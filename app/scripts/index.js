@@ -19,7 +19,9 @@ app.filter('secondsToHHmmss', function($filter) {
 
 app.filter('tagToCapitalize', function($filter) {
     return function(tag) {
+      if(tag != null){
         return tag.toUpperCase().replace(/-/g, " & ");
+      }
     };
 });
 
@@ -29,5 +31,6 @@ function PlayerService() {
     this.currentlyPlaying = "";
     this.podcastDuration = 0;
     this.atTime = 0;
+    this.albumCover;
 }
 app.service('PlayerService', PlayerService);

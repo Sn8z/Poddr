@@ -1,0 +1,5 @@
+<ul ng-controller="EpisodesController">
+  <li ng-repeat="episode in episodes.episodes">
+    <a ng-click='playPodcast(episode, album)' href="#" style="color:white">{{ episode.title }} - ({{ episode.duration | secondsToHHmmss }})</a>
+  </li>
+</ul>

@@ -8,6 +8,13 @@
       <link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.css">
       <link rel="stylesheet" type="text/css" href="styles/style.css">
 
+      <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+      <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
       <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
       <script type="text/javascript" src="../bower_components/angular-aria/angular-aria.js"></script>
       <script type="text/javascript" src="../bower_components/angular-animate/angular-animate.js"></script>
@@ -17,6 +24,11 @@
       <script type="text/javascript" src="scripts/app/poddrController.js"></script>
       <script type="text/javascript" src="scripts/app/podcastController.js"></script>
       <script type="text/javascript" src="scripts/app/menu.js"></script>
+      <script type="text/javascript" src="scripts/app/search.js"></script>
+      <script type="text/javascript" src="scripts/app/episodes.js"></script>
+      <script type="text/javascript" src="scripts/app/player.js"></script>
+
+      <script>if (window.module) module = window.module;</script>
   </head>
   <body layout="column" ng-controller="PoddrController" ng-cloak>
     <div id="title-bar" md-whiteframe="8">
@@ -63,8 +75,8 @@
             </md-item>
           </md-list>
         </md-content>
-        <div style="position:absolute;bottom:0;width:100%;height:auto;">
-          <img ng-src="images/album_cover.png" style="width:100%;height:auto;" md-whiteframe="10"/>
+        <div style="position:absolute;bottom:0;width:100%;height:auto;" ng-controller="PlayerController">
+          <img src='{{ getAlbumCover() || "images/album_cover.png" }}' style="width:100%;height:auto;" md-whiteframe="10"/>
         </div>
       </md-sidenav>
       <div layout="column" flex>
@@ -79,28 +91,28 @@
           </div>
         </div>
 
-        <div class="box3" layout="column" md-whiteframe="24">
-          <div flex="15" id="progress">
-            <div id="bar">
+        <div class="box3" layout="column" ng-controller="PlayerController" md-whiteframe="24">
+          <div flex="10" id="progress" ng-click="seek(this)">
+            <div id="bar" ng-style="{width:getBarWidth()}">
               <!-- Progressbar -->
             </div>
           </div>
           <div flex layout="row">
             <div flex="10" layout="column" layout-align="center center">
-              <md-button class="md-fab md-mini">
-                <md-icon md-font-library="material-icons">play_arrow</md-icon>
+              <md-button class="md-fab md-mini" ng-click="togglePlay()">
+                <md-icon md-font-library="material-icons">{{ checkPlayBtn() }}</md-icon>
               </md-button>
             </div>
             <div flex="40" layout="column" layout-align="center start" style="color:white">
-              <b>Avicii - Without You</b>
+              <b ng-bind="currentlyPlaying()"></b>
             </div>
             <div flex="20" layout="column" layout-align="center center" style="color:white">
-              <p>00:00:00 / 00:00:00</p>
+              <p>{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</p>
             </div>
             <div flex="30" layout="column" layout-align="center center">
               <md-slider-container>
                 <span><md-icon md-font-library="material-icons">volume_up</md-icon></span>
-                <md-slider flex min="0" max="1" step="0.01" aria-label="volume"></md-slider>
+                <md-slider id="volume" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.01" aria-label="volume"></md-slider>
               </md-slider-container>
             </div>
           </div>

@@ -1,10 +1,12 @@
 //register poddr module
-var app = angular.module('poddr').controller("PoddrController", function($scope){
+var app = angular.module('poddr')
+  .controller("PoddrController", function($scope){
   $scope.mainContent = "podcasts";
   function changeView(view){
     $scope.mainContent = view;
   }
   $scope.changeView = changeView;
+
 });
 
 app.directive('podcasts', function(){
@@ -30,6 +32,6 @@ app.directive('episodes', function () {
       link: function(scope, element, attrs){
         scope.podcast = attrs.data;
       },
-      templateUrl: "../../views/episodes.html"
+      templateUrl: "views/episodes.html"
     };
 });

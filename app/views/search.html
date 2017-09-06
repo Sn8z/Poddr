@@ -1,22 +1,19 @@
-<div id="podcastGrid" ng-controller="PodcastController" layout-padding ng-cloak>
+<div id="podcastGrid" ng-controller="SearchController" layout-padding ng-cloak>
     <md-input-container class="md-block" class="box1">
       <md-icon md-font-library="material-icons">search</md-icon>
-      <input type="text" placeholder="Search..." />
+      <input ng-model="query" type="text" ng-model-options="{debounce: 300}" ng-change="doSearch()" placeholder="Search..." />
     </md-input-container>
-      <md-grid-list md-cols-xs="1" md-cols-sm="2" md-cols-md="2"
-        md-cols-gt-md="2" md-row-height="16:9" md-gutter="12px"
-        md-gutter-gt-sm="8px" layout-margin>
-
-        <md-grid-tile ng-repeat="podcast in podcasts"
-          style="background: #222"
-          layout-align="center center"
-          ng-click="alert('EEEEE')" md-whiteframe="10">
-
-          <div layout="column">
-            <div> Text </div>
-          </div>
-
-        </md-grid-tile>
-      </md-grid-list>
+    <md-list flex layout="column">
+      <md-list-item class="md-2-line" ng-repeat="podcast in results" layout-padding>
+        <img src="{{ podcast.logo_url }}" onerror='this.src="images/album_cover.png"' class="md-avatar" alt="album_cover"/>
+        <div class="md-list-item-text" layout="column">
+          <h3>{{ podcast.title }}</h3>
+          <p>
+            {{ podcast.description }}
+          </p>
+          <episodes data="podcast"/>
+        </div>
+      </md-list-item>
+    </md-list>
     </div>
 </div>

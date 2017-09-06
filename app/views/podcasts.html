@@ -1,9 +1,9 @@
 <div id="podcastGrid" ng-controller="PodcastController" layout="column" layout-padding ng-cloak>
   <div class="row" layout="row">
-    <h1 flex style="color:white">{{ title }}</h1>
+    <h1 flex style="color:white">Top 25 - {{ genre | tagToCapitalize }}</h1>
     <md-input-container flex="40">
       <label>Genre</label>
-      <md-select name="type" ng-model="genre">
+      <md-select name="type" ng-model="genre" ng-change="getPodcasts()" style="color:white">
         <md-option ng-repeat="tag in tags" ng-value="tag">{{ tag | tagToCapitalize }}</md-option>
       </md-select>
     </md-input-container>
@@ -17,8 +17,8 @@
         <p>
           {{ podcast.description }}
         </p>
+        <episodes data="podcast"/>
       </div>
-      <md-button class="md-primary" ng-click="showEpisodes()">Episodes</md-button>
     </md-list-item>
   </md-list>
 </div>
