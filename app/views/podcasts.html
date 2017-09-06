@@ -1,0 +1,25 @@
+<div id="podcastGrid" ng-controller="PodcastController" layout="column" layout-padding ng-cloak>
+  <div class="row" layout="row">
+    <h1 flex style="color:white">{{ title }}</h1>
+    <md-input-container flex="40">
+      <label>Genre</label>
+      <md-select name="type" ng-model="genre">
+        <md-option ng-repeat="tag in tags" ng-value="tag">{{ tag | tagToCapitalize }}</md-option>
+      </md-select>
+    </md-input-container>
+  </div>
+  <div class="row">
+  <md-list flex layout="column">
+    <md-list-item class="md-2-line" ng-repeat="podcast in podcasts" layout-padding>
+      <img src="{{ podcast.logo_url }}" onerror='this.src="images/album_cover.png"' class="md-avatar" alt="album_cover"/>
+      <div class="md-list-item-text" layout="column">
+        <h3>{{ podcast.title }}</h3>
+        <p>
+          {{ podcast.description }}
+        </p>
+      </div>
+      <md-button class="md-primary" ng-click="showEpisodes()">Episodes</md-button>
+    </md-list-item>
+  </md-list>
+</div>
+</div>

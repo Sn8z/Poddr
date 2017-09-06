@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html ng-app="poddr">
+  <head>
+      <title>Poddr</title>
+
+      <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.css">
+      <link rel="stylesheet" type="text/css" href="styles/style.css">
+
+      <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
+      <script type="text/javascript" src="../bower_components/angular-aria/angular-aria.js"></script>
+      <script type="text/javascript" src="../bower_components/angular-animate/angular-animate.js"></script>
+      <script type="text/javascript" src="../bower_components/angular-material/angular-material.js"></script>
+
+      <script type="text/javascript" src="scripts/index.js"></script>
+      <script type="text/javascript" src="scripts/app/poddrController.js"></script>
+      <script type="text/javascript" src="scripts/app/podcastController.js"></script>
+      <script type="text/javascript" src="scripts/app/menu.js"></script>
+  </head>
+  <body layout="column" ng-controller="PoddrController" ng-cloak>
+    <div id="title-bar" md-whiteframe="8">
+      <img id="title-icon" src="images/icon.png"/>
+      <div id="title-bar-btns">
+        <md-icon id="min-btn" md-font-library="material-icons">remove</md-icon>
+        <md-icon id="max-btn" md-font-library="material-icons">fullscreen</md-icon>
+        <md-icon id="close-btn" md-font-library="material-icons">close</md-icon>
+      </div>
+    </div>
+    <div flex layout="row">
+      <md-sidenav flex="20" md-is-locked-open="true" md-whiteframe="8">
+        <md-content>
+          <md-list>
+            <md-item class="menuItem" ng-click="changeView('podcasts')">
+                <md-item-content md-ink-ripple layout="row" layout-align="start center">
+                  <div class="inset">
+                    <md-icon md-font-library="material-icons">music_note</md-icon>
+                  </div>
+                  <div class="inset">
+                    Podcasts
+                  </div>
+                </md-item-content>
+            </md-item>
+            <md-item class="menuItem">
+                <md-item-content md-ink-ripple layout="row" layout-align="start center">
+                  <div class="inset">
+                    <md-icon md-font-library="material-icons">favorite</md-icon>
+                  </div>
+                  <div class="inset">
+                    Favourites
+                  </div>
+                </md-item-content>
+            </md-item>
+            <md-item class="menuItem" ng-click="changeView('search')">
+                <md-item-content md-ink-ripple layout="row" layout-align="start center">
+                  <div class="inset">
+                    <md-icon md-font-library="material-icons">search</md-icon>
+                  </div>
+                  <div class="inset">
+                    Search
+                  </div>
+                </md-item-content>
+            </md-item>
+          </md-list>
+        </md-content>
+        <div style="position:absolute;bottom:0;width:100%;height:auto;">
+          <img ng-src="images/album_cover.png" style="width:100%;height:auto;" md-whiteframe="10"/>
+        </div>
+      </md-sidenav>
+      <div layout="column" flex>
+
+        <!-- Content -->
+        <div ng-switch="mainContent" class="box2">
+          <div ng-switch-when="podcasts" style="width:100%">
+            <podcasts/>
+          </div>
+          <div ng-switch-when="search" style="width:100%">
+            <search/>
+          </div>
+        </div>
+
+        <div class="box3" layout="column" md-whiteframe="24">
+          <div flex="15" id="progress">
+            <div id="bar">
+              <!-- Progressbar -->
+            </div>
+          </div>
+          <div flex layout="row">
+            <div flex="10" layout="column" layout-align="center center">
+              <md-button class="md-fab md-mini">
+                <md-icon md-font-library="material-icons">play_arrow</md-icon>
+              </md-button>
+            </div>
+            <div flex="40" layout="column" layout-align="center start" style="color:white">
+              <b>Avicii - Without You</b>
+            </div>
+            <div flex="20" layout="column" layout-align="center center" style="color:white">
+              <p>00:00:00 / 00:00:00</p>
+            </div>
+            <div flex="30" layout="column" layout-align="center center">
+              <md-slider-container>
+                <span><md-icon md-font-library="material-icons">volume_up</md-icon></span>
+                <md-slider flex min="0" max="1" step="0.01" aria-label="volume"></md-slider>
+              </md-slider-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
