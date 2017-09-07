@@ -12,6 +12,7 @@ angular.module('poddr').controller(
 
     player.addEventListener('timeupdate',function (){
       PlayerService.atTime = player.currentTime;
+      $scope.barWidth = getBarWidth();
       $scope.$apply();
     });
 
@@ -46,7 +47,7 @@ angular.module('poddr').controller(
       return PlayerService.podcastDuration;
     }
 
-    $scope.getBarWidth = function(){
+    function getBarWidth(){
       return ((player.currentTime/player.duration) * 100) + "%";
     }
 

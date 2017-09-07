@@ -4,11 +4,30 @@
   "description": "Simple podcast client",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "dist:mac": "build --mac",
+    "dist:win": "build --win",
+    "dist:linux": "build --linux"
   },
   "author": "Sn8z",
   "license": "ISC",
-  "dependencies": {
-    "electron-prebuilt": "^1.4.13"
+  "devDependencies": {
+    "electron-prebuilt": "^1.4.13",
+    "electron-builder": "^19.27.7"
+  },
+  "build":  {
+    "appId": "com.sn8z.poddr",
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns"
+    },
+    "linux":  {
+      "target": "AppImage"
+    }
   }
 }
