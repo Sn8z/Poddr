@@ -1,5 +1,5 @@
 angular.module('poddr').controller(
-  "PlayerController", function($scope, $rootScope, PlayerService){
+  "PlayerController", function($scope, $rootScope, PlayerService, $mdToast){
     player = new Audio();
 
     player.volume = 0.5;
@@ -16,14 +16,22 @@ angular.module('poddr').controller(
       $scope.$apply();
     });
 
+    player.addEventListener('error', function failed(e){
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent(e.target.error.code)
+          .position("top right")
+          .hideDelay(3000)
+          .toastClass('md-toast-error')
+      );
+    }, true);
+
     var progress = document.getElementById('progress');
     progress.addEventListener('click', function(e) {
       var $this = $(this);
-
       var widthclicked = e.pageX - $this.offset().left;
       var totalWidth = $this.width();
-
-      var calc = (widthclicked / totalWidth) * player.duration; // get the percent of bar clicked and multiply in by the duration
+      var calc = (widthclicked / totalWidth) * player.duration;
       player.currentTime = calc.toFixed(0);
     });
 

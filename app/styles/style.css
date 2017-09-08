@@ -79,8 +79,8 @@
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-button {
@@ -91,7 +91,6 @@
 ::-webkit-scrollbar-thumb {
   background: #A0A0A0;
   border: 0px none #ffffff;
-  border-radius: 50px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -105,7 +104,6 @@
 ::-webkit-scrollbar-track {
   background: #666666;
   border: 0px none #ffffff;
-  border-radius: 50px;
 }
 
 ::-webkit-scrollbar-track:hover {
@@ -120,7 +118,14 @@
   background: transparent;
 }
 
+.md-toast-content {
+  width: 250px;
+}
 
-md-sidenav.md-default-theme, md-sidenav, md-sidenav.md-default-theme md-content, md-sidenav md-content {
-  background-color: #222 !important;
+.md-toast-success .md-toast-content{
+    background-color: green !important;
+}
+
+.md-toast-error .md-toast-content{
+    background-color: red !important;
 }

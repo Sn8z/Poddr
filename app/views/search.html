@@ -1,8 +1,11 @@
 <div id="podcastGrid" ng-controller="SearchController" layout-padding ng-cloak>
+  <form ng-submit="doSearch()">
     <md-input-container class="md-block" class="box1">
-      <md-icon md-font-library="material-icons">search</md-icon>
-      <input ng-model="query" type="text" ng-model-options="{debounce: 300}" ng-change="doSearch()" placeholder="Search..." />
+        <md-icon md-font-library="material-icons">search</md-icon>
+        <input ng-model="query" type="text" placeholder="Search..." />
     </md-input-container>
+  </form>
+
     <md-list flex layout="column">
       <md-list-item class="md-2-line" ng-repeat="podcast in results" layout-padding>
         <img src="{{ podcast.logo_url }}" onerror='this.src="images/album_cover.png"' class="md-avatar" alt="album_cover"/>
