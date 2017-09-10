@@ -28,10 +28,7 @@ app.directive('search', function(){
 app.directive('episodes', function () {
     return {
       restrict: 'AE',
-      scope: true,
-      link: function(scope, element, attrs){
-        scope.podcast = attrs.data;
-      },
+      scope: {podcastid:'='},
       templateUrl: "views/episodes.html"
     };
 });

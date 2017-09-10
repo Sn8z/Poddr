@@ -67,13 +67,13 @@ angular.module('poddr').controller(
       PlayerService.podcastDuration = player.duration;
     })
 
-    function playPodcast(episode, album_cover){
-      url = episode.files[0].urls[0];
+    function playPodcast(episode){
+      url = episode.enclosure.url
       player.src = url;
       player.play();
       PlayerService.currentlyPlaying = episode.title;
       PlayerService.podcastDuration = 0;
-      PlayerService.albumCover = album_cover;
+      PlayerService.albumCover = episode.image;
     }
     $rootScope.playPodcast = playPodcast;
 

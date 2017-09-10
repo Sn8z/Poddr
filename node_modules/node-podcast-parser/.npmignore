@@ -1,0 +1,6 @@
+test
+node_modules
+coverage
+src
+.eslintrc
+.editorconfig

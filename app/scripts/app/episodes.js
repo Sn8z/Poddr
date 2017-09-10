@@ -1,10 +1,28 @@
 angular.module('poddr').controller(
   "EpisodesController", function($scope, $rootScope, $http){
+    const parsePodcast = require('node-podcast-parser');
 
     $scope.playPodcast = $rootScope.playPodcast;
     $scope.episodes = [];
-    $scope.album = $scope.podcast.logo_url;
-    $http.get("http://feeds.gpodder.net/parse?url=" + $scope.podcast.url).then(function(response){
-      $scope.episodes = response.data[0];
-    })
+
+    $scope.toggleEpisodes = function(){
+      $('#' + $scope.podcastid).toggle();
+      if($scope.episodes.length == 0){
+        fetchEpisodes();
+      }
+    }
+
+    function fetchEpisodes(){
+      $http.get("https://itunes.apple.com/lookup?id=" + $scope.podcastid ).then(function(response){
+        $http.get(response.data.results[0].feedUrl).then(function(response){
+          parsePodcast(response.data, function(err, data){
+            if(err){
+              console.log(err);
+            } else {
+              $scope.episodes = data.episodes;
+            }
+          });
+        });
+      });
+    }
   });

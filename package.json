@@ -1,6 +1,6 @@
 {
   "name": "poddr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple podcast client",
   "main": "main.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "electron-prebuilt": "^1.4.13",
     "electron-builder": "^19.27.7"
   },
-  "build":  {
+  "build": {
     "appId": "com.sn8z.poddr",
     "win": {
       "target": "nsis",
@@ -26,8 +26,12 @@
       "target": "dmg",
       "icon": "build/icon.icns"
     },
-    "linux":  {
+    "linux": {
       "target": "AppImage"
     }
+  },
+  "dependencies": {
+    "itunes-api-search": "^1.1.0",
+    "node-podcast-parser": "^2.0.0"
   }
 }

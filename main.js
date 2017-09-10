@@ -23,7 +23,7 @@ app.on('ready', function(){
   mainWindow.loadURL('file://' + __dirname + "/app/index.html");
 
   //Devtools
-  mainWindow.webContents.openDevTools({detach:true});
+  //mainWindow.webContents.openDevTools({detach:true});
 
   //Cleanup on window close
   mainWindow.on('closed', function(){

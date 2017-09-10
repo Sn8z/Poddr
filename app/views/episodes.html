@@ -1,5 +1,15 @@
 <ul ng-controller="EpisodesController">
-  <li ng-repeat="episode in episodes.episodes">
-    <a ng-click='playPodcast(episode, album)' href="#" style="color:white">{{ episode.title }} - ({{ episode.duration | secondsToHHmmss }})</a>
-  </li>
+  <md-button class="md-primary" ng-click="toggleEpisodes()">Episodes</md-button>
+  <table id="{{ podcastid }}" hidden="hidden">
+    <tr ng-repeat="episode in episodes">
+      <td>
+        <a ng-click='playPodcast(episode)' href="#" style="color:white">{{ episode.title }}</a>
+      </td>
+      <td>
+        <p style="color:white">
+          ({{ episode.duration | secondsToHHmmss }})
+        </p>
+      </td>
+    </tr>
+  </table>
 </ul>

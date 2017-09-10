@@ -1,17 +1,25 @@
 angular.module('poddr').controller(
-  "SearchController", function($scope, $http){
+  "SearchController", function($scope, $http, $mdToast){
+    var itunesSearch = require('itunes-api-search');
     $scope.query = "";
     $scope.results = [];
 
-  function doSearch(){
-    if($scope.query){
-      $http.get("https://gpodder.net/search.json?q=" + $scope.query).then(function(response){
-        $scope.results = response.data;
-      })
-    } else {
-      $scope.results = [];
+    $scope.doSearch = function(){
+      if($scope.query){
+        itunesSearch.search($scope.query, {
+          entity: 'podcast',
+          limit: '25',
+          country: 'SE'
+        }, function(err, res){
+          if(err){
+            console.log(err);
+            return;
+          }
+          console.log(res.results);
+          $scope.results = res.results;
+          $scope.$apply();
+        })
+      }
     }
-  }
-  $scope.doSearch = doSearch;
 
   });
