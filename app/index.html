@@ -40,39 +40,47 @@
       </div>
     </div>
     <div flex layout="row">
-      <md-sidenav flex="20" md-is-locked-open="true" md-whiteframe="8">
+      <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8">
         <md-content>
           <md-list>
-            <md-item class="menuItem" ng-click="changeView('podcasts')">
-                <md-item-content md-ink-ripple layout="row" layout-align="start center">
+            <md-divider></md-divider>
+
+            <md-list-item class="menuItem" ng-click="changeView('podcasts')">
+                <md-item-content md-ink-ripple layout="row" layout-align="center center">
                   <div class="inset">
-                    <md-icon md-font-library="material-icons">music_note</md-icon>
-                  </div>
-                  <div class="inset">
-                    Podcasts
-                  </div>
-                </md-item-content>
-            </md-item>
-            <md-item class="menuItem">
-                <md-item-content md-ink-ripple layout="row" layout-align="start center">
-                  <div class="inset">
-                    <md-icon md-font-library="material-icons">favorite</md-icon>
-                  </div>
-                  <div class="inset">
-                    Favourites
+                    Top 25
                   </div>
                 </md-item-content>
-            </md-item>
-            <md-item class="menuItem" ng-click="changeView('search')">
-                <md-item-content md-ink-ripple layout="row" layout-align="start center">
-                  <div class="inset">
-                    <md-icon md-font-library="material-icons">search</md-icon>
-                  </div>
+            </md-list-item>
+            <md-divider></md-divider>
+
+            <md-list-item class="menuItem" ng-click="changeView('search')">
+                <md-item-content md-ink-ripple layout="row" layout-align="center center">
                   <div class="inset">
                     Search
                   </div>
                 </md-item-content>
-            </md-item>
+            </md-list-item>
+            <md-divider></md-divider>
+
+            <md-list-item class="menuItem" ng-click="changeView('search')">
+                <md-item-content md-ink-ripple layout="row" layout-align="center center">
+                  <div class="inset">
+                    Favourites
+                  </div>
+                </md-item-content>
+            </md-list-item>
+            <md-divider></md-divider>
+
+            <md-list-item class="menuItem" ng-click="changeView('podcasts')">
+                <md-item-content md-ink-ripple layout="row" layout-align="center center">
+                  <div class="inset">
+                    Settings
+                  </div>
+                </md-item-content>
+            </md-list-item>
+            <md-divider></md-divider>
+
           </md-list>
         </md-content>
         <div style="position:absolute;bottom:0;width:100%;height:auto;" ng-controller="PlayerController">
@@ -112,7 +120,7 @@
             <div flex="30" layout="column" layout-align="center center">
               <md-slider-container>
                 <span><md-icon md-font-library="material-icons">volume_up</md-icon></span>
-                <md-slider id="volume" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.01" aria-label="volume"></md-slider>
+                <md-slider id="volume" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>
               </md-slider-container>
             </div>
           </div>

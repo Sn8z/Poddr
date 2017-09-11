@@ -14,16 +14,17 @@ app.on('window-all-closed', function(){
 app.on('ready', function(){
   mainWindow = new BrowserWindow({
     name: "Poddr",
-    width: 900,
-    height: 700,
-    frame: false
+    width: 1200,
+    height: 900,
+    frame: false,
+    backgroundColor: "#333333"
   });
 
   //Point to html file to be opened
   mainWindow.loadURL('file://' + __dirname + "/app/index.html");
 
   //Devtools
-  //mainWindow.webContents.openDevTools({detach:true});
+  mainWindow.webContents.openDevTools({detach:true});
 
   //Cleanup on window close
   mainWindow.on('closed', function(){

@@ -1,6 +1,8 @@
-<ul ng-controller="EpisodesController">
+<div ng-controller="EpisodesController">
   <md-button class="md-primary" ng-click="toggleEpisodes()">Episodes</md-button>
-  <table id="{{ podcastid }}" hidden="hidden">
+  <br />
+  <br />
+  <table id="{{ podcastid }}" hidden="hidden" style="width:100%;">
     <tr ng-repeat="episode in episodes">
       <td>
         <a ng-click='playPodcast(episode)' href="#" style="color:white">{{ episode.title }}</a>
@@ -11,5 +13,11 @@
         </p>
       </td>
     </tr>
+    <tr>
+      <td>
+        <br />
+        <br />
+      </td>
+    </tr>
   </table>
-</ul>
+</div>

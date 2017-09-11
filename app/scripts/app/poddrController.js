@@ -1,6 +1,26 @@
 //register poddr module
 var app = angular.module('poddr')
-  .controller("PoddrController", function($scope){
+  .controller("PoddrController", function($scope, $mdToast, $http){
+
+    //check if update is available
+    $http.get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json").then(function(response){
+      if(response.data.version != require('electron').remote.app.getVersion()){
+        var toast = $mdToast.simple()
+          .textContent(response.data.version + " available!")
+          .position("top right")
+          .hideDelay(10000)
+          .action("Update now!")
+          .toastClass('md-toast-success')
+
+        $mdToast.show(toast).then(function(response){
+          if(response == 'ok'){
+            require('electron').shell.openExternal('https://github.com/Sn8z/Poddr/releases');
+          }
+        });
+      }
+    });
+
+  //Handle maincontent navigation
   $scope.mainContent = "podcasts";
   function changeView(view){
     $scope.mainContent = view;
