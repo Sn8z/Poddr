@@ -1,0 +1,24 @@
+<div id="podcastGrid" ng-controller="FavouritesController" layout="column" layout-padding ng-cloak>
+  <div class="row" layout="row">
+    <h1 flex style="color:white">{{ title }}</h1>
+  </div>
+  <div class="row">
+    <md-list>
+
+      <md-list-item class="md-2-line" ng-repeat="favourite in favourites" layout-padding>
+        <img src="{{ favourite.img }}" alt="album_cover"/>
+        <div class="md-list-item-text" layout="column">
+          <h3>
+            {{ favourite.title }}
+            <md-button ng-click="removeFavourite(favourite.id)">Remove</md-button>
+          </h3>
+          <p>
+            {{ favourite.artist }}
+          </p>
+          <episodes podcastid="favourite.id"/>
+        </div>
+        <md-divider></md-divider>
+      </md-list-item>
+    </md-list>
+  </div>
+</div>

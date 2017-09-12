@@ -2,6 +2,7 @@
   <md-button class="md-primary" ng-click="toggleEpisodes()">Episodes</md-button>
   <br />
   <br />
+  <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
   <table id="{{ podcastid }}" hidden="hidden" style="width:100%;">
     <tr ng-repeat="episode in episodes">
       <td>

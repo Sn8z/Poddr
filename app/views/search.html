@@ -1,16 +1,30 @@
 <div id="podcastGrid" ng-controller="SearchController" layout-padding ng-cloak>
-  <form ng-submit="doSearch()">
-    <md-input-container class="md-block" class="box1">
-        <md-icon md-font-library="material-icons">search</md-icon>
-        <input ng-model="query" type="text" placeholder="Search..." />
+  <div class="row" layout="row">
+    <form flex ng-submit="doSearch()">
+      <md-input-container class="md-block" class="box1">
+          <md-icon md-font-library="material-icons">search</md-icon>
+          <input ng-model="query" type="text" placeholder="Search..."/>
+      </md-input-container>
+    </form>
+
+    <md-input-container flex="20">
+      <label>Country</label>
+      <md-select name="type" ng-model="region" ng-change="getPodcasts()" style="color:white">
+        <md-option ng-repeat="country in countries" ng-value="country">{{ country | tagToCapitalize }}</md-option>
+      </md-select>
     </md-input-container>
-  </form>
+  </div>
 
   <md-list flex layout="column">
+    <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
+
     <md-list-item class="md-2-line" ng-repeat="podcast in results" layout-padding>
       <img src="{{ podcast.artworkUrl60 }}" alt="album_cover"/>
       <div class="md-list-item-text" layout="column">
-        <h3>{{ podcast.trackName }}</h3>
+        <h3>
+          {{ podcast.trackName }}
+          <md-button md-class="md-primary" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl60, podcast.trackName, podcast.artistName)">Follow</md-button>
+        </h3>
         <p>
           {{ podcast.artistName }}
         </p>

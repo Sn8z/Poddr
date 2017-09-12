@@ -15,6 +15,7 @@
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
 
+
       <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
       <script type="text/javascript" src="../bower_components/angular-aria/angular-aria.js"></script>
       <script type="text/javascript" src="../bower_components/angular-animate/angular-animate.js"></script>
@@ -26,6 +27,7 @@
       <script type="text/javascript" src="scripts/app/menu.js"></script>
       <script type="text/javascript" src="scripts/app/search.js"></script>
       <script type="text/javascript" src="scripts/app/episodes.js"></script>
+      <script type="text/javascript" src="scripts/app/favourites.js"></script>
       <script type="text/javascript" src="scripts/app/player.js"></script>
 
       <script>if (window.module) module = window.module;</script>
@@ -48,7 +50,7 @@
             <md-list-item class="menuItem" ng-click="changeView('podcasts')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
                   <div class="inset">
-                    Top 25
+                    Toplists
                   </div>
                 </md-item-content>
             </md-list-item>
@@ -63,7 +65,7 @@
             </md-list-item>
             <md-divider></md-divider>
 
-            <md-list-item class="menuItem" ng-click="changeView('search')">
+            <md-list-item class="menuItem" ng-click="changeView('favourites')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
                   <div class="inset">
                     Favourites
@@ -96,6 +98,9 @@
           </div>
           <div ng-switch-when="search" style="width:100%">
             <search/>
+          </div>
+          <div ng-switch-when="favourites" style="width:100%">
+            <favourites/>
           </div>
         </div>
 

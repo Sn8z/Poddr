@@ -33,4 +33,5 @@ function PlayerService() {
     this.atTime = 0;
     this.albumCover;
 }
+
 app.service('PlayerService', PlayerService);

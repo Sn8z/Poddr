@@ -1,6 +1,13 @@
 //register poddr module
 var app = angular.module('poddr')
-  .controller("PoddrController", function($scope, $mdToast, $http){
+  .controller("PoddrController", function($scope, $rootScope, $mdToast, $http){
+
+    //setting up keybinds
+    var Mousetrap = require('mousetrap');
+    Mousetrap.bind('space', function(e){
+      e.preventDefault();
+      $rootScope.togglePlay();
+    });
 
     //check if update is available
     $http.get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json").then(function(response){
@@ -42,6 +49,14 @@ app.directive('search', function(){
     restrict: 'AE',
     replace: true,
     templateUrl: 'views/search.html'
+  }
+})
+
+app.directive('favourites', function(){
+  return {
+    restrict: 'AE',
+    replace: true,
+    templateUrl: 'views/favourites.html'
   }
 })
 

@@ -17,7 +17,8 @@ app.on('ready', function(){
     width: 1200,
     height: 900,
     frame: false,
-    backgroundColor: "#333333"
+    backgroundColor: "#333333",
+    icon: __dirname + '/app/images/icon.png'
   });
 
   //Point to html file to be opened
