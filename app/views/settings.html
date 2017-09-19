@@ -1,0 +1,69 @@
+<div ng-controller="SettingsController" layout="column" layout-padding ng-cloak>
+  <div class="row" layout="row">
+    <div flex="50" class="row">
+      <h3 style="color:white">
+        Settings
+      </h3>
+      <md-divider></md-divider>
+      <md-input-container flex="100">
+        <label>Country</label>
+        <md-select name="type" ng-model="region" ng-change="getPodcasts()" style="color:white">
+          <md-option ng-repeat="country in countries" ng-value="country">{{ country | tagToCapitalize }}</md-option>
+        </md-select>
+      </md-input-container>
+    </div>
+    <div flex="50" class="row">
+      <h3 style="color:white">
+        Keybinds
+      </h3>
+      <md-divider></md-divider>
+      <table style="width:100%">
+        <tr>
+          <td style="color:white">
+            <code>Space</code>
+          </td>
+          <td style="color:white">
+            Toggle play/pause
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>CTRL</code> + <code>s</code>
+          </td>
+          <td style="color:white">
+            Volume Up
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>CTRL</code> + <code>a</code>
+          </td>
+          <td style="color:white">
+            Volume Down
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>ALT</code> + <code>f4</code>
+          </td>
+          <td style="color:white">
+            Exit program
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <h3 style="color:white;">
+      About
+    </h3>
+    <md-divider></md-divider>
+    <h4 style="color:white;">
+      Tech
+    </h4>
+    <p style="color:white;">
+      Poddr uses iTunes RSS feed to get the toplists and then the iTunes search API
+      to get the information about them.
+    </p>
+  </div>
+</div>

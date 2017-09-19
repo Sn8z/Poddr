@@ -23,12 +23,20 @@
       <div class="md-list-item-text" layout="column">
         <h3>
           {{ podcast.trackName }}
-          <md-button md-class="md-primary" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl60, podcast.trackName, podcast.artistName)">Follow</md-button>
         </h3>
         <p>
           {{ podcast.artistName }}
         </p>
-        <episodes podcastid="podcast.trackId"/>
+        <div layout="row">
+          <div flex="10">
+            <md-button class="md-primary" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl60, podcast.trackName, podcast.artistName)">
+              <md-icon md-font-library="material-icons">favorite</md-icon>
+            </md-button>
+          </div>
+          <div flex>
+            <episodes podcastid="podcast.trackId"/>
+          </div>
+        </div>
       </div>
       <md-divider></md-divider>
     </md-list-item>

@@ -7,6 +7,14 @@ angular.module('poddr').controller(
     $scope.playPodcast = $rootScope.playPodcast;
     $scope.episodes = [];
 
+    //pagination
+    $scope.pageSize = 10;
+    $scope.currentPage = 0;
+
+    $scope.numberOfPages = function(){
+      return Math.ceil($scope.episodes.length / $scope.pageSize);
+    }
+
     $scope.toggleEpisodes = function(){
       $('#' + $scope.podcastid).toggle();
       if($scope.episodes.length == 0){
@@ -24,6 +32,7 @@ angular.module('poddr').controller(
             } else {
               $scope.isLoading = false;
               $scope.episodes = data.episodes;
+              $scope.totalItems = $scope.episodes.length;
             }
           });
         });

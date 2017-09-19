@@ -1,24 +1,54 @@
+<!--
 <div ng-controller="EpisodesController">
-  <md-button class="md-primary" ng-click="toggleEpisodes()">Episodes</md-button>
+  <md-button class="md-primary" ng-click="toggleEpisodes()">
+    <md-icon md-font-library="material-icons">view_headline</md-icon>
+  </md-button>
   <br />
   <br />
   <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
-  <table id="{{ podcastid }}" hidden="hidden" style="width:100%;">
-    <tr ng-repeat="episode in episodes">
-      <td>
-        <a ng-click='playPodcast(episode)' href="#" style="color:white">{{ episode.title }}</a>
-      </td>
-      <td>
-        <p style="color:white">
-          ({{ episode.duration | secondsToHHmmss }})
-        </p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <br />
-        <br />
-      </td>
-    </tr>
-  </table>
+  <div id="{{ podcastid }}" hidden="hidden" style="background-color:black;padding:5px;" layout-fill>
+    <table style="width:100%;">
+      <tr ng-repeat="episode in episodes">
+        <td>
+          <a ng-click='playPodcast(episode)' href="#" style="color:white">{{ episode.title }}</a>
+        </td>
+        <td>
+          <p style="color:white">
+            ({{ episode.duration | secondsToHHmmss }})
+          </p>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+-->
+
+<div ng-controller="EpisodesController">
+  <md-button class="md-primary" ng-click="toggleEpisodes()">
+    <md-icon md-font-library="material-icons">view_headline</md-icon>
+  </md-button>
+  <br />
+  <br />
+  <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;margin-bottom:20px;"></md-progress-circular>
+  <div id="{{ podcastid }}" class="md-whiteframe-4dp" hidden="hidden" style="background-color:#222;padding:10px;margin-bottom:20px;" ng-show="!isLoading">
+    <div class="row" ng-repeat="episode in episodes | pagination: currentPage * pageSize | limitTo: pageSize" layout="row" style="border-bottom:1px solid;padding:5px;">
+      <div flex="75">
+        <a ng-click='playPodcast(episode)' href="#" style="color:white;text-decoration:none">{{ episode.title }}</a>
+      </div>
+      <div flex="25" style="color:white;" layout="column" layout-align="center end">
+        {{ episode.duration | secondsToHHmmss }}
+      </div>
+    </div>
+    <div class="row" layout="row">
+      <div flex="10" layout="column" layout-align="center center">
+        <md-button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1"><md-icon md-font-library="material-icons">keyboard_arrow_left</md-icon></md-button>
+      </div>
+      <div flex="80" style="color:white;" layout="column" layout-align="center center">
+        Page {{currentPage + 1}} of {{ numberOfPages() }}
+      </div>
+      <div flex="10" layout="column" layout-align="center center">
+        <md-button ng-disabled="currentPage >= episodes.length/pageSize - 1" ng-click="currentPage = currentPage+1"><md-icon md-font-library="material-icons">keyboard_arrow_right</md-icon></md-button>
+      </div>
+    </div>
+  </div>
 </div>

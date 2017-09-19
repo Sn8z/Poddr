@@ -8,6 +8,14 @@ var app = angular.module('poddr')
       e.preventDefault();
       $rootScope.togglePlay();
     });
+    Mousetrap.bind('mod+s', function(e){
+      e.preventDefault();
+      $rootScope.volumeUp();
+    });
+    Mousetrap.bind('mod+a', function(e){
+      e.preventDefault();
+      $rootScope.volumeDown();
+    });
 
     //check if update is available
     $http.get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json").then(function(response){
@@ -57,6 +65,14 @@ app.directive('favourites', function(){
     restrict: 'AE',
     replace: true,
     templateUrl: 'views/favourites.html'
+  }
+})
+
+app.directive('settings', function(){
+  return {
+    restrict: 'AE',
+    replace: true,
+    templateUrl: 'views/settings.html'
   }
 })
 

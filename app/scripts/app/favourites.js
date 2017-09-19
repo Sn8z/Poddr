@@ -13,12 +13,15 @@ angular.module('poddr').controller(
       }
     });
 
-    $scope.removeFavourite = function(id){
+    $scope.removeFavourite = function($event, id){
+      if(confirm("Are you sure?")){
       storage.remove(id, function(err){
         if(err){
           console.log(err);
-          }
+        } else {
+          $event.currentTarget.parentNode.parentNode.parentNode.parentNode.remove();
+        }
       });
     }
-
-  });
+  }
+});

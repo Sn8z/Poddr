@@ -1,6 +1,6 @@
 angular.module('poddr').controller(
   "PlayerController", function($scope, $rootScope, PlayerService, $mdToast){
-    player = new Audio();
+    player = document.createElement('audio');
 
     player.volume = 0.5;
     $scope.barWidth = "0%";
@@ -17,9 +17,10 @@ angular.module('poddr').controller(
     });
 
     player.addEventListener('error', function failed(e){
+      console.log("Player src error: " + e.target.error.code);
       $mdToast.show(
         $mdToast.simple()
-          .textContent(e.target.error.code)
+          .textContent("Source error.")
           .position("top right")
           .hideDelay(3000)
           .toastClass('md-toast-error')
@@ -29,9 +30,9 @@ angular.module('poddr').controller(
     var progress = document.getElementById('progress');
     progress.addEventListener('click', function(e) {
       var $this = $(this);
-      var widthclicked = e.pageX - $this.offset().left;
+      var widthClicked = e.pageX - $this.offset().left;
       var totalWidth = $this.width();
-      var calc = (widthclicked / totalWidth) * player.duration;
+      var calc = (widthClicked / totalWidth) * player.duration;
       player.currentTime = calc.toFixed(0);
     });
 
@@ -85,5 +86,29 @@ angular.module('poddr').controller(
       }
     }
     $rootScope.togglePlay = togglePlay;
+
+    function volumeUp(){
+      if(player.volume + 0.005 > 1){
+        player.volume = 1;
+        $scope.volume = player.volume;
+      } else {
+        player.volume = player.volume + 0.005;
+        $scope.volume = player.volume;
+      }
+      $scope.$apply();
+    }
+    $rootScope.volumeUp = volumeUp;
+
+    function volumeDown(){
+      if(player.volume - 0.005 < 0){
+        player.volume = 0;
+        $scope.volume = player.volume;
+      } else {
+        player.volume = player.volume - 0.005;
+        $scope.volume = player.volume;
+      }
+      $scope.$apply();
+    }
+    $rootScope.volumeDown = volumeDown;
 
   });

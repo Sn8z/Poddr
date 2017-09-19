@@ -29,10 +29,11 @@
       <script type="text/javascript" src="scripts/app/episodes.js"></script>
       <script type="text/javascript" src="scripts/app/favourites.js"></script>
       <script type="text/javascript" src="scripts/app/player.js"></script>
+      <script type="text/javascript" src="scripts/app/settings.js"></script>
 
       <script>if (window.module) module = window.module;</script>
   </head>
-  <body layout="column" ng-controller="PoddrController" ng-cloak>
+  <body layout="column" ng-controller="PoddrController" style="overflow-x:hidden;" ng-cloak>
     <div id="title-bar" md-whiteframe="8">
       <img id="title-icon" src="images/icon.png"/>
       <div id="title-bar-btns">
@@ -74,7 +75,7 @@
             </md-list-item>
             <md-divider></md-divider>
 
-            <md-list-item class="menuItem" ng-click="changeView('podcasts')">
+            <md-list-item class="menuItem" ng-click="changeView('settings')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
                   <div class="inset">
                     Settings
@@ -101,6 +102,9 @@
           </div>
           <div ng-switch-when="favourites" style="width:100%">
             <favourites/>
+          </div>
+          <div ng-switch-when="settings" style="width:100%">
+            <settings/>
           </div>
         </div>
 

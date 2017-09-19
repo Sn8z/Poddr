@@ -42,6 +42,14 @@ angular.module('poddr').controller(
       }, function(err){
         if(err){
           console.log(err);
+        } else {
+          $mdToast.show(
+            $mdToast.simple()
+              .textContent("You now follow " + artist)
+              .position("top right")
+              .hideDelay(3000)
+              .toastClass('md-toast-success')
+          );
         }
       });
     }

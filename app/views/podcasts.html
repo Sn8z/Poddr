@@ -15,12 +15,20 @@
       <div class="md-list-item-text" layout="column">
         <h3>
           {{ podcast.title.label }}
-          <md-button md-class="md-primary" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][0]['label'], podcast.title.label, podcast.title.label)">Follow</md-button>
         </h3>
         <p>
           {{ podcast.summary.label }}
         </p>
-        <episodes podcastid="podcast['id']['attributes']['im:id']"/>
+        <div layout="row">
+          <div flex="10">
+            <md-button class="md-primary" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][0]['label'], podcast.title.label, podcast.title.label)">
+              <md-icon md-font-library="material-icons">favorite</md-icon>
+            </md-button>
+          </div>
+          <div flex>
+            <episodes podcastid="podcast['id']['attributes']['im:id']"/>
+          </div>
+        </div>
       </div>
       <md-divider></md-divider>
     </md-list-item>

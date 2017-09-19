@@ -10,12 +10,20 @@
         <div class="md-list-item-text" layout="column">
           <h3>
             {{ favourite.title }}
-            <md-button ng-click="removeFavourite(favourite.id)">Remove</md-button>
           </h3>
           <p>
             {{ favourite.artist }}
           </p>
-          <episodes podcastid="favourite.id"/>
+          <div layout="row">
+            <div flex="10">
+              <md-button class="md-warn" ng-click="removeFavourite($event, favourite.id)">
+                <md-icon md-font-library="material-icons">close</md-icon>
+              </md-button>
+            </div>
+            <div flex>
+              <episodes podcastid="favourite.id"/>
+            </div>
+          </div>
         </div>
         <md-divider></md-divider>
       </md-list-item>

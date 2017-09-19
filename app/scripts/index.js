@@ -25,6 +25,12 @@ app.filter('tagToCapitalize', function($filter) {
     };
 });
 
+app.filter('pagination', function(){
+  return function(input, start){
+   start = +start;
+   return input.slice(start);
+  };
+})
 
 //Service to handle global player events & variables
 function PlayerService() {
@@ -33,5 +39,4 @@ function PlayerService() {
     this.atTime = 0;
     this.albumCover;
 }
-
 app.service('PlayerService', PlayerService);

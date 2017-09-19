@@ -1,6 +1,5 @@
 angular.module('poddr').controller(
-  "PodcastController", function($scope, $rootScope, $http){
-
+  "PodcastController", function($scope, $http, $mdToast){
     $scope.amount = 50;
     $scope.region = "us";
     $scope.podcasts = [];
@@ -26,6 +25,14 @@ angular.module('poddr').controller(
       }, function(err){
         if(err){
           console.log(err);
+        } else {
+          $mdToast.show(
+            $mdToast.simple()
+              .textContent("You now follow " + artist)
+              .position("top right")
+              .hideDelay(3000)
+              .toastClass('md-toast-success')
+          );
         }
       });
     }
