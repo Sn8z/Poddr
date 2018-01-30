@@ -30,6 +30,7 @@ angular.module('poddr').controller(
             if(err){
               console.log(err);
             } else {
+              console.log(data.episodes);
               $scope.isLoading = false;
               $scope.episodes = data.episodes;
               $scope.totalItems = $scope.episodes.length;
