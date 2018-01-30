@@ -1,13 +1,23 @@
 angular.module('poddr').controller(
   "PlayerController", function($scope, $rootScope, PlayerService, $mdToast){
+    var storage = require('electron-json-storage');
+
     player = document.createElement('audio');
 
-    player.volume = 0.5;
+    player.volume = 0.1;
     $scope.barWidth = "0%";
     $scope.volume = player.volume;
 
+    storage.get('volume', function(error, data) {
+      if (error) throw error;
+      player.volume = data.value;
+      $scope.volume = data.value;
+      $scope.$apply();
+    });
+
     $scope.setVolume = function() {
       player.volume = $scope.volume;
+      storage.set("volume", {value: player.volume}, function(err){if(err)throw err;});
     };
 
     player.addEventListener('timeupdate',function (){
@@ -95,6 +105,7 @@ angular.module('poddr').controller(
         player.volume = player.volume + 0.005;
         $scope.volume = player.volume;
       }
+      storage.set("volume", {value: player.volume}, function(err){if(err)throw err;});
       $scope.$apply();
     }
     $rootScope.volumeUp = volumeUp;
@@ -107,6 +118,7 @@ angular.module('poddr').controller(
         player.volume = player.volume - 0.005;
         $scope.volume = player.volume;
       }
+      storage.set("volume", {value: player.volume}, function(err){if(err)throw err;});
       $scope.$apply();
     }
     $rootScope.volumeDown = volumeDown;

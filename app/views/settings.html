@@ -5,9 +5,9 @@
         Settings
       </h3>
       <md-divider></md-divider>
-      <md-input-container flex="100">
-        <label>Country</label>
-        <md-select name="type" ng-model="region" ng-change="getPodcasts()" style="color:white">
+      <md-input-container style="width:90%">
+        <label>Default region</label>
+        <md-select name="type" ng-model="region" ng-change="setRegion()" style="color:white">
           <md-option ng-repeat="country in countries" ng-value="country">{{ country | tagToCapitalize }}</md-option>
         </md-select>
       </md-input-container>

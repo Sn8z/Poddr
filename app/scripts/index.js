@@ -6,8 +6,8 @@ app.config(['$mdThemingProvider', configure]);
 function configure($mdThemingProvider){
   $mdThemingProvider.theme('dark-orange')
   .primaryPalette('orange')
-    .accentPalette('orange')
-    .dark()
+  .accentPalette('orange')
+  .dark()
   $mdThemingProvider.setDefaultTheme('dark-orange');
 }
 
@@ -40,3 +40,9 @@ function PlayerService() {
     this.albumCover;
 }
 app.service('PlayerService', PlayerService);
+
+//regions service
+function RegionService(){
+  this.regions = ["us", "gb", "se", "fr", "es"];
+}
+app.service('RegionService', RegionService);

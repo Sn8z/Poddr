@@ -1,12 +1,18 @@
 angular.module('poddr').controller(
-  "SearchController", function($scope, $http, $mdToast){
+  "SearchController", function($scope, $http, $mdToast, RegionService){
+    var storage = require('electron-json-storage');
     var itunesSearch = require('itunes-api-search');
     $scope.query = "";
     $scope.results = [];
 
-    //TODO: move to service
-    $scope.countries = ["us", "gb", "se", "fr", "es"];
+    $scope.countries = RegionService.regions;
     $scope.region = "us";
+
+    storage.get('region', function(error, data) {
+      if (error) throw error;
+      $scope.region = data.value;
+      $scope.$apply();
+    });
 
     $scope.isLoading = false;
 
@@ -20,7 +26,6 @@ angular.module('poddr').controller(
           country: $scope.region
         }, function(err, res){
           if(err){
-            //TODO display error to user in a friendly way
             console.log(err);
             return;
           }

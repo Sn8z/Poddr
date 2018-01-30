@@ -16,7 +16,7 @@ app.on('ready', function(){
     name: "Poddr",
     width: 1200,
     height: 900,
-    frame: false,
+    frame: true,
     backgroundColor: "#333333",
     icon: __dirname + '/app/images/icon.png'
   });

@@ -2,33 +2,6 @@
   outline: none !important;
 }
 
-#title-bar  {
-  -webkit-user-select: none;
-  -webkit-app-region: drag;
-  height: 44px;
-  background-color: #333333;
-  padding: none;
-  margin: 0px;
-}
-
-#title-bar-btns {
-  -webkit-app-region: no-drag;
-  position: absolute;
-  top: 10px;
-  right: 12px;
-}
-
-#title-icon {
-  -webkit-app-region: drag;
-  margin: 8px;
-  height: calc(100% - 16px);
-  width: auto;
-}
-
-#min-btn, #max-btn, #close-btn  {
-  cursor: pointer;
-}
-
 .box1, .box2, .box3 {
   display: flex;
   box-sizing: border-box;
@@ -71,7 +44,6 @@
 
 #bar {
   height: 100%;
-  background-color: #ff9900;
   -webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,.6);
   -moz-box-shadow: inset 0px 1px 1px rgba(0,0,0,.6);
   box-shadow: inset 0px 1px 1px rgba(0,0,0,.6);

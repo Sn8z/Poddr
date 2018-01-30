@@ -1,11 +1,21 @@
 angular.module('poddr').controller(
-  "PodcastController", function($scope, $http, $mdToast){
+  "PodcastController", function($scope, $http, $mdToast, RegionService){
+    var storage = require('electron-json-storage');
     $scope.amount = 50;
-    $scope.region = "us";
     $scope.podcasts = [];
 
     //TODO: move to service
-    $scope.countries = ["us", "gb", "se", "fr", "es"];
+    $scope.countries = RegionService.regions;
+    $scope.region = "us";
+
+    storage.get('region', function(error, data) {
+      if (error) throw error;
+      if(data.value.length > 0){
+        $scope.region = data.value;
+      }
+      $scope.$apply();
+      $scope.getPodcasts();
+    });
 
     $scope.getPodcasts = function(){
       $scope.podcasts = [];
@@ -13,7 +23,6 @@ angular.module('poddr').controller(
         $scope.podcasts = response.data.feed.entry;
       });
     }
-    $scope.getPodcasts();
 
     var storage = require('electron-json-storage');
     $scope.setFavourite = function(id, img, title, artist){

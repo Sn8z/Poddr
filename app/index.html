@@ -10,10 +10,6 @@
 
       <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
-      <script
-        src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
 
 
       <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
@@ -24,24 +20,21 @@
       <script type="text/javascript" src="scripts/index.js"></script>
       <script type="text/javascript" src="scripts/app/poddrController.js"></script>
       <script type="text/javascript" src="scripts/app/podcastController.js"></script>
-      <script type="text/javascript" src="scripts/app/menu.js"></script>
       <script type="text/javascript" src="scripts/app/search.js"></script>
       <script type="text/javascript" src="scripts/app/episodes.js"></script>
       <script type="text/javascript" src="scripts/app/favourites.js"></script>
       <script type="text/javascript" src="scripts/app/player.js"></script>
       <script type="text/javascript" src="scripts/app/settings.js"></script>
 
+
+      <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+
       <script>if (window.module) module = window.module;</script>
   </head>
   <body layout="column" ng-controller="PoddrController" style="overflow-x:hidden;" ng-cloak>
-    <div id="title-bar" md-whiteframe="8">
-      <img id="title-icon" src="images/icon.png"/>
-      <div id="title-bar-btns">
-        <md-icon id="min-btn" md-font-library="material-icons">remove</md-icon>
-        <md-icon id="max-btn" md-font-library="material-icons">fullscreen</md-icon>
-        <md-icon id="close-btn" md-font-library="material-icons">close</md-icon>
-      </div>
-    </div>
     <div flex layout="row">
       <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8">
         <md-content>
@@ -110,7 +103,7 @@
 
         <div class="box3" layout="column" ng-controller="PlayerController" md-whiteframe="24">
           <div flex="10" id="progress">
-            <div id="bar" ng-style="{width:barWidth}">
+            <div id="bar" ng-style="{'width':barWidth}" md-colors="{background: 'primary'}">
               <!-- Progressbar -->
             </div>
           </div>

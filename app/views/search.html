@@ -17,7 +17,6 @@
 
   <md-list flex layout="column">
     <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
-
     <md-list-item class="md-2-line" ng-repeat="podcast in results" layout-padding>
       <img src="{{ podcast.artworkUrl60 }}" alt="album_cover"/>
       <div class="md-list-item-text" layout="column">
@@ -41,5 +40,4 @@
       <md-divider></md-divider>
     </md-list-item>
   </md-list>
-
 </div>
