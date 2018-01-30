@@ -13,8 +13,9 @@
   "author": "Sn8z",
   "license": "MIT",
   "devDependencies": {
-    "electron-prebuilt": "^1.4.13",
-    "electron-builder": "^19.27.7"
+    "electron": "^1.7.11",
+    "electron-builder": "^19.27.7",
+    "electron-prebuilt": "^1.4.13"
   },
   "build": {
     "appId": "com.sn8z.poddr",
@@ -32,6 +33,7 @@
   },
   "dependencies": {
     "electron-json-storage": "^3.1.0",
+    "electron-window-state": "^4.1.1",
     "itunes-api-search": "^1.1.0",
     "mousetrap": "^1.6.1",
     "node-podcast-parser": "^2.0.0"
