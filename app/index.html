@@ -36,11 +36,9 @@
   </head>
   <body layout="column" ng-controller="PoddrController" style="overflow-x:hidden;" ng-cloak>
     <div flex layout="row">
-      <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8">
-        <md-content>
+      <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8" style="background-color: #121212">
+        <md-content style="background-color:transparent">
           <md-list>
-            <md-divider></md-divider>
-
             <md-list-item class="menuItem" ng-click="changeView('podcasts')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
                   <div class="inset">
