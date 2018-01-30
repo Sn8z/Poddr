@@ -25,7 +25,7 @@
       <script type="text/javascript" src="scripts/app/favourites.js"></script>
       <script type="text/javascript" src="scripts/app/player.js"></script>
       <script type="text/javascript" src="scripts/app/settings.js"></script>
-
+      <script type="text/javascript" src="scripts/app/menu.js"></script>
 
       <script
         src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -35,10 +35,25 @@
       <script>if (window.module) module = window.module;</script>
   </head>
   <body layout="column" ng-controller="PoddrController" style="overflow-x:hidden;" ng-cloak>
+    <div id="title-bar" md-whiteframe="8">
+      <div id="title-bar-btns">
+        <md-icon id="min-btn" md-font-library="material-icons">remove</md-icon>
+        <md-icon id="max-btn" md-font-library="material-icons">fullscreen</md-icon>
+        <md-icon id="close-btn" md-font-library="material-icons">close</md-icon>
+      </div>
+    </div>
     <div flex layout="row">
-      <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8" style="background-color: #121212">
+      <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8" style="background-color: hsla(0, 0%, 0%, 0.6)">
         <md-content style="background-color:transparent">
           <md-list>
+            <md-item class="menuItem" ng-click="changeView('search')">
+                <md-item-content md-ink-ripple layout="row" layout-align="center center">
+                  <div class="inset">
+                    <h2>Poddr</h2>
+                  </div>
+                </md-item-content>
+            </md-item>
+            <md-divider></md-divider>
             <md-list-item class="menuItem" ng-click="changeView('podcasts')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
                   <div class="inset">
@@ -47,7 +62,6 @@
                 </md-item-content>
             </md-list-item>
             <md-divider></md-divider>
-
             <md-list-item class="menuItem" ng-click="changeView('search')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
                   <div class="inset">
@@ -82,7 +96,6 @@
         </div>
       </md-sidenav>
       <div layout="column" flex>
-
         <!-- Content -->
         <div ng-switch="mainContent" class="box2">
           <div ng-switch-when="podcasts" style="width:100%">

@@ -26,7 +26,7 @@ app.on('ready', function(){
     height: mainWindowState.height,
     x: mainWindowState.x,
     y: mainWindowState.y,
-    frame: true,
+    frame: false,
     show: false,
     backgroundColor: "#333333",
     icon: __dirname + '/app/images/icon.png'

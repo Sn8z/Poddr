@@ -2,6 +2,37 @@
   outline: none !important;
 }
 
+#title-bar  {	
+   -webkit-user-select: none;	
+   -webkit-app-region: drag;	
+   height: 30px;	
+   background-color: hsla(0, 0%, 0%, 0.8);	
+   padding: none;	
+   margin: 0px;	
+ }	
+ 	
+#title-bar-btns {	
+   -webkit-app-region: no-drag;	
+   position: absolute;	
+   top: 5px;	
+   right: 15px;	
+ }	
+ 	
+#title-icon {	
+   -webkit-app-region: drag;	
+   margin: 4px;	
+   height: calc(100% - 8px);	
+   width: auto;	
+ }	
+ 	
+#min-btn, #max-btn, #close-btn  {	
+  cursor: pointer;
+  width: 10px;
+  height: 10px;
+  line-height: 10px;
+  margin-top: 4px;  
+}
+
 .box1, .box2, .box3 {
   display: flex;
   box-sizing: border-box;
@@ -23,7 +54,7 @@
 }
 
 .box3 {
-  background-color: #333;
+  background-color: hsla(0, 0%, 0%, 0.8);
   height: 75px;
 }
 
