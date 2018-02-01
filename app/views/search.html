@@ -18,7 +18,7 @@
   <md-list flex layout="column">
     <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
     <md-list-item class="md-2-line" ng-repeat="podcast in results" layout-padding>
-      <img src="{{ podcast.artworkUrl60 }}" alt="album_cover"/>
+      <img src="{{ podcast.artworkUrl100 }}" alt="album_cover" height="90px"/>
       <div class="md-list-item-text" layout="column">
         <h3>
           {{ podcast.trackName }}
@@ -28,7 +28,7 @@
         </p>
         <div layout="row">
           <div flex="10">
-            <md-button class="md-primary" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl60, podcast.trackName, podcast.artistName)">
+            <md-button class="md-warn" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl100, podcast.trackName, podcast.artistName)">
               <md-icon md-font-library="material-icons">favorite</md-icon>
             </md-button>
           </div>

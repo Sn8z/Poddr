@@ -28,7 +28,7 @@ app.on('ready', function(){
     y: mainWindowState.y,
     frame: false,
     show: false,
-    backgroundColor: "#333333",
+    backgroundColor: "#0f0f0f",
     icon: __dirname + '/app/images/icon.png'
   });
 
@@ -36,9 +36,9 @@ app.on('ready', function(){
   mainWindowState.manage(mainWindow);
 
   //when main window is ready
-  mainWindow.on('ready-to-show', function() { 
-    mainWindow.show(); 
-    mainWindow.focus(); 
+  mainWindow.on('ready-to-show', function() {
+    mainWindow.show();
+    mainWindow.focus();
   });
 
   //Point to html file to be opened

@@ -11,7 +11,7 @@
   <div class="row">
   <md-list flex layout="column">
     <md-list-item class="md-2-line" ng-repeat="podcast in podcasts" layout-padding>
-      <img src="{{ podcast['im:image'][0]['label'] }}" alt="album_cover"/>
+      <img src="{{ podcast['im:image'][2]['label'] }}" alt="album_cover" height="90px"/>
       <div class="md-list-item-text" layout="column">
         <h3>
           {{ podcast.title.label }}
@@ -21,7 +21,7 @@
         </p>
         <div layout="row">
           <div flex="10">
-            <md-button class="md-warn" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][0]['label'], podcast.title.label, podcast['im:name']['label'])">
+            <md-button class="md-warn" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][2]['label'], podcast.title.label, podcast['im:name']['label'])">
               <md-icon md-font-library="material-icons">favorite</md-icon>
             </md-button>
           </div>

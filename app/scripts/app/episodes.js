@@ -1,6 +1,6 @@
 angular.module('poddr').controller(
   "EpisodesController", function($scope, $rootScope, $http){
-    const parsePodcast = require('node-podcast-parser');
+    var parsePodcast = require('node-podcast-parser');
 
     $scope.isLoading = false;
 
@@ -30,7 +30,6 @@ angular.module('poddr').controller(
             if(err){
               console.log(err);
             } else {
-              console.log(data.episodes);
               $scope.isLoading = false;
               $scope.episodes = data.episodes;
               $scope.totalItems = $scope.episodes.length;

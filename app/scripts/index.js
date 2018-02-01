@@ -1,5 +1,5 @@
 //register module
-var app = angular.module('poddr', ['ngMaterial']);
+var app = angular.module('poddr', ['ngMaterial', 'ngAnimate']);
 
 app.config(['$mdThemingProvider', configure]);
 

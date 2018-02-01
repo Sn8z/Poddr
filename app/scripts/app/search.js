@@ -2,6 +2,7 @@ angular.module('poddr').controller(
   "SearchController", function($scope, $http, $mdToast, RegionService){
     var storage = require('electron-json-storage');
     var itunesSearch = require('itunes-api-search');
+
     $scope.query = "";
     $scope.results = [];
 

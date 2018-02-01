@@ -1,9 +1,13 @@
-//register poddr module
 var app = angular.module('poddr')
   .controller("PoddrController", function($scope, $rootScope, $mdToast, $http){
 
+    //preloading modules to cache to speed up first time view of for example search page
+    var storage = require('electron-json-storage');
+    var itunesSearch = require('itunes-api-search');
+    var parsePodcast = require('node-podcast-parser');
+
     //setting up keybinds
-    var Mousetrap = require('mousetrap');
+    let Mousetrap = require('mousetrap');
     Mousetrap.bind('space', function(e){
       e.preventDefault();
       $rootScope.togglePlay();

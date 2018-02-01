@@ -4,7 +4,6 @@ angular.module('poddr').controller(
     $scope.amount = 50;
     $scope.podcasts = [];
 
-    //TODO: move to service
     $scope.countries = RegionService.regions;
     $scope.region = "us";
 
@@ -21,10 +20,10 @@ angular.module('poddr').controller(
       $scope.podcasts = [];
       $http.get("https://itunes.apple.com/" + $scope.region + "/rss/toppodcasts/limit=" + $scope.amount + "/json").then(function(response){
         $scope.podcasts = response.data.feed.entry;
+        console.log($scope.podcasts);
       });
     }
 
-    var storage = require('electron-json-storage');
     $scope.setFavourite = function(id, img, title, artist){
       storage.set(id,{
         'id': id,
@@ -45,5 +44,4 @@ angular.module('poddr').controller(
         }
       });
     }
-
 });

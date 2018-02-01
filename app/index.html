@@ -10,8 +10,6 @@
 
       <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
-
-
       <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
       <script type="text/javascript" src="../bower_components/angular-aria/angular-aria.js"></script>
       <script type="text/javascript" src="../bower_components/angular-animate/angular-animate.js"></script>
@@ -27,8 +25,7 @@
       <script type="text/javascript" src="scripts/app/settings.js"></script>
       <script type="text/javascript" src="scripts/app/menu.js"></script>
 
-      <script
-        src="https://code.jquery.com/jquery-3.1.1.min.js"
+      <script src="https://code.jquery.com/jquery-3.1.1.min.js"
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
         crossorigin="anonymous"></script>
 
@@ -42,10 +39,11 @@
         <md-icon id="close-btn" md-font-library="material-icons">close</md-icon>
       </div>
     </div>
+
     <div flex layout="row">
       <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8" style="background-color: hsla(0, 0%, 0%, 0.6)">
         <md-content style="background-color:transparent">
-          <md-list>
+          <md-list md-no-ink>
             <md-item class="menuItem" ng-click="changeView('search')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
                   <div class="inset">
@@ -97,15 +95,16 @@
       </md-sidenav>
       <div layout="column" flex>
         <!-- Content -->
+
         <div ng-switch="mainContent" class="box2">
           <div ng-switch-when="podcasts" style="width:100%">
             <podcasts/>
           </div>
-          <div ng-switch-when="search" style="width:100%">
-            <search/>
-          </div>
           <div ng-switch-when="favourites" style="width:100%">
             <favourites/>
+          </div>
+          <div ng-switch-when="search" style="width:100%">
+            <search/>
           </div>
           <div ng-switch-when="settings" style="width:100%">
             <settings/>
