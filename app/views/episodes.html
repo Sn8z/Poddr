@@ -1,10 +1,24 @@
 <div ng-controller="EpisodesController">
   <md-list style="background-color:black;">
-    <md-progress-circular md-mode="indeterminate" md-diameter="50" style="margin-left:200px;margin-top:25px;" ng-show="isLoading"></md-progress-circular>
-    <md-list-item class="md-2-line" ng-repeat="episode in episodes" style="background-color:black;">
-      <div class="md-list-item-text" layout="column" ng-click='playPodcast(episode)'>
-        <a href="#" style="color:white;text-decoration:none">{{ episode.title }}</a>
-        <i style="color:white;">{{ episode.duration | secondsToHHmmss }} - {{ episode.published |  date : format : timezone }}</i>
+    <md-list-item>
+      <h2 style="color:white;">
+        Episodes
+      </h2>
+      <md-progress-circular md-mode="indeterminate" md-diameter="25" ng-show="isLoading" style="margin-left:10px;"></md-progress-circular>
+    </md-list-item>
+    <md-list-item ng-repeat="episode in episodes" style="background-color:black;">
+      <div layout="column" ng-click='playPodcast(episode)' style="width:100%">
+        <div class="row">
+          <a href="#" style="color:white;text-decoration:none">{{ episode.title }}</a>
+        </div>
+        <div class="row" layout="row">
+          <div flex="50">
+            <span style="color:#bbb;font-size:12px;">{{ episode.published |  date : format : timezone }}</span>
+          </div>
+          <div flex="50">
+            <span style="color:#bbb;font-size:12px;float:right;">{{ episode.duration | secondsToHHmmss }}</span>
+          </div>
+        </div>
       </div>
       <md-divider></md-divider>
     </md-list-item>

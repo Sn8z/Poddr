@@ -3,7 +3,6 @@
   <head>
       <title>Poddr</title>
 
-      <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.css">
       <link rel="stylesheet" type="text/css" href="styles/style.css">
@@ -44,7 +43,7 @@
       <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8" md-component-id="left" style="background-color: hsla(0, 0%, 0%, 0.6)">
         <md-content style="background-color:transparent">
           <md-list md-no-ink>
-            <md-item class="menuItem">
+            <md-item>
                 <md-item-content layout="row" layout-align="center center">
                   <div class="inset">
                     <h2>Poddr</h2>
@@ -54,6 +53,7 @@
             <md-divider></md-divider>
             <md-list-item class="menuItem" ng-click="changeView('podcasts')">
                 <md-item-content layout="row" layout-align="center center">
+                  <md-icon md-font-library="material-icons">headset</md-icon>
                   <div class="inset">
                     Podcasts
                   </div>
@@ -62,6 +62,7 @@
             <md-divider></md-divider>
             <md-list-item class="menuItem" ng-click="changeView('search')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
+                  <md-icon md-font-library="material-icons">search</md-icon>
                   <div class="inset">
                     Search
                   </div>
@@ -71,6 +72,7 @@
 
             <md-list-item class="menuItem" ng-click="changeView('favourites')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
+                  <md-icon md-font-library="material-icons">favorite</md-icon>
                   <div class="inset">
                     Favourites
                   </div>
@@ -80,6 +82,7 @@
 
             <md-list-item class="menuItem" ng-click="changeView('settings')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
+                  <md-icon md-font-library="material-icons">settings</md-icon>
                   <div class="inset">
                     About
                   </div>
