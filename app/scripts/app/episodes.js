@@ -7,24 +7,10 @@ angular.module('poddr').controller(
     $scope.playPodcast = $rootScope.playPodcast;
     $scope.episodes = [];
 
-    //pagination
-    $scope.pageSize = 10;
-    $scope.currentPage = 0;
-
-    $scope.numberOfPages = function(){
-      return Math.ceil($scope.episodes.length / $scope.pageSize);
-    }
-
-    $scope.toggleEpisodes = function(){
-      $('#' + $scope.podcastid).toggle();
-      if($scope.episodes.length == 0){
-        fetchEpisodes();
-      }
-    }
-
-    function fetchEpisodes(){
+    $rootScope.fetchEpisodes = function (id){
+      $scope.episodes = [];
       $scope.isLoading = true;
-      $http.get("https://itunes.apple.com/lookup?id=" + $scope.podcastid ).then(function(response){
+      $http.get("https://itunes.apple.com/lookup?id=" + id).then(function(response){
         $http.get(response.data.results[0].feedUrl).then(function(response){
           parsePodcast(response.data, function(err, data){
             if(err){
@@ -32,7 +18,6 @@ angular.module('poddr').controller(
             } else {
               $scope.isLoading = false;
               $scope.episodes = data.episodes;
-              $scope.totalItems = $scope.episodes.length;
             }
           });
         });

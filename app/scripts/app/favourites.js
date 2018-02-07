@@ -1,5 +1,5 @@
 angular.module('poddr').controller(
-  "FavouritesController", function($scope, $mdToast){
+  "FavouritesController", function($scope, $rootScope, $mdToast){
     var storage = require('electron-json-storage');
 
     $scope.title = "Favourites";
@@ -17,6 +17,11 @@ angular.module('poddr').controller(
       }
     });
 
+    $scope.showEpisodes = function(id){
+      $rootScope.fetchEpisodes(id);
+      $rootScope.toggleSidebar();
+    }
+
     $scope.removeFavourite = function($event, id){
 
       var toast = $mdToast.simple()
@@ -32,7 +37,8 @@ angular.module('poddr').controller(
             if(err){
               console.log(err);
             } else {
-              $event.currentTarget.parentNode.parentNode.parentNode.parentNode.remove();
+              console.log($event);
+              $event.srcElement.parentNode.parentElement.parentElement.parentElement.remove();
             }
           });
         }

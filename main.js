@@ -1,6 +1,7 @@
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const globalShortcut = electron.globalShortcut;
 const windowStateKeeper = require('electron-window-state');
 
 //Global reference to window object;
@@ -14,6 +15,12 @@ app.on('window-all-closed', function(){
 //When app is rdy, create window
 app.on('ready', function(){
 
+  //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
+  globalShortcut.register('MediaPlayPause', () => {
+    mainWindow.webContents.send('toggle-play', 'playpause');
+    console.log('pressed globalShortcut');
+  });
+
   //default window size
   let mainWindowState = windowStateKeeper({
     defaultWidth: 1200,
@@ -22,6 +29,8 @@ app.on('ready', function(){
 
   mainWindow = new BrowserWindow({
     name: "Poddr",
+    minWidth: 700,
+    minHeight: 600,
     width: mainWindowState.width,
     height: mainWindowState.height,
     x: mainWindowState.x,

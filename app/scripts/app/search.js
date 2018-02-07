@@ -1,5 +1,5 @@
 angular.module('poddr').controller(
-  "SearchController", function($scope, $http, $mdToast, RegionService){
+  "SearchController", function($scope, $http, $mdToast, $rootScope, RegionService){
     var storage = require('electron-json-storage');
     var itunesSearch = require('itunes-api-search');
 
@@ -16,11 +16,18 @@ angular.module('poddr').controller(
     });
 
     $scope.isLoading = false;
+    $scope.isEmpty = false;
+
+    $scope.showEpisodes = function(id){
+      $rootScope.fetchEpisodes(id);
+      $rootScope.toggleSidebar();
+    }
 
     $scope.doSearch = function(){
       if($scope.query){
         $scope.results = [];
         $scope.isLoading = true;
+        $scope.isEmpty = false;
         itunesSearch.search($scope.query, {
           entity: 'podcast',
           limit: '50',
@@ -32,6 +39,8 @@ angular.module('poddr').controller(
           }
           $scope.isLoading = false;
           $scope.results = res.results;
+          console.log($scope.results);
+          if($scope.results.length == 0){$scope.isEmpty = true;}
           $scope.$apply();
         })
       }

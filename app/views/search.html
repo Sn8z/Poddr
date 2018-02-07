@@ -6,7 +6,6 @@
           <input ng-model="query" type="text" placeholder="Search..." autofocus/>
       </md-input-container>
     </form>
-
     <md-input-container flex="20">
       <label>Country</label>
       <md-select name="type" ng-model="region" ng-change="getPodcasts()" style="color:white">
@@ -14,30 +13,20 @@
       </md-select>
     </md-input-container>
   </div>
+  <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
 
-  <md-list flex layout="column">
-    <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
-    <md-list-item class="md-2-line" ng-repeat="podcast in results" layout-padding>
-      <img src="{{ podcast.artworkUrl100 }}" alt="album_cover" height="90px"/>
-      <div class="md-list-item-text" layout="column">
-        <h3>
-          {{ podcast.trackName }}
-        </h3>
-        <p>
-          {{ podcast.artistName }}
-        </p>
-        <div layout="row">
-          <div flex="10">
-            <md-button class="md-warn" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl100, podcast.trackName, podcast.artistName)">
-              <md-icon md-font-library="material-icons">favorite</md-icon>
-            </md-button>
-          </div>
-          <div flex>
-            <episodes podcastid="podcast.trackId"/>
-          </div>
-        </div>
-      </div>
+  <md-list>
+    <md-list-item ng-repeat="podcast in results" class="noright">
+      <img ng-src="{{ podcast.artworkUrl600 }}" style="padding:15px;width:100px;" />
+      <p style="color:white">{{ podcast.artistName }} - {{ podcast.trackName }}</p>
+      <md-button class="md-warn md-secondary" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl600, podcast.trackName, podcast.artistName)">
+        <md-icon md-font-library="material-icons">favorite</md-icon>
+      </md-button>
+      <md-button class="md-secondary" ng-click="showEpisodes(podcast.trackId)">
+        <md-icon md-font-library="material-icons">reorder</md-icon>
+      </md-button>
       <md-divider></md-divider>
     </md-list-item>
   </md-list>
+
 </div>

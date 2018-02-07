@@ -1,12 +1,10 @@
 var app = angular.module('poddr')
-  .controller("PoddrController", function($scope, $rootScope, $mdToast, $http){
-
+  .controller("PoddrController", function($scope, $rootScope, $mdToast, $mdSidenav, $http){
     //preloading modules to cache to speed up first time view of for example search page
     var storage = require('electron-json-storage');
     var itunesSearch = require('itunes-api-search');
     var parsePodcast = require('node-podcast-parser');
 
-    //setting up keybinds
     let Mousetrap = require('mousetrap');
     Mousetrap.bind('space', function(e){
       e.preventDefault();
@@ -38,6 +36,11 @@ var app = angular.module('poddr')
         });
       }
     });
+
+  $rootScope.toggleSidebar = function(){
+    $mdSidenav("right").toggle();
+  };
+  $scope.toggleSidebar = $rootScope.toggleSidebar;
 
   //Handle maincontent navigation
   $scope.mainContent = "podcasts";
@@ -83,7 +86,7 @@ app.directive('settings', function(){
 app.directive('episodes', function () {
     return {
       restrict: 'AE',
-      scope: {podcastid:'='},
+      replace: true,
       templateUrl: "views/episodes.html"
     };
 });

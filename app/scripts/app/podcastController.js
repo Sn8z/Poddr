@@ -1,5 +1,5 @@
 angular.module('poddr').controller(
-  "PodcastController", function($scope, $http, $mdToast, RegionService){
+  "PodcastController", function($scope, $http, $mdToast, $rootScope, RegionService){
     var storage = require('electron-json-storage');
     $scope.amount = 50;
     $scope.podcasts = [];
@@ -22,6 +22,11 @@ angular.module('poddr').controller(
         $scope.podcasts = response.data.feed.entry;
         console.log($scope.podcasts);
       });
+    }
+
+    $scope.showEpisodes = function(id){
+      $rootScope.fetchEpisodes(id);
+      $rootScope.toggleSidebar();
     }
 
     $scope.setFavourite = function(id, img, title, artist){

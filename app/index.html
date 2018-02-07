@@ -41,11 +41,11 @@
     </div>
 
     <div flex layout="row">
-      <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8" style="background-color: hsla(0, 0%, 0%, 0.6)">
+      <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8" md-component-id="left" style="background-color: hsla(0, 0%, 0%, 0.6)">
         <md-content style="background-color:transparent">
           <md-list md-no-ink>
-            <md-item class="menuItem" ng-click="changeView('search')">
-                <md-item-content md-ink-ripple layout="row" layout-align="center center">
+            <md-item class="menuItem">
+                <md-item-content layout="row" layout-align="center center">
                   <div class="inset">
                     <h2>Poddr</h2>
                   </div>
@@ -53,9 +53,9 @@
             </md-item>
             <md-divider></md-divider>
             <md-list-item class="menuItem" ng-click="changeView('podcasts')">
-                <md-item-content md-ink-ripple layout="row" layout-align="center center">
+                <md-item-content layout="row" layout-align="center center">
                   <div class="inset">
-                    Toplists
+                    Podcasts
                   </div>
                 </md-item-content>
             </md-list-item>
@@ -81,7 +81,7 @@
             <md-list-item class="menuItem" ng-click="changeView('settings')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
                   <div class="inset">
-                    Settings
+                    About
                   </div>
                 </md-item-content>
             </md-list-item>
@@ -111,6 +111,13 @@
           </div>
         </div>
 
+        <md-sidenav class="md-sidenav-right" md-whiteframe="8" md-component-id="right" style="min-width:450px;max-width:450px;width:450px;background-color:black;">
+          <md-content>
+            <episodes/>
+          </md-content>
+        </md-sidenav>
+
+        <!-- Player -->
         <div class="box3" layout="column" ng-controller="PlayerController" md-whiteframe="24">
           <div flex="10" id="progress">
             <div id="bar" ng-style="{'width':barWidth}" md-colors="{background: 'primary'}">
@@ -123,13 +130,21 @@
                 <md-icon md-font-library="material-icons">{{ checkPlayBtn() }}</md-icon>
               </md-button>
             </div>
-            <div flex="40" layout="column" layout-align="center start" style="color:white">
+            <div flex="30" layout="column" layout-align="center start" style="color:white">
               <b ng-bind="currentlyPlaying()"></b>
             </div>
             <div flex="20" layout="column" layout-align="center center" style="color:white">
               <p>{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</p>
             </div>
-            <div flex="30" layout="column" layout-align="center center">
+            <div flex="10" layout="column" layout-align="center center">
+              <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
+            </div>
+            <div flex="10" layout="column" layout-align="center center">
+              <md-button ng-click="toggleSidebar()">
+                <md-icon md-font-library="material-icons">view_headline</md-icon>
+              </md-button>
+            </div>
+            <div flex="20" layout="column" layout-align="center center">
               <md-slider-container>
                 <span><md-icon md-font-library="material-icons">volume_up</md-icon></span>
                 <md-slider id="volume" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>

@@ -1,12 +1,18 @@
 angular.module('poddr').controller(
   "PlayerController", function($scope, $rootScope, PlayerService, $mdToast){
     var storage = require('electron-json-storage');
+    var ipc = require('electron').ipcRenderer;
+    var player = document.createElement('audio');
 
-    player = document.createElement('audio');
-
-    player.volume = 0.1;
+    player.volume = 0.5;
     $scope.barWidth = "0%";
     $scope.volume = player.volume;
+    $scope.isLoading = false;
+
+    ipc.on('toggle-play', function(event, message) {
+      togglePlay();
+      console.log(message);
+    });
 
     storage.get('volume', function(error, data) {
       if (error) throw error;
@@ -76,10 +82,13 @@ angular.module('poddr').controller(
 
     player.addEventListener("canplaythrough", function(e) {
       PlayerService.podcastDuration = player.duration;
+      $scope.isLoading = false;
     })
 
     function playPodcast(episode){
-      url = episode.enclosure.url
+      $scope.isLoading = true;
+      $rootScope.toggleSidebar();
+      url = episode.enclosure.url;
       player.src = url;
       player.play();
       PlayerService.currentlyPlaying = episode.title;

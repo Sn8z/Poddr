@@ -1,32 +1,12 @@
 <div ng-controller="EpisodesController">
-  <md-button ng-click="toggleEpisodes()">
-    <md-icon md-font-library="material-icons">view_headline</md-icon>
-  </md-button>
-  <br />
-  <br />
-  <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;margin-bottom:20px;"></md-progress-circular>
-  <div id="{{ podcastid }}" class="md-whiteframe-4dp" hidden="hidden" style="background-color:#222;padding:10px;margin-bottom:20px;" ng-show="!isLoading">
-    <div class="row" ng-repeat="episode in episodes | pagination: currentPage * pageSize | limitTo: pageSize" layout="row" style="border-bottom:1px solid;padding:5px;">
-      <div flex="50">
-        <a ng-click='playPodcast(episode)' href="#" style="color:white;text-decoration:none">{{ episode.title }}</a>
+  <md-list style="background-color:black;">
+    <md-progress-circular md-mode="indeterminate" md-diameter="50" style="margin-left:200px;margin-top:25px;" ng-show="isLoading"></md-progress-circular>
+    <md-list-item class="md-2-line" ng-repeat="episode in episodes" style="background-color:black;">
+      <div class="md-list-item-text" layout="column" ng-click='playPodcast(episode)'>
+        <a href="#" style="color:white;text-decoration:none">{{ episode.title }}</a>
+        <i style="color:white;">{{ episode.duration | secondsToHHmmss }} - {{ episode.published |  date : format : timezone }}</i>
       </div>
-      <div flex="25" style="color:white;" layout="column" layout-align="center end">
-          {{ episode.duration | secondsToHHmmss }}
-       </div>
-      <div flex="25" style="color:white;" layout="column" layout-align="center end">
-            {{ episode.published |  date : format : timezone }}
-      </div>
-    </div>
-    <div class="row" layout="row">
-      <div flex="10" layout="column" layout-align="center center">
-        <md-button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1"><md-icon md-font-library="material-icons">keyboard_arrow_left</md-icon></md-button>
-      </div>
-      <div flex="80" style="color:white;" layout="column" layout-align="center center">
-        Page {{currentPage + 1}} of {{ numberOfPages() }}
-      </div>
-      <div flex="10" layout="column" layout-align="center center">
-        <md-button ng-disabled="currentPage >= episodes.length/pageSize - 1" ng-click="currentPage = currentPage+1"><md-icon md-font-library="material-icons">keyboard_arrow_right</md-icon></md-button>
-      </div>
-    </div>
-  </div>
+      <md-divider></md-divider>
+    </md-list-item>
+  </md-list>
 </div>

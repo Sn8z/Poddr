@@ -44,7 +44,7 @@
 }
 
 .box2 {
-  background-color: #111;
+  background: linear-gradient(to right,rgba(20,20,20,1)0%, rgba(10,10,10,1)100%);
   overflow-y: scroll;
   overflow-x: none;
   width: 100%;
@@ -56,6 +56,7 @@
 .box3 {
   background-color: #0B0B0B;
   height: 75px;
+  max-height: 75px;
 }
 
 .menuItem {
