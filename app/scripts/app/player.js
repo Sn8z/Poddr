@@ -12,7 +12,6 @@ angular.module('poddr').controller(
     //listen for messages from main process
     ipc.on('toggle-play', function(event, message) {
       togglePlay();
-      console.log(message);
     });
 
     storage.get('volume', function(error, data) {
@@ -80,6 +79,11 @@ angular.module('poddr').controller(
     $scope.getAlbumCover = function(){
       return PlayerService.albumCover;
     }
+
+    player.addEventListener('seeking', function () {
+      $scope.isLoading = true;
+      $scope.$apply();
+    });
 
     player.addEventListener("canplaythrough", function(e) {
       PlayerService.podcastDuration = player.duration;
