@@ -9,6 +9,7 @@ angular.module('poddr').controller(
     $scope.volume = player.volume;
     $scope.isLoading = false;
 
+    //listen for messages from main process
     ipc.on('toggle-play', function(event, message) {
       togglePlay();
       console.log(message);
@@ -98,10 +99,12 @@ angular.module('poddr').controller(
     $rootScope.playPodcast = playPodcast;
 
     function togglePlay() {
-      if (player.paused) {
-        player.play();
-      } else {
-        player.pause();
+      if (player.src){
+        if (player.paused) {
+          player.play();
+        } else {
+          player.pause();
+        }
       }
     }
     $rootScope.togglePlay = togglePlay;
