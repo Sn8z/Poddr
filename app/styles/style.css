@@ -2,6 +2,10 @@
   outline: none !important;
 }
 
+body  {
+  font-family: 'Ubuntu', sans-serif;
+}
+
 #title-bar  {	
    -webkit-user-select: none;	
    -webkit-app-region: drag;	
