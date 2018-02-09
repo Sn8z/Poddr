@@ -14,8 +14,7 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^1.8.2",
-    "electron-builder": "^19.56.2",
-    "electron-prebuilt": "^1.4.13"
+    "electron-builder": "^19.56.2"
   },
   "build": {
     "appId": "com.sn8z.poddr",
@@ -28,7 +27,8 @@
       "icon": "build/icon.icns"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "category": "Audio"
     }
   },
   "dependencies": {
