@@ -22,7 +22,7 @@
       </div>
       <md-divider></md-divider>
     </md-list-item>
-    <md-list-item>
+    <md-list-item ng-if="canLoadMore">
       <md-button ng-click="loadMore()">Load more...</md-button>
     </md-list-item>
   </md-list>
