@@ -4,16 +4,14 @@
   </div>
   <div class="row" layout="row" layout-wrap>
     <div flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="favourite in favourites" style="padding:15px;">
-      <div md-whiteframe="4" style="background-color:#010101;">
-        <md-tooltip>{{ favourite.title }}</md-tooltip>
+      <div md-whiteframe="4" style="background-color:#010101;border-bottom:1px solid #f90;">
         <img src="{{ favourite.img }}" alt="album_cover" width="100%" />
-        <div class="row" layout="row">
-          <md-button flex class="md-warn" ng-click="removeFavourite($event, favourite.id)">
-            <md-icon md-font-library="material-icons">close</md-icon>
-          </md-button>
-          <md-button flex ng-click="showEpisodes(favourite.id)">
-            <md-icon md-font-library="material-icons">reorder</md-icon>
-          </md-button>
+        <div class="row" style="color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" layout-padding>
+          {{ favourite.title }}
+        </div>
+        <div class="row" layout="row" layout-padding>
+          <md-icon class="md-warn icon-btn" md-font-library="material-icons" ng-click="removeFavourite($event, favourite.id)">close</md-icon>
+          <md-icon class="icon-btn" md-font-library="material-icons" ng-click="showEpisodes(favourite.id)">reorder</md-icon>
         </div>
       </div>
     </div>

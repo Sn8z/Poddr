@@ -43,6 +43,6 @@ app.service('PlayerService', PlayerService);
 
 //regions service
 function RegionService(){
-  this.regions = ["us", "gb", "se", "fr", "es"];
+  this.regions = ["us", "gb", "se", "fr", "es", "de"];
 }
 app.service('RegionService', RegionService);

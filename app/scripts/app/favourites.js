@@ -38,7 +38,7 @@ angular.module('poddr').controller(
               console.log(err);
             } else {
               console.log($event);
-              $event.srcElement.parentNode.parentElement.parentElement.parentElement.remove();
+              $event.srcElement.parentNode.parentElement.parentElement.remove();
             }
           });
         }

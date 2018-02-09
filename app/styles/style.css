@@ -2,35 +2,35 @@
   outline: none !important;
 }
 
-#title-bar  {
-   -webkit-user-select: none;
-   -webkit-app-region: drag;
-   height: 30px;
-   background-color: #0B0B0B;
-   padding: none;
-   margin: 0px;
- }
-
-#title-bar-btns {
-   -webkit-app-region: no-drag;
-   position: absolute;
-   top: 5px;
-   right: 15px;
- }
-
-#title-icon {
-   -webkit-app-region: drag;
-   margin: 4px;
-   height: calc(100% - 8px);
-   width: auto;
- }
-
-#min-btn, #max-btn, #close-btn  {
+#title-bar  {	
+   -webkit-user-select: none;	
+   -webkit-app-region: drag;	
+   height: 30px;	
+   background-color: hsla(0, 0%, 0%, 0.8);	
+   padding: none;	
+   margin: 0px;	
+ }	
+ 	
+#title-bar-btns {	
+   -webkit-app-region: no-drag;	
+   position: absolute;	
+   top: 5px;	
+   right: 15px;	
+ }	
+ 	
+#title-icon {	
+   -webkit-app-region: drag;	
+   margin: 4px;	
+   height: calc(100% - 8px);	
+   width: auto;	
+ }	
+ 	
+#min-btn, #max-btn, #close-btn  {	
   cursor: pointer;
   width: 10px;
   height: 10px;
   line-height: 10px;
-  margin-top: 4px;
+  margin-top: 4px;  
 }
 
 .box1, .box2, .box3 {
@@ -44,7 +44,7 @@
 }
 
 .box2 {
-  background: linear-gradient(to right,rgba(20,20,20,1)0%, rgba(10,10,10,1)100%);
+  background-color: #111;
   overflow-y: scroll;
   overflow-x: none;
   width: 100%;
@@ -52,11 +52,10 @@
   max-height: 100%;
   flex:1 1 100%;
 }
-
+    
 .box3 {
-  background-color: #0B0B0B;
+  background-color: hsla(0, 0%, 0%, 0.8);
   height: 75px;
-  max-height: 75px;
 }
 
 .menuItem {
@@ -65,7 +64,7 @@
 }
 
 #progress {
-  background-color: #222;
+  background-color: #333;
   height: 10px;
   cursor: pointer;
   margin-top: 5px;
@@ -132,4 +131,17 @@
 
 .md-toast-error .md-toast-content{
     background-color: red !important;
+}
+
+.toggle-btn {
+  cursor: pointer;
+}
+
+.icon-btn {
+  transition: all .2s ease-in-out;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  transform: scale(1.2);
 }

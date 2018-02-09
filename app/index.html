@@ -3,6 +3,7 @@
   <head>
       <title>Poddr</title>
 
+      <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.css">
       <link rel="stylesheet" type="text/css" href="styles/style.css">
@@ -40,7 +41,7 @@
     </div>
 
     <div flex layout="row">
-      <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8" md-component-id="left" style="background-color: hsla(0, 0%, 0%, 0.6)">
+      <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8" md-component-id="left" style="background-color: hsla(0, 0%, 0%, 0.2)">
         <md-content style="background-color:transparent">
           <md-list md-no-ink>
             <md-item>
@@ -53,7 +54,7 @@
             <md-divider></md-divider>
             <md-list-item class="menuItem" ng-click="changeView('podcasts')">
                 <md-item-content layout="row" layout-align="center center">
-                  <md-icon md-font-library="material-icons">headset</md-icon>
+                  <md-icon style="color:rgba(255, 153, 0, 0.7);" md-font-library="material-icons">headset</md-icon>
                   <div class="inset">
                     Podcasts
                   </div>
@@ -62,7 +63,7 @@
             <md-divider></md-divider>
             <md-list-item class="menuItem" ng-click="changeView('search')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
-                  <md-icon md-font-library="material-icons">search</md-icon>
+                  <md-icon style="color:rgba(0, 255, 0, 0.7);" md-font-library="material-icons">search</md-icon>
                   <div class="inset">
                     Search
                   </div>
@@ -72,7 +73,7 @@
 
             <md-list-item class="menuItem" ng-click="changeView('favourites')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
-                  <md-icon md-font-library="material-icons">favorite</md-icon>
+                  <md-icon style="color:rgba(255, 0, 0, 0.7);" md-font-library="material-icons">favorite</md-icon>
                   <div class="inset">
                     Favourites
                   </div>
@@ -82,7 +83,7 @@
 
             <md-list-item class="menuItem" ng-click="changeView('settings')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
-                  <md-icon md-font-library="material-icons">settings</md-icon>
+                  <md-icon style="color:rgba(255, 0, 255, 0.7);" md-font-library="material-icons">settings</md-icon>
                   <div class="inset">
                     About
                   </div>
@@ -143,9 +144,7 @@
               <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
             </div>
             <div flex="10" layout="column" layout-align="center center">
-              <md-button ng-click="toggleSidebar()">
-                <md-icon md-font-library="material-icons">view_headline</md-icon>
-              </md-button>
+              <md-icon class="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
             </div>
             <div flex="20" layout="column" layout-align="center center">
               <md-slider-container>

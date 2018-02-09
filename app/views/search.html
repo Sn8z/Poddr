@@ -16,6 +16,9 @@
   <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
 
   <md-list>
+    <md-list-item ng-show="isEmpty">
+      <h2 style="color:white">No results</h2>
+    </md-list-item>
     <md-list-item ng-repeat="podcast in results" class="noright">
       <img ng-src="{{ podcast.artworkUrl600 }}" style="padding:15px;width:100px;" />
       <p style="color:white">{{ podcast.artistName }} - {{ podcast.trackName }}</p>
