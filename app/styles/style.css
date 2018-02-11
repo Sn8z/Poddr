@@ -67,6 +67,13 @@ body  {
   -webkit-user-select:none;
 }
 
+.timer-text {
+  color:#CCC;
+  font-size: 14px;
+  float:right;
+  font-family: 'Open Sans', sans-serif;
+}
+
 #progress {
   background-color: #333;
   width: 100%;

@@ -4,6 +4,7 @@
       <title>Poddr</title>
 
       <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.css">
       <link rel="stylesheet" type="text/css" href="styles/style.css">
@@ -125,10 +126,8 @@
         <!-- Player -->
         <div class="box3" layout="column" ng-controller="PlayerController" md-whiteframe="24">
           <div flex layout="row">
-            <div flex="10" layout="column" layout-align="center center">
-              <md-button class="md-fab md-mini" ng-click="togglePlay()">
-                <md-icon md-font-library="material-icons">{{ checkPlayBtn() }}</md-icon>
-              </md-button>
+            <div flex="10" layout="row" layout-align="center center">
+              <md-icon md-font-library="material-icons" style="color:#F90;font-size:48px;width:48px;height:48px;" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
             </div>
             <div flex="60" layout="column" layout-align="center start" style="color:white">
               <div id="progress">
@@ -141,7 +140,7 @@
                   <b ng-bind="currentlyPlaying()"></b>
                 </div>
                 <div flex>
-                  <span style="color:#ccc;font-size:14px;float:right;">{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</span>
+                  <span class="timer-text">{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</span>
                 </div>
               </div>
             </div>

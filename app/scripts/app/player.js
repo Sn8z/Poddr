@@ -54,9 +54,9 @@ angular.module('poddr').controller(
 
     $scope.checkPlayBtn = function(){
       if(player.paused){
-        return "play_arrow";
+        return "play_circle_outline";
       } else {
-        return "pause";
+        return "pause_circle_outline";
       }
     }
 
