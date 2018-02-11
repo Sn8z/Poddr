@@ -3,14 +3,14 @@
 }
 
 body  {
-  font-family: 'Ubuntu', sans-serif;
+  font-family: 'Rubik', sans-serif;
 }
 
 #title-bar  {	
    -webkit-user-select: none;	
    -webkit-app-region: drag;	
    height: 30px;	
-   background-color: hsla(0, 0%, 0%, 0.8);	
+   background-color: #0b0b0b;	
    padding: none;	
    margin: 0px;	
  }	
@@ -48,7 +48,7 @@ body  {
 }
 
 .box2 {
-  background-color: #111;
+  background: linear-gradient(to right, #151515, #111);
   overflow-y: scroll;
   overflow-x: none;
   width: 100%;
@@ -58,7 +58,7 @@ body  {
 }
     
 .box3 {
-  background-color: hsla(0, 0%, 0%, 0.8);
+  background-color: #050505;
   height: 75px;
 }
 

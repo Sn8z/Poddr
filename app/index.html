@@ -3,7 +3,7 @@
   <head>
       <title>Poddr</title>
 
-      <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.css">
       <link rel="stylesheet" type="text/css" href="styles/style.css">
@@ -33,9 +33,10 @@
   </head>
   <body layout="column" ng-controller="PoddrController" style="overflow-x:hidden;" ng-cloak>
     <div id="title-bar" md-whiteframe="8">
+      <img id="title-icon" src="images/icon.png" />
       <div id="title-bar-btns">
         <md-icon id="min-btn" md-font-library="material-icons">remove</md-icon>
-        <md-icon id="max-btn" md-font-library="material-icons">fullscreen</md-icon>
+        <md-icon id="max-btn" md-font-library="material-icons">crop_square</md-icon>
         <md-icon id="close-btn" md-font-library="material-icons">close</md-icon>
       </div>
     </div>
@@ -115,8 +116,8 @@
           </div>
         </div>
 
-        <md-sidenav class="md-sidenav-right" md-whiteframe="8" md-component-id="right" style="min-width:450px;max-width:450px;width:450px;background-color:black;">
-          <md-content>
+        <md-sidenav class="md-sidenav-right" md-whiteframe="8" md-component-id="right" style="min-width:450px;max-width:450px;width:450px;background-color:#222;">
+          <md-content style="background-color:transparent;">
             <episodes/>
           </md-content>
         </md-sidenav>
