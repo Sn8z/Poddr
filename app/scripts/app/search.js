@@ -18,8 +18,8 @@ angular.module('poddr').controller(
     $scope.isLoading = false;
     $scope.isEmpty = false;
 
-    $scope.showEpisodes = function(id){
-      $rootScope.fetchEpisodes(id);
+    $scope.showEpisodes = function(id, img){
+      $rootScope.fetchEpisodes(id, img);
       $rootScope.toggleSidebar();
     }
 

@@ -2,6 +2,7 @@ angular.module('poddr').controller(
   "EpisodesController", function($scope, $rootScope, $http){
     var parsePodcast = require('node-podcast-parser');
 
+    $scope.albumCover = "";
     $scope.isLoading = false;
     $scope.nrOfItems = 20;
     $scope.playPodcast = $rootScope.playPodcast;
@@ -15,7 +16,8 @@ angular.module('poddr').controller(
       }
     }
 
-    $rootScope.fetchEpisodes = function (id){
+    $rootScope.fetchEpisodes = function (id, podcastCover){
+      $scope.albumCover = podcastCover;
       $scope.episodes = [];
       $scope.isLoading = true;
       $scope.nrOfItems = 20;

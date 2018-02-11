@@ -1,11 +1,14 @@
 angular.module('poddr').controller(
-  "PodcastController", function($scope, $http, $mdToast, $rootScope, RegionService){
+  "PodcastController", function($scope, $http, $mdToast, $rootScope, RegionService, GenreService){
     var storage = require('electron-json-storage');
     $scope.amount = 50;
     $scope.podcasts = [];
 
     $scope.countries = RegionService.regions;
     $scope.region = "us";
+
+    $scope.genres = GenreService.genres;
+    $scope.genre = 26;
 
     storage.get('region', function(error, data) {
       if (error) throw error;
@@ -18,14 +21,13 @@ angular.module('poddr').controller(
 
     $scope.getPodcasts = function(){
       $scope.podcasts = [];
-      $http.get("https://itunes.apple.com/" + $scope.region + "/rss/toppodcasts/limit=" + $scope.amount + "/json").then(function(response){
+      $http.get("https://itunes.apple.com/" + $scope.region + "/rss/topaudiopodcasts/limit=" + $scope.amount + "/genre=" + $scope.genre + "/json").then(function(response){
         $scope.podcasts = response.data.feed.entry;
-        console.log($scope.podcasts);
       });
     }
 
-    $scope.showEpisodes = function(id){
-      $rootScope.fetchEpisodes(id);
+    $scope.showEpisodes = function(id, img){
+      $rootScope.fetchEpisodes(id, img);
       $rootScope.toggleSidebar();
     }
 

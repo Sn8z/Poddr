@@ -2,6 +2,12 @@
   <div class="row" layout="row">
     <h1 flex style="color:white">Top {{ amount }} - {{ region | tagToCapitalize }}</h1>
     <md-input-container flex="20">
+      <label>Genre</label>
+      <md-select name="type" ng-model="genre" ng-change="getPodcasts()" style="color:white">
+        <md-option ng-repeat="x in genres" ng-value="x.id">{{ x.genre }}</md-option>
+      </md-select>
+    </md-input-container>
+    <md-input-container flex="20">
       <label>Country</label>
       <md-select name="type" ng-model="region" ng-change="getPodcasts()" style="color:white">
         <md-option ng-repeat="country in countries" ng-value="country.iso">{{ country.name }}</md-option>
@@ -17,7 +23,7 @@
         </div>
         <div class="row" layout="row" layout-padding>
           <md-icon class="md-warn icon-btn" md-font-library="material-icons" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][2]['label'], podcast.title.label, podcast['im:name']['label'])">favorite</md-icon>
-          <md-icon class="icon-btn" md-font-library="material-icons" ng-click="showEpisodes(podcast['id']['attributes']['im:id'])">reorder</md-icon>
+          <md-icon class="icon-btn" md-font-library="material-icons" ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:image'][2]['label'])">reorder</md-icon>
         </div>
       </div>
     </div>

@@ -17,8 +17,8 @@ angular.module('poddr').controller(
       }
     });
 
-    $scope.showEpisodes = function(id){
-      $rootScope.fetchEpisodes(id);
+    $scope.showEpisodes = function(id, img){
+      $rootScope.fetchEpisodes(id, img);
       $rootScope.toggleSidebar();
     }
 
