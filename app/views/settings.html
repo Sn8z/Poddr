@@ -8,7 +8,7 @@
       <md-input-container style="width:90%">
         <label>Default region</label>
         <md-select name="type" ng-model="region" ng-change="setRegion()" style="color:white">
-          <md-option ng-repeat="country in countries" ng-value="country">{{ country | tagToCapitalize }}</md-option>
+          <md-option ng-repeat="country in countries" ng-value="country.iso">{{ country.name }}</md-option>
         </md-select>
       </md-input-container>
     </div>

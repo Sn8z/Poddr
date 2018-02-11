@@ -43,6 +43,13 @@ app.service('PlayerService', PlayerService);
 
 //regions service
 function RegionService(){
-  this.regions = ["us", "gb", "se", "fr", "es", "de"];
+  this.regions = [
+    { "iso": "de", "name": "Germany" },
+    { "iso": "es", "name": "Spain" },
+    { "iso": "fr", "name": "France" },
+    { "iso": "gb", "name": "Great Britain" },
+    { "iso": "se", "name": "Sweden"},
+    { "iso": "us", "name": "Usa" }
+  ];
 }
 app.service('RegionService', RegionService);
