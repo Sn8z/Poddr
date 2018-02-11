@@ -34,7 +34,7 @@ app.filter('pagination', function(){
 
 //Service to handle global player events & variables
 function PlayerService() {
-    this.currentlyPlaying = "";
+    this.currentlyPlaying = "No title";
     this.podcastDuration = 0;
     this.atTime = 0;
     this.albumCover;

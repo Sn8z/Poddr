@@ -124,28 +124,35 @@
 
         <!-- Player -->
         <div class="box3" layout="column" ng-controller="PlayerController" md-whiteframe="24">
-          <div flex="10" id="progress">
-            <div id="bar" ng-style="{'width':barWidth}" md-colors="{background: 'primary'}">
-              <!-- Progressbar -->
-            </div>
-          </div>
           <div flex layout="row">
             <div flex="10" layout="column" layout-align="center center">
               <md-button class="md-fab md-mini" ng-click="togglePlay()">
                 <md-icon md-font-library="material-icons">{{ checkPlayBtn() }}</md-icon>
               </md-button>
             </div>
-            <div flex="30" layout="column" layout-align="center start" style="color:white">
-              <b ng-bind="currentlyPlaying()"></b>
+            <div flex="60" layout="column" layout-align="center start" style="color:white">
+              <div id="progress">
+                <div id="bar" ng-style="{'width':barWidth}" md-colors="{background: 'primary'}">
+                  <!-- Progressbar -->
+                </div>
+              </div>
+              <div class="row" layout="rows" style="width:100%;">
+                <div flex>
+                  <b ng-bind="currentlyPlaying()"></b>
+                </div>
+                <div flex>
+                  <span style="color:#ccc;font-size:14px;float:right;">{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</span>
+                </div>
+              </div>
             </div>
-            <div flex="20" layout="column" layout-align="center center" style="color:#ccc;font-size:14px;">
-              <p>{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</p>
-            </div>
-            <div flex="10" layout="column" layout-align="center center">
+            <div flex="5" layout="column" layout-align="center center">
               <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
             </div>
-            <div flex="10" layout="column" layout-align="center center">
+            <div flex="5" layout="column" layout-align="center center">
               <md-icon class="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
+            </div>
+            <div flex="5" layout="column" layout-align="center center">
+              <md-icon class="toggle-btn md-warn" ng-click="toggleSidebar()" md-font-library="material-icons">favorite</md-icon>
             </div>
             <div flex="20" layout="column" layout-align="center center">
               <md-slider-container>
