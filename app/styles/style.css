@@ -1,5 +1,6 @@
 * {
   outline: none !important;
+  user-select: none;
 }
 
 body  {

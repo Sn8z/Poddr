@@ -56,9 +56,9 @@
             <md-divider></md-divider>
             <md-list-item class="menuItem" ng-click="changeView('podcasts')">
                 <md-item-content layout="row" layout-align="center center">
-                  <md-icon style="color:rgba(255, 153, 0, 0.7);" md-font-library="material-icons">headset</md-icon>
+                  <md-icon style="color:rgba(255, 153, 0, 0.7);" md-font-library="material-icons">whatshot</md-icon>
                   <div class="inset">
-                    Podcasts
+                    Toplists
                   </div>
                 </md-item-content>
             </md-list-item>
@@ -127,7 +127,7 @@
         <div class="box3" layout="column" ng-controller="PlayerController" md-whiteframe="24">
           <div flex layout="row">
             <div flex="10" layout="row" layout-align="center center">
-              <md-icon md-font-library="material-icons" style="color:#F90;font-size:48px;width:48px;height:48px;" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
+              <md-icon md-font-library="material-icons" style="cursor:pointer;color:#F90;font-size:48px;width:48px;height:48px;" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
             </div>
             <div flex="60" layout="column" layout-align="center start" style="color:white">
               <div id="progress">
@@ -144,14 +144,11 @@
                 </div>
               </div>
             </div>
-            <div flex="5" layout="column" layout-align="center center">
+            <div flex="10" layout="column" layout-align="center center">
               <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
             </div>
             <div flex="5" layout="column" layout-align="center center">
               <md-icon class="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
-            </div>
-            <div flex="5" layout="column" layout-align="center center">
-              <md-icon class="toggle-btn md-warn" ng-click="toggleSidebar()" md-font-library="material-icons">favorite</md-icon>
             </div>
             <div flex="20" layout="column" layout-align="center center">
               <md-slider-container>

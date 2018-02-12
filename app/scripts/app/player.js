@@ -92,7 +92,6 @@ angular.module('poddr').controller(
 
     function playPodcast(episode, podcastCover){
       $scope.isLoading = true;
-      $rootScope.toggleSidebar();
       url = episode.enclosure.url;
       player.src = url;
       player.play();
@@ -103,6 +102,7 @@ angular.module('poddr').controller(
       } else {
         PlayerService.albumCover = episode.image;
       }
+      $rootScope.toggleSidebar();
     }
     $rootScope.playPodcast = playPodcast;
 

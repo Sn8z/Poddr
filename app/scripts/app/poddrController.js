@@ -48,7 +48,6 @@ var app = angular.module('poddr')
     $scope.mainContent = view;
   }
   $scope.changeView = changeView;
-
 });
 
 app.directive('podcasts', function(){

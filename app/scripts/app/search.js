@@ -7,11 +7,18 @@ angular.module('poddr').controller(
     $scope.results = [];
 
     $scope.countries = RegionService.regions;
-    $scope.region = "us";
 
-    storage.get('region', function(error, data) {
-      if (error) throw error;
-      $scope.region = data.value;
+    storage.get('region', function (error, data) {
+      if (error) {
+        $scope.region = "us";
+        console.log(error);
+      } else {
+        if (data.value) {
+          $scope.region = data.value;
+        } else {
+          $scope.region = "us";
+        }
+      }
       $scope.$apply();
     });
 
@@ -39,16 +46,15 @@ angular.module('poddr').controller(
           }
           $scope.isLoading = false;
           $scope.results = res.results;
-          console.log($scope.results);
           if($scope.results.length == 0){$scope.isEmpty = true;}
           $scope.$apply();
         })
       }
     }
 
-    var storage = require('electron-json-storage');
+    $scope.setFavourite = $rootScope.setFavourite;
     $scope.setFavourite = function(id, img, title, artist){
-      var id = id.toString();
+      id = id.toString();
       storage.set(id,{
         'id': id,
         'title': title,
@@ -67,6 +73,6 @@ angular.module('poddr').controller(
           );
         }
       });
-    }
+    };
 
   });

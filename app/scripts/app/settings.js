@@ -5,6 +5,10 @@ angular.module('poddr').controller(
     $scope.countries = RegionService.regions;
     $scope.region = $scope.countries[0];
 
+    $scope.openURL = function(url){
+      require('electron').shell.openExternal(url);
+    };
+
     storage.get('region', function(error, data) {
       if (error) throw error;
       if(data.value.length > 0){

@@ -7,7 +7,7 @@ function configure($mdThemingProvider){
   $mdThemingProvider.theme('dark-orange')
   .primaryPalette('orange')
   .accentPalette('orange')
-  .dark()
+  .dark();
   $mdThemingProvider.setDefaultTheme('dark-orange');
 }
 
@@ -37,7 +37,8 @@ function PlayerService() {
     this.currentlyPlaying = "No title";
     this.podcastDuration = 0;
     this.atTime = 0;
-    this.albumCover;
+    this.albumCover = "";
+    this.podcastID = 0;
 }
 app.service('PlayerService', PlayerService);
 
@@ -48,6 +49,7 @@ function RegionService(){
     { "iso": "es", "name": "Spain" },
     { "iso": "fr", "name": "France" },
     { "iso": "gb", "name": "Great Britain" },
+    { "iso": "kr", "name": "Korea" },
     { "iso": "se", "name": "Sweden"},
     { "iso": "us", "name": "Usa" }
   ];

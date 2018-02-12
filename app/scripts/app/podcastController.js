@@ -5,15 +5,20 @@ angular.module('poddr').controller(
     $scope.podcasts = [];
 
     $scope.countries = RegionService.regions;
-    $scope.region = "us";
 
     $scope.genres = GenreService.genres;
     $scope.genre = 26;
 
     storage.get('region', function(error, data) {
-      if (error) throw error;
-      if(data.value.length > 0){
-        $scope.region = data.value;
+      if (error){
+        $scope.region = "us";
+        console.log(error);
+      }else{
+        if (data.value) {
+          $scope.region = data.value;
+        } else {
+          $scope.region = "us";          
+        }
       }
       $scope.$apply();
       $scope.getPodcasts();
@@ -27,6 +32,7 @@ angular.module('poddr').controller(
     }
 
     $scope.showEpisodes = function(id, img){
+      console.log(id + " " + img);
       $rootScope.fetchEpisodes(id, img);
       $rootScope.toggleSidebar();
     }
@@ -50,5 +56,5 @@ angular.module('poddr').controller(
           );
         }
       });
-    }
+    };
 });
