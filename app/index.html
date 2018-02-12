@@ -131,15 +131,15 @@
             </div>
             <div flex="60" layout="column" layout-align="center start" style="color:white">
               <div id="progress">
-                <div id="bar" ng-style="{'width':barWidth}" md-colors="{background: 'primary'}">
+                <div id="bar" ng-style="{'width':barWidth}" style="background-color: #F90">
                   <!-- Progressbar -->
                 </div>
               </div>
               <div class="row" layout="rows" style="width:100%;">
-                <div flex>
+                <div flex="75" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                   <b ng-bind="currentlyPlaying()"></b>
                 </div>
-                <div flex>
+                <div flex="25">
                   <span class="timer-text">{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</span>
                 </div>
               </div>
