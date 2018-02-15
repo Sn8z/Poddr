@@ -8,6 +8,7 @@
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.css">
       <link rel="stylesheet" type="text/css" href="styles/style.css">
+      <link rel="stylesheet" type="text/css" href="styles/scrollbar.css">
 
       <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
@@ -43,7 +44,7 @@
     </div>
 
     <div flex layout="row">
-      <md-sidenav flex="15" md-is-locked-open="true" md-whiteframe="8" md-component-id="left" style="background-color: hsla(0, 0%, 0%, 0.2)">
+      <md-sidenav id="left-sidenav" flex="15" md-is-locked-open="true" md-component-id="left">
         <md-content style="background-color:transparent">
           <md-list md-no-ink>
             <md-item>
@@ -54,18 +55,18 @@
                 </md-item-content>
             </md-item>
             <md-divider></md-divider>
-            <md-list-item class="menuItem" ng-click="changeView('podcasts')">
+            <md-list-item class="menu-item" ng-click="changeView('podcasts')">
                 <md-item-content layout="row" layout-align="center center">
-                  <md-icon style="color:rgba(255, 153, 0, 0.7);" md-font-library="material-icons">whatshot</md-icon>
+                  <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
                   <div class="inset">
                     Toplists
                   </div>
                 </md-item-content>
             </md-list-item>
             <md-divider></md-divider>
-            <md-list-item class="menuItem" ng-click="changeView('search')">
+            <md-list-item class="menu-item" ng-click="changeView('search')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
-                  <md-icon style="color:rgba(255, 153, 0, 0.7);" md-font-library="material-icons">search</md-icon>
+                  <md-icon class="menu-icon" md-font-library="material-icons">search</md-icon>
                   <div class="inset">
                     Search
                   </div>
@@ -73,9 +74,9 @@
             </md-list-item>
             <md-divider></md-divider>
 
-            <md-list-item class="menuItem" ng-click="changeView('favourites')">
+            <md-list-item class="menu-item" ng-click="changeView('favourites')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
-                  <md-icon style="color:rgba(255, 153, 0, 0.7);" md-font-library="material-icons">favorite</md-icon>
+                  <md-icon class="menu-icon" md-font-library="material-icons">favorite</md-icon>
                   <div class="inset">
                     Favourites
                   </div>
@@ -83,9 +84,9 @@
             </md-list-item>
             <md-divider></md-divider>
 
-            <md-list-item class="menuItem" ng-click="changeView('settings')">
+            <md-list-item class="menu-item" ng-click="changeView('settings')">
                 <md-item-content md-ink-ripple layout="row" layout-align="center center">
-                  <md-icon style="color:rgba(255, 153, 0, 0.7);" md-font-library="material-icons">settings</md-icon>
+                  <md-icon class="menu-icon" md-font-library="material-icons">settings</md-icon>
                   <div class="inset">
                     About
                   </div>
@@ -117,21 +118,21 @@
           </div>
         </div>
 
-        <md-sidenav class="md-sidenav-right" md-whiteframe="8" md-component-id="right" style="min-width:450px;max-width:450px;width:450px;background-color:#222;">
+        <md-sidenav class="md-sidenav-right" id="right-sidenav" md-whiteframe="8" md-component-id="right">
           <md-content style="background-color:transparent;">
             <episodes/>
           </md-content>
         </md-sidenav>
 
         <!-- Player -->
-        <div class="box3" layout="column" ng-controller="PlayerController" md-whiteframe="24">
+        <div class="box3" layout="column" ng-controller="PlayerController">
           <div flex layout="row">
             <div flex="10" layout="row" layout-align="center center">
-              <md-icon md-font-library="material-icons" style="cursor:pointer;color:#F90;font-size:48px;width:48px;height:48px;" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
+              <md-icon class="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
             </div>
             <div flex="60" layout="column" layout-align="center start" style="color:white">
               <div id="progress">
-                <div id="bar" ng-style="{'width':barWidth}" style="background-color: #F90">
+                <div id="bar" ng-style="{'width':barWidth}">
                   <!-- Progressbar -->
                 </div>
               </div>
@@ -152,8 +153,8 @@
             </div>
             <div flex="20" layout="column" layout-align="center center">
               <md-slider-container>
-                <span><md-icon md-font-library="material-icons">volume_up</md-icon></span>
-                <md-slider id="volume" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>
+                <span><md-icon md-font-library="material-icons">{{ checkVolume() }}</md-icon></span>
+                <md-slider id="volume-slider" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>
               </md-slider-container>
             </div>
           </div>

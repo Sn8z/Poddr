@@ -6,7 +6,7 @@
       </h2>
       <md-progress-circular md-mode="indeterminate" md-diameter="25" ng-show="isLoading" style="margin-left:10px;"></md-progress-circular>
     </md-list-item>
-    <md-list-item style="border-bottom:1px solid rgb(219, 143, 0);" ng-repeat="episode in episodes | limitTo:nrOfItems" layout-margin>
+    <md-list-item class="episode-item" ng-repeat="episode in episodes | limitTo:nrOfItems" layout-margin>
       <div layout="column" ng-click='playPodcast(episode, albumCover)' style="width:100%">
         <div class="row">
           <a href="#" style="color:white;text-decoration:none">{{ episode.title }}</a>

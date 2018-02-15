@@ -60,6 +60,14 @@ angular.module('poddr').controller(
       }
     }
 
+    $scope.checkVolume = function(){
+      if(player.volume == 0){
+        return "volume_off";
+      } else {
+        return "volume_up";
+      }
+    }
+
     $scope.currentlyPlaying = function(){
       return PlayerService.currentlyPlaying;
     }

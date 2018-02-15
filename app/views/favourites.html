@@ -4,8 +4,8 @@
   </div>
 
   <div class="row" layout="row" layout-wrap>
-    <div flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="favourite in favourites" style="padding:20px;">
-      <div md-whiteframe="4" style="background-color:#050505;border-bottom:1px solid #F90">
+    <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="favourite in favourites">
+      <div class="podcast-frame" md-whiteframe="4">
         <div style="position:relative">
           <img ng-click="showEpisodes(favourite.id, favourite.img)" src="{{ favourite.img }}"
             alt="album_cover" style="cursor:pointer" width="100%" height="100%" />
@@ -13,8 +13,7 @@
             <md-icon class="md-warn icon-btn" md-font-library="material-icons" ng-click="removeFavourite($event, favourite.id)">close</md-icon>
           </div>
         </div>
-        <div class="row" ng-click="showEpisodes(favourite.id, favourite.img, favourite.title)" style="color:white;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"
-          layout-padding>
+        <div class="row podcast-title" ng-click="showEpisodes(favourite.id, favourite.img, favourite.title)" layout-padding>
           {{ favourite.title }}
         </div>
       </div>

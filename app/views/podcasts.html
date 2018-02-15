@@ -1,22 +1,22 @@
 <div id="podcastGrid" ng-controller="PodcastController" layout="column" layout-padding ng-cloak>
   <div class="row" layout="row">
     <h1 flex style="color:white">Top {{ amount }}</h1>
-    <md-input-container flex="20">
+    <md-input-container class="select-dropdown" flex="20">
       <label>Genre</label>
-      <md-select name="type" ng-model="genre" ng-change="getPodcasts()" style="color:white">
+      <md-select name="type" ng-model="genre" ng-change="getPodcasts()">
         <md-option ng-repeat="x in genres" ng-value="x.id">{{ x.genre }}</md-option>
       </md-select>
     </md-input-container>
-    <md-input-container flex="20">
+    <md-input-container class="select-dropdown" flex="20">
       <label>Country</label>
-      <md-select name="type" ng-model="region" ng-change="getPodcasts()" style="color:white">
+      <md-select name="type" ng-model="region" ng-change="getPodcasts()">
         <md-option ng-repeat="country in countries" ng-value="country.iso">{{ country.name }}</md-option>
       </md-select>
     </md-input-container>
   </div>
   <div class="row" layout="row" layout-wrap>
-    <div flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="podcast in podcasts" style="padding:20px;">
-      <div md-whiteframe="4" style="background-color:#050505;border-bottom:1px solid #F90">
+    <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="podcast in podcasts">
+      <div class="podcast-frame" md-whiteframe="4">
         <div style="position:relative">
           <img ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:image'][2]['label'])" src="{{ podcast['im:image'][2]['label'] }}" alt="album_cover" style="cursor:pointer" width="100%" height="100%"/>
           <div layout="row" style="position:absolute;bottom:10px;right:10px;height:auto">
