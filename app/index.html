@@ -3,6 +3,7 @@
   <head>
       <title>Poddr</title>
 
+      <link href="https://fonts.googleapis.com/css?family=Rock+Salt" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -33,7 +34,7 @@
 
       <script>if (window.module) module = window.module;</script>
   </head>
-  <body layout="column" ng-controller="PoddrController" style="overflow-x:hidden;" ng-cloak>
+  <body layout="column" ng-controller="PoddrController" ng-init="init()" style="overflow-x:hidden;" ng-cloak>
     <div id="title-bar" md-whiteframe="8">
       <img id="title-icon" src="images/icon.png" />
       <div id="title-bar-btns">
@@ -50,7 +51,7 @@
             <md-item>
                 <md-item-content layout="row" layout-align="center center">
                   <div class="inset">
-                    <h2>Poddr</h2>
+                    <h1 class="logo-text">Poddr</h1>
                   </div>
                 </md-item-content>
             </md-item>

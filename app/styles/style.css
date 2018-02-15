@@ -1,5 +1,5 @@
 :root {
-  --main-color: #F90;
+  --main-color: #000;
 }
 
 * {
@@ -47,6 +47,10 @@ body  {
 
 #min-btn:hover, #max-btn:hover, #close-btn:hover  {	
   transform: scale(1.1);
+}
+
+.logo-text {
+  font-family: 'Rock Salt', cursive;
 }
 
 md-progress-circular path {
@@ -138,7 +142,7 @@ md-option:focus{
 }
 
 .podcast-frame {
-  background-color:#050505;
+  background-color:#111;
   border-bottom:1px solid var(--main-color);
 }
 

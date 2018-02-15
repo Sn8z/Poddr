@@ -1,16 +1,24 @@
 <div ng-controller="SettingsController" layout="column" layout-padding ng-cloak>
   <div class="row" layout="row">
     <div flex="50" class="row">
-      <h3 style="color:white">
-        Settings
-      </h3>
-      <md-divider></md-divider>
-      <md-input-container style="width:90%">
-        <label>Default region</label>
-        <md-select name="type" ng-model="region" ng-change="setRegion()" style="color:white">
-          <md-option ng-repeat="country in countries" ng-value="country.iso">{{ country.name }}</md-option>
-        </md-select>
-      </md-input-container>
+      <div class="row">
+        <h3 style="color:white">
+          Settings
+        </h3>
+        <md-divider></md-divider>
+        <md-input-container style="width:90%">
+          <label>Default region</label>
+          <md-select name="type" ng-model="region" ng-change="setRegion()">
+            <md-option ng-repeat="country in countries" ng-value="country.iso">{{ country.name }}</md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <div class="row">
+        <md-input-container style="width:90%">
+          <label>Color</label>
+          <input id="color-input" ng-model="color" ng-change="changeColor()" type="color"/>
+        </md-input-container>
+      </div>
     </div>
     <div flex="50" class="row">
       <h3 style="color:white">
