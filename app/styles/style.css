@@ -51,6 +51,7 @@ body  {
 
 .logo-text {
   font-family: 'Rock Salt', cursive;
+  cursor: default;
 }
 
 md-progress-circular path {
