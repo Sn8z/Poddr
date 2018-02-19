@@ -18,7 +18,6 @@ app.on('ready', function(){
   //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
   globalShortcut.register('MediaPlayPause', () => {
     mainWindow.webContents.send('toggle-play', 'playpause');
-    console.log('pressed globalShortcut');
   });
 
   //default window size
@@ -54,7 +53,7 @@ app.on('ready', function(){
   mainWindow.loadURL('file://' + __dirname + "/app/index.html");
 
   //Devtools
-  mainWindow.webContents.openDevTools({detach:true});
+  //mainWindow.webContents.openDevTools({detach:true});
 
   //Cleanup on window close
   mainWindow.on('closed', function(){

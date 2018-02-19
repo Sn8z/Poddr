@@ -3,10 +3,8 @@
   <head>
       <title>Poddr</title>
 
-      <link href="../node_modules/typeface-rock-salt/index.css" rel="stylesheet">
-      <link href="../node_modules/typeface-rubik/index.css" rel="stylesheet">
-      <link href="../node_modules/typeface-open-sans/index.css" rel="stylesheet">
-      <link href="../node_modules/material-design-icons/iconfont/material-icons.css" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans|Rock+Salt|Rubik" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="../bower_components/angular-material/angular-material.css">
       <link rel="stylesheet" type="text/css" href="styles/style.css">
       <link rel="stylesheet" type="text/css" href="styles/scrollbar.css">
@@ -28,7 +26,8 @@
       <script type="text/javascript" src="scripts/app/settings.js"></script>
       <script type="text/javascript" src="scripts/app/menu.js"></script>
 
-      <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+      <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
 
       <script>if (window.module) module = window.module;</script>
   </head>
@@ -128,7 +127,7 @@
             <div flex="10" layout="row" layout-align="center center">
               <md-icon class="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
             </div>
-            <div flex="60" layout="column" layout-align="center start" style="color:white">
+            <div flex="65" layout="column" layout-align="center start" style="color:white">
               <div id="progress">
                 <div id="bar" ng-style="{'width':barWidth}">
                   <!-- Progressbar -->
@@ -143,18 +142,16 @@
                 </div>
               </div>
             </div>
-            <div flex="10" layout="column" layout-align="center center">
+            <div flex="5" layout="column" layout-align="center center">
               <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
             </div>
             <div flex="5" layout="column" layout-align="center center">
               <md-icon class="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
             </div>
-            <div flex="20" layout="column" layout-align="center center">
-              <md-slider-container>
-                <span><md-icon md-font-library="material-icons">{{ checkVolume() }}</md-icon></span>
-                <md-slider id="volume-slider" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>
-              </md-slider-container>
-            </div>
+            <md-slider-container flex="15" style="padding:20px;">
+              <span><md-icon md-font-library="material-icons">{{ checkVolume() }}</md-icon></span>
+              <md-slider flex id="volume-slider" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>
+            </md-slider-container>
           </div>
         </div>
       </div>

@@ -17,6 +17,7 @@
     "electron-builder": "^19.56.2"
   },
   "build": {
+    "productName": "Poddr",
     "appId": "com.sn8z.poddr",
     "win": {
       "target": "nsis",
@@ -35,12 +36,7 @@
     "electron-json-storage": "^3.2.0",
     "electron-window-state": "^4.1.1",
     "itunes-api-search": "^1.1.0",
-    "jquery": "^3.3.1",
-    "material-design-icons": "^3.0.1",
     "mousetrap": "^1.6.1",
-    "node-podcast-parser": "^2.0.0",
-    "typeface-open-sans": "0.0.54",
-    "typeface-rock-salt": "0.0.54",
-    "typeface-rubik": "0.0.54"
+    "node-podcast-parser": "^2.0.0"
   }
 }
