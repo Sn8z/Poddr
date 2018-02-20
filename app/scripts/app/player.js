@@ -44,13 +44,11 @@ angular.module('poddr').controller(
     }, true);
 
     var progress = document.getElementById('progress');
-    progress.addEventListener('click', function(e) {
-      var $this = $(this);
-      var widthClicked = e.pageX - $this.offset().left;
-      var totalWidth = $this.width();
-      var calc = (widthClicked / totalWidth) * player.duration;
-      player.currentTime = calc.toFixed(0);
-    });
+    progress.addEventListener("click", function (event) {
+      var width = event.clientX - progress.getBoundingClientRect().left;
+      var calc = (width / progress.offsetWidth) * player.duration;
+      player.currentTime = parseFloat(calc);
+    }, true);
 
     $scope.checkPlayBtn = function(){
       if(player.paused){

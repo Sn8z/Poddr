@@ -18,7 +18,7 @@
     <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="podcast in podcasts">
       <div class="podcast-frame" md-whiteframe="4">
         <div style="position:relative">
-          <img ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:image'][2]['label'])" src="{{ podcast['im:image'][2]['label'] }}" alt="album_cover" style="cursor:pointer" width="100%" height="100%"/>
+          <img ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:image'][2]['label'])" ng-src="{{ podcast['im:image'][2]['label'] }}" alt="album_cover" style="cursor:pointer" width="100%" height="100%"/>
           <div layout="row" style="position:absolute;bottom:10px;right:10px;height:auto">
             <md-icon class="md-warn icon-btn" md-font-library="material-icons" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][2]['label'], podcast.title.label, podcast['im:name']['label'])">favorite</md-icon>
           </div>

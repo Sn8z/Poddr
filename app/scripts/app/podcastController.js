@@ -32,7 +32,6 @@ angular.module('poddr').controller(
     }
 
     $scope.showEpisodes = function(id, img){
-      console.log(id + " " + img);
       $rootScope.fetchEpisodes(id, img);
       $rootScope.toggleSidebar();
     }
