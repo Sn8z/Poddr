@@ -1,7 +1,8 @@
 <div align="center">
     <img src="images/poddr_logo.png" alt="Poddr" width="60" height="60">
     <h1>Poddr</h1>
-    <a href="https://github.com/Sn8z/Poddr/releases"><img src="https://img.shields.io/github/release/sn8z/poddr.svg?style=flat-square"/></a>
+    <img src="https://img.shields.io/github/release/sn8z/poddr.svg?style=flat-square"/>
+    <img src="https://app.codeship.com/projects/201ad970-f91b-0135-962e-46ce43625878/status?branch=master"/>
 </div>
 
 Podcast client built with Electron and AngularJS.
