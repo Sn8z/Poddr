@@ -10,7 +10,9 @@
           <img ng-click="showEpisodes(favourite.id, favourite.img)" ng-src="{{ favourite.img }}"
             alt="album_cover" style="cursor:pointer" width="100%" height="100%" />
           <div layout="row" style="position:absolute;bottom:10px;right:10px;height:auto">
-            <md-icon class="md-warn icon-btn" md-font-library="material-icons" ng-click="removeFavourite($event, favourite.id)">close</md-icon>
+            <md-button class="md-icon-button md-warn icon-btn">
+              <md-icon md-font-library="material-icons" ng-click="removeFavourite($event, favourite.id)">close</md-icon>
+            </md-button>
           </div>
         </div>
         <div class="row podcast-title" ng-click="showEpisodes(favourite.id, favourite.img, favourite.title)" layout-padding>

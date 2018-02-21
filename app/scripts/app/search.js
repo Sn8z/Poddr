@@ -1,26 +1,10 @@
 angular.module('poddr').controller(
-  "SearchController", function($scope, $http, $mdToast, $rootScope, RegionService){
+  "SearchController", function($scope, $http, $mdToast, $rootScope){
     var storage = require('electron-json-storage');
     var itunesSearch = require('itunes-api-search');
 
     $scope.query = "";
     $scope.results = [];
-
-    $scope.countries = RegionService.regions;
-
-    storage.get('region', function (error, data) {
-      if (error) {
-        $scope.region = "us";
-        console.log(error);
-      } else {
-        if (data.value) {
-          $scope.region = data.value;
-        } else {
-          $scope.region = "us";
-        }
-      }
-      $scope.$apply();
-    });
 
     $scope.isLoading = false;
     $scope.isEmpty = false;
@@ -37,8 +21,7 @@ angular.module('poddr').controller(
         $scope.isEmpty = false;
         itunesSearch.search($scope.query, {
           entity: 'podcast',
-          limit: '50',
-          country: $scope.region
+          limit: '50'
         }, function(err, res){
           if(err){
             console.log(err);

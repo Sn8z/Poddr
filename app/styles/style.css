@@ -169,15 +169,15 @@ md-option:focus{
   height: 6px;
   border-radius: 3px;
   cursor: pointer;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   box-shadow: inset 0px 2px 2px #111;
+  overflow: hidden;
 }
 
 #bar {
   height: 100%;
   box-shadow: inset 0px 1px 1px #111;
   width: 0px;
-  border-radius: 3px;
   background: var(--main-color) !important;
 }
 

@@ -58,7 +58,7 @@ angular.module('poddr').controller(
             if(err){
               console.log(err);
             } else {
-              $event.srcElement.parentNode.parentElement.parentElement.parentElement.remove();
+              $event.srcElement.parentNode.parentElement.parentElement.parentElement.parentElement.remove();
             }
           });
         }

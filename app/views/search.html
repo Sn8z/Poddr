@@ -6,27 +6,17 @@
           <input id="search_input" ng-model="query" type="text" placeholder="Search..."/>
       </md-input-container>
     </form>
-    <md-input-container flex="20">
-      <label>Country</label>
-      <md-select name="type" ng-model="region" ng-change="getPodcasts()" style="color:white">
-        <md-option ng-repeat="country in countries" ng-value="country.iso">{{ country.name }}</md-option>
-      </md-select>
-    </md-input-container>
   </div>
   <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
-
   <md-list>
     <md-list-item ng-show="isEmpty">
       <h2 style="color:white">No results</h2>
     </md-list-item>
-    <md-list-item ng-repeat="podcast in results" class="noright">
+    <md-list-item ng-repeat="podcast in results" class="noright" ng-click="showEpisodes(podcast.trackId, podcast.artworkUrl600)">
       <img ng-src="{{ podcast.artworkUrl600 }}" style="padding:15px;width:100px;" />
       <p style="color:white">{{ podcast.artistName }} - {{ podcast.trackName }}</p>
-      <md-button class="md-warn md-secondary" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl600, podcast.trackName, podcast.artistName)">
-        <md-icon md-font-library="material-icons">favorite</md-icon>
-      </md-button>
-      <md-button class="md-secondary" ng-click="showEpisodes(podcast.trackId, podcast.artworkUrl600)">
-        <md-icon md-font-library="material-icons">reorder</md-icon>
+      <md-button class="md-icon-button md-warn icon-btn" aria-label="Favourite">
+        <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl600, podcast.trackName, podcast.artistName)">favorite</md-icon>
       </md-button>
       <md-divider></md-divider>
     </md-list-item>
