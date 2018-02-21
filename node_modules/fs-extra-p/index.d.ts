@@ -198,9 +198,7 @@ export function emptyDir(path: string): Promise<void>
 
 export function emptyDirSync(path: string): boolean
 
-export function existsSync(path: string): boolean
-
-export function existsSync(path: string): boolean
+export function pathExists(path: string): Promise<boolean>
 
 export function access(path: string | Buffer, mode?: number): Promise<void>
 
