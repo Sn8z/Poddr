@@ -145,9 +145,9 @@
             <div flex="5" layout="column" layout-align="center center">
               <md-icon class="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
             </div>
-            <md-slider-container flex="15" style="padding:20px;">
-              <span><md-icon md-font-library="material-icons">{{ checkVolume() }}</md-icon></span>
-              <md-slider flex id="volume-slider" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>
+            <md-slider-container flex="15" style="padding:10px;">
+              <md-icon md-font-library="material-icons">{{ checkVolume() }}</md-icon>
+              <md-slider id="volume-slider" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>
             </md-slider-container>
           </div>
         </div>
