@@ -1,0 +1,39 @@
+{
+  "name": "rgb2hex",
+  "version": "0.1.0",
+  "description": "lightweight rgb/rgba to hex parser",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "coveralls": "^2.10.0",
+    "istanbul": "^0.2.7",
+    "mocha": "^1.18.2",
+    "should": "^3.3.1",
+    "zuul": "^1.6.3"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/_mocha",
+    "travis": "./node_modules/.bin/zuul test/rgb2hex.spec.js",
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --print -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/christian-bromann/rgb2hex.git"
+  },
+  "keywords": [
+    "rgb",
+    "rgba",
+    "hex",
+    "color",
+    "parse",
+    "parser"
+  ],
+  "author": "Christian Bromann <mail@christian-bromann.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/christian-bromann/rgb2hex/issues"
+  },
+  "homepage": "https://github.com/christian-bromann/rgb2hex"
+}

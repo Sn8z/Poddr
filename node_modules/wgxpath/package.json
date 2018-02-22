@@ -1,0 +1,33 @@
+{
+  "name": "wgxpath",
+  "description": "Wicked Good XPath",
+  "version": "1.0.0",
+  "url": "https://github.com/google/wicked-good-xpath",
+  "homepage": "https://github.com/jacobmarble/node-wgxpath",
+  "author": {
+    "name": "Jacob Marble",
+    "email": "jacobmarble@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jacobmarble/node-wgxpath.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jacobmarble/node-wgxpath/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/jacobmarble/node-wgxpath/blob/master/LICENSE"
+    }
+  ],
+  "main": "wgxpath.install.js",
+  "keywords": [
+    "xpath",
+    "wgxpath",
+    "wicked-good-xpath",
+    "parse",
+    "html"
+  ]
+}
+

@@ -1,6 +1,6 @@
 {
   "name": "strip-ansi",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "Strip ANSI escape codes",
   "license": "MIT",
   "repository": "chalk/strip-ansi",
@@ -9,13 +9,8 @@
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com"
   },
-  "maintainers": [
-    "Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)",
-    "Joshua Boy Nicolai Appelman <joshua@jbna.nl> (jbna.nl)",
-    "JD Ballard <i.am.qix@gmail.com> (github.com/qix-)"
-  ],
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4"
   },
   "scripts": {
     "test": "xo && ava"
@@ -48,7 +43,7 @@
     "text"
   ],
   "dependencies": {
-    "ansi-regex": "^2.0.0"
+    "ansi-regex": "^3.0.0"
   },
   "devDependencies": {
     "ava": "*",
