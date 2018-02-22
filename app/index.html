@@ -1,157 +1,158 @@
 <!DOCTYPE html>
 <html ng-app="poddr">
-  <head>
-      <title>Poddr</title>
 
-      <link href="https://fonts.googleapis.com/css?family=Open+Sans|Rock+Salt|Rubik" rel="stylesheet">
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <link rel="stylesheet" type="text/css" href="../node_modules/angular-material/angular-material.css">
-      <link rel="stylesheet" type="text/css" href="styles/style.css">
-      <link rel="stylesheet" type="text/css" href="styles/scrollbar.css">
+<head>
+  <title>Poddr</title>
 
-      <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Rock+Salt|Rubik" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-      <script type="text/javascript" src="../node_modules/angular/angular.min.js"></script>
-      <script type="text/javascript" src="../node_modules/angular-aria/angular-aria.min.js"></script>
-      <script type="text/javascript" src="../node_modules/angular-animate/angular-animate.min.js"></script>
-      <script type="text/javascript" src="../node_modules/angular-material/angular-material.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../node_modules/angular-material/angular-material.css">
+  <link rel="stylesheet" type="text/css" href="styles/style.css">
+  <link rel="stylesheet" type="text/css" href="styles/scrollbar.css">
 
-      <script type="text/javascript" src="scripts/index.js"></script>
-      <script type="text/javascript" src="scripts/app/poddrController.js"></script>
-      <script type="text/javascript" src="scripts/app/podcastController.js"></script>
-      <script type="text/javascript" src="scripts/app/search.js"></script>
-      <script type="text/javascript" src="scripts/app/episodes.js"></script>
-      <script type="text/javascript" src="scripts/app/favourites.js"></script>
-      <script type="text/javascript" src="scripts/app/player.js"></script>
-      <script type="text/javascript" src="scripts/app/settings.js"></script>
-      <script type="text/javascript" src="scripts/app/menu.js"></script>
+  <script type="text/javascript" src="../node_modules/angular/angular.min.js"></script>
+  <script type="text/javascript" src="../node_modules/angular-aria/angular-aria.min.js"></script>
+  <script type="text/javascript" src="../node_modules/angular-animate/angular-animate.min.js"></script>
+  <script type="text/javascript" src="../node_modules/angular-material/angular-material.min.js"></script>
+  <script type="text/javascript" src="scripts/index.js"></script>
+  <script type="text/javascript" src="scripts/app/poddrController.js"></script>
+  <script type="text/javascript" src="scripts/app/podcastController.js"></script>
+  <script type="text/javascript" src="scripts/app/search.js"></script>
+  <script type="text/javascript" src="scripts/app/episodes.js"></script>
+  <script type="text/javascript" src="scripts/app/favourites.js"></script>
+  <script type="text/javascript" src="scripts/app/player.js"></script>
+  <script type="text/javascript" src="scripts/app/settings.js"></script>
+  <script type="text/javascript" src="scripts/app/menu.js"></script>
 
-      <script>if (window.module) module = window.module;</script>
-  </head>
-  <body layout="column" ng-controller="PoddrController" ng-init="init()" style="overflow-x:hidden;" ng-cloak>
-    <div id="title-bar" md-whiteframe="8">
-      <div id="title-bar-btns">
-        <md-icon id="min-btn" md-font-library="material-icons">remove</md-icon>
-        <md-icon id="max-btn" md-font-library="material-icons">crop_square</md-icon>
-        <md-icon id="close-btn" md-font-library="material-icons">close</md-icon>
-      </div>
+</head>
+
+<body layout="column" ng-controller="PoddrController" ng-init="init()" style="overflow-x:hidden;" ng-cloak>
+  <div id="title-bar" md-whiteframe="8">
+    <div id="title-bar-btns">
+      <md-icon id="min-btn" md-font-library="material-icons">remove</md-icon>
+      <md-icon id="max-btn" md-font-library="material-icons">crop_square</md-icon>
+      <md-icon id="close-btn" md-font-library="material-icons">close</md-icon>
     </div>
+  </div>
 
-    <div flex layout="row">
-      <md-sidenav id="left-sidenav" flex="15" md-is-locked-open="true" md-component-id="left">
-        <md-content style="background-color:transparent">
-          <md-list md-no-ink>
-            <md-item>
-                <md-item-content layout="row" layout-align="center center">
-                  <div class="inset">
-                    <h1 class="logo-text">Poddr</h1>
-                  </div>
-                </md-item-content>
-            </md-item>
-            <md-divider></md-divider>
-            <md-list-item class="menu-item" ng-click="changeView('podcasts')">
-                <md-item-content layout="row" layout-align="center center">
-                  <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
-                  <div class="inset">
-                    Toplists
-                  </div>
-                </md-item-content>
-            </md-list-item>
-            <md-divider></md-divider>
-            <md-list-item class="menu-item" ng-click="changeView('search')">
-                <md-item-content md-ink-ripple layout="row" layout-align="center center">
-                  <md-icon class="menu-icon" md-font-library="material-icons">search</md-icon>
-                  <div class="inset">
-                    Search
-                  </div>
-                </md-item-content>
-            </md-list-item>
-            <md-divider></md-divider>
+  <div flex layout="row">
+    <md-sidenav id="left-sidenav" flex="15" md-is-locked-open="true" md-component-id="left">
+      <md-content style="background-color:transparent">
+        <md-list md-no-ink>
+          <md-item>
+            <md-item-content layout="row" layout-align="center center">
+              <div class="inset">
+                <h1 class="logo-text">Poddr</h1>
+              </div>
+            </md-item-content>
+          </md-item>
+          <md-divider></md-divider>
+          <md-list-item class="menu-item" ng-click="changeView('podcasts')">
+            <md-item-content layout="row" layout-align="center center">
+              <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
+              <div class="inset">
+                Toplists
+              </div>
+            </md-item-content>
+          </md-list-item>
+          <md-divider></md-divider>
+          <md-list-item class="menu-item" ng-click="changeView('search')">
+            <md-item-content md-ink-ripple layout="row" layout-align="center center">
+              <md-icon class="menu-icon" md-font-library="material-icons">search</md-icon>
+              <div class="inset">
+                Search
+              </div>
+            </md-item-content>
+          </md-list-item>
+          <md-divider></md-divider>
 
-            <md-list-item class="menu-item" ng-click="changeView('favourites')">
-                <md-item-content md-ink-ripple layout="row" layout-align="center center">
-                  <md-icon class="menu-icon" md-font-library="material-icons">favorite</md-icon>
-                  <div class="inset">
-                    Favourites
-                  </div>
-                </md-item-content>
-            </md-list-item>
-            <md-divider></md-divider>
+          <md-list-item class="menu-item" ng-click="changeView('favourites')">
+            <md-item-content md-ink-ripple layout="row" layout-align="center center">
+              <md-icon class="menu-icon" md-font-library="material-icons">favorite</md-icon>
+              <div class="inset">
+                Favourites
+              </div>
+            </md-item-content>
+          </md-list-item>
+          <md-divider></md-divider>
 
-            <md-list-item class="menu-item" ng-click="changeView('settings')">
-                <md-item-content md-ink-ripple layout="row" layout-align="center center">
-                  <md-icon class="menu-icon" md-font-library="material-icons">settings</md-icon>
-                  <div class="inset">
-                    About
-                  </div>
-                </md-item-content>
-            </md-list-item>
-            <md-divider></md-divider>
+          <md-list-item class="menu-item" ng-click="changeView('settings')">
+            <md-item-content md-ink-ripple layout="row" layout-align="center center">
+              <md-icon class="menu-icon" md-font-library="material-icons">settings</md-icon>
+              <div class="inset">
+                About
+              </div>
+            </md-item-content>
+          </md-list-item>
+          <md-divider></md-divider>
 
-          </md-list>
+        </md-list>
+      </md-content>
+      <div style="position:absolute;bottom:0;width:100%;height:auto;" ng-controller="PlayerController">
+        <img ng-src='{{ getAlbumCover() || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;"
+        />
+      </div>
+    </md-sidenav>
+    <div layout="column" flex>
+      <!-- Content -->
+
+      <div ng-switch="mainContent" class="box2">
+        <div ng-switch-when="podcasts" style="width:100%">
+          <podcasts/>
+        </div>
+        <div ng-switch-when="favourites" style="width:100%">
+          <favourites/>
+        </div>
+        <div ng-switch-when="search" style="width:100%">
+          <search/>
+        </div>
+        <div ng-switch-when="settings" style="width:100%">
+          <settings/>
+        </div>
+      </div>
+
+      <md-sidenav class="md-sidenav-right" id="right-sidenav" md-whiteframe="8" md-component-id="right">
+        <md-content style="background-color:transparent;">
+          <episodes/>
         </md-content>
-        <div style="position:absolute;bottom:0;width:100%;height:auto;" ng-controller="PlayerController">
-          <img ng-src='{{ getAlbumCover() || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;"/>
-        </div>
       </md-sidenav>
-      <div layout="column" flex>
-        <!-- Content -->
 
-        <div ng-switch="mainContent" class="box2">
-          <div ng-switch-when="podcasts" style="width:100%">
-            <podcasts/>
+      <!-- Player -->
+      <div class="box3" layout="column" ng-controller="PlayerController">
+        <div flex layout="row">
+          <div flex="10" layout="row" layout-align="center center">
+            <md-icon class="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
           </div>
-          <div ng-switch-when="favourites" style="width:100%">
-            <favourites/>
-          </div>
-          <div ng-switch-when="search" style="width:100%">
-            <search/>
-          </div>
-          <div ng-switch-when="settings" style="width:100%">
-            <settings/>
-          </div>
-        </div>
-
-        <md-sidenav class="md-sidenav-right" id="right-sidenav" md-whiteframe="8" md-component-id="right">
-          <md-content style="background-color:transparent;">
-            <episodes/>
-          </md-content>
-        </md-sidenav>
-
-        <!-- Player -->
-        <div class="box3" layout="column" ng-controller="PlayerController">
-          <div flex layout="row">
-            <div flex="10" layout="row" layout-align="center center">
-              <md-icon class="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
-            </div>
-            <div flex="65" layout="column" layout-align="center start" style="color:white">
-              <div id="progress">
-                <div id="bar" ng-style="{'width':barWidth}">
-                  <!-- Progressbar -->
-                </div>
-              </div>
-              <div class="row" layout="rows" style="width:100%;">
-                <div flex="75" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                  <b ng-bind="currentlyPlaying()"></b>
-                </div>
-                <div flex="25">
-                  <span class="timer-text">{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</span>
-                </div>
+          <div flex="65" layout="column" layout-align="center start" style="color:white">
+            <div id="progress">
+              <div id="bar" ng-style="{'width':barWidth}">
+                <!-- Progressbar -->
               </div>
             </div>
-            <div flex="5" layout="column" layout-align="center center">
-              <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
+            <div class="row" layout="rows" style="width:100%;">
+              <div flex="75" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                <b ng-bind="currentlyPlaying()"></b>
+              </div>
+              <div flex="25">
+                <span class="timer-text">{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</span>
+              </div>
             </div>
-            <div flex="5" layout="column" layout-align="center center">
-              <md-icon class="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
-            </div>
-            <md-slider-container flex="15" style="padding:10px;">
-              <md-icon md-font-library="material-icons">{{ checkVolume() }}</md-icon>
-              <md-slider id="volume-slider" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>
-            </md-slider-container>
           </div>
+          <div flex="5" layout="column" layout-align="center center">
+            <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
+          </div>
+          <div flex="5" layout="column" layout-align="center center">
+            <md-icon class="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
+          </div>
+          <md-slider-container flex="15" style="padding:10px;">
+            <md-icon md-font-library="material-icons">{{ checkVolume() }}</md-icon>
+            <md-slider id="volume-slider" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>
+          </md-slider-container>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
