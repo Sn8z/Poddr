@@ -16,7 +16,6 @@ app.on("window-all-closed", function() {
 app.on("ready", function() {
   //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
   globalShortcut.register("MediaPlayPause", () => {
-    console.log("global shortcut pushed");
     mainWindow.webContents.send("toggle-play", "playpause");
   });
 

@@ -17,6 +17,10 @@ var app = angular
       e.preventDefault();
       $rootScope.togglePlay();
     });
+    Mousetrap.bind("mod+m", function(e) {
+      e.preventDefault();
+      $rootScope.toggleMute();
+    });
     Mousetrap.bind("mod+s", function(e) {
       e.preventDefault();
       $rootScope.volumeUp();

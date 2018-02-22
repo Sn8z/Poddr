@@ -18,7 +18,7 @@ describe("Application launch", function() {
     }
   });
 
-  it("should start and display a visible window", function() {
+  it("Should start and display a visible window", function() {
     return this.app.browserWindow.isVisible().then(function(isVisible) {
       assert.equal(isVisible, true);
     });

@@ -7,50 +7,50 @@
   user-select: none;
 }
 
-body  {
-  font-family: 'Rubik', sans-serif;
+body {
+  font-family: "Rubik", sans-serif;
 }
 
-#title-bar  {	
-   -webkit-user-select: none;	
-   -webkit-app-region: drag;	
-   height: 30px;	
-   background: #252525;
-   padding: none;	
-   margin: 0px;
-   border-bottom: 1px solid var(--main-color);
-   box-shadow: 0px 2px 5px #111;
-   z-index: 10;
- }	
- 	
-#title-bar-btns {	
-   -webkit-app-region: no-drag;	
-   position: absolute;	
-   top: 5px;	
-   right: 15px;	
- }	
- 	
-#title-icon {	
-   -webkit-app-region: drag;	
-   margin: 4px;	
-   height: calc(100% - 8px);	
-   width: auto;	
- }	
- 	
-#min-btn, #max-btn, #close-btn  {	
+#title-bar {
+  user-select: none;
+  -webkit-app-region: drag;
+  height: 30px;
+  background: #252525;
+  padding: none;
+  margin: 0px;
+  border-bottom: 1px solid var(--main-color);
+  box-shadow: 0px 2px 5px #111;
+  z-index: 10;
+}
+
+#title-bar-btns {
+  -webkit-app-region: no-drag;
+  position: absolute;
+  right: 15px;
+  height: 30px;
+}
+
+#min-btn,
+#max-btn,
+#close-btn {
   cursor: pointer;
-  width: 10px;
-  height: 10px;
-  line-height: 10px;
-  margin-top: 4px;  
+  width: auto;
+  height: 30px;
+  line-height: 30px;
+  color: #aaa;
 }
 
-#min-btn:hover, #max-btn:hover, #close-btn:hover  {	
-  transform: scale(1.1);
+#min-btn:hover,
+#max-btn:hover {
+  background-color: #353535;
+}
+
+#close-btn:hover {
+  background-color: rgb(105, 28, 28);
 }
 
 .logo-text {
-  font-family: 'Rock Salt', cursive;
+  font-family: "Rock Salt", cursive;
   cursor: default;
 }
 
@@ -58,7 +58,9 @@ md-progress-circular path {
   stroke: var(--main-color) !important;
 }
 
-.box1, .box2, .box3 {
+.box1,
+.box2,
+.box3 {
   display: flex;
   box-sizing: border-box;
   min-width: 100%;
@@ -75,9 +77,9 @@ md-progress-circular path {
   width: 100%;
   height: 100%;
   max-height: 100%;
-  flex:1 1 100%;
+  flex: 1 1 100%;
 }
-    
+
 .box3 {
   z-index: 10;
   background: #151515;
@@ -90,15 +92,14 @@ md-progress-circular path {
 }
 
 #right-sidenav {
-  min-width:450px;
-  max-width:450px;
-  width:450px;
-  background-color:#222;
+  min-width: 450px;
+  max-width: 450px;
+  width: 450px;
+  background-color: #222;
 }
 
 .menu-item {
   cursor: pointer;
-  -webkit-user-select:none;
 }
 
 .menu-icon {
@@ -106,10 +107,10 @@ md-progress-circular path {
 }
 
 .timer-text {
-  color:#CCC;
+  color: #ccc;
   font-size: 14px;
-  float:right;
-  font-family: 'Open Sans', sans-serif;
+  float: right;
+  font-family: "Open Sans", sans-serif;
 }
 
 /* input */
@@ -117,7 +118,7 @@ md-select {
   color: white !important;
 }
 
-md-select:not([disabled]):focus .md-select-value{
+md-select:not([disabled]):focus .md-select-value {
   border-bottom-color: var(--main-color) !important;
 }
 
@@ -133,7 +134,7 @@ md-input-container label {
   color: var(--main-color) !important;
 }
 
-md-option:focus{
+md-option:focus {
   color: var(--main-color) !important;
 }
 
@@ -143,24 +144,26 @@ md-option:focus{
 }
 
 .podcast-frame {
-  background-color:#111;
-  border-bottom:1px solid var(--main-color);
+  background-color: #111;
+  border-bottom: 1px solid var(--main-color);
+  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
 }
 
 .podcast-title {
-  color:white;
-  cursor:pointer;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0px 0px 10px #000;
 }
 /* Player */
-.play-btn {
-  cursor:pointer;
+#play-btn {
+  cursor: pointer;
   color: var(--main-color) !important;
-  font-size:48px;
-  width:48px;
-  height:48px;
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
 }
 
 #progress {
@@ -185,32 +188,34 @@ md-option:focus{
   min-width: 10px;
 }
 
-#volume-slider .md-thumb:after, #volume-slider .md-track-fill{
-    background-color: var(--main-color) !important;
-    border-color: var(--main-color) !important;
+#volume-slider .md-thumb:after,
+#volume-slider .md-track-fill {
+  background-color: var(--main-color) !important;
+  border-color: var(--main-color) !important;
 }
-#volume-slider .md-focus-thumb, #volume-slider .md-focus-ring{
-    background-color: var(--main-color);
+#volume-slider .md-focus-thumb,
+#volume-slider .md-focus-ring {
+  background-color: var(--main-color);
 }
 
 .md-toast-content {
   width: 250px;
 }
 
-.md-toast-success .md-toast-content{
-    background-color: green !important;
+.md-toast-success .md-toast-content {
+  background-color: green !important;
 }
 
-.md-toast-error .md-toast-content{
-    background-color: red !important;
+.md-toast-error .md-toast-content {
+  background-color: red !important;
 }
 
-.toggle-btn {
+#toggle-btn {
   cursor: pointer;
 }
 
 .icon-btn {
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
 

@@ -48,7 +48,7 @@
             </md-item-content>
           </md-item>
           <md-divider></md-divider>
-          <md-list-item class="menu-item" ng-click="changeView('podcasts')">
+          <md-list-item class="menu-item" id="toplist-item" ng-click="changeView('podcasts')">
             <md-item-content layout="row" layout-align="center center">
               <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
               <div class="inset">
@@ -57,7 +57,7 @@
             </md-item-content>
           </md-list-item>
           <md-divider></md-divider>
-          <md-list-item class="menu-item" ng-click="changeView('search')">
+          <md-list-item class="menu-item" id="search-item" ng-click="changeView('search')">
             <md-item-content md-ink-ripple layout="row" layout-align="center center">
               <md-icon class="menu-icon" md-font-library="material-icons">search</md-icon>
               <div class="inset">
@@ -67,7 +67,7 @@
           </md-list-item>
           <md-divider></md-divider>
 
-          <md-list-item class="menu-item" ng-click="changeView('favourites')">
+          <md-list-item class="menu-item" id="favourite-item" ng-click="changeView('favourites')">
             <md-item-content md-ink-ripple layout="row" layout-align="center center">
               <md-icon class="menu-icon" md-font-library="material-icons">favorite</md-icon>
               <div class="inset">
@@ -77,7 +77,7 @@
           </md-list-item>
           <md-divider></md-divider>
 
-          <md-list-item class="menu-item" ng-click="changeView('settings')">
+          <md-list-item class="menu-item" id="about-item" ng-click="changeView('settings')">
             <md-item-content md-ink-ripple layout="row" layout-align="center center">
               <md-icon class="menu-icon" md-font-library="material-icons">settings</md-icon>
               <div class="inset">
@@ -122,7 +122,7 @@
       <div class="box3" layout="column" ng-controller="PlayerController">
         <div flex layout="row">
           <div flex="10" layout="row" layout-align="center center">
-            <md-icon class="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
+            <md-icon id="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
           </div>
           <div flex="65" layout="column" layout-align="center start" style="color:white">
             <div id="progress">
@@ -131,7 +131,7 @@
               </div>
             </div>
             <div class="row" layout="rows" style="width:100%;">
-              <div flex="75" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              <div flex="75" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000;">
                 <b ng-bind="currentlyPlaying()"></b>
               </div>
               <div flex="25">
@@ -143,11 +143,12 @@
             <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
           </div>
           <div flex="5" layout="column" layout-align="center center">
-            <md-icon class="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
+            <md-icon id="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
           </div>
           <md-slider-container flex="15" style="padding:10px;">
-            <md-icon md-font-library="material-icons">{{ checkVolume() }}</md-icon>
-            <md-slider id="volume-slider" ng-model="volume" ng-change="setVolume()" flex min="0" max="1" step="0.001" aria-label="volume"></md-slider>
+            <md-icon ng-click="toggleMute()" md-font-library="material-icons">{{ checkVolume() }}</md-icon>
+            <md-slider id="volume-slider" onmouseup="document.activeElement.blur()" ng-model="volume" ng-change="setVolume()" flex min="0"
+              max="1" step="0.001" aria-label="volume"></md-slider>
           </md-slider-container>
         </div>
       </div>

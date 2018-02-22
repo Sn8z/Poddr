@@ -16,7 +16,7 @@
       <div class="row">
         <md-input-container style="width:90%">
           <label>Color</label>
-          <input id="color-input" ng-model="color" ng-change="changeColor()" type="color"/>
+          <input id="color-input" ng-model="color" ng-change="changeColor()" type="color" />
         </md-input-container>
       </div>
     </div>
@@ -36,7 +36,17 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>CTRL</code> + <code>s</code>
+            <code>CTRL</code> +
+            <code>m</code>
+          </td>
+          <td style="color:white">
+            Toggle mute
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>CTRL</code> +
+            <code>s</code>
           </td>
           <td style="color:white">
             Volume Up
@@ -44,7 +54,8 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>CTRL</code> + <code>a</code>
+            <code>CTRL</code> +
+            <code>a</code>
           </td>
           <td style="color:white">
             Volume Down
@@ -70,7 +81,8 @@
           <p style="color:white">AngularJS</p>
           <md-divider></md-divider>
         </md-list-item>
-        <md-list-item ng-click="openURL('https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/')" class="noright">
+        <md-list-item ng-click="openURL('https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/')"
+          class="noright">
           <img src="images/itunes.png" style="padding:15px;width:50px;" />
           <p style="color:white">iTunes RSS feeds & Search API</p>
           <md-divider></md-divider>

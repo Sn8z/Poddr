@@ -4,10 +4,13 @@ angular
     $scope,
     $rootScope,
     PlayerService,
-    $mdToast
+    $mdToast,
+    $window
   ) {
     var storage = require("electron-json-storage");
     var ipc = require("electron").ipcRenderer;
+
+    //create the audio element
     var player = document.createElement("audio");
 
     player.volume = 0.5;
@@ -20,6 +23,7 @@ angular
       togglePlay();
     });
 
+    //set initial volume based on previous session if available
     storage.get("volume", function(error, data) {
       if (error) throw error;
       player.volume = data.value;
@@ -34,27 +38,64 @@ angular
       });
     };
 
+    player.addEventListener("loadstart", function() {
+      $scope.isLoading = true;
+      $scope.$apply();
+    });
+
     player.addEventListener("timeupdate", function() {
       PlayerService.atTime = player.currentTime;
       $scope.barWidth = getBarWidth();
       $scope.$apply();
     });
 
-    player.addEventListener(
-      "error",
-      function failed(e) {
-        console.log("Player src error: " + e.target.error.code);
-        $mdToast.show(
-          $mdToast
-            .simple()
-            .textContent("Source error.")
-            .position("top right")
-            .hideDelay(3000)
-            .toastClass("md-toast-error")
-        );
-      },
-      true
-    );
+    player.addEventListener("seeking", function() {
+      $scope.isLoading = true;
+      $scope.$apply();
+    });
+
+    player.addEventListener("canplaythrough", function(e) {
+      PlayerService.podcastDuration = player.duration;
+      $scope.isLoading = false;
+    });
+
+    player.addEventListener("ended", function() {
+      $mdToast.show(
+        $mdToast
+          .simple()
+          .textContent("Podcast ended.")
+          .position("top right")
+          .hideDelay(3000)
+          .toastClass("md-toast-success")
+      );
+    });
+
+    player.addEventListener("error", function failed(e) {
+      console.log("Player src error: " + e.target.error.code);
+      $mdToast.show(
+        $mdToast
+          .simple()
+          .textContent("Source error.")
+          .position("top right")
+          .hideDelay(3000)
+          .toastClass("md-toast-error")
+      );
+    });
+
+    function playPodcast(episode, podcastCover) {
+      url = episode.enclosure.url;
+      player.src = url;
+      player.play();
+      PlayerService.currentlyPlaying = episode.title;
+      PlayerService.podcastDuration = 0;
+      if (episode.image == null) {
+        PlayerService.albumCover = podcastCover;
+      } else {
+        PlayerService.albumCover = episode.image;
+      }
+      $rootScope.toggleSidebar();
+    }
+    $rootScope.playPodcast = playPodcast;
 
     var progress = document.getElementById("progress");
     progress.addEventListener(
@@ -76,7 +117,7 @@ angular
     };
 
     $scope.checkVolume = function() {
-      if (player.volume == 0) {
+      if (player.volume == 0 || player.muted) {
         return "volume_off";
       } else {
         return "volume_up";
@@ -103,33 +144,8 @@ angular
       return PlayerService.albumCover;
     };
 
-    player.addEventListener("seeking", function() {
-      $scope.isLoading = true;
-      $scope.$apply();
-    });
-
-    player.addEventListener("canplaythrough", function(e) {
-      PlayerService.podcastDuration = player.duration;
-      $scope.isLoading = false;
-    });
-
-    function playPodcast(episode, podcastCover) {
-      $scope.isLoading = true;
-      url = episode.enclosure.url;
-      player.src = url;
-      player.play();
-      PlayerService.currentlyPlaying = episode.title;
-      PlayerService.podcastDuration = 0;
-      if (episode.image == null) {
-        PlayerService.albumCover = podcastCover;
-      } else {
-        PlayerService.albumCover = episode.image;
-      }
-      $rootScope.toggleSidebar();
-    }
-    $rootScope.playPodcast = playPodcast;
-
     function togglePlay() {
+      $window.document.getElementById("play-btn").blur();
       if (player.src) {
         if (player.paused) {
           player.play();
@@ -139,6 +155,16 @@ angular
       }
     }
     $rootScope.togglePlay = togglePlay;
+
+    function toggleMute() {
+      console.log("mute");
+      if (player.muted) {
+        player.muted = false;
+      } else {
+        player.muted = true;
+      }
+    }
+    $rootScope.toggleMute = toggleMute;
 
     function volumeUp() {
       if (player.volume + 0.005 > 1) {
