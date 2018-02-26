@@ -9,7 +9,6 @@ var app = angular
   ) {
     //preloading modules to cache to speed up first time view of for example search page
     var storage = require("electron-json-storage");
-    var itunesSearch = require("itunes-api-search");
     var parsePodcast = require("node-podcast-parser");
     let Mousetrap = require("mousetrap");
 

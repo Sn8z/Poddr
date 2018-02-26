@@ -46,7 +46,6 @@
     "angular-messages": "^1.6.9",
     "electron-json-storage": "^3.2.0",
     "electron-window-state": "^4.1.1",
-    "itunes-api-search": "^1.1.0",
     "mousetrap": "^1.6.1",
     "node-podcast-parser": "^2.0.0"
   }

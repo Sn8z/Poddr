@@ -13,6 +13,12 @@ app.filter("secondsToHHmmss", function($filter) {
   };
 });
 
+app.filter("itunesPodcastCover", function() {
+  return function(podcastCover) {
+    return podcastCover.replace("60x60", "250x250");
+  };
+});
+
 //Service to handle global player events & variables
 function PlayerService() {
   this.currentlyPlaying = "No title";

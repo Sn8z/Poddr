@@ -12,11 +12,11 @@
     <md-list-item ng-show="isEmpty">
       <h2 style="color:white">No results</h2>
     </md-list-item>
-    <md-list-item ng-repeat="podcast in results" class="noright" ng-click="showEpisodes(podcast.trackId, podcast.artworkUrl600)">
-      <img ng-src="{{ podcast.artworkUrl600 }}" style="padding:15px;width:100px;" />
+    <md-list-item ng-repeat="podcast in results" class="noright" ng-click="showEpisodes(podcast.trackId, podcast.artworkUrl60 | itunesPodcastCover)">
+      <img ng-src="{{ podcast.artworkUrl60 | itunesPodcastCover }}" style="padding:15px;width:100px;height:100px;">
       <p style="color:white">{{ podcast.artistName }} - {{ podcast.trackName }}</p>
       <md-button class="md-icon-button md-warn icon-btn" aria-label="Favourite">
-        <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl600, podcast.trackName, podcast.artistName)">favorite</md-icon>
+        <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)">favorite</md-icon>
       </md-button>
       <md-divider></md-divider>
     </md-list-item>

@@ -9,7 +9,6 @@ angular
     $timeout
   ) {
     var storage = require("electron-json-storage");
-    var itunesSearch = require("itunes-api-search");
 
     $scope.query = "";
     $scope.results = [];
@@ -19,7 +18,6 @@ angular
 
     //Set focus on input everytime this view gets rendered
     $timeout(function() {
-      console.log($window.document.getElementById("search-input"));
       $window.document.getElementById("search-input").focus();
     }, 50);
 
@@ -33,25 +31,24 @@ angular
         $scope.results = [];
         $scope.isLoading = true;
         $scope.isEmpty = false;
-        itunesSearch.search(
-          $scope.query,
-          {
-            entity: "podcast",
-            limit: "50"
-          },
-          function(err, res) {
-            if (err) {
-              console.log(err);
-              return;
-            }
+
+        //replace åäö
+        var sQuery = $scope.query.replace(/[\u00e4\u00c4\u00c5\u00e5]/g, "a");
+        sQuery = sQuery.replace(/[\u00d6\u00f6]/g, "o");
+
+        $http
+          .get(
+            "https://itunes.apple.com/search?term=" +
+              sQuery +
+              "&entity=podcast&attributes=titleTerm,artistTerm"
+          )
+          .then(function(response) {
             $scope.isLoading = false;
-            $scope.results = res.results;
+            $scope.results = response.data.results;
             if ($scope.results.length == 0) {
               $scope.isEmpty = true;
             }
-            $scope.$apply();
-          }
-        );
+          });
       }
     };
 

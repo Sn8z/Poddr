@@ -26,7 +26,7 @@ body {
 #title-bar-btns {
   -webkit-app-region: no-drag;
   position: absolute;
-  right: 15px;
+  right: 0px;
   height: 30px;
 }
 
@@ -38,6 +38,8 @@ body {
   height: 30px;
   line-height: 30px;
   color: #aaa;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 #min-btn:hover,
@@ -157,6 +159,7 @@ md-option:focus {
   text-overflow: ellipsis;
   text-shadow: 0px 0px 10px #000;
 }
+
 /* Player */
 #play-btn {
   cursor: pointer;
