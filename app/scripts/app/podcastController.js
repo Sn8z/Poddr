@@ -6,13 +6,16 @@ angular
     $mdToast,
     $rootScope,
     RegionService,
-    GenreService
+    GenreService,
+    ToastService
   ) {
     var storage = require("electron-json-storage");
     $scope.amount = 50;
     $scope.podcasts = [];
 
-    $scope.countries = RegionService.regions;
+    RegionService.regions(function(response) {
+      $scope.countries = response;
+    });
 
     $scope.genres = GenreService.genres;
     $scope.genre = 26;
@@ -44,9 +47,14 @@ angular
             $scope.genre +
             "/json"
         )
-        .then(function(response) {
-          $scope.podcasts = response.data.feed.entry;
-        });
+        .then(
+          function successCallback(response) {
+            $scope.podcasts = response.data.feed.entry;
+          },
+          function errorCallback(response) {
+            console.log("Error: " + response);
+          }
+        );
     };
 
     $scope.showEpisodes = function(id, img) {
@@ -66,15 +74,9 @@ angular
         function(err) {
           if (err) {
             console.log(err);
+            ToastService.errorToast("Something went wrong");
           } else {
-            $mdToast.show(
-              $mdToast
-                .simple()
-                .textContent("You now follow " + artist)
-                .position("top right")
-                .hideDelay(3000)
-                .toastClass("md-toast-success")
-            );
+            ToastService.successToast("You now follow " + artist);
           }
         }
       );

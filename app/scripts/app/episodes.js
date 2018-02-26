@@ -1,6 +1,12 @@
-angular.module('poddr').controller(
-  "EpisodesController", function($scope, $rootScope, $http){
-    var parsePodcast = require('node-podcast-parser');
+angular
+  .module("poddr")
+  .controller("EpisodesController", function(
+    $scope,
+    $rootScope,
+    $http,
+    ToastService
+  ) {
+    var parsePodcast = require("node-podcast-parser");
 
     $scope.albumCover = "";
     $scope.isLoading = false;
@@ -9,33 +15,47 @@ angular.module('poddr').controller(
     $scope.episodes = [];
     $scope.canLoadMore = false;
 
-    $scope.loadMore = function(){
+    $scope.loadMore = function() {
       $scope.nrOfItems += 10;
       if ($scope.episodes.length <= $scope.nrOfItems) {
         $scope.canLoadMore = false;
       }
-    }
+    };
 
-    $rootScope.fetchEpisodes = function (id, podcastCover){
+    $rootScope.fetchEpisodes = function(id, podcastCover) {
       $scope.albumCover = podcastCover;
       $scope.episodes = [];
       $scope.isLoading = true;
       $scope.nrOfItems = 20;
       $scope.canLoadMore = false;
-      $http.get("https://itunes.apple.com/lookup?id=" + id).then(function(response){
-        $http.get(response.data.results[0].feedUrl).then(function(response){
-          parsePodcast(response.data, function(err, data){
-            if(err){
-              console.log(err);
-            } else {
+      $http.get("https://itunes.apple.com/lookup?id=" + id).then(
+        function successCallback(response) {
+          $http.get(response.data.results[0].feedUrl).then(
+            function successCallback(response) {
+              parsePodcast(response.data, function(err, data) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  $scope.isLoading = false;
+                  $scope.episodes = data.episodes;
+                  if ($scope.episodes.length > $scope.nrOfItems) {
+                    $scope.canLoadMore = true;
+                  }
+                }
+              });
+            },
+            function errorCallback(response) {
+              console.log(response);
               $scope.isLoading = false;
-              $scope.episodes = data.episodes;
-              if ($scope.episodes.length > $scope.nrOfItems) {
-                $scope.canLoadMore = true;
-              }
+              ToastService.errorToast("Something went wrong");
             }
-          });
-        });
-      });
-    }
+          );
+        },
+        function errorCallback(response) {
+          console.log(response);
+          $scope.isLoading = false;
+          ToastService.errorToast("Something went wrong");
+        }
+      );
+    };
   });

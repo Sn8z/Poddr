@@ -47,7 +47,6 @@ var app = angular
         if (
           response.data.version != require("electron").remote.app.getVersion()
         ) {
-          console.log(response.data.version);
           var toast = $mdToast
             .simple()
             .textContent(response.data.version + " available!")

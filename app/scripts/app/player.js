@@ -4,8 +4,8 @@ angular
     $scope,
     $rootScope,
     PlayerService,
-    $mdToast,
-    $window
+    $window,
+    ToastService
   ) {
     var storage = require("electron-json-storage");
     var ipc = require("electron").ipcRenderer;
@@ -60,26 +60,13 @@ angular
     });
 
     player.addEventListener("ended", function() {
-      $mdToast.show(
-        $mdToast
-          .simple()
-          .textContent("Podcast ended.")
-          .position("top right")
-          .hideDelay(3000)
-          .toastClass("md-toast-success")
-      );
+      ToastService.successToast("Podcast ended.");
     });
 
     player.addEventListener("error", function failed(e) {
       console.log("Player src error: " + e.target.error.code);
-      $mdToast.show(
-        $mdToast
-          .simple()
-          .textContent("Source error.")
-          .position("top right")
-          .hideDelay(3000)
-          .toastClass("md-toast-error")
-      );
+      ToastService.errorToast("Something went wrong.");
+      $scope.isLoading = false;
     });
 
     function playPodcast(episode, podcastCover) {
@@ -157,7 +144,6 @@ angular
     $rootScope.togglePlay = togglePlay;
 
     function toggleMute() {
-      console.log("mute");
       if (player.muted) {
         player.muted = false;
       } else {

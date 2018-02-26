@@ -19,6 +19,49 @@ app.filter("itunesPodcastCover", function() {
   };
 });
 
+function ToastService($mdToast) {
+  this.successToast = function(text) {
+    $mdToast.show(
+      $mdToast
+        .simple()
+        .textContent(text)
+        .position("top right")
+        .hideDelay(3000)
+        .toastClass("md-toast-success")
+    );
+  };
+
+  this.errorToast = function(text) {
+    $mdToast.show(
+      $mdToast
+        .simple()
+        .textContent(text)
+        .position("top right")
+        .hideDelay(3000)
+        .toastClass("md-toast-error")
+    );
+  };
+
+  this.confirmToast = function(text, callback) {
+    var toast = $mdToast
+      .simple()
+      .textContent("Are you sure?")
+      .position("top right")
+      .hideDelay(10000)
+      .action("Remove")
+      .toastClass("md-toast-error");
+
+    $mdToast.show(toast).then(function(response) {
+      if (response == "ok") {
+        callback(true);
+      } else {
+        callback(false);
+      }
+    });
+  };
+}
+app.service("ToastService", ToastService);
+
 //Service to handle global player events & variables
 function PlayerService() {
   this.currentlyPlaying = "No title";
@@ -30,8 +73,9 @@ function PlayerService() {
 app.service("PlayerService", PlayerService);
 
 //regions service
-function RegionService() {
-  this.regions = [
+function RegionService($http, ToastService) {
+  var countries = [];
+  var countriesFallback = [
     { iso: "de", name: "Germany" },
     { iso: "es", name: "Spain" },
     { iso: "fr", name: "France" },
@@ -40,6 +84,21 @@ function RegionService() {
     { iso: "se", name: "Sweden" },
     { iso: "us", name: "Usa" }
   ];
+  this.regions = function(callback) {
+    $http
+      .get("https://api.music.apple.com/v1/storefronts", { cache: true })
+      .then(
+        function successCallback(response) {
+          response.data.data.forEach(function(obj) {
+            countries.push({ iso: obj.id, name: obj.attributes.name });
+          });
+          callback(countries);
+        },
+        function errorCallback(response) {
+          callback(countriesFallback);
+        }
+      );
+  };
 }
 app.service("RegionService", RegionService);
 
