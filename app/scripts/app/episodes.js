@@ -35,6 +35,8 @@ angular
               parsePodcast(response.data, function(err, data) {
                 if (err) {
                   console.log(err);
+                  $scope.isLoading = false;
+                  ToastService.errorToast("Parsing podcastfeed failed.");
                 } else {
                   $scope.isLoading = false;
                   $scope.episodes = data.episodes;

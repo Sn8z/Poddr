@@ -27,14 +27,16 @@ angular
       $rootScope.toggleSidebar();
     };
 
-    $scope.removeFavourite = function($event, id) {
+    $scope.removeFavourite = function(id) {
       ToastService.confirmToast("Are you sure?", function(response) {
         if (response) {
           storage.remove(id, function(err) {
             if (err) {
               console.log(err);
+              ToastService.errorToast("Couldn't remove favourite.");
             } else {
-              $event.srcElement.parentNode.parentElement.parentElement.parentElement.parentElement.remove();
+              delete $scope.favourites[id];
+              $scope.$apply();
             }
           });
         }

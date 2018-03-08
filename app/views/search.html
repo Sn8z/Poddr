@@ -16,7 +16,7 @@
       <img ng-src="{{ podcast.artworkUrl60 | itunesPodcastCover }}" style="padding:15px;width:100px;height:100px;">
       <p style="color:white">{{ podcast.artistName }} - {{ podcast.trackName }}</p>
       <md-button class="md-icon-button md-warn icon-btn" aria-label="Favourite">
-        <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast.trackId, podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)">favorite</md-icon>
+        <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)">favorite</md-icon>
       </md-button>
       <md-divider></md-divider>
     </md-list-item>

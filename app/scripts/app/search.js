@@ -6,7 +6,8 @@ angular
     $mdToast,
     $rootScope,
     $window,
-    $timeout
+    $timeout,
+    FavouriteService
   ) {
     var storage = require("electron-json-storage");
 
@@ -52,31 +53,5 @@ angular
       }
     };
 
-    $scope.setFavourite = $rootScope.setFavourite;
-    $scope.setFavourite = function(id, img, title, artist) {
-      id = id.toString();
-      storage.set(
-        id,
-        {
-          id: id,
-          title: title,
-          img: img,
-          artist: artist
-        },
-        function(err) {
-          if (err) {
-            console.log(err);
-          } else {
-            $mdToast.show(
-              $mdToast
-                .simple()
-                .textContent("You now follow " + artist)
-                .position("top right")
-                .hideDelay(3000)
-                .toastClass("md-toast-success")
-            );
-          }
-        }
-      );
-    };
+    $scope.setFavourite = FavouriteService.favourite;
   });

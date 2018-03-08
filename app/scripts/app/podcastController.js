@@ -7,7 +7,8 @@ angular
     $rootScope,
     RegionService,
     GenreService,
-    ToastService
+    ToastService,
+    FavouriteService
   ) {
     var storage = require("electron-json-storage");
     $scope.amount = 50;
@@ -23,7 +24,6 @@ angular
     storage.get("region", function(error, data) {
       if (error) {
         $scope.region = "us";
-        console.log(error);
       } else {
         if (data.value) {
           $scope.region = data.value;
@@ -62,23 +62,5 @@ angular
       $rootScope.toggleSidebar();
     };
 
-    $scope.setFavourite = function(id, img, title, artist) {
-      storage.set(
-        id,
-        {
-          id: id,
-          title: title,
-          img: img,
-          artist: artist
-        },
-        function(err) {
-          if (err) {
-            console.log(err);
-            ToastService.errorToast("Something went wrong");
-          } else {
-            ToastService.successToast("You now follow " + artist);
-          }
-        }
-      );
-    };
+    $scope.setFavourite = FavouriteService.favourite;
   });

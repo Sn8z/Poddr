@@ -72,6 +72,32 @@ function PlayerService() {
 }
 app.service("PlayerService", PlayerService);
 
+//Favourite
+function FavouriteService(ToastService) {
+  var storage = require("electron-json-storage");
+  this.favourite = function(id, img, title, artist) {
+    storage.set(
+      id,
+      {
+        id: id,
+        title: title,
+        img: img,
+        artist: artist,
+        dateAdded: Date.now()
+      },
+      function(err) {
+        if (err) {
+          console.log(err);
+          ToastService.errorToast("Something went wrong");
+        } else {
+          ToastService.successToast("You now follow " + artist);
+        }
+      }
+    );
+  };
+}
+app.service("FavouriteService", FavouriteService);
+
 //regions service
 function RegionService($http, ToastService) {
   var countries = [];

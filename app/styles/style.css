@@ -143,6 +143,7 @@ md-option:focus {
 /* grid */
 .grid-item {
   padding: 20px;
+  opacity: 1;
 }
 
 .podcast-frame {
