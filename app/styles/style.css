@@ -14,7 +14,7 @@ body {
 #title-bar {
   user-select: none;
   -webkit-app-region: drag;
-  height: 30px;
+  height: 35px;
   background: #252525;
   padding: none;
   margin: 0px;
@@ -27,7 +27,7 @@ body {
   -webkit-app-region: no-drag;
   position: absolute;
   right: 0px;
-  height: 30px;
+  height: 35px;
 }
 
 #min-btn,
@@ -35,8 +35,8 @@ body {
 #close-btn {
   cursor: pointer;
   width: auto;
-  height: 30px;
-  line-height: 30px;
+  height: 35px;
+  line-height: 35px;
   color: #aaa;
   padding-left: 5px;
   padding-right: 5px;
