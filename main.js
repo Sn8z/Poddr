@@ -8,12 +8,12 @@ const windowStateKeeper = require("electron-window-state");
 var mainWindow = null;
 
 //Quit when all windows are closed
-app.on("window-all-closed", function() {
+app.on("window-all-closed", function () {
   app.quit();
 });
 
 //When app is rdy, create window
-app.on("ready", function() {
+app.on("ready", function () {
   //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
   globalShortcut.register("MediaPlayPause", () => {
     mainWindow.webContents.send("toggle-play", "playpause");
@@ -43,7 +43,7 @@ app.on("ready", function() {
   mainWindowState.manage(mainWindow);
 
   //when main window is ready
-  mainWindow.on("ready-to-show", function() {
+  mainWindow.on("ready-to-show", function () {
     mainWindow.show();
     mainWindow.focus();
   });
@@ -55,7 +55,7 @@ app.on("ready", function() {
   //mainWindow.webContents.openDevTools({ detach: true });
 
   //Cleanup on window close
-  mainWindow.on("closed", function() {
+  mainWindow.on("closed", function () {
     mainWindow = null;
   });
 });

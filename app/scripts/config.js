@@ -7,20 +7,20 @@ function configure($mdThemingProvider) {
   $mdThemingProvider.theme("default").dark();
 }
 
-app.filter("secondsToHHmmss", function($filter) {
-  return function(seconds) {
+app.filter("secondsToHHmmss", function ($filter) {
+  return function (seconds) {
     return $filter("date")(new Date(0, 0, 0).setSeconds(seconds), "HH:mm:ss");
   };
 });
 
-app.filter("itunesPodcastCover", function() {
-  return function(podcastCover) {
+app.filter("itunesPodcastCover", function () {
+  return function (podcastCover) {
     return podcastCover.replace("60x60", "250x250");
   };
 });
 
 function ToastService($mdToast) {
-  this.successToast = function(text) {
+  this.successToast = function (text) {
     $mdToast.show(
       $mdToast
         .simple()
@@ -31,7 +31,7 @@ function ToastService($mdToast) {
     );
   };
 
-  this.errorToast = function(text) {
+  this.errorToast = function (text) {
     $mdToast.show(
       $mdToast
         .simple()
@@ -42,7 +42,7 @@ function ToastService($mdToast) {
     );
   };
 
-  this.confirmToast = function(text, callback) {
+  this.confirmToast = function (text, callback) {
     var toast = $mdToast
       .simple()
       .textContent("Are you sure?")
@@ -51,7 +51,7 @@ function ToastService($mdToast) {
       .action("Remove")
       .toastClass("md-toast-error");
 
-    $mdToast.show(toast).then(function(response) {
+    $mdToast.show(toast).then(function (response) {
       if (response == "ok") {
         callback(true);
       } else {
@@ -75,7 +75,7 @@ app.service("PlayerService", PlayerService);
 //Favourite
 function FavouriteService(ToastService) {
   var storage = require("electron-json-storage");
-  this.favourite = function(id, img, title, artist) {
+  this.favourite = function (id, img, title, artist) {
     storage.set(
       id,
       {
@@ -85,7 +85,7 @@ function FavouriteService(ToastService) {
         artist: artist,
         dateAdded: Date.now()
       },
-      function(err) {
+      function (err) {
         if (err) {
           console.log(err);
           ToastService.errorToast("Something went wrong");
@@ -100,30 +100,23 @@ app.service("FavouriteService", FavouriteService);
 
 //regions service
 function RegionService($http, ToastService) {
+  const fs = require("fs");
   var countries = [];
-  var countriesFallback = [
-    { iso: "de", name: "Germany" },
-    { iso: "es", name: "Spain" },
-    { iso: "fr", name: "France" },
-    { iso: "gb", name: "Great Britain" },
-    { iso: "kr", name: "Korea" },
-    { iso: "se", name: "Sweden" },
-    { iso: "us", name: "Usa" }
-  ];
-  this.regions = function(callback) {
-    $http
-      .get("https://api.music.apple.com/v1/storefronts", { cache: true })
-      .then(
-        function successCallback(response) {
-          response.data.data.forEach(function(obj) {
-            countries.push({ iso: obj.id, name: obj.attributes.name });
-          });
-          callback(countries);
-        },
-        function errorCallback(response) {
-          callback(countriesFallback);
-        }
-      );
+  this.regions = function (callback) {
+    //Load local JSON with iTunes storefronts
+    fs.readFile(__dirname + "/scripts/storefronts.json", function (
+      err,
+      response
+    ) {
+      if (err) {
+        return console.log(err);
+      } else {
+        JSON.parse(response).data.forEach(function (obj) {
+          countries.push({ iso: obj.id, name: obj.attributes.name });
+        });
+      }
+    });
+    callback(countries);
   };
 }
 app.service("RegionService", RegionService);

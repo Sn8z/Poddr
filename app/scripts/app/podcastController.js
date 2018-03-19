@@ -1,6 +1,6 @@
 angular
   .module("poddr")
-  .controller("PodcastController", function(
+  .controller("PodcastController", function (
     $scope,
     $http,
     $mdToast,
@@ -14,14 +14,14 @@ angular
     $scope.amount = 50;
     $scope.podcasts = [];
 
-    RegionService.regions(function(response) {
+    RegionService.regions(function (response) {
       $scope.countries = response;
     });
 
     $scope.genres = GenreService.genres;
     $scope.genre = 26;
 
-    storage.get("region", function(error, data) {
+    storage.get("region", function (error, data) {
       if (error) {
         $scope.region = "us";
       } else {
@@ -35,29 +35,30 @@ angular
       $scope.getPodcasts();
     });
 
-    $scope.getPodcasts = function() {
+    $scope.getPodcasts = function () {
       $scope.podcasts = [];
       $http
         .get(
           "https://itunes.apple.com/" +
-            $scope.region +
-            "/rss/topaudiopodcasts/limit=" +
-            $scope.amount +
-            "/genre=" +
-            $scope.genre +
-            "/json"
+          $scope.region +
+          "/rss/topaudiopodcasts/limit=" +
+          $scope.amount +
+          "/genre=" +
+          $scope.genre +
+          "/json"
         )
         .then(
           function successCallback(response) {
             $scope.podcasts = response.data.feed.entry;
           },
           function errorCallback(response) {
-            console.log("Error: " + response);
+            console.log(response);
+            ToastService.errorToast("Couldn't fetch podcasts");
           }
         );
     };
 
-    $scope.showEpisodes = function(id, img) {
+    $scope.showEpisodes = function (id, img) {
       $rootScope.fetchEpisodes(id, img);
       $rootScope.toggleSidebar();
     };
