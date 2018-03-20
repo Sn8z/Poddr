@@ -1,1876 +1,1260 @@
 {
   "data": [
     {
+      "id": "ai",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ai",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Vietnam",
-        "supportedLanguageTags": [
-          "en-gb",
-          "vi-vi"
-        ]
-      },
-      "href": "/v1/storefronts/vn",
-      "id": "vn",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Mongolia",
+        "name": "Anguilla",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/mn",
-      "id": "mn",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "ag",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ag",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "South Africa",
+        "name": "Antigua and Barbuda",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/za",
-      "id": "za",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "ar",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ar",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Mozambique",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/mz",
-      "id": "mz",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Mauritania",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/mr",
-      "id": "mr",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Taiwan",
-        "supportedLanguageTags": [
-          "en-gb",
-          "zh-tw"
-        ]
-      },
-      "href": "/v1/storefronts/tw",
-      "id": "tw",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Micronesia, Federated States of",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/fm",
-      "id": "fm",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Singapore",
-        "supportedLanguageTags": [
-          "en-gb",
-          "zh-cn"
-        ]
-      },
-      "href": "/v1/storefronts/sg",
-      "id": "sg",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Guinea-Bissau",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/gw",
-      "id": "gw",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "zh-cn",
-        "name": "China",
-        "supportedLanguageTags": [
-          "zh-cn",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/cn",
-      "id": "cn",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Kyrgyzstan",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/kg",
-      "id": "kg",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "ja-jp",
-        "name": "Japan",
-        "supportedLanguageTags": [
-          "ja-jp",
-          "en-us"
-        ]
-      },
-      "href": "/v1/storefronts/jp",
-      "id": "jp",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Fiji",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/fj",
-      "id": "fj",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Hong Kong",
-        "supportedLanguageTags": [
-          "en-gb",
-          "zh-hk",
-          "zh-tw"
-        ]
-      },
-      "href": "/v1/storefronts/hk",
-      "id": "hk",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Gambia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/gm",
-      "id": "gm",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Mexico",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/mx",
-      "id": "mx",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Colombia",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/co",
-      "id": "co",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Malawi",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/mw",
-      "id": "mw",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "ru-ru",
-        "name": "Russia",
-        "supportedLanguageTags": [
-          "ru-ru",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ru",
-      "id": "ru",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Venezuela",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ve",
-      "id": "ve",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "ko-kr",
-        "name": "Korea, Republic of",
-        "supportedLanguageTags": [
-          "ko-kr",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/kr",
-      "id": "kr",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Lao People's Democratic Republic",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/la",
-      "id": "la",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "India",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/in",
-      "id": "in",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Liberia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/lr",
-      "id": "lr",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
         "name": "Argentina",
         "supportedLanguageTags": [
           "es-mx",
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ar",
-      "id": "ar",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
     },
     {
+      "id": "am",
+      "type": "storefronts",
+      "href": "/v1/storefronts/am",
       "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "El Salvador",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/sv",
-      "id": "sv",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "pt-br",
-        "name": "Brazil",
-        "supportedLanguageTags": [
-          "pt-br",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/br",
-      "id": "br",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Guatemala",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/gt",
-      "id": "gt",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Ecuador",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ec",
-      "id": "ec",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Peru",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/pe",
-      "id": "pe",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Dominican Republic",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/do",
-      "id": "do",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Hungary",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/hu",
-      "id": "hu",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Chile",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/cl",
-      "id": "cl",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Turkey",
-        "supportedLanguageTags": [
-          "en-gb",
-          "tr-tr"
-        ]
-      },
-      "href": "/v1/storefronts/tr",
-      "id": "tr",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "UAE",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ae",
-      "id": "ae",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Thailand",
-        "supportedLanguageTags": [
-          "en-gb",
-          "th-th"
-        ]
-      },
-      "href": "/v1/storefronts/th",
-      "id": "th",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Indonesia",
-        "supportedLanguageTags": [
-          "en-gb",
-          "id-id"
-        ]
-      },
-      "href": "/v1/storefronts/id",
-      "id": "id",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Papua New Guinea",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/pg",
-      "id": "pg",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Malaysia",
-        "supportedLanguageTags": [
-          "en-gb",
-          "ms-my"
-        ]
-      },
-      "href": "/v1/storefronts/my",
-      "id": "my",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Namibia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/na",
-      "id": "na",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Philippines",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ph",
-      "id": "ph",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Palau",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/pw",
-      "id": "pw",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Saudi Arabia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/sa",
-      "id": "sa",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Nicaragua",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ni",
-      "id": "ni",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Paraguay",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/py",
-      "id": "py",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Pakistan",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/pk",
-      "id": "pk",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Honduras",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/hn",
-      "id": "hn",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "S\u00e3o Tom\u00e9 and Pr\u00edncipe",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/st",
-      "id": "st",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Poland",
-        "supportedLanguageTags": [
-          "en-gb",
-          "pl-pl"
-        ]
-      },
-      "href": "/v1/storefronts/pl",
-      "id": "pl",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Jamaica",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/jm",
-      "id": "jm",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Seychelles",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/sc",
-      "id": "sc",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Egypt",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/eg",
-      "id": "eg",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Kazakhstan",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/kz",
-      "id": "kz",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Uruguay",
-        "supportedLanguageTags": [
-          "en-gb",
-          "es-mx"
-        ]
-      },
-      "href": "/v1/storefronts/uy",
-      "id": "uy",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Macau",
-        "supportedLanguageTags": [
-          "en-gb",
-          "zh-hk",
-          "zh-tw"
-        ]
-      },
-      "href": "/v1/storefronts/mo",
-      "id": "mo",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Estonia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ee",
-      "id": "ee",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Latvia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/lv",
-      "id": "lv",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Kuwait",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/kw",
-      "id": "kw",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Croatia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/hr",
-      "id": "hr",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Israel",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/il",
-      "id": "il",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Ukraine",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ua",
-      "id": "ua",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Sri Lanka",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/lk",
-      "id": "lk",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Romania",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ro",
-      "id": "ro",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Lithuania",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/lt",
-      "id": "lt",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Nepal",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/np",
-      "id": "np",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Panama",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/pa",
-      "id": "pa",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Moldova",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/md",
-      "id": "md",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
         "name": "Armenia",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/am",
-      "id": "am",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "au",
+      "type": "storefronts",
+      "href": "/v1/storefronts/au",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Malta",
+        "name": "Australia",
         "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/mt",
-      "id": "mt",
-      "type": "storefronts"
+          "en-au"
+        ],
+        "defaultLanguageTag": "en-au"
+      }
     },
     {
+      "id": "at",
+      "type": "storefronts",
+      "href": "/v1/storefronts/at",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Czech Republic",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/cz",
-      "id": "cz",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Jordan",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/jo",
-      "id": "jo",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Botswana",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/bw",
-      "id": "bw",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Bulgaria",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/bg",
-      "id": "bg",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Kenya",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ke",
-      "id": "ke",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Lebanon",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/lb",
-      "id": "lb",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Macedonia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/mk",
-      "id": "mk",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Qatar",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/qa",
-      "id": "qa",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Madagascar",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/mg",
-      "id": "mg",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Costa Rica",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/cr",
-      "id": "cr",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Slovakia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/sk",
-      "id": "sk",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Niger",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ne",
-      "id": "ne",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Senegal",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/sn",
-      "id": "sn",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Slovenia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/si",
-      "id": "si",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Mali",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ml",
-      "id": "ml",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Mauritius",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/mu",
-      "id": "mu",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Anguilla",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ai",
-      "id": "ai",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Bahamas",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/bs",
-      "id": "bs",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Tunisia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/tn",
-      "id": "tn",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Uganda",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ug",
-      "id": "ug",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Barbados",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/bb",
-      "id": "bb",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Bermuda",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/bm",
-      "id": "bm",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Antigua and Barbuda",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ag",
-      "id": "ag",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Dominica",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/dm",
-      "id": "dm",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Grenada",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/gd",
-      "id": "gd",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "British Virgin Islands",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/vg",
-      "id": "vg",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Cayman Islands",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ky",
-      "id": "ky",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "St. Lucia",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/lc",
-      "id": "lc",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Montserrat",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ms",
-      "id": "ms",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "St. Kitts and Nevis",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/kn",
-      "id": "kn",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Brunei Darussalam",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/bn",
-      "id": "bn",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Turks and Caicos",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/tc",
-      "id": "tc",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Guyana",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/gy",
-      "id": "gy",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "St. Vincent and The Grenadines",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/vc",
-      "id": "vc",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Trinidad and Tobago",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/tt",
-      "id": "tt",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-mx",
-        "name": "Bolivia",
-        "supportedLanguageTags": [
-          "es-mx",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/bo",
-      "id": "bo",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Cyprus",
-        "supportedLanguageTags": [
-          "en-gb",
-          "tr-tr",
-          "el-gr"
-        ]
-      },
-      "href": "/v1/storefronts/cy",
-      "id": "cy",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Suriname",
-        "supportedLanguageTags": [
-          "en-gb",
-          "nl-nl"
-        ]
-      },
-      "href": "/v1/storefronts/sr",
-      "id": "sr",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Belize",
-        "supportedLanguageTags": [
-          "en-gb",
-          "es-mx"
-        ]
-      },
-      "href": "/v1/storefronts/bz",
-      "id": "bz",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Iceland",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/is",
-      "id": "is",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Bahrain",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/bh",
-      "id": "bh",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "it-it",
-        "name": "Italy",
-        "supportedLanguageTags": [
-          "it-it",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/it",
-      "id": "it",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Yemen",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ye",
-      "id": "ye",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "fr-fr",
-        "name": "France",
-        "supportedLanguageTags": [
-          "fr-fr",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/fr",
-      "id": "fr",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Algeria",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/dz",
-      "id": "dz",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "de-de",
-        "name": "Germany",
+        "name": "Austria",
         "supportedLanguageTags": [
           "de-de",
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/de",
-      "id": "de",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "de-de"
+      }
     },
     {
+      "id": "az",
+      "type": "storefronts",
+      "href": "/v1/storefronts/az",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Angola",
+        "name": "Azerbaijan",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ao",
-      "id": "ao",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "bh",
+      "type": "storefronts",
+      "href": "/v1/storefronts/bh",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Nigeria",
+        "name": "Bahrain",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ng",
-      "id": "ng",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "bb",
+      "type": "storefronts",
+      "href": "/v1/storefronts/bb",
       "attributes": {
-        "defaultLanguageTag": "en-us",
-        "name": "United States",
-        "supportedLanguageTags": [
-          "en-us",
-          "es-mx"
-        ]
-      },
-      "href": "/v1/storefronts/us",
-      "id": "us",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Oman",
+        "name": "Barbados",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/om",
-      "id": "om",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "by",
+      "type": "storefronts",
+      "href": "/v1/storefronts/by",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
+        "name": "Belarus",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "be",
+      "type": "storefronts",
+      "href": "/v1/storefronts/be",
+      "attributes": {
         "name": "Belgium",
         "supportedLanguageTags": [
           "en-gb",
           "fr-fr",
           "nl-nl"
-        ]
-      },
-      "href": "/v1/storefronts/be",
-      "id": "be",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "bz",
+      "type": "storefronts",
+      "href": "/v1/storefronts/bz",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Sierra Leone",
+        "name": "Belize",
+        "supportedLanguageTags": [
+          "en-gb",
+          "es-mx"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "bm",
+      "type": "storefronts",
+      "href": "/v1/storefronts/bm",
+      "attributes": {
+        "name": "Bermuda",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/sl",
-      "id": "sl",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "bo",
+      "type": "storefronts",
+      "href": "/v1/storefronts/bo",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
+        "name": "Bolivia",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "bw",
+      "type": "storefronts",
+      "href": "/v1/storefronts/bw",
+      "attributes": {
+        "name": "Botswana",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "br",
+      "type": "storefronts",
+      "href": "/v1/storefronts/br",
+      "attributes": {
+        "name": "Brazil",
+        "supportedLanguageTags": [
+          "pt-br",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "pt-br"
+      }
+    },
+    {
+      "id": "vg",
+      "type": "storefronts",
+      "href": "/v1/storefronts/vg",
+      "attributes": {
+        "name": "British Virgin Islands",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "bg",
+      "type": "storefronts",
+      "href": "/v1/storefronts/bg",
+      "attributes": {
+        "name": "Bulgaria",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "kh",
+      "type": "storefronts",
+      "href": "/v1/storefronts/kh",
+      "attributes": {
+        "name": "Cambodia",
+        "supportedLanguageTags": [
+          "en-gb",
+          "fr-fr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "ca",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ca",
+      "attributes": {
+        "name": "Canada",
+        "supportedLanguageTags": [
+          "en-ca",
+          "fr-ca"
+        ],
+        "defaultLanguageTag": "en-ca"
+      }
+    },
+    {
+      "id": "cv",
+      "type": "storefronts",
+      "href": "/v1/storefronts/cv",
+      "attributes": {
+        "name": "Cape Verde",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "ky",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ky",
+      "attributes": {
+        "name": "Cayman Islands",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "cl",
+      "type": "storefronts",
+      "href": "/v1/storefronts/cl",
+      "attributes": {
+        "name": "Chile",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "cn",
+      "type": "storefronts",
+      "href": "/v1/storefronts/cn",
+      "attributes": {
+        "name": "China",
+        "supportedLanguageTags": [
+          "zh-cn",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "zh-cn"
+      }
+    },
+    {
+      "id": "co",
+      "type": "storefronts",
+      "href": "/v1/storefronts/co",
+      "attributes": {
+        "name": "Colombia",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "cr",
+      "type": "storefronts",
+      "href": "/v1/storefronts/cr",
+      "attributes": {
+        "name": "Costa Rica",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "cy",
+      "type": "storefronts",
+      "href": "/v1/storefronts/cy",
+      "attributes": {
+        "name": "Cyprus",
+        "supportedLanguageTags": [
+          "en-gb",
+          "el-gr",
+          "tr-tr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "cz",
+      "type": "storefronts",
+      "href": "/v1/storefronts/cz",
+      "attributes": {
+        "name": "Czech Republic",
+        "supportedLanguageTags": [
+          "en-gb",
+          "cs-cz"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "dk",
+      "type": "storefronts",
+      "href": "/v1/storefronts/dk",
+      "attributes": {
+        "name": "Denmark",
+        "supportedLanguageTags": [
+          "en-gb",
+          "da-dk"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "dm",
+      "type": "storefronts",
+      "href": "/v1/storefronts/dm",
+      "attributes": {
+        "name": "Dominica",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "do",
+      "type": "storefronts",
+      "href": "/v1/storefronts/do",
+      "attributes": {
+        "name": "Dominican Republic",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "ec",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ec",
+      "attributes": {
+        "name": "Ecuador",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "eg",
+      "type": "storefronts",
+      "href": "/v1/storefronts/eg",
+      "attributes": {
+        "name": "Egypt",
+        "supportedLanguageTags": [
+          "en-gb",
+          "fr-fr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "sv",
+      "type": "storefronts",
+      "href": "/v1/storefronts/sv",
+      "attributes": {
+        "name": "El Salvador",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "ee",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ee",
+      "attributes": {
+        "name": "Estonia",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "fj",
+      "type": "storefronts",
+      "href": "/v1/storefronts/fj",
+      "attributes": {
+        "name": "Fiji",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "fi",
+      "type": "storefronts",
+      "href": "/v1/storefronts/fi",
+      "attributes": {
         "name": "Finland",
         "supportedLanguageTags": [
           "en-gb",
           "fi-fi"
-        ]
-      },
-      "href": "/v1/storefronts/fi",
-      "id": "fi",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "fr",
+      "type": "storefronts",
+      "href": "/v1/storefronts/fr",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Azerbaijan",
+        "name": "France",
+        "supportedLanguageTags": [
+          "fr-fr",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "fr-fr"
+      }
+    },
+    {
+      "id": "gm",
+      "type": "storefronts",
+      "href": "/v1/storefronts/gm",
+      "attributes": {
+        "name": "Gambia",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/az",
-      "id": "az",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "de",
+      "type": "storefronts",
+      "href": "/v1/storefronts/de",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Solomon Islands",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/sb",
-      "id": "sb",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "United Kingdom",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/gb",
-      "id": "gb",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Belarus",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/by",
-      "id": "by",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "de-de",
-        "name": "Austria",
+        "name": "Germany",
         "supportedLanguageTags": [
           "de-de",
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/at",
-      "id": "at",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "de-de"
+      }
     },
     {
+      "id": "gh",
+      "type": "storefronts",
+      "href": "/v1/storefronts/gh",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Uzbekistan",
+        "name": "Ghana",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/uz",
-      "id": "uz",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "gr",
+      "type": "storefronts",
+      "href": "/v1/storefronts/gr",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Zimbabwe",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/zw",
-      "id": "zw",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
         "name": "Greece",
         "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/gr",
-      "id": "gr",
-      "type": "storefronts"
+          "en-gb",
+          "el-gr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "gd",
+      "type": "storefronts",
+      "href": "/v1/storefronts/gd",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Swaziland",
+        "name": "Grenada",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/sz",
-      "id": "sz",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "gt",
+      "type": "storefronts",
+      "href": "/v1/storefronts/gt",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
+        "name": "Guatemala",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "gw",
+      "type": "storefronts",
+      "href": "/v1/storefronts/gw",
+      "attributes": {
+        "name": "Guinea-Bissau",
+        "supportedLanguageTags": [
+          "en-gb",
+          "fr-fr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "hn",
+      "type": "storefronts",
+      "href": "/v1/storefronts/hn",
+      "attributes": {
+        "name": "Honduras",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "hk",
+      "type": "storefronts",
+      "href": "/v1/storefronts/hk",
+      "attributes": {
+        "name": "Hong Kong",
+        "supportedLanguageTags": [
+          "zh-hk",
+          "zh-tw",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "zh-hk"
+      }
+    },
+    {
+      "id": "hu",
+      "type": "storefronts",
+      "href": "/v1/storefronts/hu",
+      "attributes": {
+        "name": "Hungary",
+        "supportedLanguageTags": [
+          "en-gb",
+          "hu-hu"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "in",
+      "type": "storefronts",
+      "href": "/v1/storefronts/in",
+      "attributes": {
+        "name": "India",
+        "supportedLanguageTags": [
+          "en-gb",
+          "hi-in"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "id",
+      "type": "storefronts",
+      "href": "/v1/storefronts/id",
+      "attributes": {
+        "name": "Indonesia",
+        "supportedLanguageTags": [
+          "en-gb",
+          "id-id"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "ie",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ie",
+      "attributes": {
         "name": "Ireland",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/ie",
-      "id": "ie",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "il",
+      "type": "storefronts",
+      "href": "/v1/storefronts/il",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Tajikistan",
+        "name": "Israel",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/tj",
-      "id": "tj",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "it",
+      "type": "storefronts",
+      "href": "/v1/storefronts/it",
       "attributes": {
-        "defaultLanguageTag": "en-au",
-        "name": "Australia",
+        "name": "Italy",
         "supportedLanguageTags": [
-          "en-au"
-        ]
-      },
-      "href": "/v1/storefronts/au",
-      "id": "au",
-      "type": "storefronts"
+          "it-it",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "it-it"
+      }
     },
     {
+      "id": "jp",
+      "type": "storefronts",
+      "href": "/v1/storefronts/jp",
       "attributes": {
-        "defaultLanguageTag": "en-au",
-        "name": "New Zealand",
+        "name": "Japan",
         "supportedLanguageTags": [
-          "en-au"
-        ]
-      },
-      "href": "/v1/storefronts/nz",
-      "id": "nz",
-      "type": "storefronts"
+          "ja-jp",
+          "en-us"
+        ],
+        "defaultLanguageTag": "ja-jp"
+      }
     },
     {
+      "id": "jo",
+      "type": "storefronts",
+      "href": "/v1/storefronts/jo",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Congo, Republic of the",
+        "name": "Jordan",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/cg",
-      "id": "cg",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "kz",
+      "type": "storefronts",
+      "href": "/v1/storefronts/kz",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Cape Verde",
+        "name": "Kazakhstan",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/cv",
-      "id": "cv",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "ke",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ke",
       "attributes": {
-        "defaultLanguageTag": "pt-pt",
-        "name": "Portugal",
-        "supportedLanguageTags": [
-          "pt-pt",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/pt",
-      "id": "pt",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "es-es",
-        "name": "Spain",
-        "supportedLanguageTags": [
-          "es-es",
-          "ca-es",
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/es",
-      "id": "es",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Albania",
+        "name": "Kenya",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/al",
-      "id": "al",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "kr",
+      "type": "storefronts",
+      "href": "/v1/storefronts/kr",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
+        "name": "Korea, Republic of",
+        "supportedLanguageTags": [
+          "ko-kr",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "ko-kr"
+      }
+    },
+    {
+      "id": "kg",
+      "type": "storefronts",
+      "href": "/v1/storefronts/kg",
+      "attributes": {
+        "name": "Kyrgyzstan",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "la",
+      "type": "storefronts",
+      "href": "/v1/storefronts/la",
+      "attributes": {
+        "name": "Lao People's Democratic Republic",
+        "supportedLanguageTags": [
+          "en-gb",
+          "fr-fr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "lv",
+      "type": "storefronts",
+      "href": "/v1/storefronts/lv",
+      "attributes": {
+        "name": "Latvia",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "lb",
+      "type": "storefronts",
+      "href": "/v1/storefronts/lb",
+      "attributes": {
+        "name": "Lebanon",
+        "supportedLanguageTags": [
+          "en-gb",
+          "fr-fr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "lt",
+      "type": "storefronts",
+      "href": "/v1/storefronts/lt",
+      "attributes": {
+        "name": "Lithuania",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "lu",
+      "type": "storefronts",
+      "href": "/v1/storefronts/lu",
+      "attributes": {
         "name": "Luxembourg",
         "supportedLanguageTags": [
           "en-gb",
           "fr-fr",
           "de-de"
-        ]
-      },
-      "href": "/v1/storefronts/lu",
-      "id": "lu",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "mo",
+      "type": "storefronts",
+      "href": "/v1/storefronts/mo",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Tanzania",
+        "name": "Macau",
+        "supportedLanguageTags": [
+          "zh-hk",
+          "zh-tw",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "zh-hk"
+      }
+    },
+    {
+      "id": "my",
+      "type": "storefronts",
+      "href": "/v1/storefronts/my",
+      "attributes": {
+        "name": "Malaysia",
+        "supportedLanguageTags": [
+          "en-gb",
+          "ms-my"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "mt",
+      "type": "storefronts",
+      "href": "/v1/storefronts/mt",
+      "attributes": {
+        "name": "Malta",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/tz",
-      "id": "tz",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "mu",
+      "type": "storefronts",
+      "href": "/v1/storefronts/mu",
       "attributes": {
-        "defaultLanguageTag": "nl-nl",
+        "name": "Mauritius",
+        "supportedLanguageTags": [
+          "en-gb",
+          "fr-fr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "mx",
+      "type": "storefronts",
+      "href": "/v1/storefronts/mx",
+      "attributes": {
+        "name": "Mexico",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "fm",
+      "type": "storefronts",
+      "href": "/v1/storefronts/fm",
+      "attributes": {
+        "name": "Micronesia, Federated States of",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "md",
+      "type": "storefronts",
+      "href": "/v1/storefronts/md",
+      "attributes": {
+        "name": "Moldova",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "mn",
+      "type": "storefronts",
+      "href": "/v1/storefronts/mn",
+      "attributes": {
+        "name": "Mongolia",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "np",
+      "type": "storefronts",
+      "href": "/v1/storefronts/np",
+      "attributes": {
+        "name": "Nepal",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "nl",
+      "type": "storefronts",
+      "href": "/v1/storefronts/nl",
+      "attributes": {
         "name": "Netherlands",
         "supportedLanguageTags": [
           "nl-nl",
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/nl",
-      "id": "nl",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "nl-nl"
+      }
     },
     {
+      "id": "nz",
+      "type": "storefronts",
+      "href": "/v1/storefronts/nz",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Ghana",
+        "name": "New Zealand",
+        "supportedLanguageTags": [
+          "en-au"
+        ],
+        "defaultLanguageTag": "en-au"
+      }
+    },
+    {
+      "id": "ni",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ni",
+      "attributes": {
+        "name": "Nicaragua",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "ne",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ne",
+      "attributes": {
+        "name": "Niger",
+        "supportedLanguageTags": [
+          "en-gb",
+          "fr-fr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "ng",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ng",
+      "attributes": {
+        "name": "Nigeria",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/gh",
-      "id": "gh",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "no",
+      "type": "storefronts",
+      "href": "/v1/storefronts/no",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
         "name": "Norway",
         "supportedLanguageTags": [
           "en-gb",
           "no-no"
-        ]
-      },
-      "href": "/v1/storefronts/no",
-      "id": "no",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "om",
+      "type": "storefronts",
+      "href": "/v1/storefronts/om",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Denmark",
+        "name": "Oman",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "pa",
+      "type": "storefronts",
+      "href": "/v1/storefronts/pa",
+      "attributes": {
+        "name": "Panama",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "pg",
+      "type": "storefronts",
+      "href": "/v1/storefronts/pg",
+      "attributes": {
+        "name": "Papua New Guinea",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "py",
+      "type": "storefronts",
+      "href": "/v1/storefronts/py",
+      "attributes": {
+        "name": "Paraguay",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "pe",
+      "type": "storefronts",
+      "href": "/v1/storefronts/pe",
+      "attributes": {
+        "name": "Peru",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "ph",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ph",
+      "attributes": {
+        "name": "Philippines",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "pl",
+      "type": "storefronts",
+      "href": "/v1/storefronts/pl",
+      "attributes": {
+        "name": "Poland",
         "supportedLanguageTags": [
           "en-gb",
-          "da-dk"
-        ]
-      },
-      "href": "/v1/storefronts/dk",
-      "id": "dk",
-      "type": "storefronts"
+          "pl-pl"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "pt",
+      "type": "storefronts",
+      "href": "/v1/storefronts/pt",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Cambodia",
+        "name": "Portugal",
+        "supportedLanguageTags": [
+          "pt-pt",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "pt-pt"
+      }
+    },
+    {
+      "id": "ro",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ro",
+      "attributes": {
+        "name": "Romania",
+        "supportedLanguageTags": [
+          "en-gb",
+          "ro-ro"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "ru",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ru",
+      "attributes": {
+        "name": "Russia",
+        "supportedLanguageTags": [
+          "ru-ru",
+          "en-gb",
+          "uk-ua"
+        ],
+        "defaultLanguageTag": "ru-ru"
+      }
+    },
+    {
+      "id": "sa",
+      "type": "storefronts",
+      "href": "/v1/storefronts/sa",
+      "attributes": {
+        "name": "Saudi Arabia",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/kh",
-      "id": "kh",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "sg",
+      "type": "storefronts",
+      "href": "/v1/storefronts/sg",
       "attributes": {
-        "defaultLanguageTag": "en-ca",
-        "name": "Canada",
+        "name": "Singapore",
         "supportedLanguageTags": [
-          "en-ca",
-          "fr-ca"
-        ]
-      },
-      "href": "/v1/storefronts/ca",
-      "id": "ca",
-      "type": "storefronts"
+          "en-gb",
+          "zh-cn"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "sk",
+      "type": "storefronts",
+      "href": "/v1/storefronts/sk",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Benin",
+        "name": "Slovakia",
+        "supportedLanguageTags": [
+          "en-gb",
+          "sk-sk"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "si",
+      "type": "storefronts",
+      "href": "/v1/storefronts/si",
+      "attributes": {
+        "name": "Slovenia",
         "supportedLanguageTags": [
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/bj",
-      "id": "bj",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     },
     {
+      "id": "za",
+      "type": "storefronts",
+      "href": "/v1/storefronts/za",
       "attributes": {
-        "defaultLanguageTag": "sv-se",
+        "name": "South Africa",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "es",
+      "type": "storefronts",
+      "href": "/v1/storefronts/es",
+      "attributes": {
+        "name": "Spain",
+        "supportedLanguageTags": [
+          "es-es",
+          "ca-es",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-es"
+      }
+    },
+    {
+      "id": "lk",
+      "type": "storefronts",
+      "href": "/v1/storefronts/lk",
+      "attributes": {
+        "name": "Sri Lanka",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "kn",
+      "type": "storefronts",
+      "href": "/v1/storefronts/kn",
+      "attributes": {
+        "name": "St. Kitts and Nevis",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "sz",
+      "type": "storefronts",
+      "href": "/v1/storefronts/sz",
+      "attributes": {
+        "name": "Swaziland",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "se",
+      "type": "storefronts",
+      "href": "/v1/storefronts/se",
+      "attributes": {
         "name": "Sweden",
         "supportedLanguageTags": [
           "sv-se",
           "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/se",
-      "id": "se",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "sv-se"
+      }
     },
     {
+      "id": "ch",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ch",
       "attributes": {
-        "defaultLanguageTag": "en-gb",
-        "name": "Bhutan",
-        "supportedLanguageTags": [
-          "en-gb"
-        ]
-      },
-      "href": "/v1/storefronts/bt",
-      "id": "bt",
-      "type": "storefronts"
-    },
-    {
-      "attributes": {
-        "defaultLanguageTag": "de-ch",
         "name": "Switzerland",
         "supportedLanguageTags": [
           "de-ch",
@@ -1878,11 +1262,198 @@
           "en-gb",
           "fr-fr",
           "it-it"
-        ]
-      },
-      "href": "/v1/storefronts/ch",
-      "id": "ch",
-      "type": "storefronts"
+        ],
+        "defaultLanguageTag": "de-ch"
+      }
+    },
+    {
+      "id": "tw",
+      "type": "storefronts",
+      "href": "/v1/storefronts/tw",
+      "attributes": {
+        "name": "Taiwan",
+        "supportedLanguageTags": [
+          "zh-tw",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "zh-tw"
+      }
+    },
+    {
+      "id": "tj",
+      "type": "storefronts",
+      "href": "/v1/storefronts/tj",
+      "attributes": {
+        "name": "Tajikistan",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "th",
+      "type": "storefronts",
+      "href": "/v1/storefronts/th",
+      "attributes": {
+        "name": "Thailand",
+        "supportedLanguageTags": [
+          "en-gb",
+          "th-th"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "tt",
+      "type": "storefronts",
+      "href": "/v1/storefronts/tt",
+      "attributes": {
+        "name": "Trinidad and Tobago",
+        "supportedLanguageTags": [
+          "en-gb",
+          "fr-fr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "tr",
+      "type": "storefronts",
+      "href": "/v1/storefronts/tr",
+      "attributes": {
+        "name": "Turkey",
+        "supportedLanguageTags": [
+          "en-gb",
+          "tr-tr"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "tm",
+      "type": "storefronts",
+      "href": "/v1/storefronts/tm",
+      "attributes": {
+        "name": "Turkmenistan",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "ae",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ae",
+      "attributes": {
+        "name": "UAE",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "ug",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ug",
+      "attributes": {
+        "name": "Uganda",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "ua",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ua",
+      "attributes": {
+        "name": "Ukraine",
+        "supportedLanguageTags": [
+          "en-gb",
+          "uk-ua",
+          "ru-ru"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "gb",
+      "type": "storefronts",
+      "href": "/v1/storefronts/gb",
+      "attributes": {
+        "name": "United Kingdom",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "us",
+      "type": "storefronts",
+      "href": "/v1/storefronts/us",
+      "attributes": {
+        "name": "United States",
+        "supportedLanguageTags": [
+          "en-us",
+          "es-mx"
+        ],
+        "defaultLanguageTag": "en-us"
+      }
+    },
+    {
+      "id": "uz",
+      "type": "storefronts",
+      "href": "/v1/storefronts/uz",
+      "attributes": {
+        "name": "Uzbekistan",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "ve",
+      "type": "storefronts",
+      "href": "/v1/storefronts/ve",
+      "attributes": {
+        "name": "Venezuela",
+        "supportedLanguageTags": [
+          "es-mx",
+          "en-gb"
+        ],
+        "defaultLanguageTag": "es-mx"
+      }
+    },
+    {
+      "id": "vn",
+      "type": "storefronts",
+      "href": "/v1/storefronts/vn",
+      "attributes": {
+        "name": "Vietnam",
+        "supportedLanguageTags": [
+          "en-gb",
+          "vi-vi"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
+    },
+    {
+      "id": "zw",
+      "type": "storefronts",
+      "href": "/v1/storefronts/zw",
+      "attributes": {
+        "name": "Zimbabwe",
+        "supportedLanguageTags": [
+          "en-gb"
+        ],
+        "defaultLanguageTag": "en-gb"
+      }
     }
   ]
 }
