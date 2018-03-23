@@ -115,6 +115,19 @@ md-progress-circular path {
   font-family: "Open Sans", sans-serif;
 }
 
+/* switch */
+md-switch.md-checked .md-bar {
+  background-color: var(--main-color) !important;
+}
+
+md-switch.md-checked .md-thumb {
+  background-color: var(--main-color) !important;
+}
+
+md-switch.md-checked .md-ink-ripple { 
+  color: var(--main-color) !important; 
+}
+
 /* input */
 md-select {
   color: white !important;

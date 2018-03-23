@@ -1,6 +1,6 @@
 angular
   .module("poddr")
-  .controller("SearchController", function(
+  .controller("SearchController", function (
     $scope,
     $http,
     $mdToast,
@@ -9,8 +9,6 @@ angular
     $timeout,
     FavouriteService
   ) {
-    var storage = require("electron-json-storage");
-
     $scope.query = "";
     $scope.results = [];
 
@@ -18,16 +16,15 @@ angular
     $scope.isEmpty = false;
 
     //Set focus on input everytime this view gets rendered
-    $timeout(function() {
+    $timeout(function () {
       $window.document.getElementById("search-input").focus();
     }, 50);
 
-    $scope.showEpisodes = function(id, img) {
+    $scope.showEpisodes = function (id, img) {
       $rootScope.fetchEpisodes(id, img);
-      $rootScope.toggleSidebar();
     };
 
-    $scope.doSearch = function() {
+    $scope.doSearch = function () {
       if ($scope.query) {
         $scope.results = [];
         $scope.isLoading = true;
@@ -40,10 +37,10 @@ angular
         $http
           .get(
             "https://itunes.apple.com/search?term=" +
-              sQuery +
-              "&entity=podcast&attributes=titleTerm,artistTerm"
+            sQuery +
+            "&entity=podcast&attributes=titleTerm,artistTerm"
           )
-          .then(function(response) {
+          .then(function (response) {
             $scope.isLoading = false;
             $scope.results = response.data.results;
             if ($scope.results.length == 0) {

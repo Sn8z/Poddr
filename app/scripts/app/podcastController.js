@@ -60,7 +60,6 @@ angular
 
     $scope.showEpisodes = function (id, img) {
       $rootScope.fetchEpisodes(id, img);
-      $rootScope.toggleSidebar();
     };
 
     $scope.setFavourite = FavouriteService.favourite;

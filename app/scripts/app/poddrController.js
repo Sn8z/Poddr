@@ -1,6 +1,6 @@
 var app = angular
   .module("poddr")
-  .controller("PoddrController", function(
+  .controller("PoddrController", function (
     $scope,
     $rootScope,
     $mdToast,
@@ -12,25 +12,25 @@ var app = angular
     var parsePodcast = require("node-podcast-parser");
     let Mousetrap = require("mousetrap");
 
-    Mousetrap.bind("space", function(e) {
+    Mousetrap.bind("space", function (e) {
       e.preventDefault();
       $rootScope.togglePlay();
     });
-    Mousetrap.bind("mod+m", function(e) {
+    Mousetrap.bind("mod+m", function (e) {
       e.preventDefault();
       $rootScope.toggleMute();
     });
-    Mousetrap.bind("mod+s", function(e) {
+    Mousetrap.bind("mod+s", function (e) {
       e.preventDefault();
       $rootScope.volumeUp();
     });
-    Mousetrap.bind("mod+a", function(e) {
+    Mousetrap.bind("mod+a", function (e) {
       e.preventDefault();
       $rootScope.volumeDown();
     });
 
-    $scope.init = function() {
-      storage.get("theme", function(error, data) {
+    $scope.init = function () {
+      storage.get("theme", function (error, data) {
         var color = "#ff9900";
         if (!error && data.value) {
           color = data.value;
@@ -43,7 +43,7 @@ var app = angular
     //check if update is available
     $http
       .get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json")
-      .then(function(response) {
+      .then(function (response) {
         if (
           response.data.version != require("electron").remote.app.getVersion()
         ) {
@@ -54,7 +54,7 @@ var app = angular
             .hideDelay(10000)
             .action("Update now!")
             .toastClass("md-toast-success");
-          $mdToast.show(toast).then(function(response) {
+          $mdToast.show(toast).then(function (response) {
             if (response == "ok") {
               require("electron").shell.openExternal(
                 "https://github.com/Sn8z/Poddr/releases"
@@ -64,7 +64,7 @@ var app = angular
         }
       });
 
-    $rootScope.toggleSidebar = function() {
+    $rootScope.toggleSidebar = function () {
       $mdSidenav("right").toggle();
     };
     $scope.toggleSidebar = $rootScope.toggleSidebar;
@@ -77,7 +77,7 @@ var app = angular
     $scope.changeView = changeView;
   });
 
-app.directive("podcasts", function() {
+app.directive("podcasts", function () {
   return {
     restrict: "AE",
     replace: true,
@@ -85,7 +85,7 @@ app.directive("podcasts", function() {
   };
 });
 
-app.directive("search", function() {
+app.directive("search", function () {
   return {
     restrict: "AE",
     replace: true,
@@ -93,7 +93,7 @@ app.directive("search", function() {
   };
 });
 
-app.directive("favourites", function() {
+app.directive("favourites", function () {
   return {
     restrict: "AE",
     replace: true,
@@ -101,7 +101,7 @@ app.directive("favourites", function() {
   };
 });
 
-app.directive("settings", function() {
+app.directive("settings", function () {
   return {
     restrict: "AE",
     replace: true,
@@ -109,7 +109,7 @@ app.directive("settings", function() {
   };
 });
 
-app.directive("episodes", function() {
+app.directive("episodes", function () {
   return {
     restrict: "AE",
     replace: true,

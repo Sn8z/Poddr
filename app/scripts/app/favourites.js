@@ -1,6 +1,6 @@
 angular
   .module("poddr")
-  .controller("FavouritesController", function(
+  .controller("FavouritesController", function (
     $scope,
     $rootScope,
     ToastService
@@ -9,7 +9,7 @@ angular
 
     $scope.title = "Favourites";
     $scope.favourites = [];
-    storage.getAll(function(err, data) {
+    storage.getAll(function (err, data) {
       if (err) {
         console.log(err);
       } else {
@@ -22,15 +22,15 @@ angular
       }
     });
 
-    $scope.showEpisodes = function(id, img) {
+    $scope.showEpisodes = function (id, img) {
       $rootScope.fetchEpisodes(id, img);
       $rootScope.toggleSidebar();
     };
 
-    $scope.removeFavourite = function(id) {
-      ToastService.confirmToast("Are you sure?", function(response) {
+    $scope.removeFavourite = function (id) {
+      ToastService.confirmToast("Are you sure?", function (response) {
         if (response) {
-          storage.remove(id, function(err) {
+          storage.remove(id, function (err) {
             if (err) {
               console.log(err);
               ToastService.errorToast("Couldn't remove favourite.");

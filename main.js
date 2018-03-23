@@ -5,7 +5,7 @@ const globalShortcut = electron.globalShortcut;
 const windowStateKeeper = require("electron-window-state");
 
 //Global reference to window object;
-var mainWindow = null;
+let mainWindow = null;
 
 //Quit when all windows are closed
 app.on("window-all-closed", function () {
@@ -13,7 +13,7 @@ app.on("window-all-closed", function () {
 });
 
 //When app is rdy, create window
-app.on("ready", function () {
+app.once("ready", function () {
   //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
   globalShortcut.register("MediaPlayPause", () => {
     mainWindow.webContents.send("toggle-play", "playpause");

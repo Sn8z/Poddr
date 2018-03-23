@@ -109,7 +109,8 @@ function RegionService($http, ToastService) {
       response
     ) {
       if (err) {
-        return console.log(err);
+        console.log(err);
+        ToastService.errorToast("Couldn't load storefronts");
       } else {
         JSON.parse(response).data.forEach(function (obj) {
           countries.push({ iso: obj.id, name: obj.attributes.name });
