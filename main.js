@@ -5,7 +5,7 @@ const globalShortcut = electron.globalShortcut;
 const windowStateKeeper = require("electron-window-state");
 
 //Global reference to window object;
-let mainWindow = null;
+var mainWindow = null;
 
 //Quit when all windows are closed
 app.on("window-all-closed", function () {

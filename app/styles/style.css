@@ -220,7 +220,7 @@ md-option:focus {
 }
 
 .md-toast-success .md-toast-content {
-  background-color: green !important;
+  background-color: var(--main-color) !important;
 }
 
 .md-toast-error .md-toast-content {

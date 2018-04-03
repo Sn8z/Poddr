@@ -37,7 +37,7 @@ function ToastService($mdToast) {
         .simple()
         .textContent(text)
         .position("top right")
-        .hideDelay(3000)
+        .hideDelay(10000)
         .toastClass("md-toast-error")
     );
   };
