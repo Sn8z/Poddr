@@ -17,16 +17,10 @@ Commands:
     Show help.
 
 
-  icon --input=INPUT --format=FORMAT [<flags>]
-    create ICNS or ICO or icon set from PNG files
-
-    -i, --input=INPUT ...  input directory or file
-    -f, --format=FORMAT    output format
-    -r, --root=ROOT ...    base directory to resolve relative path
-
   blockmap --input=INPUT [<flags>]
-    Generates file block map for differential update using content defined chunking 
-    (that is robust to insertions, deletions, and changes to input file)
+    Generates file block map for differential update using content defined
+    chunking (that is robust to insertions, deletions, and changes to input
+    file)
 
     -i, --input=INPUT       input file
     -o, --output=OUTPUT     output file
@@ -49,17 +43,27 @@ Commands:
   copy --from=FROM --to=TO [<flags>]
     Copy file or dir.
 
-    -f, --from=FROM  
-    -t, --to=TO      
+    -f, --from=FROM
+    -t, --to=TO
         --hard-link  Whether to use hard-links if possible
+
+  appimage --app=APP --stage=STAGE --output=OUTPUT [<flags>]
+    Build AppImage.
+
+    -a, --app=APP                  The app dir.
+    -s, --stage=STAGE              The stage dir.
+    -o, --output=OUTPUT            The output file.
+        --arch=x64                 The arch.
+        --compression=COMPRESSION  The compression.
+        --remove-stage             Whether to remove stage after build.
 
   snap --app=APP --stage=STAGE --output=OUTPUT [<flags>]
     Build snap.
 
-    -t, --template=TEMPLATE  The template dir.
-    -u, --template-url=TEMPLATE-URL  
+    -t, --template=TEMPLATE  The template file.
+    -u, --template-url=TEMPLATE-URL
                              The template archive URL.
-        --template-sha512=TEMPLATE-SHA512  
+        --template-sha512=TEMPLATE-SHA512
                              The expected sha512 of template archive.
     -a, --app=APP            The app dir.
     -s, --stage=STAGE        The stage dir.
@@ -67,8 +71,27 @@ Commands:
         --hooks=HOOKS        The hooks dir.
         --arch=amd64         The arch.
     -o, --output=OUTPUT      The output file.
-        --docker-image="snapcore/snapcraft:latest"  
+        --docker-image="snapcore/snapcraft:latest"
                              The docker image.
         --docker             Whether to use Docker.
         --remove-stage       Whether to remove stage after build.
+
+  icon --input=INPUT --format=FORMAT --out=OUT [<flags>]
+    create ICNS or ICO or icon set from PNG files
+
+    -i, --input=INPUT ...  input directory or file
+    -f, --format=FORMAT    output format
+        --out=OUT          output directory
+    -r, --root=ROOT ...    base directory to resolve relative path
+
+  dmg --volume=VOLUME [<flags>]
+    Build dmg.
+
+    --volume=VOLUME
+    --icon=ICON
+    --background=BACKGROUND
+
+  clear-exec-stack --input=INPUT
+
+    -i, --input=INPUT
 ```
