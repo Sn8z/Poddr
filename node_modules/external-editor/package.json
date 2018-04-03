@@ -1,6 +1,6 @@
 {
   "name": "external-editor",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Edit a string with the users preferred text editor using $VISUAL or $ENVIRONMENT",
   "main": "main/index.js",
   "scripts": {

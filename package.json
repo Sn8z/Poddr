@@ -18,7 +18,6 @@
   "author": "Sn8z",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^1.8.2",
     "electron-builder": "^19.56.2"
   },
   "build": {
