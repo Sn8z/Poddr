@@ -1,11 +1,14 @@
 <div align="center">
     <img src="images/poddr_logo.png" alt="Poddr" width="60" height="60">
     <h1>Poddr</h1>
+    <img src="https://img.shields.io/github/release/sn8z/poddr.svg">
+    <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg">
     <img src="https://app.codeship.com/projects/201ad970-f91b-0135-962e-46ce43625878/status?branch=master"/>
+    <a href="https://david-dm.org/sn8z/poddr" title="dependencies status"><img src="https://david-dm.org/sn8z/poddr/status.svg"/></a>
 </div>
-
+ 
 Podcast client built with Electron and AngularJS.
-
+ 
 It uses iTunes RSS feeds and search API to gather its information.
 ### Screenshots
 
