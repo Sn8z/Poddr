@@ -142,15 +142,6 @@ angular
     }
     $rootScope.togglePlay = togglePlay;
 
-    function toggleMute() {
-      if (player.muted) {
-        player.muted = false;
-      } else {
-        player.muted = true;
-      }
-    }
-    $rootScope.toggleMute = toggleMute;
-
     function volumeUp() {
       if (player.volume + 0.005 > 1) {
         player.volume = 1;

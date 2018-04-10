@@ -120,36 +120,36 @@
 
       <!-- Player -->
       <div class="box3" layout="column" ng-controller="PlayerController">
-        <div flex layout="row">
+        <div class="row">
+          <div id="progress">
+            <div id="bar" ng-style="{'width':barWidth}"></div>
+          </div>
+        </div>
+        <div class="row" layout="row" style="height:100%">
           <div flex="10" layout="row" layout-align="center center">
             <md-icon id="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
           </div>
-          <div flex="65" layout="column" layout-align="center start" style="color:white">
-            <div id="progress">
-              <div id="bar" ng-style="{'width':barWidth}">
-                <!-- Progressbar -->
-              </div>
-            </div>
-            <div class="row" layout="rows" style="width:100%;">
-              <div flex="75" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000;">
-                <b ng-bind="currentlyPlaying()"></b>
-              </div>
-              <div flex="25">
-                <span class="timer-text">{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</span>
-              </div>
-            </div>
+          <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
+            <b ng-bind="currentlyPlaying()"></b>
+            <span class="timer-text">{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</span>
           </div>
-          <div flex="5" layout="column" layout-align="center center">
+          <div flex="10" layout="row" layout-align="center center">
             <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
           </div>
-          <div flex="5" layout="column" layout-align="center center">
+          <div flex="5" layout="row" layout-align="center center">
             <md-icon id="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
           </div>
-          <md-slider-container flex="15" style="padding:10px;">
-            <md-icon ng-click="toggleMute()" md-font-library="material-icons">{{ checkVolume() }}</md-icon>
+          <div flex="5" layout="row" layout-align="center center">
+            <md-icon md-font-library="material-icons">favorite_border</md-icon>
+          </div>
+          <div flex="5" layout="row" layout-align="center center">
+            <md-icon md-font-library="material-icons">{{ checkVolume() }}</md-icon>
+          </div>
+          <md-slider-container flex="10">
             <md-slider id="volume-slider" onmouseup="document.activeElement.blur()" ng-model="volume" ng-change="setVolume()" flex min="0"
               max="1" step="0.001" aria-label="volume"></md-slider>
           </md-slider-container>
+          <div flex="5"></div>
         </div>
       </div>
     </div>
