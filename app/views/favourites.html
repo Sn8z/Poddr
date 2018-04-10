@@ -2,8 +2,8 @@
   <div class="row" layout="row">
     <h1 flex style="color:white">{{ title }}</h1>
   </div>
-  <div class="row" ng-if="favourites.length == 0">
-    <h2 style="color:white">No favourites</h2>
+  <div class="row">
+    <h3 style="color:white">{{ message }}</h3>
   </div>
   <div class="row" layout="row" layout-wrap>
     <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="20" flex-xl="20" ng-repeat="favourite in favourites">

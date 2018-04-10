@@ -8,6 +8,7 @@ angular
     var storage = require("electron-json-storage");
 
     $scope.title = "Favourites";
+    $scope.message = "";
     $scope.favourites = [];
     storage.getAll(function (err, data) {
       if (err) {
@@ -18,6 +19,9 @@ angular
         delete data.region;
         delete data.theme;
         $scope.favourites = data;
+        if ($scope.favourites.length == 0) {
+          $scope.message = "No favourites added yet..";
+        }
         $scope.$apply();
       }
     });
