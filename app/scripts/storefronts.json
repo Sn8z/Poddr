@@ -1280,18 +1280,6 @@
       }
     },
     {
-      "id": "tj",
-      "type": "storefronts",
-      "href": "/v1/storefronts/tj",
-      "attributes": {
-        "name": "Tajikistan",
-        "supportedLanguageTags": [
-          "en-gb"
-        ],
-        "defaultLanguageTag": "en-gb"
-      }
-    },
-    {
       "id": "th",
       "type": "storefronts",
       "href": "/v1/storefronts/th",

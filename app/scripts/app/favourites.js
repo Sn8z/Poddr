@@ -7,7 +7,6 @@ angular
   ) {
     var storage = require("electron-json-storage");
 
-    $scope.title = "Favourites";
     $scope.message = "";
     $scope.favourites = [];
     storage.getAll(function (err, data) {
