@@ -1,10 +1,11 @@
-// Copyright 2014 Simon Lydell
+// Copyright 2014, 2015, 2016, 2017 Simon Lydell
 // X11 (“MIT”) Licensed. (See LICENSE.)
 
-var sourceMappingURL = require("source-map-url")
-var resolveUrl       = require("./resolve-url")
-var urix             = require("urix")
-var atob             = require("atob")
+var sourceMappingURL   = require("source-map-url")
+var resolveUrl         = require("./resolve-url")
+var decodeUriComponent = require("./decode-uri-component")
+var urix               = require("urix")
+var atob               = require("atob")
 
 
 
@@ -12,8 +13,23 @@ function callbackAsync(callback, error, result) {
   setImmediate(function() { callback(error, result) })
 }
 
-function parseMapToJSON(string) {
-  return JSON.parse(string.replace(/^\)\]\}'/, ""))
+function parseMapToJSON(string, data) {
+  try {
+    return JSON.parse(string.replace(/^\)\]\}'/, ""))
+  } catch (error) {
+    error.sourceMapData = data
+    throw error
+  }
+}
+
+function readSync(read, url, data) {
+  var readUrl = decodeUriComponent(url)
+  try {
+    return String(read(readUrl))
+  } catch (error) {
+    error.sourceMapData = data
+    throw error
+  }
 }
 
 
@@ -28,12 +44,15 @@ function resolveSourceMap(code, codeUrl, read, callback) {
   if (!mapData || mapData.map) {
     return callbackAsync(callback, null, mapData)
   }
-  read(mapData.url, function(error, result) {
+  var readUrl = decodeUriComponent(mapData.url)
+  read(readUrl, function(error, result) {
     if (error) {
+      error.sourceMapData = mapData
       return callback(error)
     }
+    mapData.map = String(result)
     try {
-      mapData.map = parseMapToJSON(String(result))
+      mapData.map = parseMapToJSON(mapData.map, mapData)
     } catch (error) {
       return callback(error)
     }
@@ -46,7 +65,8 @@ function resolveSourceMapSync(code, codeUrl, read) {
   if (!mapData || mapData.map) {
     return mapData
   }
-  mapData.map = parseMapToJSON(String(read(mapData.url)))
+  mapData.map = readSync(read, mapData.url, mapData)
+  mapData.map = parseMapToJSON(mapData.map, mapData)
   return mapData
 }
 
@@ -64,17 +84,24 @@ function resolveSourceMapHelper(code, codeUrl) {
   var dataUri = url.match(dataUriRegex)
   if (dataUri) {
     var mimeType = dataUri[1]
-    var lastParameter = dataUri[2]
-    var encoded = dataUri[3]
-    if (!jsonMimeTypeRegex.test(mimeType)) {
-      throw new Error("Unuseful data uri mime type: " + (mimeType || "text/plain"))
-    }
-    return {
+    var lastParameter = dataUri[2] || ""
+    var encoded = dataUri[3] || ""
+    var data = {
       sourceMappingURL: url,
       url: null,
       sourcesRelativeTo: codeUrl,
-      map: parseMapToJSON(lastParameter === ";base64" ? atob(encoded) : decodeURIComponent(encoded))
+      map: encoded
     }
+    if (!jsonMimeTypeRegex.test(mimeType)) {
+      var error = new Error("Unuseful data uri mime type: " + (mimeType || "text/plain"))
+      error.sourceMapData = data
+      throw error
+    }
+    data.map = parseMapToJSON(
+      lastParameter === ";base64" ? atob(encoded) : decodeURIComponent(encoded),
+      data
+    )
+    return data
   }
 
   var mapUrl = resolveUrl(codeUrl, url)
@@ -93,21 +120,18 @@ function resolveSources(map, mapUrl, read, options, callback) {
     callback = options
     options = {}
   }
-  var pending = map.sources.length
-  var errored = false
+  var pending = map.sources ? map.sources.length : 0
   var result = {
     sourcesResolved: [],
     sourcesContent:  []
   }
 
-  var done = function(error) {
-    if (errored) {
-      return
-    }
-    if (error) {
-      errored = true
-      return callback(error)
-    }
+  if (pending === 0) {
+    callbackAsync(callback, null, result)
+    return
+  }
+
+  var done = function() {
     pending--
     if (pending === 0) {
       callback(null, result)
@@ -120,9 +144,10 @@ function resolveSources(map, mapUrl, read, options, callback) {
       result.sourcesContent[index] = sourceContent
       callbackAsync(done, null)
     } else {
-      read(fullUrl, function(error, source) {
-        result.sourcesContent[index] = String(source)
-        done(error)
+      var readUrl = decodeUriComponent(fullUrl)
+      read(readUrl, function(error, source) {
+        result.sourcesContent[index] = error ? error : String(source)
+        done()
       })
     }
   })
@@ -133,16 +158,27 @@ function resolveSourcesSync(map, mapUrl, read, options) {
     sourcesResolved: [],
     sourcesContent:  []
   }
+
+  if (!map.sources || map.sources.length === 0) {
+    return result
+  }
+
   resolveSourcesHelper(map, mapUrl, options, function(fullUrl, sourceContent, index) {
     result.sourcesResolved[index] = fullUrl
     if (read !== null) {
       if (typeof sourceContent === "string") {
         result.sourcesContent[index] = sourceContent
       } else {
-        result.sourcesContent[index] = String(read(fullUrl))
+        var readUrl = decodeUriComponent(fullUrl)
+        try {
+          result.sourcesContent[index] = String(read(readUrl))
+        } catch (error) {
+          result.sourcesContent[index] = error
+        }
       }
     }
   })
+
   return result
 }
 
@@ -153,14 +189,23 @@ function resolveSourcesHelper(map, mapUrl, options, fn) {
   mapUrl = urix(mapUrl)
   var fullUrl
   var sourceContent
+  var sourceRoot
   for (var index = 0, len = map.sources.length; index < len; index++) {
-    if (map.sourceRoot && !options.ignoreSourceRoot) {
+    sourceRoot = null
+    if (typeof options.sourceRoot === "string") {
+      sourceRoot = options.sourceRoot
+    } else if (typeof map.sourceRoot === "string" && options.sourceRoot !== false) {
+      sourceRoot = map.sourceRoot
+    }
+    // If the sourceRoot is the empty string, it is equivalent to not setting
+    // the property at all.
+    if (sourceRoot === null || sourceRoot === '') {
+      fullUrl = resolveUrl(mapUrl, map.sources[index])
+    } else {
       // Make sure that the sourceRoot ends with a slash, so that `/scripts/subdir` becomes
       // `/scripts/subdir/<source>`, not `/scripts/<source>`. Pointing to a file as source root
       // does not make sense.
-      fullUrl = resolveUrl(mapUrl, map.sourceRoot.replace(endingSlash, "/"), map.sources[index])
-    } else {
-      fullUrl = resolveUrl(mapUrl, map.sources[index])
+      fullUrl = resolveUrl(mapUrl, sourceRoot.replace(endingSlash, "/"), map.sources[index])
     }
     sourceContent = (map.sourcesContent || [])[index]
     fn(fullUrl, sourceContent, index)
@@ -174,13 +219,41 @@ function resolve(code, codeUrl, read, options, callback) {
     callback = options
     options = {}
   }
-  resolveSourceMap(code, codeUrl, read, function(error, mapData) {
-    if (error) {
-      return callback(error)
+  if (code === null) {
+    var mapUrl = codeUrl
+    var data = {
+      sourceMappingURL: null,
+      url: mapUrl,
+      sourcesRelativeTo: mapUrl,
+      map: null
     }
-    if (!mapData) {
-      return callback(null, null)
-    }
+    var readUrl = decodeUriComponent(mapUrl)
+    read(readUrl, function(error, result) {
+      if (error) {
+        error.sourceMapData = data
+        return callback(error)
+      }
+      data.map = String(result)
+      try {
+        data.map = parseMapToJSON(data.map, data)
+      } catch (error) {
+        return callback(error)
+      }
+      _resolveSources(data)
+    })
+  } else {
+    resolveSourceMap(code, codeUrl, read, function(error, mapData) {
+      if (error) {
+        return callback(error)
+      }
+      if (!mapData) {
+        return callback(null, null)
+      }
+      _resolveSources(mapData)
+    })
+  }
+
+  function _resolveSources(mapData) {
     resolveSources(mapData.map, mapData.sourcesRelativeTo, read, options, function(error, result) {
       if (error) {
         return callback(error)
@@ -189,13 +262,26 @@ function resolve(code, codeUrl, read, options, callback) {
       mapData.sourcesContent  = result.sourcesContent
       callback(null, mapData)
     })
-  })
+  }
 }
 
 function resolveSync(code, codeUrl, read, options) {
-  var mapData = resolveSourceMapSync(code, codeUrl, read)
-  if (!mapData) {
-    return null
+  var mapData
+  if (code === null) {
+    var mapUrl = codeUrl
+    mapData = {
+      sourceMappingURL: null,
+      url: mapUrl,
+      sourcesRelativeTo: mapUrl,
+      map: null
+    }
+    mapData.map = readSync(read, mapUrl, mapData)
+    mapData.map = parseMapToJSON(mapData.map, mapData)
+  } else {
+    mapData = resolveSourceMapSync(code, codeUrl, read)
+    if (!mapData) {
+      return null
+    }
   }
   var result = resolveSourcesSync(mapData.map, mapData.sourcesRelativeTo, read, options)
   mapData.sourcesResolved = result.sourcesResolved
@@ -211,5 +297,6 @@ module.exports = {
   resolveSources:       resolveSources,
   resolveSourcesSync:   resolveSourcesSync,
   resolve:              resolve,
-  resolveSync:          resolveSync
+  resolveSync:          resolveSync,
+  parseMapToJSON:       parseMapToJSON
 }

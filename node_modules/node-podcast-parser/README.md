@@ -25,9 +25,10 @@ Takes an opinionated view on what should be included so not everything is. The g
   "categories": [
     "Category>Subcategory"
   ],
+  "author": "<Author name>",
   "owner": {
-    "name":  "<Author name>",
-    "email": "<Author email>"
+    "name":  "<Owner name>",
+    "email": "<Owner email>"
   },
   "episodes": [
     {

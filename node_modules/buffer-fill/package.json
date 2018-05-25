@@ -1,0 +1,13 @@
+{
+  "name": "buffer-fill",
+  "version": "0.1.1",
+  "license": "MIT",
+  "repository": "LinusU/buffer-fill",
+  "scripts": {
+    "test": "standard && node test"
+  },
+  "devDependencies": {
+    "buffer-alloc-unsafe": "^0.1.0",
+    "standard": "^7.1.2"
+  }
+}

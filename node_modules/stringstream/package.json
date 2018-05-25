@@ -1,6 +1,6 @@
 {
   "name": "stringstream",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Encode and decode streams into string streams",
   "author": "Michael Hart <michael.hart.au@gmail.com> (http://github.com/mhart)",
   "main": "stringstream.js",

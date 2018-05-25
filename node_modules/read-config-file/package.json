@@ -1,6 +1,6 @@
 {
   "name": "read-config-file",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "out/main.js",
   "author": "Vladimir Krivosheev",
   "license": "MIT",
@@ -15,23 +15,23 @@
     "release": "yarn compile && npm publish"
   },
   "dependencies": {
-    "ajv": "^6.1.1",
-    "ajv-keywords": "^3.1.0",
+    "ajv": "^6.4.0",
+    "ajv-keywords": "^3.2.0",
     "bluebird-lst": "^1.0.5",
-    "dotenv": "^5.0.0",
-    "dotenv-expand": "^4.0.1",
-    "fs-extra-p": "^4.5.0",
-    "js-yaml": "^3.10.0",
-    "json5": "^0.5.1",
+    "dotenv": "^5.0.1",
+    "dotenv-expand": "^4.2.0",
+    "fs-extra-p": "^4.6.0",
+    "js-yaml": "^3.11.0",
+    "json5": "^1.0.1",
     "lazy-val": "^1.0.3"
   },
   "devDependencies": {
-    "@types/dotenv": "^4.0.2",
-    "@types/js-yaml": "^3.10.1",
-    "@types/node": "^9.4.0",
-    "babel-preset-ts-node6-bluebird": "^1.0.1",
-    "ts-babel": "^4.1.8",
-    "typescript": "^2.7.1"
+    "@types/dotenv": "^4.0.3",
+    "@types/js-yaml": "^3.11.1",
+    "@types/node": "^10.0.2",
+    "babel-preset-ts-node6-bluebird": "^2.0.5",
+    "ts-babel": "^5.0.3",
+    "typescript": "^2.8.3"
   },
   "babel": {
     "presets": [

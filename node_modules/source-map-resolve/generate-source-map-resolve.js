@@ -1,4 +1,4 @@
-// Copyright 2014 Simon Lydell
+// Copyright 2014, 2017 Simon Lydell
 // X11 (“MIT”) Licensed. (See LICENSE.)
 
 var fs = require("fs")
@@ -13,6 +13,9 @@ nodeCode = nodeCode
 
   // Remove `urix`.
   .replace(/(\w+)\s*=\s*urix\(\1\)\s*/g, "")
+
+  // Remove `decode-uri-component`.
+  .replace(/(var readUrl = )decodeUriComponent\(([\w.]+)\)/g, "$1$2")
 
   // Change `module.exports = {...}` to `return {...}`.
   .replace(/module\.exports = (\{[^}]+\})\s*$/, "return $1")

@@ -1,10 +1,7 @@
 rgb2hex [![Build Status](https://travis-ci.org/christian-bromann/rgb2hex.svg?branch=master)](https://travis-ci.org/christian-bromann/rgb2hex) [![Coverage Status](https://coveralls.io/repos/christian-bromann/rgb2hex/badge.png)](https://coveralls.io/r/christian-bromann/rgb2hex)
 =======
 
-[![Selenium Test Status](https://saucelabs.com/browser-matrix/rgb2hex.svg)](https://saucelabs.com/u/rgb2hex)
-
 Parse any rgb or rgba string into a hex color. Lightweight library, no dependencies!
-
 
 ## Installation
 

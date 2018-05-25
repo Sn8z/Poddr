@@ -40,6 +40,7 @@
     "afterEach": false,
     "define": false,
     "window": false,
-    "atob": true
+    "atob": true,
+    "JSON": false
   }
 }

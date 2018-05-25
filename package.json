@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "electron .",
+    "start": "./node_modules/.bin/electron .",
     "dist": "electron-builder -wl",
     "dist:mac": "build --mac",
     "dist:win": "build --win",
@@ -18,7 +18,7 @@
   "author": "Sn8z",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^1.8.2",
+    "electron": "^2.0.2",
     "electron-builder": "^20.8.2",
     "mocha": "^5.0.1",
     "spectron": "^3.8.0"

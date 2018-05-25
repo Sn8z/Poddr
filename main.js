@@ -52,7 +52,7 @@ app.once("ready", function () {
   mainWindow.loadURL("file://" + __dirname + "/app/index.html");
 
   //Devtools
-  //mainWindow.webContents.openDevTools({ detach: true });
+  //mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   //Cleanup on window close
   mainWindow.on("closed", function () {
