@@ -90,7 +90,7 @@ md-progress-circular path {
 }
 
 #left-sidenav {
-  background: #111;
+  background-color: rgba(15, 15, 15, 0.99);
 }
 
 #right-sidenav {

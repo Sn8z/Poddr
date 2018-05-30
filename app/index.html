@@ -5,7 +5,7 @@
   <title>Poddr</title>
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|Rock+Salt|Rubik" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="../node_modules/material-design-icons-iconfont/dist/material-design-icons.css">
 
   <link rel="stylesheet" type="text/css" href="../node_modules/angular-material/angular-material.css">
   <link rel="stylesheet" type="text/css" href="styles/style.css">
@@ -40,14 +40,6 @@
     <md-sidenav id="left-sidenav" flex="15" md-is-locked-open="true" md-component-id="left">
       <md-content style="background-color:transparent">
         <md-list md-no-ink>
-          <md-item>
-            <md-item-content layout="row" layout-align="center center">
-              <div class="inset">
-                <h1 class="logo-text">Poddr</h1>
-              </div>
-            </md-item-content>
-          </md-item>
-          <md-divider></md-divider>
           <md-list-item class="menu-item" id="toplist-item" ng-click="changeView('podcasts')">
             <md-item-content layout="row" layout-align="center center">
               <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
@@ -56,7 +48,7 @@
               </div>
             </md-item-content>
           </md-list-item>
-          <md-divider></md-divider>
+
           <md-list-item class="menu-item" id="search-item" ng-click="changeView('search')">
             <md-item-content md-ink-ripple layout="row" layout-align="center center">
               <md-icon class="menu-icon" md-font-library="material-icons">search</md-icon>
@@ -65,16 +57,16 @@
               </div>
             </md-item-content>
           </md-list-item>
-          <md-divider></md-divider>
 
           <md-list-item class="menu-item" id="favourite-item" ng-click="changeView('favourites')">
             <md-item-content md-ink-ripple layout="row" layout-align="center center">
-              <md-icon class="menu-icon" md-font-library="material-icons">favorite</md-icon>
+              <md-icon class="menu-icon" md-font-library="material-icons">favorite_border</md-icon>
               <div class="inset">
                 Favourites
               </div>
             </md-item-content>
           </md-list-item>
+
           <md-divider></md-divider>
 
           <md-list-item class="menu-item" id="about-item" ng-click="changeView('settings')">
@@ -85,7 +77,6 @@
               </div>
             </md-item-content>
           </md-list-item>
-          <md-divider></md-divider>
 
         </md-list>
       </md-content>
