@@ -5,7 +5,8 @@ var app = angular
     $rootScope,
     $mdToast,
     $mdSidenav,
-    $http
+    $http,
+    PlayerService
   ) {
     //preloading modules to cache to speed up first time view of for example search page
     var storage = require("electron-json-storage");

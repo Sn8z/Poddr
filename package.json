@@ -1,6 +1,6 @@
 {
   "name": "poddr",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Simple podcast client",
   "main": "main.js",
   "repository": {

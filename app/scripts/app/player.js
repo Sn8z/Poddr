@@ -5,7 +5,8 @@ angular
     $rootScope,
     PlayerService,
     $window,
-    ToastService
+    ToastService,
+    FavouriteService
   ) {
     var storage = require("electron-json-storage");
     var ipc = require("electron").ipcRenderer;
@@ -69,16 +70,21 @@ angular
       $scope.isLoading = false;
     });
 
-    function playPodcast(episode, podcastCover) {
-      url = episode.enclosure.url;
-      player.src = url;
+    function playPodcast(episode) {
+      player.src = episode.enclosure.url;
       player.play();
+
       PlayerService.currentlyPlaying = episode.title;
       PlayerService.podcastDuration = 0;
+      PlayerService.podcastArtist = PlayerService.latestSeenArtist;
+      PlayerService.podcastDescription = episode.description;
+      PlayerService.podcastID = PlayerService.latestSeenID;
+      PlayerService.podcastCover = PlayerService.latestSeenCover;
+
       if (episode.image == null) {
-        PlayerService.albumCover = podcastCover;
+        PlayerService.episodeCover = PlayerService.podcastCover;
       } else {
-        PlayerService.albumCover = episode.image;
+        PlayerService.episodeCover = episode.image;
       }
     }
     $rootScope.playPodcast = playPodcast;
@@ -127,7 +133,11 @@ angular
     }
 
     $scope.getAlbumCover = function () {
-      return PlayerService.albumCover;
+      return PlayerService.episodeCover;
+    };
+
+    $scope.getEpisodeDescription = function () {
+      return PlayerService.podcastDescription;
     };
 
     function togglePlay() {
@@ -141,6 +151,12 @@ angular
       }
     }
     $rootScope.togglePlay = togglePlay;
+
+    $scope.setFavourite = function () {
+      if (PlayerService.podcastID != "0") {
+        FavouriteService.favourite(PlayerService.podcastID, PlayerService.podcastCover, PlayerService.podcastArtist, PlayerService.podcastArtist);
+      }
+    }
 
     function volumeUp() {
       if (player.volume + 0.005 > 1) {

@@ -38,35 +38,52 @@
 
   <div flex layout="row">
     <md-sidenav id="left-sidenav" flex="15" md-is-locked-open="true" md-component-id="left">
-      <md-content style="background-color:transparent">
-        <md-list md-no-ink>
-          <md-list-item class="menu-item" id="toplist-item" ng-click="changeView('podcasts')">
-            <md-item-content layout="row" layout-align="center center">
-              <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
-              <div class="inset">
-                Toplists
-              </div>
-            </md-item-content>
-          </md-list-item>
+      <md-list class="md-dense" flex md-no-ink>
+        <md-list-item class="menu-item" id="toplist-item" ng-click="changeView('podcasts')">
+          <md-item-content layout="row" layout-align="center center">
+            <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
+            <div class="inset">
+              Toplists
+            </div>
+          </md-item-content>
+        </md-list-item>
 
-          <md-list-item class="menu-item" id="search-item" ng-click="changeView('search')">
-            <md-item-content md-ink-ripple layout="row" layout-align="center center">
-              <md-icon class="menu-icon" md-font-library="material-icons">search</md-icon>
-              <div class="inset">
-                Search
-              </div>
-            </md-item-content>
-          </md-list-item>
+        <md-divider></md-divider>
 
-          <md-list-item class="menu-item" id="favourite-item" ng-click="changeView('favourites')">
-            <md-item-content md-ink-ripple layout="row" layout-align="center center">
-              <md-icon class="menu-icon" md-font-library="material-icons">favorite_border</md-icon>
-              <div class="inset">
-                Favourites
-              </div>
-            </md-item-content>
-          </md-list-item>
+        <md-list-item class="menu-item" id="search-item" ng-click="changeView('search')">
+          <md-item-content md-ink-ripple layout="row" layout-align="center center">
+            <md-icon class="menu-icon" md-font-library="material-icons">search</md-icon>
+            <div class="inset">
+              Search
+            </div>
+          </md-item-content>
+        </md-list-item>
 
+        <md-divider></md-divider>
+
+        <md-list-item class="menu-item" id="favourite-item" ng-click="changeView('favourites')">
+          <md-item-content md-ink-ripple layout="row" layout-align="center center">
+            <md-icon class="menu-icon" md-font-library="material-icons">favorite_border</md-icon>
+            <div class="inset">
+              Favourites
+            </div>
+          </md-item-content>
+        </md-list-item>
+
+        <md-divider></md-divider>
+
+        <md-list-item class="menu-item" id="about-item" ng-click="changeView('settings')">
+          <md-item-content md-ink-ripple layout="row" layout-align="center center">
+            <md-icon class="menu-icon" md-font-library="material-icons">settings</md-icon>
+            <div class="inset">
+              About
+            </div>
+          </md-item-content>
+        </md-list-item>
+
+      </md-list>
+      <div style="position: absolute;bottom: 0;width: 100%;height: auto;">
+        <md-list>
           <md-divider></md-divider>
 
           <md-list-item class="menu-item" id="about-item" ng-click="changeView('settings')">
@@ -79,11 +96,12 @@
           </md-list-item>
 
         </md-list>
-      </md-content>
+      </div>
       <div style="position:absolute;bottom:0;width:100%;height:auto;" ng-controller="PlayerController">
         <img ng-src='{{ getAlbumCover() || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;"
         />
       </div>
+
     </md-sidenav>
     <div layout="column" flex>
       <!-- Content -->
@@ -128,7 +146,17 @@
             <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon md-font-library="material-icons">favorite_border</md-icon>
+            <md-icon id="fav-btn" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
+          </div>
+          <div flex="5" layout="row" layout-align="center center">
+            <md-menu>
+              <md-button class="md-icon-button" ng-mouseenter="$mdMenu.open()">
+                <md-icon id="desc-btn" md-font-library="material-icons">info</md-icon>
+              </md-button>
+              <md-menu-content width="4" ng-mouseleave="$mdMenu.close()" layout-padding>
+                {{ getEpisodeDescription() | episodeDesc }}
+              </md-menu-content>
+            </md-menu>
           </div>
           <div flex="5" layout="row" layout-align="center center">
             <md-icon id="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>

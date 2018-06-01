@@ -20,9 +20,7 @@ angular
       $window.document.getElementById("search-input").focus();
     }, 50);
 
-    $scope.showEpisodes = function (id, img) {
-      $rootScope.fetchEpisodes(id, img);
-    };
+    $scope.showEpisodes = $rootScope.fetchEpisodes;
 
     $scope.doSearch = function () {
       if ($scope.query) {
@@ -49,6 +47,5 @@ angular
           });
       }
     };
-
     $scope.setFavourite = FavouriteService.favourite;
   });

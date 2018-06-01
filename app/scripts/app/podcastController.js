@@ -58,9 +58,6 @@ angular
         );
     };
 
-    $scope.showEpisodes = function (id, img) {
-      $rootScope.fetchEpisodes(id, img);
-    };
-
+    $scope.showEpisodes = $rootScope.fetchEpisodes;
     $scope.setFavourite = FavouriteService.favourite;
   });

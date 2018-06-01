@@ -25,9 +25,7 @@ angular
       }
     });
 
-    $scope.showEpisodes = function (id, img) {
-      $rootScope.fetchEpisodes(id, img);
-    };
+    $scope.showEpisodes = $rootScope.fetchEpisodes;
 
     $scope.removeFavourite = function (id) {
       ToastService.confirmToast("Are you sure?", function (response) {

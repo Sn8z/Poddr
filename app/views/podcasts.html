@@ -15,11 +15,11 @@
     </md-input-container>
   </div>
   <div class="row" layout="row" layout-wrap>
-    <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="20" flex-xl="20" ng-repeat="podcast in podcasts">
+    <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="podcast in podcasts">
       <div class="podcast-frame">
         <div style="position:relative">
           <div style="position:relative;width:100%;height:0;padding-top:100%;">
-            <img ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:image'][1]['label'] | itunesPodcastCover )"
+            <img ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover)"
               ng-src="{{ podcast['im:image'][1]['label'] | itunesPodcastCover }}" alt="album_cover" style="cursor:pointer;position:absolute; top:0; left:0; width:100%;"
             />
           </div>
@@ -29,7 +29,7 @@
             </md-button>
           </div>
         </div>
-        <div class="row podcast-title" ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:image'][1]['label'] | itunesPodcastCover )"
+        <div class="row podcast-title" ng-attr-title="{{ podcast['im:name']['label'] }}" ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover )"
           layout-padding>
           {{ podcast['im:name']['label'] }}
         </div>

@@ -5,7 +5,8 @@ angular
     $rootScope,
     $http,
     $mdSidenav,
-    ToastService
+    ToastService,
+    PlayerService
   ) {
     var parsePodcast = require("node-podcast-parser");
 
@@ -23,8 +24,11 @@ angular
       }
     };
 
-    $rootScope.fetchEpisodes = function (id, podcastCover) {
-      $scope.albumCover = podcastCover;
+    $rootScope.fetchEpisodes = function (id, title, podcastCover) {
+      PlayerService.latestSeenArtist = title;
+      PlayerService.latestSeenID = id.toString();
+      PlayerService.latestSeenCover = podcastCover;
+
       $scope.episodes = [];
       $scope.isLoading = true;
       $scope.nrOfItems = 20;

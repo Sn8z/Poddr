@@ -234,6 +234,14 @@ md-option:focus {
   cursor: pointer;
 }
 
+#desc-btn {
+  cursor: pointer;
+}
+
+#fav-btn {
+  cursor: pointer;
+}
+
 .icon-btn {
   transition: all 0.2s ease-in-out;
   cursor: pointer;

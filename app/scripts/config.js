@@ -19,6 +19,12 @@ app.filter("itunesPodcastCover", function () {
   };
 });
 
+app.filter("episodeDesc", function () {
+  return function (text) {
+    return text ? String(text).replace(/<[^>]+>/gm, '') : 'No description available';
+  };
+});
+
 function ToastService($mdToast) {
   this.successToast = function (text) {
     $mdToast.show(
@@ -64,11 +70,19 @@ app.service("ToastService", ToastService);
 
 //Service to handle global player events & variables
 function PlayerService() {
-  this.currentlyPlaying = "No title";
   this.podcastDuration = 0;
   this.atTime = 0;
-  this.albumCover = "";
-  this.podcastID = 0;
+
+  this.currentlyPlaying = "No title";
+  this.podcastArtist = "";
+  this.podcastCover = "";
+  this.episodeCover = "";
+  this.podcastDescription = "";
+  this.podcastID = "0";
+
+  this.latestSeenArtist = "";
+  this.latestSeenID = "0";
+  this.latestSeenCover = "";
 }
 app.service("PlayerService", PlayerService);
 
