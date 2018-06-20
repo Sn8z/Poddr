@@ -3,26 +3,26 @@ angular
   .controller("SettingsController", function (
     $scope,
     RegionService,
-    $mdTheming
+    ToastService
   ) {
     var storage = require("electron-json-storage");
     $scope.appVersion = require('electron').remote.app.getVersion();
 
     RegionService.regions(function (response) {
       $scope.countries = response;
-      $scope.region = $scope.countries[0];
-      storage.get("region", function (error, data) {
-        if (error) {
-          $scope.region = $scope.countries[0];
+    });
+
+    storage.get("region", function (error, data) {
+      if (error) {
+        $scope.region = "us";
+      } else {
+        if (data.value) {
+          $scope.region = data.value;
         } else {
-          if (data.value) {
-            $scope.region = data.value;
-          } else {
-            $scope.region = $scope.countries[0];
-          }
+          $scope.region = "us";
         }
-        $scope.$apply();
-      });
+      }
+      $scope.$apply();
     });
 
     storage.get("theme", function (error, data) {
@@ -42,13 +42,13 @@ angular
       var html = document.getElementsByTagName("html")[0];
       html.style.cssText = "--main-color: " + $scope.color;
       storage.set("theme", { value: $scope.color }, function (err) {
-        if (err) console.log(err);
+        if (err) ToastService.errorToast("Couldn't change color.");
       });
     };
 
     $scope.setRegion = function () {
       storage.set("region", { value: $scope.region }, function (err) {
-        if (err) console.log(err);
+        if (err) ToastService.errorToast("Couldn't change region.");
       });
     };
   });

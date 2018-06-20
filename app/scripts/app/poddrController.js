@@ -11,21 +11,18 @@ var app = angular
     //preloading modules to cache to speed up first time view of for example search page
     var storage = require("electron-json-storage");
     var parsePodcast = require("node-podcast-parser");
-    let Mousetrap = require("mousetrap");
+
+    $scope.playerService = PlayerService;
 
     Mousetrap.bind("space", function (e) {
       e.preventDefault();
       $rootScope.togglePlay();
     });
-    Mousetrap.bind("mod+m", function (e) {
-      e.preventDefault();
-      $rootScope.toggleMute();
-    });
-    Mousetrap.bind("mod+s", function (e) {
+    Mousetrap.bindGlobal("mod+s", function (e) {
       e.preventDefault();
       $rootScope.volumeUp();
     });
-    Mousetrap.bind("mod+a", function (e) {
+    Mousetrap.bindGlobal("mod+a", function (e) {
       e.preventDefault();
       $rootScope.volumeDown();
     });

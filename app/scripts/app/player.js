@@ -6,7 +6,8 @@ angular
     PlayerService,
     $window,
     ToastService,
-    FavouriteService
+    FavouriteService,
+    FavouriteFactory
   ) {
     var storage = require("electron-json-storage");
     var ipc = require("electron").ipcRenderer;
@@ -19,16 +20,34 @@ angular
     $scope.volume = player.volume;
     $scope.isLoading = false;
 
+    $scope.playerService = PlayerService;
+
     //listen for messages from main process
     ipc.on("toggle-play", function (event, message) {
       togglePlay();
     });
 
+    storage.get("playerState", function (error, data) {
+      if (error) throw error;
+      if (data.podcastURL) {
+        player.src = data.podcastURL;
+        PlayerService.podcastURL = data.podcastURL;
+      }
+      if (data.podcastCover) {
+        PlayerService.podcastCover = data.podcastCover;
+        PlayerService.episodeCover = data.podcastCover;
+      }
+      if (data.podcastTitle) PlayerService.currentlyPlaying = data.podcastTitle;
+      if (data.podcastArtist) PlayerService.podcastArtist = data.podcastArtist;
+      if (data.podcastID) PlayerService.podcastID = data.podcastID;
+      if (data.podcastDescription) PlayerService.podcastDescription = data.podcastDescription;
+    });
+
     //set initial volume based on previous session if available
     storage.get("volume", function (error, data) {
       if (error) throw error;
-      player.volume = data.value;
-      $scope.volume = data.value;
+      player.volume = data.value ? data.value : 0.5;
+      $scope.volume = player.volume;
       $scope.$apply();
     });
 
@@ -58,6 +77,7 @@ angular
     player.addEventListener("canplaythrough", function (e) {
       PlayerService.podcastDuration = player.duration;
       $scope.isLoading = false;
+      $scope.$apply();
     });
 
     player.addEventListener("ended", function () {
@@ -65,8 +85,7 @@ angular
     });
 
     player.addEventListener("error", function failed(e) {
-      console.log("Player src error: " + e.target.error.code);
-      ToastService.errorToast("Something went wrong.");
+      ToastService.errorToast(e.target.error.message);
       $scope.isLoading = false;
     });
 
@@ -74,6 +93,7 @@ angular
       player.src = episode.enclosure.url;
       player.play();
 
+      PlayerService.podcastURL = episode.enclosure.url;
       PlayerService.currentlyPlaying = episode.title;
       PlayerService.podcastDuration = 0;
       PlayerService.podcastArtist = PlayerService.latestSeenArtist;
@@ -86,6 +106,8 @@ angular
       } else {
         PlayerService.episodeCover = episode.image;
       }
+
+      PlayerService.saveState();
     }
     $rootScope.playPodcast = playPodcast;
 
@@ -116,29 +138,9 @@ angular
       }
     };
 
-    $scope.currentlyPlaying = function () {
-      return PlayerService.currentlyPlaying;
-    };
-
-    $scope.currentTime = function () {
-      return PlayerService.atTime;
-    };
-
-    $scope.podcastDuration = function () {
-      return PlayerService.podcastDuration;
-    };
-
     function getBarWidth() {
       return player.currentTime / player.duration * 100 + "%";
     }
-
-    $scope.getAlbumCover = function () {
-      return PlayerService.episodeCover;
-    };
-
-    $scope.getEpisodeDescription = function () {
-      return PlayerService.podcastDescription;
-    };
 
     function togglePlay() {
       $window.document.getElementById("play-btn").blur();
@@ -156,6 +158,11 @@ angular
       if (PlayerService.podcastID != "0") {
         FavouriteService.favourite(PlayerService.podcastID, PlayerService.podcastCover, PlayerService.podcastArtist, PlayerService.podcastArtist);
       }
+    }
+
+    $scope.favouriteList = FavouriteFactory.getList();
+    $scope.isPlayerFavourite = function () {
+      return $scope.favouriteList.keys.indexOf(PlayerService.podcastID) !== -1;
     }
 
     function volumeUp() {

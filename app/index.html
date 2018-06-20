@@ -4,7 +4,7 @@
 <head>
   <title>Poddr</title>
 
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Rock+Salt|Rubik" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Rubik" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="../node_modules/material-design-icons-iconfont/dist/material-design-icons.css">
 
   <link rel="stylesheet" type="text/css" href="../node_modules/angular-material/angular-material.css">
@@ -15,6 +15,8 @@
   <script type="text/javascript" src="../node_modules/angular-aria/angular-aria.min.js"></script>
   <script type="text/javascript" src="../node_modules/angular-animate/angular-animate.min.js"></script>
   <script type="text/javascript" src="../node_modules/angular-material/angular-material.min.js"></script>
+  <script type="text/javascript" src="scripts/assets/mousetrap.min.js"></script>
+  <script type="text/javascript" src="scripts/assets/mousetrap-global-bind.min.js"></script>
   <script type="text/javascript" src="scripts/config.js"></script>
   <script type="text/javascript" src="scripts/app/poddrController.js"></script>
   <script type="text/javascript" src="scripts/app/podcastController.js"></script>
@@ -80,25 +82,9 @@
             </div>
           </md-item-content>
         </md-list-item>
-
       </md-list>
-      <div style="position: absolute;bottom: 0;width: 100%;height: auto;">
-        <md-list>
-          <md-divider></md-divider>
-
-          <md-list-item class="menu-item" id="about-item" ng-click="changeView('settings')">
-            <md-item-content md-ink-ripple layout="row" layout-align="center center">
-              <md-icon class="menu-icon" md-font-library="material-icons">settings</md-icon>
-              <div class="inset">
-                About
-              </div>
-            </md-item-content>
-          </md-list-item>
-
-        </md-list>
-      </div>
-      <div style="position:absolute;bottom:0;width:100%;height:auto;" ng-controller="PlayerController">
-        <img ng-src='{{ getAlbumCover() || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;"
+      <div style="position:absolute;bottom:0;width:100%;height:auto;">
+        <img ng-src='{{ playerService.episodeCover || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;"
         />
       </div>
 
@@ -139,22 +125,20 @@
             <md-icon id="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
           </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
-            <b ng-bind="currentlyPlaying()"></b>
-            <span class="timer-text">{{ currentTime() | secondsToHHmmss }} / {{ podcastDuration() | secondsToHHmmss }}</span>
+            <b ng-bind="playerService.currentlyPlaying"></b>
+            <span class="timer-text">{{ playerService.atTime | secondsToHHmmss }} / {{ playerService.podcastDuration | secondsToHHmmss }}</span>
           </div>
           <div flex="10" layout="row" layout-align="center center">
             <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon id="fav-btn" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
+            <md-icon id="fav-btn" ng-hide="isPlayerFavourite()" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
             <md-menu>
-              <md-button class="md-icon-button" ng-mouseenter="$mdMenu.open()">
-                <md-icon id="desc-btn" md-font-library="material-icons">info</md-icon>
-              </md-button>
-              <md-menu-content width="4" ng-mouseleave="$mdMenu.close()" layout-padding>
-                {{ getEpisodeDescription() | episodeDesc }}
+              <md-icon id="desc-btn" ng-click="$mdMenu.open()" md-font-library="material-icons">info</md-icon>
+              <md-menu-content style="width: auto;max-width: 450px;padding: 10px;" ng-mouseleave="$mdMenu.close()">
+                {{ playerService.podcastDescription | episodeDesc }}
               </md-menu-content>
             </md-menu>
           </div>
@@ -162,11 +146,11 @@
             <md-icon id="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon md-font-library="material-icons">{{ checkVolume() }}</md-icon>
+            <md-icon id="volume-btn" md-font-library="material-icons">{{ checkVolume() }}</md-icon>
           </div>
           <md-slider-container flex="10">
             <md-slider id="volume-slider" onmouseup="document.activeElement.blur()" ng-model="volume" ng-change="setVolume()" flex min="0"
-              max="1" step="0.001" aria-label="volume"></md-slider>
+              max="1" step="0.0001" aria-label="volume"></md-slider>
           </md-slider-container>
           <div flex="5"></div>
         </div>

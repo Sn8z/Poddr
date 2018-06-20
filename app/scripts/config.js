@@ -9,7 +9,7 @@ function configure($mdThemingProvider) {
 
 app.filter("secondsToHHmmss", function ($filter) {
   return function (seconds) {
-    return $filter("date")(new Date(0, 0, 0).setSeconds(seconds), "HH:mm:ss");
+    return seconds ? $filter("date")(new Date(0, 0, 0).setSeconds(seconds), "HH:mm:ss") : "00:00:00";
   };
 });
 
@@ -70,6 +70,8 @@ app.service("ToastService", ToastService);
 
 //Service to handle global player events & variables
 function PlayerService() {
+  var storage = require("electron-json-storage");
+
   this.podcastDuration = 0;
   this.atTime = 0;
 
@@ -79,16 +81,89 @@ function PlayerService() {
   this.episodeCover = "";
   this.podcastDescription = "";
   this.podcastID = "0";
+  this.podcastURL = "";
 
   this.latestSeenArtist = "";
   this.latestSeenID = "0";
   this.latestSeenCover = "";
+
+  this.saveState = function () {
+    storage.set("playerState", {
+      podcastURL: this.podcastURL,
+      podcastTitle: this.currentlyPlaying,
+      podcastArtist: this.podcastArtist,
+      podcastCover: this.podcastCover,
+      podcastID: this.podcastID,
+      podcastDescription: this.podcastDescription
+    }, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Playerstate saved!");
+      }
+    });
+  };
 }
 app.service("PlayerService", PlayerService);
 
-//Favourite
-function FavouriteService(ToastService) {
+//Favourite Factory
+function FavouriteFactory($q) {
   var storage = require("electron-json-storage");
+  var favourites = {
+    keys: [],
+    all: []
+  };
+
+  var getFavouriteKeys = function () {
+    const q = $q.defer();
+    storage.keys(function (err, keys) {
+      if (err) return q.reject(err);
+      q.resolve(keys);
+    });
+    return q.promise;
+  };
+
+  var getAllFavourites = function () {
+    const q = $q.defer();
+    storage.getAll(function (err, data) {
+      if (err) return q.reject(err);
+      delete data.volume;
+      delete data.region;
+      delete data.theme;
+      delete data.playerState;
+      q.resolve(data);
+    });
+    return q.promise;
+  };
+
+  getFavouriteKeys().then(function (response) {
+    favourites.keys = response;
+  });
+
+  getAllFavourites().then(function (response) {
+    favourites.all = response;
+  });
+
+  return {
+    getList: function () {
+      return favourites;
+    },
+    updateList: function () {
+      getFavouriteKeys().then(function (response) {
+        favourites.keys = response;
+      });
+      getAllFavourites().then(function (response) {
+        favourites.all = response;
+      });
+    }
+  };
+}
+app.factory("FavouriteFactory", FavouriteFactory);
+
+//Favourite Service
+function FavouriteService(ToastService, FavouriteFactory, $q) {
+  var storage = require("electron-json-storage");
+
   this.favourite = function (id, img, title, artist) {
     storage.set(
       id,
@@ -102,18 +177,40 @@ function FavouriteService(ToastService) {
       function (err) {
         if (err) {
           console.log(err);
-          ToastService.errorToast("Something went wrong");
+          ToastService.errorToast("Couldn't add podcast to favourites.");
         } else {
+          FavouriteFactory.updateList();
           ToastService.successToast("You now follow " + artist);
         }
+      });
+  };
+
+  this.removeFavourite = function (id) {
+    const q = $q.defer();
+    ToastService.confirmToast("Are you sure?", function (response) {
+      if (response) {
+        storage.remove(id, function (err) {
+          if (err) {
+            console.log(err);
+            ToastService.errorToast("Couldn't remove favourite.");
+            q.resolve(false);
+          } else {
+            FavouriteFactory.updateList();
+            ToastService.successToast("Removed podcast from favourites.");
+            q.resolve(true);
+          }
+        });
+      } else {
+        q.resolve(false);
       }
-    );
+    });
+    return q.promise;
   };
 }
 app.service("FavouriteService", FavouriteService);
 
 //regions service
-function RegionService($http, ToastService) {
+function RegionService(ToastService) {
   const fs = require("fs");
   var countries = [];
   this.regions = function (callback) {
@@ -124,7 +221,7 @@ function RegionService($http, ToastService) {
     ) {
       if (err) {
         console.log(err);
-        ToastService.errorToast("Couldn't load storefronts");
+        ToastService.errorToast("Couldn't load storefronts.");
       } else {
         JSON.parse(response).data.forEach(function (obj) {
           countries.push({ iso: obj.id, name: obj.attributes.name });

@@ -3,11 +3,11 @@ angular
   .controller("SearchController", function (
     $scope,
     $http,
-    $mdToast,
     $rootScope,
     $window,
     $timeout,
-    FavouriteService
+    FavouriteService,
+    FavouriteFactory
   ) {
     $scope.query = "";
     $scope.results = [];
@@ -48,4 +48,9 @@ angular
       }
     };
     $scope.setFavourite = FavouriteService.favourite;
+
+    $scope.favouriteList = FavouriteFactory.getList();
+    $scope.isFavourite = function (id) {
+      return $scope.favouriteList.keys.indexOf(id) !== -1;
+    }
   });

@@ -1,7 +1,7 @@
 {
   "name": "poddr",
   "version": "1.0.7",
-  "description": "Simple podcast client",
+  "description": "Podcast client",
   "main": "main.js",
   "repository": {
     "type": "git",
@@ -35,7 +35,10 @@
       "icon": "build/icon.icns"
     },
     "linux": {
-      "target": "AppImage",
+      "target": [
+        "AppImage",
+        "snap"
+      ],
       "category": "Audio"
     }
   },
@@ -48,7 +51,6 @@
     "electron-json-storage": "^4.0.2",
     "electron-window-state": "^4.1.1",
     "material-design-icons-iconfont": "^3.0.3",
-    "mousetrap": "^1.6.1",
     "node-podcast-parser": "^2.0.0"
   }
 }

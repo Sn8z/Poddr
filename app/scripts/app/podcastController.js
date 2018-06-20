@@ -3,23 +3,23 @@ angular
   .controller("PodcastController", function (
     $scope,
     $http,
-    $mdToast,
     $rootScope,
     RegionService,
     GenreService,
     ToastService,
-    FavouriteService
+    FavouriteService,
+    FavouriteFactory
   ) {
     var storage = require("electron-json-storage");
     $scope.amount = 50;
     $scope.podcasts = [];
 
+    $scope.genres = GenreService.genres;
+    $scope.genre = 26;
+
     RegionService.regions(function (response) {
       $scope.countries = response;
     });
-
-    $scope.genres = GenreService.genres;
-    $scope.genre = 26;
 
     storage.get("region", function (error, data) {
       if (error) {
@@ -52,12 +52,18 @@ angular
             $scope.podcasts = response.data.feed.entry;
           },
           function errorCallback(response) {
-            console.log(response);
-            ToastService.errorToast("Couldn't fetch podcasts");
+            ToastService.errorToast("Couldn't fetch toplistfeed.");
           }
         );
     };
 
     $scope.showEpisodes = $rootScope.fetchEpisodes;
+
     $scope.setFavourite = FavouriteService.favourite;
+
+    $scope.favouriteList = FavouriteFactory.getList();
+    $scope.isFavourite = function (id) {
+      return $scope.favouriteList.keys.indexOf(id) !== -1;
+    }
+
   });

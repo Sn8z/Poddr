@@ -44,16 +44,11 @@ body {
 
 #min-btn:hover,
 #max-btn:hover {
-  background-color: #353535;
+  background-color: #444;
 }
 
 #close-btn:hover {
-  background-color: rgb(105, 28, 28);
-}
-
-.logo-text {
-  font-family: "Rock Salt", cursive;
-  cursor: default;
+  background-color: rgb(115, 30, 30);
 }
 
 md-progress-circular path {
@@ -94,8 +89,6 @@ md-progress-circular path {
 }
 
 #right-sidenav {
-  min-width: 450px;
-  max-width: 450px;
   width: 450px;
   background-color: #222;
 }
@@ -218,12 +211,14 @@ md-option:focus {
   background-color: var(--main-color);
 }
 
-.md-toast-content {
-  width: 250px;
+md-toast {
+  margin-top: 35px;
+  margin-right: 10px;
+  min-width: 250px;
 }
 
 .md-toast-success .md-toast-content {
-  background-color: var(--main-color) !important;
+  background-color: #252525 !important;
 }
 
 .md-toast-error .md-toast-content {
@@ -232,14 +227,21 @@ md-option:focus {
 
 #toggle-btn {
   cursor: pointer;
+  color: #fff !important;
 }
 
 #desc-btn {
   cursor: pointer;
+  color: #fff !important;
 }
 
 #fav-btn {
   cursor: pointer;
+  color: var(--main-color) !important;
+}
+
+#volume-btn {
+  color: #fff !important;
 }
 
 .icon-btn {

@@ -10,12 +10,12 @@
   <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
   <md-list>
     <md-list-item ng-show="isEmpty">
-      <h2 style="color:white">No results</h2>
+      <h3 style="color:white">No results</h3>
     </md-list-item>
     <md-list-item ng-repeat="podcast in results" class="noright" ng-click="showEpisodes(podcast.trackId, podcast.trackName, podcast.artworkUrl60 | itunesPodcastCover)">
-      <img ng-src="{{ podcast.artworkUrl60 | itunesPodcastCover }}" style="padding:15px;width:100px;height:100px;">
+      <img ng-src="{{ podcast.artworkUrl60 | itunesPodcastCover }}" onload="this.style.opacity = 1" style="padding:15px;width:100px;height:100px; opacity: 0; transition: opacity 0.5s ease-in-out;">
       <p style="color:white">{{ podcast.artistName }} - {{ podcast.trackName }}</p>
-      <md-button class="md-icon-button md-warn icon-btn">
+      <md-button class="md-icon-button md-warn icon-btn" ng-if="!isFavourite(podcast.trackId.toString())">
         <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)">favorite</md-icon>
       </md-button>
       <md-divider></md-divider>

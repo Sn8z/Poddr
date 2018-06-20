@@ -29,6 +29,7 @@ angular
       PlayerService.latestSeenID = id.toString();
       PlayerService.latestSeenCover = podcastCover;
 
+      $scope.episodeTitle = PlayerService.latestSeenArtist;
       $scope.episodes = [];
       $scope.isLoading = true;
       $scope.nrOfItems = 20;
@@ -40,7 +41,6 @@ angular
               function successCallback(response) {
                 parsePodcast(response.data, function (err, data) {
                   if (err) {
-                    console.log(err);
                     $scope.isLoading = false;
                     ToastService.errorToast("Parsing podcastfeed failed.");
                   } else {
@@ -53,16 +53,14 @@ angular
                 });
               },
               function errorCallback(response) {
-                console.log(response);
                 $scope.isLoading = false;
-                ToastService.errorToast("Something went wrong");
+                ToastService.errorToast("Failed to get podcast RSS feed.");
               }
             );
           },
           function errorCallback(response) {
-            console.log(response);
             $scope.isLoading = false;
-            ToastService.errorToast("Something went wrong");
+            ToastService.errorToast("Failed to lookup id in iTunes.");
           }
         );
       });

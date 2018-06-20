@@ -1,20 +1,17 @@
 <div id="podcastGrid" ng-controller="FavouritesController" layout="column" layout-padding ng-cloak>
 
   <div class="row" layout="row">
-    <h1 flex style="color:white">Favourites</h1>
-  </div>
-
-  <div class="row" ng-if="message">
-    <h3 style="color:white">{{ message }}</h3>
+    <h1 flex style="color:white;margin-left: 15px;">Favourites</h1>
   </div>
 
   <div class="row" layout="row" layout-wrap>
-    <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="favourite in favourites">
+    <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="favourite in favourites.all">
       <div class="podcast-frame">
         <div style="position:relative">
           <div style="position:relative;width:100%;height:0;padding-top:100%;">
-            <img ng-click="showEpisodes(favourite.id, favourite.title, favourite.img)" ng-src="{{ favourite.img }}" alt="album_cover"
-              style="cursor:pointer;position:absolute;top:0;left:0;width:100%;" width="100%" height="100%" />
+            <img ng-click="showEpisodes(favourite.id, favourite.title, favourite.img)" ng-src="{{ favourite.img }}" onload="this.style.opacity = 1"
+              style="cursor:pointer;position:absolute;top:0;left:0;width:100%; opacity: 0; transition: opacity 0.5s ease-in-out;"
+              width="100%" height="100%" />
           </div>
           <div layout="row" style="position:absolute;bottom:10px;right:10px;height:auto">
             <md-button class="md-icon-button md-warn icon-btn">
