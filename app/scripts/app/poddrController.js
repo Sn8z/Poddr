@@ -10,6 +10,7 @@ var app = angular
   ) {
     //preloading modules to cache to speed up first time view of for example search page
     var storage = require("electron-json-storage");
+    var log = require('electron-log');
     var parsePodcast = require("node-podcast-parser");
 
     $scope.playerService = PlayerService;
@@ -35,6 +36,7 @@ var app = angular
         }
         var html = document.getElementsByTagName("html")[0];
         html.style.cssText = "--main-color: " + color;
+        log.info('Loaded CSS color variable.');
       });
     };
 
@@ -59,6 +61,7 @@ var app = angular
               );
             }
           });
+          log.info('Update available.');
         }
       });
 
@@ -71,6 +74,7 @@ var app = angular
     $scope.mainContent = "podcasts";
     function changeView(view) {
       $scope.mainContent = view;
+      log.info('Changed view to ' + view);
     }
     $scope.changeView = changeView;
   });

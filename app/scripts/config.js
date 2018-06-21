@@ -71,6 +71,7 @@ app.service("ToastService", ToastService);
 //Service to handle global player events & variables
 function PlayerService() {
   var storage = require("electron-json-storage");
+  var log = require("electron-log");
 
   this.podcastDuration = 0;
   this.atTime = 0;
@@ -95,11 +96,11 @@ function PlayerService() {
       podcastCover: this.podcastCover,
       podcastID: this.podcastID,
       podcastDescription: this.podcastDescription
-    }, function (err) {
-      if (err) {
-        console.log(err);
+    }, function (error) {
+      if (error) {
+        log.error(error);
       } else {
-        console.log("Playerstate saved!");
+        log.info('Saved playerstate!');
       }
     });
   };
@@ -109,6 +110,8 @@ app.service("PlayerService", PlayerService);
 //Favourite Factory
 function FavouriteFactory($q) {
   var storage = require("electron-json-storage");
+  var log = require("electron-log");
+
   var favourites = {
     keys: [],
     all: []
@@ -116,8 +119,11 @@ function FavouriteFactory($q) {
 
   var getFavouriteKeys = function () {
     const q = $q.defer();
-    storage.keys(function (err, keys) {
-      if (err) return q.reject(err);
+    storage.keys(function (error, keys) {
+      if (error) {
+        log.error(error);
+        return q.reject(err);
+      }
       q.resolve(keys);
     });
     return q.promise;
@@ -125,8 +131,11 @@ function FavouriteFactory($q) {
 
   var getAllFavourites = function () {
     const q = $q.defer();
-    storage.getAll(function (err, data) {
-      if (err) return q.reject(err);
+    storage.getAll(function (error, data) {
+      if (error) {
+        log.error(error);
+        return q.reject(error);
+      }
       delete data.volume;
       delete data.region;
       delete data.theme;
@@ -163,6 +172,7 @@ app.factory("FavouriteFactory", FavouriteFactory);
 //Favourite Service
 function FavouriteService(ToastService, FavouriteFactory, $q) {
   var storage = require("electron-json-storage");
+  var log = require("electron-log");
 
   this.favourite = function (id, img, title, artist) {
     storage.set(
@@ -174,12 +184,13 @@ function FavouriteService(ToastService, FavouriteFactory, $q) {
         artist: artist,
         dateAdded: Date.now()
       },
-      function (err) {
-        if (err) {
-          console.log(err);
+      function (error) {
+        if (error) {
+          log.error(error);
           ToastService.errorToast("Couldn't add podcast to favourites.");
         } else {
           FavouriteFactory.updateList();
+          log.info("Added " + artist + " to favourites.");
           ToastService.successToast("You now follow " + artist);
         }
       });
@@ -189,13 +200,14 @@ function FavouriteService(ToastService, FavouriteFactory, $q) {
     const q = $q.defer();
     ToastService.confirmToast("Are you sure?", function (response) {
       if (response) {
-        storage.remove(id, function (err) {
-          if (err) {
-            console.log(err);
+        storage.remove(id, function (error) {
+          if (error) {
+            log.error(error);
             ToastService.errorToast("Couldn't remove favourite.");
             q.resolve(false);
           } else {
             FavouriteFactory.updateList();
+            log.info(id + " removed from favourites.");
             ToastService.successToast("Removed podcast from favourites.");
             q.resolve(true);
           }
@@ -212,20 +224,23 @@ app.service("FavouriteService", FavouriteService);
 //regions service
 function RegionService(ToastService) {
   const fs = require("fs");
+  var log = require("electron-log");
   var countries = [];
   this.regions = function (callback) {
+    log.info("Fetching storefronts...");
     //Load local JSON with iTunes storefronts
     fs.readFile(__dirname + "/scripts/storefronts.json", function (
-      err,
+      error,
       response
     ) {
-      if (err) {
-        console.log(err);
+      if (error) {
+        log.error(error);
         ToastService.errorToast("Couldn't load storefronts.");
       } else {
         JSON.parse(response).data.forEach(function (obj) {
           countries.push({ iso: obj.id, name: obj.attributes.name });
         });
+        log.info("Done fetching storefronts.");
       }
     });
     callback(countries);

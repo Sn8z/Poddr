@@ -11,6 +11,7 @@ angular
     FavouriteFactory
   ) {
     var storage = require("electron-json-storage");
+    var log = require('electron-log');
     $scope.amount = 50;
     $scope.podcasts = [];
 
@@ -23,6 +24,7 @@ angular
 
     storage.get("region", function (error, data) {
       if (error) {
+        log.error(error);
         $scope.region = "us";
       } else {
         if (data.value) {
@@ -36,6 +38,7 @@ angular
     });
 
     $scope.getPodcasts = function () {
+      log.info('Fetching podcasts...');
       $scope.podcasts = [];
       $http
         .get(
@@ -50,8 +53,10 @@ angular
         .then(
           function successCallback(response) {
             $scope.podcasts = response.data.feed.entry;
+            log.info('Found ' + $scope.podcasts.length + ' podcasts.');
           },
-          function errorCallback(response) {
+          function errorCallback(error) {
+            log.error(error);
             ToastService.errorToast("Couldn't fetch toplistfeed.");
           }
         );

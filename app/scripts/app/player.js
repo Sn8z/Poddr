@@ -11,6 +11,7 @@ angular
   ) {
     var storage = require("electron-json-storage");
     var ipc = require("electron").ipcRenderer;
+    var log = require('electron-log');
 
     //create the audio element
     var player = document.createElement("audio");
@@ -25,10 +26,12 @@ angular
     //listen for messages from main process
     ipc.on("toggle-play", function (event, message) {
       togglePlay();
+      log.info('Toggle Play/Pause');
     });
 
     storage.get("playerState", function (error, data) {
-      if (error) throw error;
+      log.info('Getting saved playerstate.');
+      if (error) log.error(error);
       if (data.podcastURL) {
         player.src = data.podcastURL;
         PlayerService.podcastURL = data.podcastURL;
@@ -45,7 +48,8 @@ angular
 
     //set initial volume based on previous session if available
     storage.get("volume", function (error, data) {
-      if (error) throw error;
+      log.info('Getting saved volume.');
+      if (error) log.error(error);
       player.volume = data.value ? data.value : 0.5;
       $scope.volume = player.volume;
       $scope.$apply();
@@ -53,12 +57,13 @@ angular
 
     $scope.setVolume = function () {
       player.volume = $scope.volume;
-      storage.set("volume", { value: player.volume }, function (err) {
-        if (err) throw err;
+      storage.set("volume", { value: player.volume }, function (error) {
+        if (error) log.error(error);
       });
     };
 
     player.addEventListener("loadstart", function () {
+      log.info('Started loading podcast...');
       $scope.isLoading = true;
       $scope.$apply();
     });
@@ -70,26 +75,31 @@ angular
     });
 
     player.addEventListener("seeking", function () {
+      log.info('Seeking...');
       $scope.isLoading = true;
       $scope.$apply();
     });
 
     player.addEventListener("canplaythrough", function (e) {
+      log.info('Can play through podcast.');
       PlayerService.podcastDuration = player.duration;
       $scope.isLoading = false;
       $scope.$apply();
     });
 
     player.addEventListener("ended", function () {
+      log.info('Podcast ended.');
       ToastService.successToast("Podcast ended.");
     });
 
     player.addEventListener("error", function failed(e) {
-      ToastService.errorToast(e.target.error.message);
+      log.error(e.target.error.message);
+      ToastService.errorToast("Couldn't play podcast.");
       $scope.isLoading = false;
     });
 
     function playPodcast(episode) {
+      log.info('Playing ' + episode.title + '.');
       player.src = episode.enclosure.url;
       player.play();
 
@@ -115,6 +125,7 @@ angular
     progress.addEventListener(
       "click",
       function (event) {
+        log.info("Clicked progressbar.");
         var width = event.clientX - progress.getBoundingClientRect().left;
         var calc = width / progress.offsetWidth * player.duration;
         player.currentTime = parseFloat(calc);
@@ -143,6 +154,7 @@ angular
     }
 
     function togglePlay() {
+      log.info("Toggle Play/Pause.");
       $window.document.getElementById("play-btn").blur();
       if (player.src) {
         if (player.paused) {
@@ -173,8 +185,8 @@ angular
         player.volume = player.volume + 0.005;
         $scope.volume = player.volume;
       }
-      storage.set("volume", { value: player.volume }, function (err) {
-        if (err) throw err;
+      storage.set("volume", { value: player.volume }, function (error) {
+        if (error) log.error(error);
       });
       $scope.$apply();
     }
@@ -188,8 +200,8 @@ angular
         player.volume = player.volume - 0.005;
         $scope.volume = player.volume;
       }
-      storage.set("volume", { value: player.volume }, function (err) {
-        if (err) throw err;
+      storage.set("volume", { value: player.volume }, function (error) {
+        if (error) log.error(error);
       });
       $scope.$apply();
     }

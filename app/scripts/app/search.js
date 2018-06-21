@@ -9,6 +9,8 @@ angular
     FavouriteService,
     FavouriteFactory
   ) {
+    var log = require('electron-log');
+
     $scope.query = "";
     $scope.results = [];
 
@@ -24,6 +26,7 @@ angular
 
     $scope.doSearch = function () {
       if ($scope.query) {
+        log.info('Searching for ' + $scope.query + '...');
         $scope.results = [];
         $scope.isLoading = true;
         $scope.isEmpty = false;
@@ -41,6 +44,7 @@ angular
           .then(function (response) {
             $scope.isLoading = false;
             $scope.results = response.data.results;
+            log.info('Found ' + $scope.results.length + ' matches.');
             if ($scope.results.length == 0) {
               $scope.isEmpty = true;
             }

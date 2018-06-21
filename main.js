@@ -3,12 +3,14 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const globalShortcut = electron.globalShortcut;
 const windowStateKeeper = require("electron-window-state");
+var log = require('electron-log');
 
 //Global reference to window object;
 var mainWindow = null;
 
 //Quit when all windows are closed
 app.on("window-all-closed", function () {
+  log.info('Exiting Poddr.');
   app.quit();
 });
 
