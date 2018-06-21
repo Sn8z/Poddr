@@ -48,6 +48,7 @@
     "angular-aria": "^1.6.9",
     "angular-material": "^1.1.7",
     "angular-messages": "^1.6.9",
+    "dbus-native": "^0.2.5",
     "electron-json-storage": "^4.0.2",
     "electron-log": "^2.2.15",
     "electron-window-state": "^4.1.1",

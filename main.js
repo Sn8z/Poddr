@@ -16,10 +16,46 @@ app.on("window-all-closed", function () {
 
 //When app is rdy, create window
 app.once("ready", function () {
-  //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
-  globalShortcut.register("MediaPlayPause", () => {
-    mainWindow.webContents.send("toggle-play", "playpause");
-  });
+  log.info(process.platform);
+  if (process.platform == 'linux') {
+    function registerBindings(desktopEnv, session) {
+      session.getInterface(`org.${desktopEnv}.SettingsDaemon`,
+        `/org/${desktopEnv}/SettingsDaemon/MediaKeys`,
+        `org.${desktopEnv}.SettingsDaemon.MediaKeys`, (err, iface) => {
+          if (err) {
+            log.info(desktopEnv);
+            log.info(err);
+          } else {
+            iface.on('MediaPlayerKeyPressed', (n, keyName) => {
+              switch (keyName) {
+                case 'Next': log.info('next'); return;
+                case 'Previous': log.info('prev'); return;
+                case 'Play': mainWindow.webContents.send("toggle-play", "playpause"); return;
+                case 'Stop': log.info('stop'); return;
+                default: return;
+              }
+            });
+            iface.GrabMediaPlayerKeys(0, `org.${desktopEnv}.SettingsDaemon.MediaKeys`);
+          }
+        });
+    }
+
+    try {
+      var DBus = require('dbus-native');
+      var session = DBus.sessionBus('session');
+
+      registerBindings('gnome', session);
+      registerBindings('mate', session);
+    } catch (e) {
+      log.error(e);
+    }
+
+  } else {
+    //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
+    globalShortcut.register("MediaPlayPause", () => {
+      mainWindow.webContents.send("toggle-play", "playpause");
+    });
+  }
 
   //default window size
   let mainWindowState = windowStateKeeper({
@@ -54,7 +90,7 @@ app.once("ready", function () {
   mainWindow.loadURL("file://" + __dirname + "/app/index.html");
 
   //Devtools
-  //mainWindow.webContents.openDevTools({ mode: 'detach' });
+  mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   //Cleanup on window close
   mainWindow.on("closed", function () {

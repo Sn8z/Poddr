@@ -1,0 +1,113 @@
+<!doctype html>
+<html><head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <style>
+      .box {
+          width: 300px;
+          float: left;
+          margin: 0 20px 0 20px;
+      }
+      .box div, .box input {
+          border: 1px solid;
+          -moz-border-radius: 4px;
+          border-radius: 4px;
+          width: 100%;
+          padding: 0px;
+          margin: 5px;
+      }
+      .box div {
+          border-color: grey;
+          height: 300px;
+          overflow: auto;
+      }
+      .box input {
+          height: 30px;
+      }
+      h1 {
+          margin-left: 30px;
+      }
+      body {
+          background-color: #F0F0F0;
+          font-family: "Arial";
+      }
+    </style>
+</head><body lang="en">
+
+    <div id="first" class="box">
+      <div></div>
+      <form>
+        <textarea autocomplete="off" value="Type here..."></textarea>
+        <input type="submit"></input>
+      </form>
+   </div>
+
+   <img id="vol">
+
+    <script>
+        var sockjs_url = '/echo';
+        var sockjs = new SockJS(sockjs_url);
+        $('#first input').focus();
+
+        var div  = $('#first div');
+        var inp  = $('#first textarea');
+        var form = $('#first form');
+
+/*
+
+{\"type\":2,\"flags\":1,\"serial\":866,\"signature\":\"a(ssssbbusbbi)\",\"replySerial\":430,\"destination\":\":1.38\",\"sender\":\":1.48\",\"body\":[null,[[\"libsoundmenu.so\",\"0x9074834\",\"indicator-sound\",\"\",0,0,1,\"iVBORw0KGgoAAAANSUhEUgAAABgAAAAWCAYAAADafVyIAAAABHNCSVQICAgIfAhkiAAAAvBJREFUSIntkk1oVFcUgL/7ZuZNzEQziaSKDaWE+oNurRiN2ggWSindFNyI2I1/G0FRXLhw5c42iyZqXKRiBUmbghhMhVIeLaFNsYmZZMY4b5I3iZpMopNf5715M++960LjT5wYUXHVb3Uu59z73XPuhf95HwzqvV8ZetdnUkoxN6e8C0FqbMRD+FYlYt1r35lgqL9n/aAeXQdw+NjJrlw2Zys+NkSjUfW1BKnu7pCRiPxp6BGtUH5q5uFHnnQ3G0Z0eXt7e+qfjhtxxa8EfF52zYICKaViFnEJyRZgm5TNPgBD7z4woPd8DnD2/E+9UiJt09wAeE0XL99yXNfLu7lPFhQk+3u/E4r4enataTEBkM+7R5Fey1Bf54r6+vpkanTsvhoMLhsevlGsadr0xPjE+OJQcXlz8+MLvSAYiEd+N/SINPSIRMpDhcR/aH9dFkKUmI67C8gN3hu8K0CM3bEqAW96amZCCqFUVVWVFeqgttChz9MXv90MYFrW+scdeWkA086FAZy8nQGwp0ZDrxzRfMRiCR1AID4AKA0oNoDj2AEARQnkACxpB99IUFd3agmAlc3OACwJl6sA+ZydBwgEVD9AdspyXhKk0+nYQgLpOl88qb0FUFJaXgYwOj45DVBcGloEYLo5c3aPfzb4tLp2L7AUoK21Zf+a1Su/nCtQ/cETrutYV69cbwEILS762HFdT9OujQCUqEXlUkqvoeHC5EsC4O/Z4Judu4d+a/0lXFn54ebnBR0d/14ZSCbTjU1NN3W9s8Iv/RX3RlKpxsafZ6LRqLrI71Sk0+OTmqbZhQRPyWQyPfv3HTr+44VzZ4QQvtraky7Arj376gATsBXHt1UqyNa2thjgKYq1WvhUpT+RvAvI+Qf9DB9QDWwqlLx+7dftZ3/4vhpQdV0PJm537o73/fdtTU1NWaH6NyEMlAAMxLt2GInI3oaG0xuZ8zMLjug1efqQVsYKj6UfDB88eKQH8N7izHlZzpMf+N55BHdbU8xqQ8JcAAAAAElFTkSuQmCC\",1,1,null]]]}"
+[.] message "
+
+*/
+
+        var print = function(m, p) {
+            try {
+                var msg = JSON.parse(p);
+                if (msg.signature === "a(ssssbbusbbi)") {
+                    var body = msg.body[1][0][7];
+                    //console.log(msg.body[1][0][7]);
+                    $('#vol').attr('src', 'data:image/png;base64,'+body);
+                }
+            } catch (e) {
+            }
+            return;
+            p = (p === undefined) ? '' : JSON.stringify(p);
+            div.append($("<code>").text(m + ' ' + p));
+            div.append($("<br>"));
+            div.scrollTop(div.scrollTop()+10000);
+        };
+
+        sockjs.s = function(o) {
+           sockjs.send(JSON.stringify(o));
+        };
+
+        sockjs.onopen    = function()  {
+            //print('[*] open', sockjs.protocol);
+            var addMatch = {
+               "path": "/org/freedesctop/DBus",
+               "destination": "org.freedesktop.DBus",
+               "interface": "org.freedesktop.DBus",
+               "member": "AddMatch",
+               "signature": "s",
+               "body": [
+                   "type='signal'"
+               ]
+            }
+            sockjs.s(addMatch);
+            addMatch.body[0] = "type='method_call'";
+            sockjs.s(addMatch);
+            addMatch.body[0] = "type='method_return'";
+            sockjs.s(addMatch);
+        };
+        sockjs.onmessage = function(e) {print('[.] message', e.data);};
+        sockjs.onclose   = function()  {print('[*] close');};
+
+        form.submit(function() {
+            print('[ ] sending', inp.val());
+            sockjs.send(inp.val());
+            //inp.val('');
+            return false;
+        });
+
+    </script>
+</body></html>
