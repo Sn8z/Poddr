@@ -49,6 +49,7 @@
     "angular-material": "^1.1.7",
     "angular-messages": "^1.6.9",
     "electron-json-storage": "^4.0.2",
+    "electron-log": "^2.2.15",
     "electron-window-state": "^4.1.1",
     "material-design-icons-iconfont": "^3.0.3",
     "node-podcast-parser": "^2.0.0"
