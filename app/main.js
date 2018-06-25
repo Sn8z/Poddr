@@ -17,13 +17,16 @@ app.on("window-all-closed", function () {
 //When app is rdy, create window
 app.once("ready", function () {
   if (process.platform == 'linux') {
+    var DBus = require('dbus');
+    var session = DBus.getBus('session');
+
     function registerBindings(desktopEnv, session) {
       session.getInterface(`org.${desktopEnv}.SettingsDaemon`,
         `/org/${desktopEnv}/SettingsDaemon/MediaKeys`,
-        `org.${desktopEnv}.SettingsDaemon.MediaKeys`, (err, iface) => {
-          if (err) {
+        `org.${desktopEnv}.SettingsDaemon.MediaKeys`, function (error, iface) {
+          if (error) {
             log.info(desktopEnv);
-            log.info(err);
+            log.info(error);
           } else {
             iface.on('MediaPlayerKeyPressed', (n, keyName) => {
               switch (keyName) {
@@ -40,9 +43,6 @@ app.once("ready", function () {
     }
 
     try {
-      var DBus = require('dbus');
-      var session = DBus.getBus('session');
-
       registerBindings('gnome', session);
       registerBindings('mate', session);
     } catch (e) {
