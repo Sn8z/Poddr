@@ -16,7 +16,6 @@ app.on("window-all-closed", function () {
 
 //When app is rdy, create window
 app.once("ready", function () {
-  log.info(process.platform);
   if (process.platform == 'linux') {
     function registerBindings(desktopEnv, session) {
       session.getInterface(`org.${desktopEnv}.SettingsDaemon`,
@@ -74,7 +73,7 @@ app.once("ready", function () {
     frame: false,
     show: false,
     backgroundColor: "#0f0f0f",
-    icon: __dirname + "/app/images/icon.png"
+    icon: __dirname + "/images/icon.png"
   });
 
   //add listeners to the window
@@ -87,7 +86,7 @@ app.once("ready", function () {
   });
 
   //Point to html file to be opened
-  mainWindow.loadURL("file://" + __dirname + "/app/index.html");
+  mainWindow.loadURL("file://" + __dirname + "/index.html");
 
   //Devtools
   //mainWindow.webContents.openDevTools({ mode: 'detach' });
