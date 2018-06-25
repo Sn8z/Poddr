@@ -41,8 +41,8 @@ app.once("ready", function () {
     }
 
     try {
-      var DBus = require('dbus-native');
-      var session = DBus.sessionBus('session');
+      var DBus = require('dbus');
+      var session = DBus.getBus('session');
 
       registerBindings('gnome', session);
       registerBindings('mate', session);
@@ -90,7 +90,7 @@ app.once("ready", function () {
   mainWindow.loadURL("file://" + __dirname + "/app/index.html");
 
   //Devtools
-  mainWindow.webContents.openDevTools({ mode: 'detach' });
+  //mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   //Cleanup on window close
   mainWindow.on("closed", function () {

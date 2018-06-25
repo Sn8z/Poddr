@@ -1,0 +1,6 @@
+build
+*.log
+*.o
+*.swp
+*.node
+node_modules
