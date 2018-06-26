@@ -1,13 +1,14 @@
 var Application = require("spectron").Application;
-var assert = require("assert");
+var path = require('path');
+var electronPath = require('electron');
 
 describe("Application navigation", function () {
   this.timeout(30000);
 
   beforeEach(function () {
     this.app = new Application({
-      path: `${__dirname}/../node_modules/.bin/electron`,
-      args: ["main.js"]
+      path: electronPath,
+      args: [path.join(__dirname, '..')]
     });
     return this.app.start();
   });

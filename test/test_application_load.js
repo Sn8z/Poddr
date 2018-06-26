@@ -1,38 +1,44 @@
-var Application = require("spectron").Application;
-var assert = require("assert");
+try{
+  var Application = require("spectron").Application;
+  var assert = require("assert");
+  var path = require('path');
+  var electronPath = require("electron");
 
-describe("Application launch", function () {
-  this.timeout(30000);
+  describe("Application launch", function () {
+    this.timeout(30000);
 
-  beforeEach(function () {
-    this.app = new Application({
-      path: `${__dirname}/../node_modules/.bin/electron`,
-      args: ["main.js"]
+    beforeEach(function () {
+      this.app = new Application({
+        path: electronPath,
+        args: [path.join(__dirname, '..')]
+      });
+      return this.app.start();
     });
-    return this.app.start();
-  });
 
-  afterEach(function () {
-    if (this.app && this.app.isRunning()) {
-      return this.app.stop();
-    }
-  });
+    afterEach(function () {
+      if (this.app && this.app.isRunning()) {
+        return this.app.stop();
+      }
+    });
 
-  it("Should start and display a visible window", function () {
-    return this.app.browserWindow.isVisible().then(function (isVisible) {
-      assert.equal(isVisible, true);
+    it("Should start and display a visible window", function () {
+      return this.app.browserWindow.isVisible().then(function (isVisible) {
+        assert.equal(isVisible, true);
+      });
+    });
+
+    it("Should show one window", function () {
+      return this.app.client.getWindowCount().then(function (count) {
+        assert.equal(count, 1);
+      });
+    });
+
+    it("Title should be correct", function () {
+      return this.app.client.getTitle().then(function (title) {
+        assert.equal(title, "Poddr");
+      });
     });
   });
-
-  it("Should show one window", function () {
-    return this.app.client.getWindowCount().then(function (count) {
-      assert.equal(count, 1);
-    });
-  });
-
-  it("Title should be correct", function () {
-    return this.app.client.getTitle().then(function (title) {
-      assert.equal(title, "Poddr");
-    });
-  });
-});
+} catch(e){
+  throw e;
+}

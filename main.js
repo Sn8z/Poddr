@@ -73,7 +73,7 @@ app.once("ready", function () {
     frame: false,
     show: false,
     backgroundColor: "#0f0f0f",
-    icon: __dirname + "/images/icon.png"
+    icon: __dirname + "/app/images/icon.png"
   });
 
   mainWindowState.manage(mainWindow);
@@ -83,7 +83,7 @@ app.once("ready", function () {
     mainWindow.focus();
   });
 
-  mainWindow.loadURL("file://" + __dirname + "/index.html");
+  mainWindow.loadURL("file://" + __dirname + "/app/index.html");
 
   //Devtools
   //mainWindow.webContents.openDevTools({ mode: 'detach' });

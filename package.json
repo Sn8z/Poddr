@@ -2,7 +2,7 @@
   "name": "poddr",
   "version": "1.0.8",
   "description": "Podcast client",
-  "main": "app/main.js",
+  "main": "main.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/Sn8z/Poddr.git"
