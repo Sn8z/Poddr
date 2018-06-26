@@ -137,6 +137,18 @@ angular
       true
     );
 
+    function rewind() {
+      player.currentTime = player.currentTime - 1;
+      $scope.$apply();
+    }
+    $rootScope.rewind = rewind;
+
+    function forward() {
+      player.currentTime = player.currentTime + 1;
+      $scope.$apply();
+    }
+    $rootScope.forward = forward;
+
     $scope.checkPlayBtn = function () {
       if (player.paused) {
         return "play_circle_outline";

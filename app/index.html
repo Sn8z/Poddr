@@ -121,8 +121,14 @@
           </div>
         </div>
         <div class="row" layout="row" style="height:100%">
-          <div flex="10" layout="row" layout-align="center center">
+          <div flex="5" layout="row" layout-align="center center">
+            <md-icon class="media-btn" md-font-library="material-icons" ng-click="rewind()">fast_rewind</md-icon>
+          </div>
+          <div flex="7" layout="row" layout-align="center center">
             <md-icon id="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
+          </div>
+          <div flex="5" layout="row" layout-align="center center">
+            <md-icon class="media-btn" md-font-library="material-icons" ng-click="forward()">fast_forward</md-icon>
           </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
             <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastcover)" style="color: white;text-decoration: none;">

@@ -28,6 +28,14 @@ var app = angular
       e.preventDefault();
       $rootScope.volumeDown();
     });
+    Mousetrap.bindGlobal("mod+z", function (e) {
+      e.preventDefault();
+      $rootScope.rewind();
+    });
+    Mousetrap.bindGlobal("mod+x", function (e) {
+      e.preventDefault();
+      $rootScope.forward();
+    });
 
     $scope.init = function () {
       storage.get("theme", function (error, data) {
