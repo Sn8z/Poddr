@@ -1,5 +1,6 @@
 const electron = require("electron");
 const app = electron.app;
+const ipcMain = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const globalShortcut = electron.globalShortcut;
 const windowStateKeeper = require("electron-window-state");
@@ -11,6 +12,10 @@ var mainWindow = null;
 //Quit when all windows are closed
 app.on("window-all-closed", function () {
   log.info('Exiting Poddr.');
+  app.quit();
+});
+
+ipcMain.on('quit-app', function () {
   app.quit();
 });
 

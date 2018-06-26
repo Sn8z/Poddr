@@ -14,6 +14,32 @@ angular
     var ipc = require("electron").ipcRenderer;
     var log = require('electron-log');
 
+    var mpris = require('mpris-service');
+    var mprisPlayer;
+
+    if (process.platform == 'linux') {
+      mprisPlayer = mpris({
+        name: 'poddr',
+        identity: 'Poddr',
+        supportedInterfaces: ['player'],
+        rate: 1,
+        minimumRate: 1,
+        maximumRate: 1,
+        canSeek: false,
+        canControl: false
+      });
+      mprisPlayer.playbackStatus = 'Stopped';
+      mprisPlayer.canEditTracks = false;
+
+      mprisPlayer.on('playpause', function () {
+        log.info("Play Pause MPRIS.");
+        togglePlay();
+      });
+
+      mprisPlayer.on('quit', function () {
+        ipc.send('quit-app');
+      });
+    }
     //create the audio element
     var player = document.createElement("audio");
 
@@ -21,7 +47,9 @@ angular
     $scope.barWidth = "0%";
     $scope.volume = player.volume;
     $scope.isLoading = false;
+
     $scope.playerService = PlayerService;
+
     $scope.showEpisodes = function (id, title, img) {
       log.info("Pressed currently playing title.");
       $rootScope.fetchEpisodes(id, title, img);
