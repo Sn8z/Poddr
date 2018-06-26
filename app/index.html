@@ -143,7 +143,8 @@
             <md-icon id="fav-btn" ng-hide="isPlayerFavourite()" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon id="desc-btn" ng-click="showDescription(playerService.podcastDescription | episodeDesc)" md-font-library="material-icons">info</md-icon>
+            <md-icon id="desc-btn" ng-click="showDescription(playerService.currentlyPlaying, playerService.podcastDescription | episodeDesc)"
+              md-font-library="material-icons">info</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
             <md-icon id="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>

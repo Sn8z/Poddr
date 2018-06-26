@@ -22,7 +22,7 @@ angular
     $scope.volume = player.volume;
     $scope.isLoading = false;
     $scope.playerService = PlayerService;
-    $scope.showEpisodes = function(id, title, img){
+    $scope.showEpisodes = function (id, title, img) {
       log.info("Pressed currently playing title.");
       $rootScope.fetchEpisodes(id, title, img);
     };
@@ -193,13 +193,13 @@ angular
       return $scope.favouriteList.keys.indexOf(PlayerService.podcastID) !== -1;
     };
 
-    $scope.showDescription = function(text){
+    $scope.showDescription = function (title, text) {
       $mdDialog.show(
         $mdDialog.alert()
-        .clickOutsideToClose(true)
-        .title('Episode description')
-        .textContent(text)
-        .ok('Close')
+          .clickOutsideToClose(true)
+          .title(title)
+          .textContent(text)
+          .ok('Close')
       );
     };
 
