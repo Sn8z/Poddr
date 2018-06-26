@@ -3,6 +3,7 @@ angular
   .controller("PlayerController", function (
     $scope,
     $rootScope,
+    $mdDialog,
     PlayerService,
     $window,
     ToastService,
@@ -170,12 +171,22 @@ angular
       if (PlayerService.podcastID != "0") {
         FavouriteService.favourite(PlayerService.podcastID, PlayerService.podcastCover, PlayerService.podcastArtist, PlayerService.podcastArtist);
       }
-    }
+    };
 
     $scope.favouriteList = FavouriteFactory.getList();
     $scope.isPlayerFavourite = function () {
       return $scope.favouriteList.keys.indexOf(PlayerService.podcastID) !== -1;
-    }
+    };
+
+    $scope.showDescription = function(text){
+      $mdDialog.show(
+        $mdDialog.alert()
+        .clickOutsideToClose(true)
+        .title('Episode description')
+        .textContent(text)
+        .ok('Close')
+      );
+    };
 
     function volumeUp() {
       if (player.volume + 0.005 > 1) {

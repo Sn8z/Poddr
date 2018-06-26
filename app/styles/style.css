@@ -121,6 +121,12 @@ md-switch.md-checked .md-ink-ripple {
   color: var(--main-color) !important; 
 }
 
+/* Dialog */
+.md-button.md-default-theme.md-primary,
+.md-button.md-primary {
+  color: var(--main-color) !important;
+}
+
 /* input */
 md-select {
   color: white !important;

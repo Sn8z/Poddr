@@ -76,22 +76,18 @@ app.once("ready", function () {
     icon: __dirname + "/images/icon.png"
   });
 
-  //add listeners to the window
   mainWindowState.manage(mainWindow);
 
-  //when main window is ready
   mainWindow.on("ready-to-show", function () {
     mainWindow.show();
     mainWindow.focus();
   });
 
-  //Point to html file to be opened
   mainWindow.loadURL("file://" + __dirname + "/index.html");
 
   //Devtools
   //mainWindow.webContents.openDevTools({ mode: 'detach' });
 
-  //Cleanup on window close
   mainWindow.on("closed", function () {
     mainWindow = null;
   });
