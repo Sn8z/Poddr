@@ -7,6 +7,7 @@ var app = angular
     $mdSidenav,
     $http,
     $window,
+    $timeout,
     PlayerService
   ) {
     //preloading modules to cache to speed up first time view of for example search page
@@ -46,7 +47,6 @@ var app = angular
         var html = document.getElementsByTagName("html")[0];
         html.style.cssText = "--main-color: " + color;
         log.info('Loaded CSS color variable.');
-        checkUpdates();
       });
     };
 
@@ -76,6 +76,10 @@ var app = angular
           }
         });
     };
+
+    $timeout(function () {
+      checkUpdates();
+    }, 2000);
 
     $rootScope.toggleSidebar = function () {
       $mdSidenav("right").toggle();
