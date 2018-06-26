@@ -46,33 +46,36 @@ var app = angular
         var html = document.getElementsByTagName("html")[0];
         html.style.cssText = "--main-color: " + color;
         log.info('Loaded CSS color variable.');
+        checkUpdates();
       });
     };
 
     //check if update is available
-    $http
-      .get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json")
-      .then(function (response) {
-        if (
-          response.data.version != require("electron").remote.app.getVersion()
-        ) {
-          var toast = $mdToast
-            .simple()
-            .textContent(response.data.version + " available!")
-            .position("top right")
-            .hideDelay(10000)
-            .action("Update now!")
-            .toastClass("md-toast-success");
-          $mdToast.show(toast).then(function (response) {
-            if (response == "ok") {
-              require("electron").shell.openExternal(
-                "https://github.com/Sn8z/Poddr/releases"
-              );
-            }
-          });
-          log.info('Update available.');
-        }
-      });
+    var checkUpdates = function(){
+      $http
+        .get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json")
+        .then(function (response) {
+          if (
+            response.data.version != require("electron").remote.app.getVersion()
+          ) {
+            var toast = $mdToast
+              .simple()
+              .textContent(response.data.version + " available!")
+              .position("top right")
+              .hideDelay(10000)
+              .action("Update now!")
+              .toastClass("md-toast-success");
+            $mdToast.show(toast).then(function (response) {
+              if (response == "ok") {
+                require("electron").shell.openExternal(
+                  "https://github.com/Sn8z/Poddr/releases"
+                );
+              }
+            });
+            log.info('Update available.');
+          }
+        });
+    };
 
     $rootScope.toggleSidebar = function () {
       $mdSidenav("right").toggle();
