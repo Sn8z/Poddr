@@ -6,6 +6,7 @@ var app = angular
     $mdToast,
     $mdSidenav,
     $http,
+    $window,
     PlayerService
   ) {
     //preloading modules to cache to speed up first time view of for example search page
@@ -73,6 +74,11 @@ var app = angular
     //Handle maincontent navigation
     $scope.mainContent = "podcasts";
     function changeView(view) {
+      if (view == $scope.mainContent && view == "search"){
+        var search = $window.document.getElementById("search-input");
+        search.value = "";
+        search.focus();
+      }
       $scope.mainContent = view;
       log.info('Changed view to ' + view);
     }
