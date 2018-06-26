@@ -125,7 +125,9 @@
             <md-icon id="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
           </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
-            <b ng-bind="playerService.currentlyPlaying"></b>
+            <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastcover)" style="color: white;text-decoration: none;">
+              {{ playerService.currentlyPlaying }}
+            </a>
             <span class="timer-text">{{ playerService.atTime | secondsToHHmmss }} / {{ playerService.podcastDuration | secondsToHHmmss }}</span>
           </div>
           <div flex="10" layout="row" layout-align="center center">

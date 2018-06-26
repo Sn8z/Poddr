@@ -21,8 +21,11 @@ angular
     $scope.barWidth = "0%";
     $scope.volume = player.volume;
     $scope.isLoading = false;
-
     $scope.playerService = PlayerService;
+    $scope.showEpisodes = function(id, title, img){
+      log.info("Pressed currently playing title.");
+      $rootScope.fetchEpisodes(id, title, img);
+    };
 
     //listen for messages from main process
     ipc.on("toggle-play", function (event, message) {
