@@ -21,15 +21,18 @@ angular
       mprisPlayer = mpris({
         name: 'poddr',
         identity: 'Poddr',
-        supportedInterfaces: ['player'],
-        rate: 1,
-        minimumRate: 1,
-        maximumRate: 1,
-        canSeek: false,
-        canControl: false
+        supportedInterfaces: ['player']
       });
-      mprisPlayer.playbackStatus = 'Stopped';
+
+      mprisPlayer.rate = 1 + 1e-15;
+      mprisPlayer.minimumRate = 1 + 1e-15;
+      mprisPlayer.maximumRate = 1 + 1e-15;
+      mprisPlayer.canSeek = false;
+      mprisPlayer.canControl = false;
+      mprisPlayer.canGoNext = false;
+      mprisPlayer.canGoPrevious = false;
       mprisPlayer.canEditTracks = false;
+      mprisPlayer.playbackStatus = 'Stopped';
 
       mprisPlayer.on('playpause', function () {
         log.info("Play Pause MPRIS.");
@@ -39,6 +42,11 @@ angular
       mprisPlayer.on('quit', function () {
         ipc.send('quit-app');
       });
+
+      mprisPlayer.on('raise', function () {
+        ipc.send('raise-app');
+      });
+
     }
     //create the audio element
     var player = document.createElement("audio");
@@ -76,6 +84,15 @@ angular
       if (data.podcastArtist) PlayerService.podcastArtist = data.podcastArtist;
       if (data.podcastID) PlayerService.podcastID = data.podcastID;
       if (data.podcastDescription) PlayerService.podcastDescription = data.podcastDescription;
+
+      if(process.platform == 'linux'){
+        mprisPlayer.metadata = {
+          'mpris:artUrl': data.podcastCover || '',
+          'xesam:title': data.podcastTitle || 'No title',
+          'xesam:artist': [data.podcastArtist || 'No artist']
+        };
+      }
+
     });
 
     //set initial volume based on previous session if available
@@ -134,6 +151,7 @@ angular
       log.info('Playing ' + episode.title + '.');
       player.src = episode.enclosure.url;
       player.play();
+      if (process.platform == 'linux') mprisPlayer.playbackStatus = 'Playing';
 
       PlayerService.podcastURL = episode.enclosure.url;
       PlayerService.currentlyPlaying = episode.title;
@@ -147,6 +165,14 @@ angular
         PlayerService.episodeCover = PlayerService.podcastCover;
       } else {
         PlayerService.episodeCover = episode.image;
+      }
+
+      if (process.platform == 'linux') {
+        mprisPlayer.metadata = {
+          'mpris:artUrl': PlayerService.episodeCover || '',
+          'xesam:title': PlayerService.currentlyPlaying || 'No title',
+          'xesam:artist': [PlayerService.podcastArtist || 'No artist']
+        };
       }
 
       PlayerService.saveState();
@@ -203,7 +229,9 @@ angular
       if (player.src) {
         if (player.paused) {
           player.play();
+          if (process.platform == 'linux') mprisPlayer.playbackStatus = 'Playing';
         } else {
+          if (process.platform == 'linux') mprisPlayer.playbackStatus = 'Stopped';
           player.pause();
         }
       }

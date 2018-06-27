@@ -19,6 +19,11 @@ ipcMain.on('quit-app', function () {
   app.quit();
 });
 
+ipcMain.on('raise-app', function () {
+  mainWindow.show();
+  mainWindow.focus();
+});
+
 //When app is rdy, create window
 app.once("ready", function () {
   if (process.platform == 'linux') {
@@ -56,7 +61,7 @@ app.once("ready", function () {
 
   } else {
     //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
-    globalShortcut.register("MediaPlayPause", () => {
+    globalShortcut.register("MediaPlayPause", function () {
       mainWindow.webContents.send("toggle-play", "playpause");
     });
   }
