@@ -27,8 +27,6 @@ ipcMain.on('raise-app', function () {
 //When app is rdy, create window
 app.once("ready", function () {
   if (process.platform == 'linux') {
-    var DBus = require('dbus');
-    var session = DBus.getBus('session');
 
     function registerBindings(desktopEnv, session) {
       session.getInterface(`org.${desktopEnv}.SettingsDaemon`,
@@ -53,6 +51,8 @@ app.once("ready", function () {
     }
 
     try {
+      var DBus = require('dbus');
+      var session = DBus.getBus('session');
       registerBindings('gnome', session);
       registerBindings('mate', session);
     } catch (e) {
