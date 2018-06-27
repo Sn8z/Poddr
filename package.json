@@ -8,7 +8,7 @@
     "url": "git://github.com/Sn8z/Poddr.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha",
+    "test": "mocha",
     "start": "./node_modules/.bin/electron .",
     "dist": "electron-builder -wl",
     "dist:mac": "build --mac",
