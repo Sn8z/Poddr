@@ -18,6 +18,7 @@
   "author": "Sn8z",
   "license": "MIT",
   "devDependencies": {
+    "devtron": "^1.4.0",
     "electron": "^2.0.2",
     "electron-builder": "20.14.7",
     "mocha": "^5.0.1",
