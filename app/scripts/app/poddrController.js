@@ -37,6 +37,26 @@ var app = angular
       e.preventDefault();
       $rootScope.forward();
     });
+    Mousetrap.bindGlobal("mod+q", function (e) {
+      e.preventDefault();
+      $scope.mainContent = "podcasts";
+      $scope.$apply();
+    });
+    Mousetrap.bindGlobal("mod+w", function (e) {
+      e.preventDefault();
+      $scope.mainContent = "favourites";
+      $scope.$apply();
+    });
+    Mousetrap.bindGlobal("mod+e", function (e) {
+      e.preventDefault();
+      $scope.mainContent = "search";
+      $scope.$apply();
+    });
+    Mousetrap.bindGlobal("mod+r", function (e) {
+      e.preventDefault();
+      $scope.mainContent = "settings";
+      $scope.$apply();
+    });
 
     $scope.init = function () {
       storage.get("theme", function (error, data) {
