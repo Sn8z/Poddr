@@ -40,18 +40,22 @@ var app = angular
     Mousetrap.bindGlobal("mod+q", function (e) {
       e.preventDefault();
       changeView("podcasts");
+      $scope.$apply();
     });
     Mousetrap.bindGlobal("mod+w", function (e) {
       e.preventDefault();
       changeView("favourites");
+      $scope.$apply();
     });
     Mousetrap.bindGlobal("mod+e", function (e) {
       e.preventDefault();
       changeView("search");
+      $scope.$apply();
     });
     Mousetrap.bindGlobal("mod+r", function (e) {
       e.preventDefault();
       changeView("settings");
+      $scope.$apply();
     });
 
     $scope.init = function () {
@@ -111,7 +115,6 @@ var app = angular
         search.focus();
       }
       $scope.mainContent = view;
-      $scope.$apply();
       log.info('Changed view to ' + view);
     }
     $scope.changeView = changeView;
