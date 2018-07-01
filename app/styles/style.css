@@ -2,11 +2,6 @@
   --main-color: #000;
 }
 
-* {
-  outline: none !important;
-  user-select: none;
-}
-
 body {
   font-family: "Rubik", sans-serif;
 }

@@ -39,23 +39,19 @@ var app = angular
     });
     Mousetrap.bindGlobal("mod+q", function (e) {
       e.preventDefault();
-      $scope.mainContent = "podcasts";
-      $scope.$apply();
+      changeView("podcasts");
     });
     Mousetrap.bindGlobal("mod+w", function (e) {
       e.preventDefault();
-      $scope.mainContent = "favourites";
-      $scope.$apply();
+      changeView("favourites");
     });
     Mousetrap.bindGlobal("mod+e", function (e) {
       e.preventDefault();
-      $scope.mainContent = "search";
-      $scope.$apply();
+      changeView("search");
     });
     Mousetrap.bindGlobal("mod+r", function (e) {
       e.preventDefault();
-      $scope.mainContent = "settings";
-      $scope.$apply();
+      changeView("settings");
     });
 
     $scope.init = function () {
@@ -71,7 +67,7 @@ var app = angular
     };
 
     //check if update is available
-    var checkUpdates = function(){
+    var checkUpdates = function () {
       $http
         .get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json")
         .then(function (response) {
@@ -109,12 +105,13 @@ var app = angular
     //Handle maincontent navigation
     $scope.mainContent = "podcasts";
     function changeView(view) {
-      if (view == $scope.mainContent && view == "search"){
+      if (view == $scope.mainContent && view == "search") {
         var search = $window.document.getElementById("search-input");
         search.value = "";
         search.focus();
       }
       $scope.mainContent = view;
+      $scope.$apply();
       log.info('Changed view to ' + view);
     }
     $scope.changeView = changeView;
