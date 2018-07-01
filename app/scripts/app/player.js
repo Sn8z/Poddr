@@ -21,12 +21,15 @@ angular
       mprisPlayer = mpris({
         name: 'poddr',
         identity: 'Poddr',
+        canRaise: true,
         supportedInterfaces: ['player']
       });
 
       mprisPlayer.rate = 1 + 1e-15;
       mprisPlayer.minimumRate = 1 + 1e-15;
       mprisPlayer.maximumRate = 1 + 1e-15;
+      mprisPlayer.canPlay = true;
+      mprisPlayer.canPause = true;
       mprisPlayer.canSeek = false;
       mprisPlayer.canControl = false;
       mprisPlayer.canGoNext = false;
@@ -35,8 +38,15 @@ angular
       mprisPlayer.playbackStatus = 'Stopped';
 
       mprisPlayer.on('playpause', function () {
-        log.info("Play Pause MPRIS.");
         togglePlay();
+      });
+
+      mprisPlayer.on('play', function () {
+        if (player.paused) togglePlay();
+      });
+
+      mprisPlayer.on('pause', function () {
+        if (!player.paused) togglePlay();
       });
 
       mprisPlayer.on('quit', function () {
