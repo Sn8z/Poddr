@@ -44,12 +44,12 @@ var app = angular
     });
     Mousetrap.bindGlobal("mod+w", function (e) {
       e.preventDefault();
-      changeView("favourites");
+      changeView("search");
       $scope.$apply();
     });
     Mousetrap.bindGlobal("mod+e", function (e) {
       e.preventDefault();
-      changeView("search");
+      changeView("favourites");
       $scope.$apply();
     });
     Mousetrap.bindGlobal("mod+r", function (e) {

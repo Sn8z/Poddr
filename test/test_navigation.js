@@ -29,8 +29,8 @@ describe("Application navigation", function () {
     return this.app.client.click("#favourite-item");
   });
 
-  it("Should be able to click about button", function () {
-    return this.app.client.click('#about-item');
+  it("Should be able to click settings button", function () {
+    return this.app.client.click('#settings-item');
   });
 
   it("Should be able to click toggle button", function () {
