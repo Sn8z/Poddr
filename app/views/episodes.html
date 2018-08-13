@@ -13,7 +13,20 @@
       </div>
 
     </md-list-item>
-    <md-list-item class="episode-item" ng-repeat="episode in episodes | limitTo:nrOfItems" layout-margin>
+    <md-list-item>
+      <div class="row" layout="row" style="width: 100%">
+        <div flex="85">
+          <md-input-container class="md-block" style="margin: 0">
+            <input ng-model="query" type="text" placeholder="Filter by" />
+          </md-input-container>
+        </div>
+        <div flex="15" layout="row" layout-align="center center">
+          <md-icon md-font-library="material-icons" ng-click="toggleOrder=!toggleOrder">sort</md-icon>
+        </div>
+      </div>
+    </md-list-item>
+    <md-list-item class="episode-item" ng-repeat="episode in episodes | filter:query | orderBy: !toggleOrder?'-published':'published'"
+      layout-margin>
       <div layout="column" ng-click='playPodcast(episode, albumCover)' style="width:100%" ng-attr-title="{{ episode.description | episodeDesc }}">
         <div class="row">
           <a href="#" style="color:white;text-decoration:none">{{ episode.title }}</a>
@@ -27,9 +40,6 @@
           </div>
         </div>
       </div>
-    </md-list-item>
-    <md-list-item ng-if="canLoadMore">
-      <md-button style="color: var(--main-color)" ng-click="loadMore()">Load more...</md-button>
     </md-list-item>
   </md-list>
 </div>

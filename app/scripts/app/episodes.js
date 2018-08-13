@@ -13,17 +13,9 @@ angular
 
     $scope.albumCover = "";
     $scope.isLoading = false;
-    $scope.nrOfItems = 20;
     $scope.playPodcast = $rootScope.playPodcast;
     $scope.episodes = [];
-    $scope.canLoadMore = false;
-
-    $scope.loadMore = function () {
-      $scope.nrOfItems += 10;
-      if ($scope.episodes.length <= $scope.nrOfItems) {
-        $scope.canLoadMore = false;
-      }
-    };
+    $scope.toggleOrder = false;
 
     $rootScope.fetchEpisodes = function (id, title, podcastCover) {
       log.info('Fetching episodes...');
@@ -55,9 +47,6 @@ angular
                     $scope.isLoading = false;
                     $scope.episodes = data.episodes;
                     log.info('Parsed ' + $scope.episodes.length + ' episodes.');
-                    if ($scope.episodes.length > $scope.nrOfItems) {
-                      $scope.canLoadMore = true;
-                    }
                   }
                 });
               },
