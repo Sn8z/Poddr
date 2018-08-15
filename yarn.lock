@@ -44,9 +44,9 @@ angular-animate@^1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.7.3.tgz#99aa794d3417aa6a794f603c9c27ec0ee4c4b3b4"
 
-angular-aria@^1.6.9:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.2.tgz#68cb3d15aece7a22517b1fe3e00d9d3807ceca88"
+angular-aria@^1.7.3:
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.3.tgz#a545112da0daed875061ff49d1ac8964cfa51a8a"
 
 angular-material@^1.1.7:
   version "1.1.10"
