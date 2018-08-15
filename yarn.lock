@@ -717,15 +717,16 @@ electron-download@^4.1.0:
     semver "^5.3.0"
     sumchecker "^2.0.1"
 
-electron-json-storage@^4.0.2:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/electron-json-storage/-/electron-json-storage-4.1.0.tgz#98edb44995104fb8b5f85b3473217ad52ec7f146"
+electron-json-storage@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/electron-json-storage/-/electron-json-storage-4.1.1.tgz#4995a03e6d44552527bc0e9f6cdc34e98a6dcca7"
   dependencies:
     async "^2.0.0"
+    electron "^2.0.4"
+    lockfile "^1.0.4"
     lodash "^4.0.1"
     mkdirp "^0.5.1"
     rimraf "^2.5.1"
-    rwlock "^5.0.0"
 
 electron-log@^2.2.17:
   version "2.2.17"
@@ -762,7 +763,7 @@ electron-window-state@^4.1.1:
     jsonfile "^2.2.3"
     mkdirp "^0.5.1"
 
-electron@^2.0.7:
+electron@^2.0.4, electron@^2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/electron/-/electron-2.0.7.tgz#f7ce410433298e319032ce31f0e6ffd709ff052c"
   dependencies:
@@ -1310,6 +1311,12 @@ locate-path@^2.0.0:
     p-locate "^2.0.0"
     path-exists "^3.0.0"
 
+lockfile@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/lockfile/-/lockfile-1.0.4.tgz#07f819d25ae48f87e538e6578b6964a4981a5609"
+  dependencies:
+    signal-exit "^3.0.2"
+
 lodash@^4.0.1, lodash@^4.17.10, lodash@^4.3.0, lodash@^4.8.0, lodash@~4.17.10:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
@@ -1853,10 +1860,6 @@ run-async@^2.2.0:
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-2.3.0.tgz#0371ab4ae0bdd720d4166d7dfda64ff7a445a6c0"
   dependencies:
     is-promise "^2.1.0"
-
-rwlock@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/rwlock/-/rwlock-5.0.0.tgz#888d6a77a3351cc1a209204ef2ee1722093836cf"
 
 rx-lite-aggregates@^4.0.8:
   version "4.0.8"
