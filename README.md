@@ -4,7 +4,6 @@
     <img src="https://img.shields.io/github/release/sn8z/poddr.svg">
     <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg">
     <img src="https://img.shields.io/github/release-date/sn8z/poddr.svg">
-    <img src="https://app.codeship.com/projects/201ad970-f91b-0135-962e-46ce43625878/status?branch=master"/>
     <a href="https://david-dm.org/sn8z/poddr" title="dependencies status"><img src="https://david-dm.org/sn8z/poddr/status.svg"/></a>
 </div>
  
