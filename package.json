@@ -51,7 +51,7 @@
     "angular-messages": "^1.7.3",
     "dbus": "^1.0.3",
     "electron-json-storage": "^4.0.2",
-    "electron-log": "^2.2.15",
+    "electron-log": "^2.2.17",
     "electron-window-state": "^4.1.1",
     "material-design-icons-iconfont": "^3.0.3",
     "mpris-service": "^1.1.3",
