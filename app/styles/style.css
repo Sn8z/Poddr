@@ -99,9 +99,13 @@ md-progress-circular path {
 
 .menu-icon {
   color: var(--main-color) !important;
-  font-size: 40px !important;
-  width: 40px !important;
-  height: 40px !important;
+  font-size: 35px !important;
+  width: 35px !important;
+  height: 35px !important;
+}
+
+.menu-text { 
+  font-size: 16px;
 }
 
 .timer-text {
@@ -275,7 +279,7 @@ md-toast {
 }
 
 /* media queries for left navigation menu */
-@media only screen and (max-width: 960px) { 
+@media screen and (max-width: 960px) { 
   .menu-text { 
     display: none;
   }

@@ -265,7 +265,7 @@ angular
           .clickOutsideToClose(true)
           .title(title)
           .textContent(text)
-          .ok('Close')
+          .ok('x')
       );
     };
 
