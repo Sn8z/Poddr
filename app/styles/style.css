@@ -99,6 +99,9 @@ md-progress-circular path {
 
 .menu-icon {
   color: var(--main-color) !important;
+  font-size: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
 }
 
 .timer-text {
@@ -182,6 +185,9 @@ md-option:focus {
 .media-btn {
   cursor: pointer;
   color: var(--main-color) !important;
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
 }
 
 #play-btn {
@@ -266,4 +272,25 @@ md-toast {
 
 .episode-item {
   border-bottom: 1px solid var(--main-color);
+}
+
+/* media queries for left navigation menu */
+@media only screen and (max-width: 960px) { 
+  .menu-text { 
+    display: none;
+  }
+
+  .menu-divider {
+    display: none;
+  }
+
+  .menu-icon {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .menu-item-content {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }

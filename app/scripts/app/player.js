@@ -14,10 +14,10 @@ angular
     var ipc = require("electron").ipcRenderer;
     var log = require('electron-log');
 
-    var mpris = require('mpris-service');
     var mprisPlayer;
-
     if (process.platform == 'linux') {
+      var mpris = require('mpris-service');
+
       mprisPlayer = mpris({
         name: 'poddr',
         identity: 'Poddr',
@@ -95,7 +95,7 @@ angular
       if (data.podcastID) PlayerService.podcastID = data.podcastID;
       if (data.podcastDescription) PlayerService.podcastDescription = data.podcastDescription;
 
-      if(process.platform == 'linux'){
+      if (process.platform == 'linux') {
         mprisPlayer.metadata = {
           'mpris:artUrl': data.podcastCover || '',
           'xesam:title': data.podcastTitle || 'No title',
@@ -201,14 +201,14 @@ angular
       true
     );
 
-    function rewind() {
-      player.currentTime = player.currentTime - 1;
+    function rewind(amount) {
+      player.currentTime = player.currentTime - amount;
       $scope.$apply();
     }
     $rootScope.rewind = rewind;
 
-    function forward() {
-      player.currentTime = player.currentTime + 1;
+    function forward(amount) {
+      player.currentTime = player.currentTime + amount;
       $scope.$apply();
     }
     $rootScope.forward = forward;
@@ -241,8 +241,8 @@ angular
           player.play();
           if (process.platform == 'linux') mprisPlayer.playbackStatus = 'Playing';
         } else {
-          if (process.platform == 'linux') mprisPlayer.playbackStatus = 'Stopped';
           player.pause();
+          if (process.platform == 'linux') mprisPlayer.playbackStatus = 'Stopped';
         }
       }
     }

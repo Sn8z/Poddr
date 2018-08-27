@@ -42,42 +42,42 @@
     <md-sidenav id="left-sidenav" flex="15" md-is-locked-open="true" md-component-id="left">
       <md-list class="md-dense" flex md-no-ink>
         <md-list-item class="menu-item" id="toplist-item" ng-click="changeView('podcasts')">
-          <md-item-content layout="row" layout-align="center center">
+          <md-item-content class="menu-item-content" layout="row" layout-align="center center">
             <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
-            <div class="inset">
+            <div class="inset menu-text">
               Toplists
             </div>
           </md-item-content>
         </md-list-item>
 
-        <md-divider></md-divider>
+        <md-divider class="menu-divider"></md-divider>
 
         <md-list-item class="menu-item" id="search-item" ng-click="changeView('search')">
-          <md-item-content md-ink-ripple layout="row" layout-align="center center">
+          <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
             <md-icon class="menu-icon" md-font-library="material-icons">search</md-icon>
-            <div class="inset">
+            <div class="inset menu-text">
               Search
             </div>
           </md-item-content>
         </md-list-item>
 
-        <md-divider></md-divider>
+        <md-divider class="menu-divider"></md-divider>
 
         <md-list-item class="menu-item" id="favourite-item" ng-click="changeView('favourites')">
-          <md-item-content md-ink-ripple layout="row" layout-align="center center">
+          <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
             <md-icon class="menu-icon" md-font-library="material-icons">favorite_border</md-icon>
-            <div class="inset">
+            <div class="inset menu-text">
               Favourites
             </div>
           </md-item-content>
         </md-list-item>
 
-        <md-divider></md-divider>
+        <md-divider class="menu-divider"></md-divider>
 
         <md-list-item class="menu-item" id="settings-item" ng-click="changeView('settings')">
-          <md-item-content md-ink-ripple layout="row" layout-align="center center">
+          <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
             <md-icon class="menu-icon" md-font-library="material-icons">settings</md-icon>
-            <div class="inset">
+            <div class="inset menu-text">
               Settings
             </div>
           </md-item-content>
@@ -90,8 +90,8 @@
 
     </md-sidenav>
     <div layout="column" flex>
-      <!-- Content -->
 
+      <!-- Content -->
       <div ng-switch="mainContent" class="box2">
         <div ng-switch-when="podcasts" style="width:100%">
           <podcasts/>
@@ -122,25 +122,27 @@
         </div>
         <div class="row" layout="row" style="height:100%">
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon class="media-btn" md-font-library="material-icons" ng-click="rewind()">fast_rewind</md-icon>
+            <md-icon class="media-btn" md-font-library="material-icons" ng-click="rewind(10)">replay_10</md-icon>
           </div>
-          <div flex="7" layout="row" layout-align="center center">
+          <div flex="5" layout="row" layout-align="center center">
             <md-icon id="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon class="media-btn" md-font-library="material-icons" ng-click="forward()">fast_forward</md-icon>
+            <md-icon class="media-btn" md-font-library="material-icons" ng-click="forward(10)">forward_10</md-icon>
           </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
             <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastcover)" style="color: white;text-decoration: none;">
               {{ playerService.currentlyPlaying }}
             </a>
-            <span class="timer-text">{{ playerService.atTime | secondsToHHmmss }} / {{ playerService.podcastDuration | secondsToHHmmss }}</span>
-          </div>
-          <div flex="10" layout="row" layout-align="center center">
-            <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
+            <span class="timer-text">{{ playerService.atTime | secondsToHHmmss }} / {{ playerService.podcastDuration | secondsToHHmmss
+              }}
+            </span>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon id="fav-btn" ng-hide="isPlayerFavourite()" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
+            <md-progress-circular ng-if="isLoading" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
+          </div>
+          <div flex="5" layout="row" layout-align="center center" ng-if="!isPlayerFavourite()">
+            <md-icon id="fav-btn" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
             <md-icon id="desc-btn" ng-click="showDescription(playerService.currentlyPlaying, playerService.podcastDescription | episodeDesc)"

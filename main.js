@@ -74,7 +74,7 @@ app.once("ready", function () {
 
   mainWindow = new BrowserWindow({
     name: "Poddr",
-    minWidth: 700,
+    minWidth: 640,
     minHeight: 600,
     width: mainWindowState.width,
     height: mainWindowState.height,

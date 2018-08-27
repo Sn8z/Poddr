@@ -7,9 +7,9 @@
       </md-input-container>
     </form>
   </div>
-  <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-show="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
+  <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-if="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
   <md-list>
-    <md-list-item ng-show="isEmpty">
+    <md-list-item ng-if="isEmpty">
       <h3 style="color:white">No results</h3>
     </md-list-item>
     <md-list-item ng-repeat="podcast in results" class="noright" ng-click="showEpisodes(podcast.trackId, podcast.trackName, podcast.artworkUrl60 | itunesPodcastCover)">

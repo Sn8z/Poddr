@@ -31,11 +31,11 @@ var app = angular
     });
     Mousetrap.bindGlobal("mod+z", function (e) {
       e.preventDefault();
-      $rootScope.rewind();
+      $rootScope.rewind(1);
     });
     Mousetrap.bindGlobal("mod+x", function (e) {
       e.preventDefault();
-      $rootScope.forward();
+      $rootScope.forward(1);
     });
     Mousetrap.bindGlobal("mod+q", function (e) {
       e.preventDefault();
