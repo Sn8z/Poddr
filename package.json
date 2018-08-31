@@ -20,7 +20,7 @@
   "devDependencies": {
     "devtron": "^1.4.0",
     "electron": "^2.0.8",
-    "electron-builder": "20.14.7",
+    "electron-builder": "20.28.3",
     "mocha": "^5.0.1",
     "spectron": "^4.0.0"
   },
