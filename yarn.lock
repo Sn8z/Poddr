@@ -1009,12 +1009,12 @@ electron-publish@20.14.6:
     lazy-val "^1.0.3"
     mime "^2.3.1"
 
-electron-window-state@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/electron-window-state/-/electron-window-state-4.1.1.tgz#6b34fdc31b38514dfec8b7c8f7b5d4addb67632d"
+electron-window-state@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/electron-window-state/-/electron-window-state-5.0.0.tgz#5e7bab7c6a609b5f04311a8eb7bcf30f4199307e"
   dependencies:
     deep-equal "^1.0.1"
-    jsonfile "^2.2.3"
+    jsonfile "^4.0.0"
     mkdirp "^0.5.1"
 
 electron@^2.0.8:
@@ -1705,7 +1705,7 @@ json5@^1.0.1:
   dependencies:
     minimist "^1.2.0"
 
-jsonfile@^2.1.0, jsonfile@^2.2.3:
+jsonfile@^2.1.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-2.4.0.tgz#3736a2b428b87bbda0cc83b53fa3d633a35c2ae8"
   optionalDependencies:
