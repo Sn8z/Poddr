@@ -24,7 +24,7 @@ angular
           $scope.region = "us";
         }
       }
-      $scope.$apply();
+      $scope.$digest();
     });
 
     storage.get("theme", function (error, data) {
@@ -33,7 +33,7 @@ angular
       } else {
         $scope.color = "#ff9900";
       }
-      $scope.$apply();
+      $scope.$digest();
     });
 
     $scope.openURL = function (url) {

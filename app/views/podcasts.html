@@ -1,16 +1,16 @@
 <div id="podcastGrid" ng-controller="PodcastController" layout="column" layout-padding ng-cloak>
   <div class="row" layout="row">
-    <h1 flex style="color:white;margin-left: 15px;">Top {{ amount }}</h1>
+    <h1 flex style="color:white;margin-left: 15px;">Top {{ ::amount }}</h1>
     <md-input-container class="select-dropdown" flex="20">
       <label>Genre</label>
       <md-select name="type" ng-model="genre" ng-change="getPodcasts()">
-        <md-option ng-repeat="x in genres" ng-value="x.id">{{ x.genre }}</md-option>
+        <md-option ng-repeat="x in genres" ng-value="x.id">{{ ::x.genre }}</md-option>
       </md-select>
     </md-input-container>
     <md-input-container class="select-dropdown" flex="20">
       <label>Country</label>
       <md-select name="type" ng-model="region" ng-change="getPodcasts()">
-        <md-option ng-repeat="country in countries" ng-value="country.iso">{{ country.name }}</md-option>
+        <md-option ng-repeat="country in countries" ng-value="country.iso">{{ ::country.name }}</md-option>
       </md-select>
     </md-input-container>
   </div>
@@ -21,7 +21,7 @@
         <div style="position:relative">
           <div style="position:relative;width:100%;height:0;padding-top:100%;">
             <img ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover)"
-              ng-src="{{ podcast['im:image'][1]['label'] | itunesPodcastCover }}" onload="this.style.opacity = 1" style="cursor:pointer;position:absolute; top:0; left:0; width:100%; opacity: 0; transition: opacity 0.5s ease-in-out;"
+              ng-src="{{ ::podcast['im:image'][1]['label'] | itunesPodcastCover }}" onload="this.style.opacity = 1" style="cursor:pointer;position:absolute; top:0; left:0; width:100%; opacity: 0; transition: opacity 0.5s ease-in-out;"
             />
           </div>
           <div layout="row" style="position:absolute;bottom:10px;right:10px;height:auto">
@@ -30,9 +30,9 @@
             </md-button>
           </div>
         </div>
-        <div class="row podcast-title" ng-attr-title="{{ podcast['im:name']['label'] }}" ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover )"
+        <div class="row podcast-title" ng-attr-title="{{ ::podcast['im:name']['label'] }}" ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover )"
           layout-padding>
-          {{ podcast['im:name']['label'] }}
+          {{ ::podcast['im:name']['label'] }}
         </div>
       </div>
     </div>

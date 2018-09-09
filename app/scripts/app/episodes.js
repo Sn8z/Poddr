@@ -4,6 +4,7 @@ angular
     $scope,
     $rootScope,
     $http,
+    $filter,
     $mdSidenav,
     ToastService,
     PlayerService
@@ -11,23 +12,28 @@ angular
     var parsePodcast = require("node-podcast-parser");
     var log = require('electron-log');
 
+    const EPISODE_BASE_LIMIT = 20;
+    $scope.limit = EPISODE_BASE_LIMIT;
+    $scope.query = "";
+
     $scope.albumCover = "";
     $scope.isLoading = false;
     $scope.playPodcast = $rootScope.playPodcast;
     $scope.episodes = [];
-    $scope.toggleOrder = false;
+    var allEpisodes = [];
 
     $rootScope.fetchEpisodes = function (id, title, podcastCover) {
       log.info('Fetching episodes...');
       PlayerService.latestSeenArtist = title;
       PlayerService.latestSeenID = id.toString();
       PlayerService.latestSeenCover = podcastCover;
+      $scope.limit = EPISODE_BASE_LIMIT;
+      $scope.query = "";
 
       $scope.episodeTitle = PlayerService.latestSeenArtist;
       $scope.episodes = [];
+      allEpisodes = [];
       $scope.isLoading = true;
-      $scope.nrOfItems = 20;
-      $scope.canLoadMore = false;
       $mdSidenav("right").open().then(function () {
         log.info("Looking up iTunes id: " + id);
         $http.get("https://itunes.apple.com/lookup?id=" + id).then(
@@ -46,6 +52,7 @@ angular
                   } else {
                     $scope.isLoading = false;
                     $scope.episodes = data.episodes;
+                    allEpisodes = angular.copy(data.episodes);
                     log.info('Parsed ' + $scope.episodes.length + ' episodes.');
                   }
                 });
@@ -65,4 +72,32 @@ angular
         );
       });
     };
+
+    //Filter episodes
+    $scope.filterEpisodes = function () {
+      $scope.episodes = $filter('filter')(allEpisodes, $scope.query);
+    }
+
+    //Toggle order based on publish date
+    $scope.toggleOrder = true;
+    $scope.toggleOrderBy = function () {
+      $scope.toggleOrder = !$scope.toggleOrder;
+      if ($scope.toggleOrder) {
+        $scope.episodes = $filter('orderBy')($scope.episodes, '-published');
+      } else {
+        $scope.episodes = $filter('orderBy')($scope.episodes, 'published');
+      }
+    }
+
+    //Fetch and render more episodes as the user scrolls the episode list
+    var episodeNav = document.getElementById('right-sidenav');
+    var checkIfScrollAtBottom = function () {
+      if (episodeNav.scrollTop === (episodeNav.scrollHeight - episodeNav.offsetHeight)) {
+        $scope.limit += 10;
+        $scope.$digest();
+      }
+    }
+    episodeNav.addEventListener('scroll', checkIfScrollAtBottom);
+    window.addEventListener('resize', checkIfScrollAtBottom);
+
   });

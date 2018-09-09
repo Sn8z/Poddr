@@ -1,9 +1,9 @@
 //register module
 var app = angular.module("poddr", ["ngMaterial", "ngAnimate"]);
 
-app.config(["$mdThemingProvider", configure]);
+app.config(["$mdThemingProvider", configureTheme]);
 
-function configure($mdThemingProvider) {
+function configureTheme($mdThemingProvider) {
   $mdThemingProvider.theme("default").dark();
 }
 

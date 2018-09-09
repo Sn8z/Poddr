@@ -6,6 +6,7 @@ angular
     $mdDialog,
     PlayerService,
     $window,
+    $timeout,
     ToastService,
     FavouriteService,
     FavouriteFactory
@@ -79,6 +80,7 @@ angular
       log.info('Toggle Play/Pause');
     });
 
+    //get playerstate from last session
     storage.get("playerState", function (error, data) {
       log.info('Getting saved playerstate.');
       if (error) log.error(error);
@@ -95,14 +97,17 @@ angular
       if (data.podcastID) PlayerService.podcastID = data.podcastID;
       if (data.podcastDescription) PlayerService.podcastDescription = data.podcastDescription;
 
-      if (process.platform == 'linux') {
-        mprisPlayer.metadata = {
-          'mpris:artUrl': data.podcastCover || '',
-          'xesam:title': data.podcastTitle || 'No title',
-          'xesam:artist': [data.podcastArtist || 'No artist']
-        };
-      }
 
+      if (process.platform == 'linux') {
+        $timeout(function () {
+          mprisPlayer.metadata = {
+            'mpris:artUrl': data.podcastCover || '',
+            'xesam:title': data.podcastTitle || 'No title',
+            'xesam:album': 'Podcast',
+            'xesam:artist': [data.podcastArtist || 'No artist']
+          };
+        }, 5000);
+      }
     });
 
     //set initial volume based on previous session if available
@@ -111,7 +116,7 @@ angular
       if (error) log.error(error);
       player.volume = data.value ? data.value : 0.5;
       $scope.volume = player.volume;
-      $scope.$apply();
+      $scope.$digest();
     });
 
     $scope.setVolume = function () {
@@ -124,26 +129,26 @@ angular
     player.addEventListener("loadstart", function () {
       log.info('Started loading podcast...');
       $scope.isLoading = true;
-      $scope.$apply();
+      $scope.$digest();
     });
 
     player.addEventListener("timeupdate", function () {
       PlayerService.atTime = player.currentTime;
       $scope.barWidth = getBarWidth();
-      $scope.$apply();
+      $scope.$digest();
     });
 
     player.addEventListener("seeking", function () {
       log.info('Seeking...');
       $scope.isLoading = true;
-      $scope.$apply();
+      $scope.$digest();
     });
 
     player.addEventListener("canplaythrough", function (e) {
       log.info('Can play through podcast.');
       PlayerService.podcastDuration = player.duration;
       $scope.isLoading = false;
-      $scope.$apply();
+      $scope.$digest();
     });
 
     player.addEventListener("ended", function () {
@@ -181,6 +186,7 @@ angular
         mprisPlayer.metadata = {
           'mpris:artUrl': PlayerService.episodeCover || '',
           'xesam:title': PlayerService.currentlyPlaying || 'No title',
+          'xesam:album': 'Podcast',
           'xesam:artist': [PlayerService.podcastArtist || 'No artist']
         };
       }
@@ -203,13 +209,13 @@ angular
 
     function rewind(amount) {
       player.currentTime = player.currentTime - amount;
-      $scope.$apply();
+      $scope.$digest();
     }
     $rootScope.rewind = rewind;
 
     function forward(amount) {
       player.currentTime = player.currentTime + amount;
-      $scope.$apply();
+      $scope.$digest();
     }
     $rootScope.forward = forward;
 
@@ -280,7 +286,7 @@ angular
       storage.set("volume", { value: player.volume }, function (error) {
         if (error) log.error(error);
       });
-      $scope.$apply();
+      $scope.$digest();
     }
     $rootScope.volumeUp = volumeUp;
 
@@ -295,7 +301,7 @@ angular
       storage.set("volume", { value: player.volume }, function (error) {
         if (error) log.error(error);
       });
-      $scope.$apply();
+      $scope.$digest();
     }
     $rootScope.volumeDown = volumeDown;
   });

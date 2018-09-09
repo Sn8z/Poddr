@@ -9,7 +9,7 @@
         <md-input-container style="width:90%">
           <label>Default region</label>
           <md-select name="type" ng-model="region" ng-change="setRegion()">
-            <md-option ng-repeat="country in countries" ng-value="country.iso">{{ country.name }}</md-option>
+            <md-option ng-repeat="country in countries" ng-value="country.iso">{{ ::country.name }}</md-option>
           </md-select>
         </md-input-container>
       </div>
@@ -136,7 +136,7 @@
     </div>
     <div flex="50">
       <h3 style="color:white;">
-        Poddr {{ appVersion }}
+        Poddr {{ ::appVersion }}
       </h3>
       <md-divider></md-divider>
       <md-list>

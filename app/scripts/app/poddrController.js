@@ -40,22 +40,22 @@ var app = angular
     Mousetrap.bindGlobal("mod+q", function (e) {
       e.preventDefault();
       changeView("podcasts");
-      $scope.$apply();
+      $scope.$digest();
     });
     Mousetrap.bindGlobal("mod+w", function (e) {
       e.preventDefault();
       changeView("search");
-      $scope.$apply();
+      $scope.$digest();
     });
     Mousetrap.bindGlobal("mod+e", function (e) {
       e.preventDefault();
       changeView("favourites");
-      $scope.$apply();
+      $scope.$digest();
     });
     Mousetrap.bindGlobal("mod+r", function (e) {
       e.preventDefault();
       changeView("settings");
-      $scope.$apply();
+      $scope.$digest();
     });
 
     $scope.init = function () {
