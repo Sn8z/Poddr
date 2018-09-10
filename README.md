@@ -1,10 +1,10 @@
 <div align="center">
     <img src="images/poddr_logo.png" alt="Poddr" width="60" height="60">
     <h1>Poddr</h1>
-    <img src="https://img.shields.io/github/release/sn8z/poddr.svg?style=for-the-badge">
-    <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg?style=for-the-badge">
-    <img src="https://img.shields.io/github/release-date/sn8z/poddr.svg?style=for-the-badge">
-    <img src="https://img.shields.io/david/sn8z/poddr.svg?style=for-the-badge">
+    <img src="https://img.shields.io/github/release/sn8z/poddr.svg?style=flat-square">
+    <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg?style=flat-square">
+    <img src="https://img.shields.io/github/release-date/sn8z/poddr.svg?style=flat-square">
+    <img src="https://img.shields.io/david/sn8z/poddr.svg?style=flat-square">
 </div>
 
 
