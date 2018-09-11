@@ -5,6 +5,7 @@
     <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg?style=flat-square">
     <img src="https://img.shields.io/github/release-date/sn8z/poddr.svg?style=flat-square">
     <img src="https://img.shields.io/david/sn8z/poddr.svg?style=flat-square">
+    <img src="https://img.shields.io/badge/platforms-Windows%20%2F%20Linux%20%2F%20Mac-brightgreen.svg?style=flat-square">
 </div>
 
 
