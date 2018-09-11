@@ -10,6 +10,7 @@
   <link rel="stylesheet" type="text/css" href="../node_modules/angular-material/angular-material.css">
   <link rel="stylesheet" type="text/css" href="styles/style.css">
   <link rel="stylesheet" type="text/css" href="styles/scrollbar.css">
+  <link rel="stylesheet" type="text/css" href="styles/tooltip.css">
 
   <script type="text/javascript" src="../node_modules/angular/angular.min.js"></script>
   <script type="text/javascript" src="../node_modules/angular-aria/angular-aria.min.js"></script>
@@ -84,8 +85,7 @@
         </md-list-item>
       </md-list>
       <div style="position:absolute;bottom:0;width:100%;height:auto;">
-        <img ng-src='{{ playerService.episodeCover || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;"
-        />
+        <img ng-src='{{ playerService.episodeCover || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;" />
       </div>
 
     </md-sidenav>
@@ -94,22 +94,22 @@
       <!-- Content -->
       <div ng-switch="mainContent" class="box2">
         <div ng-switch-when="podcasts" style="width:100%">
-          <podcasts/>
+          <podcasts />
         </div>
         <div ng-switch-when="favourites" style="width:100%">
-          <favourites/>
+          <favourites />
         </div>
         <div ng-switch-when="search" style="width:100%">
-          <search/>
+          <search />
         </div>
         <div ng-switch-when="settings" style="width:100%">
-          <settings/>
+          <settings />
         </div>
       </div>
 
       <md-sidenav class="md-sidenav-right" id="right-sidenav" md-whiteframe="8" md-component-id="right">
         <md-content style="background-color:transparent;">
-          <episodes/>
+          <episodes />
         </md-content>
       </md-sidenav>
 
@@ -131,10 +131,12 @@
             <md-icon class="media-btn" md-font-library="material-icons" ng-click="forward(10)">forward_10</md-icon>
           </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
-            <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastcover)" style="color: white;text-decoration: none;">
+            <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastcover)"
+              style="color: white;text-decoration: none;">
               {{ playerService.currentlyPlaying }}
             </a>
-            <span class="timer-text">{{ playerService.atTime | secondsToHHmmss }} / {{ playerService.podcastDuration | secondsToHHmmss
+            <span class="timer-text">{{ playerService.atTime | secondsToHHmmss }} / {{ playerService.podcastDuration |
+              secondsToHHmmss
               }}
             </span>
           </div>
@@ -155,8 +157,8 @@
             <md-icon id="volume-btn" md-font-library="material-icons">{{ checkVolume() }}</md-icon>
           </div>
           <md-slider-container flex="10">
-            <md-slider id="volume-slider" onmouseup="document.activeElement.blur()" ng-model="volume" ng-change="setVolume()" flex min="0"
-              max="1" step="0.0001" aria-label="volume"></md-slider>
+            <md-slider id="volume-slider" onmouseup="document.activeElement.blur()" ng-model="volume" ng-change="setVolume()"
+              flex min="0" max="1" step="0.0001" aria-label="volume"></md-slider>
           </md-slider-container>
           <div flex="5"></div>
         </div>
