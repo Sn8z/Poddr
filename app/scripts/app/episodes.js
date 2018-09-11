@@ -12,7 +12,8 @@ angular
     var parsePodcast = require("node-podcast-parser");
     var log = require('electron-log');
 
-    const EPISODE_BASE_LIMIT = 20;
+    //Calculating number of episodes to load by default based on application outer height, 55px is min height of a episode element.
+    const EPISODE_BASE_LIMIT = Math.floor(window.outerHeight / 55);
     $scope.limit = EPISODE_BASE_LIMIT;
     $scope.query = "";
 
@@ -91,13 +92,18 @@ angular
 
     //Fetch and render more episodes as the user scrolls the episode list
     var episodeNav = document.getElementById('right-sidenav');
-    var checkIfScrollAtBottom = function () {
-      if (episodeNav.scrollTop === (episodeNav.scrollHeight - episodeNav.offsetHeight)) {
+    var loadMoreEpisodes = function () {
+      //check if scroll is at bottom & if there is more episodes to load
+      if (episodeNav.scrollTop === (episodeNav.scrollHeight - episodeNav.offsetHeight) && $scope.limit < $scope.episodes.length) {
         $scope.limit += 10;
         $scope.$digest();
       }
     }
-    episodeNav.addEventListener('scroll', checkIfScrollAtBottom);
-    window.addEventListener('resize', checkIfScrollAtBottom);
+
+    //Listen for the scroll event of the episode list
+    episodeNav.addEventListener('scroll', loadMoreEpisodes);
+
+    //Check if we need to load more episodes when the window size changes
+    window.addEventListener('resize', loadMoreEpisodes);
 
   });
