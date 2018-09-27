@@ -10,6 +10,7 @@
   <link rel="stylesheet" type="text/css" href="../node_modules/angular-material/angular-material.css">
   <link rel="stylesheet" type="text/css" href="styles/style.css">
   <link rel="stylesheet" type="text/css" href="styles/scrollbar.css">
+  <link rel="stylesheet" type="text/css" href="styles/tooltip.css">
 
   <script type="text/javascript" src="../node_modules/angular/angular.min.js"></script>
   <script type="text/javascript" src="../node_modules/angular-aria/angular-aria.min.js"></script>
@@ -42,74 +43,73 @@
     <md-sidenav id="left-sidenav" flex="15" md-is-locked-open="true" md-component-id="left">
       <md-list class="md-dense" flex md-no-ink>
         <md-list-item class="menu-item" id="toplist-item" ng-click="changeView('podcasts')">
-          <md-item-content layout="row" layout-align="center center">
+          <md-item-content class="menu-item-content" layout="row" layout-align="center center">
             <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
-            <div class="inset">
+            <div class="inset menu-text">
               Toplists
             </div>
           </md-item-content>
         </md-list-item>
 
-        <md-divider></md-divider>
+        <md-divider class="menu-divider"></md-divider>
 
         <md-list-item class="menu-item" id="search-item" ng-click="changeView('search')">
-          <md-item-content md-ink-ripple layout="row" layout-align="center center">
+          <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
             <md-icon class="menu-icon" md-font-library="material-icons">search</md-icon>
-            <div class="inset">
+            <div class="inset menu-text">
               Search
             </div>
           </md-item-content>
         </md-list-item>
 
-        <md-divider></md-divider>
+        <md-divider class="menu-divider"></md-divider>
 
         <md-list-item class="menu-item" id="favourite-item" ng-click="changeView('favourites')">
-          <md-item-content md-ink-ripple layout="row" layout-align="center center">
+          <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
             <md-icon class="menu-icon" md-font-library="material-icons">favorite_border</md-icon>
-            <div class="inset">
+            <div class="inset menu-text">
               Favourites
             </div>
           </md-item-content>
         </md-list-item>
 
-        <md-divider></md-divider>
+        <md-divider class="menu-divider"></md-divider>
 
-        <md-list-item class="menu-item" id="about-item" ng-click="changeView('settings')">
-          <md-item-content md-ink-ripple layout="row" layout-align="center center">
+        <md-list-item class="menu-item" id="settings-item" ng-click="changeView('settings')">
+          <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
             <md-icon class="menu-icon" md-font-library="material-icons">settings</md-icon>
-            <div class="inset">
-              About
+            <div class="inset menu-text">
+              Settings
             </div>
           </md-item-content>
         </md-list-item>
       </md-list>
       <div style="position:absolute;bottom:0;width:100%;height:auto;">
-        <img ng-src='{{ playerService.episodeCover || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;"
-        />
+        <img ng-src='{{ playerService.episodeCover || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;" />
       </div>
 
     </md-sidenav>
     <div layout="column" flex>
-      <!-- Content -->
 
+      <!-- Content -->
       <div ng-switch="mainContent" class="box2">
         <div ng-switch-when="podcasts" style="width:100%">
-          <podcasts/>
+          <podcasts />
         </div>
         <div ng-switch-when="favourites" style="width:100%">
-          <favourites/>
+          <favourites />
         </div>
         <div ng-switch-when="search" style="width:100%">
-          <search/>
+          <search />
         </div>
         <div ng-switch-when="settings" style="width:100%">
-          <settings/>
+          <settings />
         </div>
       </div>
 
       <md-sidenav class="md-sidenav-right" id="right-sidenav" md-whiteframe="8" md-component-id="right">
         <md-content style="background-color:transparent;">
-          <episodes/>
+          <episodes />
         </md-content>
       </md-sidenav>
 
@@ -121,26 +121,34 @@
           </div>
         </div>
         <div class="row" layout="row" style="height:100%">
-          <div flex="10" layout="row" layout-align="center center">
+          <div flex="5" layout="row" layout-align="center center">
+            <md-icon class="media-btn" md-font-library="material-icons" ng-click="rewind(10)">replay_10</md-icon>
+          </div>
+          <div layout="row" layout-align="center center">
             <md-icon id="play-btn" md-font-library="material-icons" ng-click="togglePlay()">{{ checkPlayBtn() }}</md-icon>
           </div>
+          <div flex="5" layout="row" layout-align="center center">
+            <md-icon class="media-btn" md-font-library="material-icons" ng-click="forward(10)">forward_10</md-icon>
+          </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
-            <b ng-bind="playerService.currentlyPlaying"></b>
-            <span class="timer-text">{{ playerService.atTime | secondsToHHmmss }} / {{ playerService.podcastDuration | secondsToHHmmss }}</span>
-          </div>
-          <div flex="10" layout="row" layout-align="center center">
-            <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-show="isLoading"></md-progress-circular>
+            <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastcover)"
+              style="color: white;text-decoration: none;">
+              {{ playerService.currentlyPlaying }}
+            </a>
+            <span class="timer-text">{{ playerService.atTime | secondsToHHmmss }} / {{ playerService.podcastDuration |
+              secondsToHHmmss
+              }}
+            </span>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon id="fav-btn" ng-hide="isPlayerFavourite()" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
+            <md-progress-circular ng-if="isLoading" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
+          </div>
+          <div flex="5" layout="row" layout-align="center center" ng-if="!isPlayerFavourite()">
+            <md-icon id="fav-btn" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-menu>
-              <md-icon id="desc-btn" ng-click="$mdMenu.open()" md-font-library="material-icons">info</md-icon>
-              <md-menu-content style="width: auto;max-width: 450px;padding: 10px;" ng-mouseleave="$mdMenu.close()">
-                {{ playerService.podcastDescription | episodeDesc }}
-              </md-menu-content>
-            </md-menu>
+            <md-icon id="desc-btn" ng-click="showDescription(playerService.currentlyPlaying, playerService.podcastDescription | episodeDesc)"
+              md-font-library="material-icons">info</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
             <md-icon id="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
@@ -149,8 +157,8 @@
             <md-icon id="volume-btn" md-font-library="material-icons">{{ checkVolume() }}</md-icon>
           </div>
           <md-slider-container flex="10">
-            <md-slider id="volume-slider" onmouseup="document.activeElement.blur()" ng-model="volume" ng-change="setVolume()" flex min="0"
-              max="1" step="0.0001" aria-label="volume"></md-slider>
+            <md-slider id="volume-slider" onmouseup="document.activeElement.blur()" ng-model="volume" ng-change="setVolume()"
+              flex min="0" max="1" step="0.0001" aria-label="volume"></md-slider>
           </md-slider-container>
           <div flex="5"></div>
         </div>

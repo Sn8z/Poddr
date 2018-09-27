@@ -6,6 +6,7 @@ angular
     ToastService
   ) {
     var storage = require("electron-json-storage");
+    var log = require('electron-log');
     $scope.appVersion = require('electron').remote.app.getVersion();
 
     RegionService.regions(function (response) {
@@ -14,6 +15,7 @@ angular
 
     storage.get("region", function (error, data) {
       if (error) {
+        log.error(error);
         $scope.region = "us";
       } else {
         if (data.value) {
@@ -22,7 +24,7 @@ angular
           $scope.region = "us";
         }
       }
-      $scope.$apply();
+      $scope.$digest();
     });
 
     storage.get("theme", function (error, data) {
@@ -31,7 +33,7 @@ angular
       } else {
         $scope.color = "#ff9900";
       }
-      $scope.$apply();
+      $scope.$digest();
     });
 
     $scope.openURL = function (url) {
@@ -41,14 +43,20 @@ angular
     $scope.changeColor = function () {
       var html = document.getElementsByTagName("html")[0];
       html.style.cssText = "--main-color: " + $scope.color;
-      storage.set("theme", { value: $scope.color }, function (err) {
-        if (err) ToastService.errorToast("Couldn't change color.");
+      storage.set("theme", { value: $scope.color }, function (error) {
+        if (error) {
+          log.error(error);
+          ToastService.errorToast("Couldn't change color.");
+        }
       });
     };
 
     $scope.setRegion = function () {
-      storage.set("region", { value: $scope.region }, function (err) {
-        if (err) ToastService.errorToast("Couldn't change region.");
+      storage.set("region", { value: $scope.region }, function (error) {
+        if (error) {
+          log.error(error);
+          ToastService.errorToast("Couldn't change region.");
+        }
       });
     };
   });

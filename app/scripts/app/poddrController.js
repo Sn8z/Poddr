@@ -6,10 +6,13 @@ var app = angular
     $mdToast,
     $mdSidenav,
     $http,
+    $window,
+    $timeout,
     PlayerService
   ) {
     //preloading modules to cache to speed up first time view of for example search page
     var storage = require("electron-json-storage");
+    var log = require('electron-log');
     var parsePodcast = require("node-podcast-parser");
 
     $scope.playerService = PlayerService;
@@ -26,6 +29,34 @@ var app = angular
       e.preventDefault();
       $rootScope.volumeDown();
     });
+    Mousetrap.bindGlobal("mod+z", function (e) {
+      e.preventDefault();
+      $rootScope.rewind(1);
+    });
+    Mousetrap.bindGlobal("mod+x", function (e) {
+      e.preventDefault();
+      $rootScope.forward(1);
+    });
+    Mousetrap.bindGlobal("mod+q", function (e) {
+      e.preventDefault();
+      changeView("podcasts");
+      $scope.$digest();
+    });
+    Mousetrap.bindGlobal("mod+w", function (e) {
+      e.preventDefault();
+      changeView("search");
+      $scope.$digest();
+    });
+    Mousetrap.bindGlobal("mod+e", function (e) {
+      e.preventDefault();
+      changeView("favourites");
+      $scope.$digest();
+    });
+    Mousetrap.bindGlobal("mod+r", function (e) {
+      e.preventDefault();
+      changeView("settings");
+      $scope.$digest();
+    });
 
     $scope.init = function () {
       storage.get("theme", function (error, data) {
@@ -35,32 +66,40 @@ var app = angular
         }
         var html = document.getElementsByTagName("html")[0];
         html.style.cssText = "--main-color: " + color;
+        log.info('Loaded CSS color variable.');
       });
     };
 
     //check if update is available
-    $http
-      .get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json")
-      .then(function (response) {
-        if (
-          response.data.version != require("electron").remote.app.getVersion()
-        ) {
-          var toast = $mdToast
-            .simple()
-            .textContent(response.data.version + " available!")
-            .position("top right")
-            .hideDelay(10000)
-            .action("Update now!")
-            .toastClass("md-toast-success");
-          $mdToast.show(toast).then(function (response) {
-            if (response == "ok") {
-              require("electron").shell.openExternal(
-                "https://github.com/Sn8z/Poddr/releases"
-              );
-            }
-          });
-        }
-      });
+    var checkUpdates = function () {
+      $http
+        .get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json")
+        .then(function (response) {
+          if (
+            response.data.version != require("electron").remote.app.getVersion()
+          ) {
+            var toast = $mdToast
+              .simple()
+              .textContent(response.data.version + " available!")
+              .position("top right")
+              .hideDelay(10000)
+              .action("Update now!")
+              .toastClass("md-toast-success");
+            $mdToast.show(toast).then(function (response) {
+              if (response == "ok") {
+                require("electron").shell.openExternal(
+                  "https://github.com/Sn8z/Poddr/releases"
+                );
+              }
+            });
+            log.info('Update available.');
+          }
+        });
+    };
+
+    $timeout(function () {
+      checkUpdates();
+    }, 2000);
 
     $rootScope.toggleSidebar = function () {
       $mdSidenav("right").toggle();
@@ -70,7 +109,13 @@ var app = angular
     //Handle maincontent navigation
     $scope.mainContent = "podcasts";
     function changeView(view) {
+      if (view == $scope.mainContent && view == "search") {
+        var search = $window.document.getElementById("search-input");
+        search.value = "";
+        search.focus();
+      }
       $scope.mainContent = view;
+      log.info('Changed view to ' + view);
     }
     $scope.changeView = changeView;
   });

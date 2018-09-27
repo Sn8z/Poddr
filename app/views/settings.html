@@ -9,14 +9,15 @@
         <md-input-container style="width:90%">
           <label>Default region</label>
           <md-select name="type" ng-model="region" ng-change="setRegion()">
-            <md-option ng-repeat="country in countries" ng-value="country.iso">{{ country.name }}</md-option>
+            <md-option ng-repeat="country in countries" ng-value="country.iso">{{ ::country.name }}</md-option>
           </md-select>
         </md-input-container>
       </div>
       <div class="row">
         <md-input-container style="width:90%">
           <label>Color</label>
-          <input id="color-input" ng-model="color" ng-change="changeColor()" type="color" />
+          <input id="color-input" ng-model="color" type="color" />
+          <md-button class="md-primary" ng-click="changeColor()">Update color</md-button>
         </md-input-container>
       </div>
     </div>
@@ -31,12 +32,21 @@
             <code>Space</code>
           </td>
           <td style="color:white">
-            Toggle play/pause
+            Toggle Play/Pause
           </td>
         </tr>
         <tr>
           <td style="color:white">
-            <code>CTRL</code> +
+            <code>Ctrl/Cmd</code> +
+            <code>a</code>
+          </td>
+          <td style="color:white">
+            Volume Down
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>Ctrl/Cmd</code> +
             <code>s</code>
           </td>
           <td style="color:white">
@@ -45,11 +55,56 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>CTRL</code> +
-            <code>a</code>
+            <code>Ctrl/Cmd</code> +
+            <code>z</code>
           </td>
           <td style="color:white">
-            Volume Down
+            Rewind
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>Ctrl/Cmd</code> +
+            <code>x</code>
+          </td>
+          <td style="color:white">
+            Forward
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>Ctrl/Cmd</code> +
+            <code>q</code>
+          </td>
+          <td style="color:white">
+            Jump to Toplists
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>Ctrl/Cmd</code> +
+            <code>w</code>
+          </td>
+          <td style="color:white">
+            Jump to Search
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>Ctrl/Cmd</code> +
+            <code>e</code>
+          </td>
+          <td style="color:white">
+            Jump to Favourites
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>Ctrl/Cmd</code> +
+            <code>r</code>
+          </td>
+          <td style="color:white">
+            Jump to Settings
           </td>
         </tr>
       </table>
@@ -82,7 +137,7 @@
     </div>
     <div flex="50">
       <h3 style="color:white;">
-        Poddr {{ appVersion }}
+        Poddr {{ ::appVersion }}
       </h3>
       <md-divider></md-divider>
       <md-list>
