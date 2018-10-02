@@ -1,0 +1,18 @@
+body {
+  background-color: #FFF;
+}
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+	font-size: inherit;
+}
+#logo {
+  width: 75px;
+  height: 75px;
+}
+#author {
+  color: black;
+  font-weight: bold;
+  font-style: italic;
+}
