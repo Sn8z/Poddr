@@ -1,5 +1,6 @@
 const electron = require("electron");
 const app = electron.app;
+const Menu = electron.Menu;
 const ipcMain = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const globalShortcut = electron.globalShortcut;
@@ -64,6 +65,27 @@ app.once("ready", function () {
     globalShortcut.register("MediaPlayPause", function () {
       mainWindow.webContents.send("toggle-play", "playpause");
     });
+  }
+
+  //Add menu edit menu when on Mac
+  if (process.platform == 'darwin') {
+    var menuTemplate = [{
+      label: "Poddr",
+      submenu: [
+        { label: "Quit", accelerator: "Command+Q", click: function () { app.quit(); } }
+      ]
+    }, {
+      label: "Edit",
+      submenu: [
+        { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+        { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+        { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+      ]
+    }
+    ];
+
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
   }
 
   //default window size
