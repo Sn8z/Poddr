@@ -173,7 +173,7 @@ md-option:focus {
 }
 
 .podcast-frame:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
 .podcast-title {
