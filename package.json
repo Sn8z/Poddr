@@ -13,13 +13,14 @@
     "dist": "electron-builder -wl",
     "dist:mac": "build --mac",
     "dist:win": "build --win",
-    "dist:linux": "build --linux"
+    "dist:linux": "build --linux",
+    "rebuild": "$(npm bin)/electron-rebuild"
   },
   "author": "Sn8z",
   "license": "MIT",
   "devDependencies": {
     "electron": "3.0.4",
-    "electron-builder": "20.14.7",
+    "electron-builder": "20.28.4",
     "electron-rebuild": "^1.8.2",
     "mocha": "^5.0.1",
     "spectron": "^4.0.0"
