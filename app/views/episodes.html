@@ -22,11 +22,11 @@
     </md-list-item>
     <md-list-item class="episode-item" ng-repeat="episode in episodes | limitTo:limit track by $index" layout-margin>
       <div layout="column" ng-click='playPodcast(episode, albumCover)' style="width:100%">
-        <md-tooltip md-direction="left" md-delay="500">{{ episode.description | episodeDesc }}</md-tooltip>
+        <md-tooltip md-direction="left" md-delay="250">{{ episode.description | episodeDesc }}</md-tooltip>
         <div class="row">
           <a href="#" style="color:white;text-decoration:none">{{ episode.title }}</a>
         </div>
-        <div class="row" layout="row">
+        <div class="row" layout="row" layout-align="center center">
           <div flex="50">
             <span style="color:#bbb;font-size:12px;">{{ episode.published | date : format : timezone }}</span>
           </div>
