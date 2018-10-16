@@ -1153,10 +1153,10 @@ electron-publish@20.14.6:
     lazy-val "^1.0.3"
     mime "^2.3.1"
 
-electron-window-state@^5.0.0:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/electron-window-state/-/electron-window-state-5.0.1.tgz#ebda7b789e4bd2ab5c439c22090b159effe6a12d"
-  integrity sha512-9NE2mB8ZM9IZpVexdBVNbJLXkBByTZYArHMuwtA04U5R3ajl6IE82v3UkmSuf0hWczP0+is/4vLIqNkJwdvCrQ==
+electron-window-state@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/electron-window-state/-/electron-window-state-5.0.2.tgz#dfc4f7dd0ca2d7116d1e246acf1683b0bdfd45c2"
+  integrity sha512-fcSS+ZxfY8K14Ig7XI0/PHZ54wBr1LEPEgMTRlFn799xDQJ9UsP8Ti+NNb7JhvRaJBsL7MWvtY6vWBk4BpVfMw==
   dependencies:
     deep-equal "^1.0.1"
     jsonfile "^4.0.0"
