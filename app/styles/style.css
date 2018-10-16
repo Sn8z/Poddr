@@ -268,6 +268,7 @@ md-toast {
 .icon-btn {
   transition: all 0.2s ease-in-out;
   cursor: pointer;
+  text-shadow: 0px 0px 20px #071B28;
 }
 
 .icon-btn:hover {

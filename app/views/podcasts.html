@@ -24,16 +24,16 @@
               style="cursor:pointer;position:absolute; top:0; left:0; width:100%; opacity: 0; transition: opacity 0.5s ease-in-out;" />
           </div>
           <div layout="row" style="position:absolute;bottom:10px;left:10px;height:auto">
+            <md-button class="md-icon-button md-warn icon-btn" ng-if="!isFavourite(podcast['id']['attributes']['im:id'])">
+              <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][1]['label'] | itunesPodcastCover , podcast.title.label, podcast['im:name']['label'])">favorite_border</md-icon>
+            </md-button>
+          </div>
+          <div layout="row" style="position:absolute;bottom:10px;right:10px;height:auto">
             <md-button class="md-icon-button icon-btn">
               <md-icon md-font-library="material-icons">
                 <md-tooltip md-direction="left" md-delay="250">{{ ::podcast['summary']['label'] | episodeDesc }}</md-tooltip>
                 info
               </md-icon>
-            </md-button>
-          </div>
-          <div layout="row" style="position:absolute;bottom:10px;right:10px;height:auto">
-            <md-button class="md-icon-button md-warn icon-btn" ng-if="!isFavourite(podcast['id']['attributes']['im:id'])">
-              <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][1]['label'] | itunesPodcastCover , podcast.title.label, podcast['im:name']['label'])">favorite_border</md-icon>
             </md-button>
           </div>
         </div>

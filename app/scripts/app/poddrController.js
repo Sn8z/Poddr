@@ -14,6 +14,7 @@ var app = angular
     var storage = require("electron-json-storage");
     var log = require('electron-log');
     var parsePodcast = require("node-podcast-parser");
+    log.info("Settings are stored at " + storage.getDataPath());
 
     $scope.playerService = PlayerService;
 
