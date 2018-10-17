@@ -266,13 +266,18 @@ angular
     };
 
     $scope.showDescription = function (title, text) {
-      $mdDialog.show(
-        $mdDialog.alert()
-          .clickOutsideToClose(true)
-          .title(title)
-          .textContent(text)
-          .ok('x')
-      );
+      $mdDialog.show({
+        template: '<md-dialog>' +
+          '<md-toolbar>' +
+          '<h2 md-truncate style="margin-left:15px;margin-right:15px">' + title + '</h2>' +
+          '</md-toolbar>' +
+          '<md-dialog-content>' +
+          text +
+          '</md-dialog-content>' +
+          '</md-dialog>',
+        clickOutsideToClose: true,
+        escapeToClose: true
+      });
     };
 
     function volumeUp() {

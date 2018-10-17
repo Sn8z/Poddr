@@ -159,6 +159,18 @@ md-option:focus {
   color: var(--main-color) !important;
 }
 
+/* toolbar */
+md-toolbar {
+  background-color:#353535 !important;
+  margin-bottom: 15px !important;
+}
+
+/* dialog */
+md-dialog-content {
+  padding: 15px !important;
+  white-space: pre-line !important;
+}
+
 /* grid */
 .grid-item {
   padding: 20px;
