@@ -267,16 +267,14 @@ angular
 
     $scope.showDescription = function (title, text) {
       $mdDialog.show({
-        template: '<md-dialog>' +
-          '<md-toolbar>' +
-          '<h2 md-truncate style="margin-left:15px;margin-right:15px">' + title + '</h2>' +
-          '</md-toolbar>' +
-          '<md-dialog-content>' +
-          text +
-          '</md-dialog-content>' +
-          '</md-dialog>',
+        templateUrl: __dirname + "/views/dialog.html",
+        locals: { title: title, text: text },
         clickOutsideToClose: true,
-        escapeToClose: true
+        escapeToClose: true,
+        controller: function ($scope, title, text) {
+          $scope.title = title;
+          $scope.desc = text;
+        }
       });
     };
 
