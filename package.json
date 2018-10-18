@@ -41,7 +41,7 @@
         "AppImage",
         "snap"
       ],
-      "category": "Audio"
+      "category": "Audio;Music;Player;AudioVideo;"
     }
   },
   "dependencies": {
