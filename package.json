@@ -8,6 +8,7 @@
     "url": "git://github.com/Sn8z/Poddr.git"
   },
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "test": "mocha",
     "start": "./node_modules/.bin/electron .",
     "dist": "electron-builder -wl",
