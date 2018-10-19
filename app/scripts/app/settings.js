@@ -6,8 +6,13 @@ angular
     ToastService
   ) {
     var storage = require("electron-json-storage");
-    var log = require('electron-log');
-    $scope.appVersion = require('electron').remote.app.getVersion();
+    var log = require("electron-log");
+    const app = require("electron").remote.app;
+    $scope.appVersion = app.getVersion();
+    $scope.appPath = app.getAppPath();
+    $scope.appStorage = storage.getDataPath();
+    $scope.electronVersion = process.versions.electron;
+    $scope.modKey = process.platform == "darwin" ? "Cmd" : "Ctrl";
 
     RegionService.regions(function (response) {
       $scope.countries = response;
@@ -39,6 +44,8 @@ angular
     $scope.openURL = function (url) {
       require("electron").shell.openExternal(url);
     };
+
+    log.info(app.getAppPath());
 
     $scope.changeColor = function () {
       var html = document.getElementsByTagName("html")[0];

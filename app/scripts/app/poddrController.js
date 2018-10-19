@@ -58,6 +58,10 @@ var app = angular
       changeView("settings");
       $scope.$digest();
     });
+    Mousetrap.bindGlobal("mod+e", function (e) {
+      e.preventDefault();
+      toggleSidebar();
+    });
 
     $scope.init = function () {
       storage.get("theme", function (error, data) {
@@ -102,9 +106,10 @@ var app = angular
       checkUpdates();
     }, 2000);
 
-    $rootScope.toggleSidebar = function () {
+    function toggleSidebar() {
       $mdSidenav("right").toggle();
     };
+    $rootScope.toggleSidebar = toggleSidebar;
     $scope.toggleSidebar = $rootScope.toggleSidebar;
 
     //Handle maincontent navigation
