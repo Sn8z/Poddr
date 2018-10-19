@@ -22,38 +22,38 @@ var app = angular
       e.preventDefault();
       $rootScope.togglePlay();
     });
-    Mousetrap.bindGlobal("mod+s", function (e) {
+    Mousetrap.bindGlobal("mod+up", function (e) {
       e.preventDefault();
       $rootScope.volumeUp();
     });
-    Mousetrap.bindGlobal("mod+a", function (e) {
+    Mousetrap.bindGlobal("mod+down", function (e) {
       e.preventDefault();
       $rootScope.volumeDown();
     });
-    Mousetrap.bindGlobal("mod+z", function (e) {
+    Mousetrap.bindGlobal("mod+left", function (e) {
       e.preventDefault();
       $rootScope.rewind(1);
     });
-    Mousetrap.bindGlobal("mod+x", function (e) {
+    Mousetrap.bindGlobal("mod+right", function (e) {
       e.preventDefault();
       $rootScope.forward(1);
     });
-    Mousetrap.bindGlobal("mod+q", function (e) {
+    Mousetrap.bindGlobal("mod+1", function (e) {
       e.preventDefault();
       changeView("podcasts");
       $scope.$digest();
     });
-    Mousetrap.bindGlobal("mod+w", function (e) {
+    Mousetrap.bindGlobal(["mod+2", "mod+f", "mod+l"], function (e) {
       e.preventDefault();
       changeView("search");
       $scope.$digest();
     });
-    Mousetrap.bindGlobal("mod+e", function (e) {
+    Mousetrap.bindGlobal("mod+3", function (e) {
       e.preventDefault();
       changeView("favourites");
       $scope.$digest();
     });
-    Mousetrap.bindGlobal("mod+r", function (e) {
+    Mousetrap.bindGlobal("mod+4", function (e) {
       e.preventDefault();
       changeView("settings");
       $scope.$digest();
