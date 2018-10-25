@@ -9,6 +9,12 @@
 }
 */
 
+:focus {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: var(--main-color);
+}
+
 body {
   font-family: "Rubik", sans-serif;
 }
@@ -106,7 +112,7 @@ md-progress-circular path {
   height: 35px !important;
 }
 
-.menu-text { 
+.menu-text {
   font-size: 16px;
 }
 
@@ -126,8 +132,8 @@ md-switch.md-checked .md-thumb {
   background-color: var(--main-color) !important;
 }
 
-md-switch.md-checked .md-ink-ripple { 
-  color: var(--main-color) !important; 
+md-switch.md-checked .md-ink-ripple {
+  color: var(--main-color) !important;
 }
 
 /* Dialog */
@@ -163,7 +169,7 @@ md-option:focus {
 
 /* toolbar */
 md-toolbar {
-  background-color:#353535 !important;
+  background-color: #353535 !important;
 }
 
 /* dialog */
@@ -183,6 +189,10 @@ md-dialog-content {
   border-bottom: 1px solid var(--main-color);
   box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
   transition: all 0.1s linear;
+}
+
+.podcast-img {
+  user-select: none;
 }
 
 .podcast-frame:hover {
@@ -205,6 +215,8 @@ md-dialog-content {
   font-size: 30px;
   width: 30px;
   height: 30px;
+  user-select: none;
+  outline: 0;
 }
 
 #play-btn {
@@ -213,6 +225,8 @@ md-dialog-content {
   font-size: 40px;
   width: 40px;
   height: 40px;
+  user-select: none;
+  outline: 0;
 }
 
 #progress {
@@ -281,7 +295,7 @@ md-toast {
 .icon-btn {
   transition: all 0.2s ease-in-out;
   cursor: pointer;
-  text-shadow: 0px 0px 20px #071B28;
+  text-shadow: 0px 0px 20px #071b28;
 }
 
 .icon-btn:hover {
@@ -293,8 +307,8 @@ md-toast {
 }
 
 /* media queries for left navigation menu */
-@media screen and (max-width: 960px) { 
-  .menu-text { 
+@media screen and (max-width: 960px) {
+  .menu-text {
     display: none;
   }
 
