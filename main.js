@@ -110,7 +110,7 @@ app.once("ready", function() {
   mainWindow.loadURL("file://" + __dirname + "/app/index.html");
 
   //Devtools
-  //mainWindow.webContents.openDevTools({ mode: 'detach' });
+  //mainWindow.webContents.openDevTools({ mode: "detach" });
 
   mainWindow.on("closed", function() {
     mainWindow = null;

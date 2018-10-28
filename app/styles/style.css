@@ -306,6 +306,10 @@ md-toast {
   border-bottom: 1px solid var(--main-color);
 }
 
+.played-icon {
+  color: var(--main-color) !important;
+}
+
 /* media queries for left navigation menu */
 @media screen and (max-width: 960px) {
   .menu-text {

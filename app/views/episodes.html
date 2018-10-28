@@ -6,7 +6,6 @@
       <md-progress-circular md-mode="indeterminate" md-diameter="25" ng-if="isLoading"></md-progress-circular>
     </div>
   </md-toolbar>
-
   <md-list>
     <md-list-item>
       <div class="row" layout="row" style="width: 100%">
@@ -25,6 +24,7 @@
         <md-tooltip md-direction="left" md-delay="250">{{ episode.description | episodeDesc }}</md-tooltip>
         <div class="row">
           <a href="#" style="color:white;text-decoration:none">{{ episode.title }}</a>
+          <md-icon class="played-icon" ng-if="isPlayed(episode.guid)" md-font-library="material-icons">done</md-icon>
         </div>
         <div class="row" layout="row" layout-align="center center">
           <div flex="50">
