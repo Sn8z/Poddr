@@ -62,7 +62,6 @@ angular
                       log.info(
                         "Parsed " + $scope.episodes.length + " episodes."
                       );
-                      log.info($scope.episodes);
                     }
                   });
                 },
@@ -83,7 +82,7 @@ angular
     };
 
     $scope.isPlayed = function(id) {
-      return $scope.prevPlayedEpisodes["prevGUIDs"]["guids"].indexOf(id) !== -1;
+      return $scope.prevPlayedEpisodes["prevGUIDs"]["guids"] ? $scope.prevPlayedEpisodes["prevGUIDs"]["guids"].indexOf(id) !== -1 : false;
     };
 
     //Filter episodes
