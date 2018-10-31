@@ -43,12 +43,12 @@ angular
               {timeout: 20000}
           )
           .then(function(response) {
-            $scope.isLoading = false;
             $scope.results = response.data.results;
             log.info("Found " + $scope.results.length + " matches.");
             if ($scope.results.length == 0) {
               $scope.isEmpty = true;
             }
+            $scope.isLoading = false;
           });
       }
     };

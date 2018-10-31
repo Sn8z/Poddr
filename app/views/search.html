@@ -15,8 +15,11 @@
     <md-list-item ng-repeat="podcast in results" class="noright" ng-click="showEpisodes(podcast.trackId, podcast.trackName, podcast.artworkUrl60 | itunesPodcastCover)">
       <img class="podcast-img-small" ng-src="{{ ::podcast.artworkUrl60 | itunesPodcastCover }}" onload="this.style.opacity = 1">
       <p style="color:white">{{ ::podcast.artistName }} - {{ ::podcast.trackName }}</p>
-      <md-button class="md-icon-button md-warn icon-btn" ng-if="!isFavourite(podcast.trackId.toString())">
-        <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)">favorite</md-icon>
+      <md-button class="md-icon-button md-warn icon-btn" ng-if="!isFavourite(podcast.trackId.toString())" tabindex="-1">
+        <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)">
+          <md-tooltip md-direction="top" md-delay="250">Add to favourites</md-tooltip>
+          favorite
+        </md-icon>
       </md-button>
       <md-divider></md-divider>
     </md-list-item>

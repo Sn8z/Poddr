@@ -24,7 +24,7 @@
         <md-tooltip md-direction="left" md-delay="250">{{ episode.description | episodeDesc }}</md-tooltip>
         <div class="row" layout="row">
           <div flex>
-            <a href="#" style="color:white;text-decoration:none">{{ episode.title }}</a>
+            <a href="#" style="color:white;text-decoration:none" tabindex="-1">{{ episode.title }}</a>
           </div>
           <div>
             <md-icon class="played-icon" ng-if="isPlayed(episode.guid)" md-font-library="material-icons">done</md-icon>
