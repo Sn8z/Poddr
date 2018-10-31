@@ -49,7 +49,7 @@ angular
           "/genre=" +
           $scope.genre +
           "/json"
-        )
+        , {timeout: 20000})
         .then(
           function successCallback(response) {
             $scope.podcasts = response.data.feed.entry;

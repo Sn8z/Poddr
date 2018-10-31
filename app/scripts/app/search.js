@@ -39,7 +39,8 @@ angular
           .get(
             "https://itunes.apple.com/search?term=" +
               sQuery +
-              "&entity=podcast&attributes=titleTerm,artistTerm"
+              "&entity=podcast&attributes=titleTerm,artistTerm",
+              {timeout: 20000}
           )
           .then(function(response) {
             $scope.isLoading = false;
