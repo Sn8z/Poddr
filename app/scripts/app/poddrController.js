@@ -124,6 +124,15 @@ var app = angular
       log.info("Changed view to " + view);
     }
     $scope.changeView = changeView;
+
+    // Add class to body when the mouse is being used
+    // These functions work together with CSS :focus on different elements
+    document.body.addEventListener('mousedown', function() {
+      document.body.classList.add('using-mouse');
+    });
+    document.body.addEventListener('keydown', function() {
+      document.body.classList.remove('using-mouse');
+    });
   });
 
 app.directive("podcasts", function() {

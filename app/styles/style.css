@@ -8,6 +8,10 @@
   outline-color: var(--main-color);
 }
 
+body.using-mouse :focus {
+  outline: none;
+}
+
 body {
   font-family: "Rubik", sans-serif;
 }
