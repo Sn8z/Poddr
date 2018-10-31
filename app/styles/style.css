@@ -164,6 +164,10 @@ md-option:focus {
   color: var(--main-color) !important;
 }
 
+md-select-menu.md-default-theme md-content md-option[selected], md-select-menu md-content md-option[selected] {
+  color: var(--main-color) !important;
+}
+
 /* toolbar */
 md-toolbar {
   background-color: #353535 !important;
