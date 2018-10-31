@@ -301,8 +301,8 @@ app.service("PrevPlayedService", PrevPlayedService);
 function RegionService(ToastService) {
   const fs = require("fs");
   var log = require("electron-log");
-  var countries = [];
   this.regions = function(callback) {
+    var countries = [];
     log.info("Fetching storefronts...");
     //Load local JSON with iTunes storefronts
     fs.readFile(__dirname + "/scripts/storefronts.json", function(

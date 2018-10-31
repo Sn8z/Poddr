@@ -2,15 +2,8 @@
   --main-color: #000;
 }
 
-/*
-* {	
-  outline: none !important;	
-  user-select: none;	
-}
-*/
-
 :focus {
-  outline-width: 2px;
+  outline-width: 1px;
   outline-style: solid;
   outline-color: var(--main-color);
 }
@@ -193,6 +186,23 @@ md-dialog-content {
 
 .podcast-img {
   user-select: none;
+  cursor:pointer;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  opacity: 0; 
+  transition: opacity 0.5s ease-in-out;
+}
+
+.podcast-img-small {
+  user-select: none;
+  cursor:pointer;
+  width:100px;
+  height: 100px;
+  padding: 15px;
+  opacity: 0; 
+  transition: opacity 0.5s ease-in-out;
 }
 
 .podcast-frame:hover {
