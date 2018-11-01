@@ -52,11 +52,9 @@ angular
                   log.info("Parsing podcastfeed...");
                   parsePodcast(response.data, function(error, data) {
                     if (error) {
-                      $scope.isLoading = false;
                       ToastService.errorToast("Parsing podcastfeed failed.");
                       log.error(error);
                     } else {
-                      $scope.isLoading = false;
                       $scope.episodes = data.episodes;
                       allEpisodes = angular.copy(data.episodes);
                       log.info(
@@ -66,11 +64,12 @@ angular
                   });
                 },
                 function errorCallback(error) {
-                  $scope.isLoading = false;
                   ToastService.errorToast("Failed to get podcast RSS feed.");
                   log.error(error);
                 }
-              );
+              ).finally(function(){
+                $scope.isLoading = false;
+              });
             },
             function errorCallback(error) {
               $scope.isLoading = false;

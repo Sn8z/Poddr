@@ -3,7 +3,7 @@
 }
 
 :focus {
-  outline-width: 1px;
+  outline-width: 2px;
   outline-style: solid;
   outline-color: var(--main-color);
 }

@@ -10,6 +10,7 @@ angular
     FavouriteFactory
   ) {
     var log = require("electron-log");
+    var parsePodcast = require("node-podcast-parser");
 
     $scope.query = "";
     $scope.results = [];
@@ -23,6 +24,31 @@ angular
     }, 50);
 
     $scope.showEpisodes = $rootScope.fetchEpisodes;
+
+    var getDescription = function(podcast){
+      if(podcast.feedURL !== null && podcast.feedUrl.length){
+        $http.get(podcast.feedUrl, {timeout: 20000})
+          .then(function(response){
+            parsePodcast(response.data, function(error, data) {
+              if (error) {
+                log.error(error);
+                podcast.description = "No description available";
+              } else {
+                if(data.description.long !== null && data.description.long.length){
+                  podcast.description = data.description.long;
+                } else {
+                  podcast.description = "No description available";
+                }
+              }
+            });
+          }, function(error){
+            log.error(error);
+            podcast.description = "No description available";
+          });
+      } else {
+        podcast.description = "No description available";
+      }
+    };
 
     $scope.doSearch = function() {
       if ($scope.query) {
@@ -42,12 +68,18 @@ angular
               "&entity=podcast&attributes=titleTerm,artistTerm",
               {timeout: 20000}
           )
-          .then(function(response) {
+          .then(function successCallback(response) {
             $scope.results = response.data.results;
+            angular.forEach($scope.results, function(result){
+              getDescription(result);
+            });
             log.info("Found " + $scope.results.length + " matches.");
             if ($scope.results.length == 0) {
               $scope.isEmpty = true;
             }
+          }, function errorCallback(error){
+            log.error(error);
+          }).finally(function(){
             $scope.isLoading = false;
           });
       }
