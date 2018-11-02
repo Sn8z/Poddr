@@ -22,6 +22,9 @@ var app = angular
       e.preventDefault();
       $rootScope.togglePlay();
     });
+    Mousetrap.bindGlobal("escape", function(e){
+      document.activeElement.blur();
+    });
     Mousetrap.bindGlobal("mod+up", function(e) {
       e.preventDefault();
       $rootScope.volumeUp();
