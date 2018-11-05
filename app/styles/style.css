@@ -218,7 +218,10 @@ md-dialog-content {
 }
 
 .podcast-title {
-  padding: 5px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
 }
 
 /* Player */
