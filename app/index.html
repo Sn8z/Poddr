@@ -145,10 +145,10 @@
             <md-progress-circular ng-if="isLoading" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
           </div>
           <div flex="5" layout="row" layout-align="center center" ng-if="!isPlayerFavourite()">
-            <md-icon id="fav-btn" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
+            <md-icon class="fav-btn" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon id="desc-btn" ng-click="showDescription(playerService.currentlyPlaying, playerService.podcastDescription | episodeDesc)"
+            <md-icon class="desc-btn" ng-click="showDescription(playerService.currentlyPlaying, playerService.podcastDescription | episodeDesc)"
               md-font-library="material-icons">info</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">

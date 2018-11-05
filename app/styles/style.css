@@ -192,6 +192,10 @@ md-dialog-content {
   transition: all 0.1s linear;
 }
 
+.podcast-frame:hover {
+  transform: scale(1.02);
+}
+
 .podcast-img {
   user-select: none;
   cursor:pointer;
@@ -213,17 +217,8 @@ md-dialog-content {
   transition: opacity 0.5s ease-in-out;
 }
 
-.podcast-frame:hover {
-  transform: scale(1.02);
-}
-
 .podcast-title {
-  color: white;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0px 0px 10px #000;
+  padding: 5px !important;
 }
 
 /* Player */
@@ -296,14 +291,19 @@ md-toast {
   color: #fff !important;
 }
 
-#desc-btn {
+.desc-btn {
   cursor: pointer;
   color: #fff !important;
 }
 
-#fav-btn {
+.fav-btn {
   cursor: pointer;
   color: var(--main-color) !important;
+}
+
+.remove-btn {
+  cursor: pointer;
+  color: rgb(115, 30, 30);
 }
 
 #volume-btn {
@@ -313,7 +313,6 @@ md-toast {
 .icon-btn {
   transition: all 0.2s ease-in-out;
   cursor: pointer;
-  text-shadow: 0px 0px 20px #071b28;
 }
 
 .icon-btn:hover {

@@ -6,6 +6,7 @@ angular
     $http,
     $filter,
     $mdSidenav,
+    $timeout,
     ToastService,
     PlayerService,
     PrevPlayedFactory
@@ -42,46 +43,57 @@ angular
         .open()
         .then(function() {
           log.info("Looking up iTunes id: " + id);
-          $http.get("https://itunes.apple.com/lookup?id=" + id).then(
-            function successCallback(response) {
-              log.info("Found iTunes data.");
-              log.info("Getting podcastfeed...");
-              $http.get(response.data.results[0].feedUrl).then(
-                function successCallback(response) {
-                  log.info("Successfully fetched podcastfeed.");
-                  log.info("Parsing podcastfeed...");
-                  parsePodcast(response.data, function(error, data) {
-                    if (error) {
-                      ToastService.errorToast("Parsing podcastfeed failed.");
-                      log.error(error);
-                    } else {
-                      $scope.episodes = data.episodes;
-                      allEpisodes = angular.copy(data.episodes);
-                      log.info(
-                        "Parsed " + $scope.episodes.length + " episodes."
+          $http
+            .get("https://itunes.apple.com/lookup?id=" + id, { timeout: 20000 })
+            .then(
+              function successCallback(response) {
+                log.info("Found iTunes data.");
+                log.info("Getting podcastfeed...");
+                $http
+                  .get(response.data.results[0].feedUrl)
+                  .then(
+                    function successCallback(response) {
+                      log.info("Successfully fetched podcastfeed.");
+                      log.info("Parsing podcastfeed...");
+                      parsePodcast(response.data, function(error, data) {
+                        if (error) {
+                          ToastService.errorToast(
+                            "Parsing podcastfeed failed."
+                          );
+                          log.error(error);
+                        } else {
+                          $scope.episodes = data.episodes;
+                          allEpisodes = angular.copy(data.episodes);
+                          log.info(
+                            "Parsed " + $scope.episodes.length + " episodes."
+                          );
+                        }
+                      });
+                    },
+                    function errorCallback(error) {
+                      ToastService.errorToast(
+                        "Failed to get podcast RSS feed."
                       );
+                      log.error(error);
                     }
+                  )
+                  .finally(function() {
+                    $scope.isLoading = false;
                   });
-                },
-                function errorCallback(error) {
-                  ToastService.errorToast("Failed to get podcast RSS feed.");
-                  log.error(error);
-                }
-              ).finally(function(){
+              },
+              function errorCallback(error) {
                 $scope.isLoading = false;
-              });
-            },
-            function errorCallback(error) {
-              $scope.isLoading = false;
-              ToastService.errorToast("Failed to lookup id in iTunes.");
-              log.error(error);
-            }
-          );
+                ToastService.errorToast("Failed to lookup id in iTunes.");
+                log.error(error);
+              }
+            );
         });
     };
 
     $scope.isPlayed = function(id) {
-      return $scope.prevPlayedEpisodes["prevGUIDs"]["guids"] ? $scope.prevPlayedEpisodes["prevGUIDs"]["guids"].indexOf(id) !== -1 : false;
+      return $scope.prevPlayedEpisodes["prevGUIDs"]["guids"]
+        ? $scope.prevPlayedEpisodes["prevGUIDs"]["guids"].indexOf(id) !== -1
+        : false;
     };
 
     //Filter episodes
