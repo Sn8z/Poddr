@@ -2,9 +2,14 @@
   --main-color: #000;
 }
 
-* {	
-  outline: none !important;	
-  user-select: none;	
+:focus {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: var(--main-color);
+}
+
+body.using-mouse :focus {
+  outline: none;
 }
 
 body {
@@ -104,7 +109,7 @@ md-progress-circular path {
   height: 35px !important;
 }
 
-.menu-text { 
+.menu-text {
   font-size: 16px;
 }
 
@@ -124,8 +129,8 @@ md-switch.md-checked .md-thumb {
   background-color: var(--main-color) !important;
 }
 
-md-switch.md-checked .md-ink-ripple { 
-  color: var(--main-color) !important; 
+md-switch.md-checked .md-ink-ripple {
+  color: var(--main-color) !important;
 }
 
 /* Dialog */
@@ -159,6 +164,21 @@ md-option:focus {
   color: var(--main-color) !important;
 }
 
+md-select-menu.md-default-theme md-content md-option[selected], md-select-menu md-content md-option[selected] {
+  color: var(--main-color) !important;
+}
+
+/* toolbar */
+md-toolbar {
+  background-color: #353535 !important;
+}
+
+/* dialog */
+md-dialog-content {
+  padding: 15px !important;
+  white-space: pre-line !important;
+}
+
 /* grid */
 .grid-item {
   padding: 20px;
@@ -173,16 +193,35 @@ md-option:focus {
 }
 
 .podcast-frame:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
+}
+
+.podcast-img {
+  user-select: none;
+  cursor:pointer;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  opacity: 0; 
+  transition: opacity 0.5s ease-in-out;
+}
+
+.podcast-img-small {
+  user-select: none;
+  cursor:pointer;
+  width:100px;
+  height: 100px;
+  padding: 15px;
+  opacity: 0; 
+  transition: opacity 0.5s ease-in-out;
 }
 
 .podcast-title {
-  color: white;
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0px 0px 10px #000;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
 }
 
 /* Player */
@@ -192,6 +231,8 @@ md-option:focus {
   font-size: 30px;
   width: 30px;
   height: 30px;
+  user-select: none;
+  outline: 0;
 }
 
 #play-btn {
@@ -200,6 +241,8 @@ md-option:focus {
   font-size: 40px;
   width: 40px;
   height: 40px;
+  user-select: none;
+  outline: 0;
 }
 
 #progress {
@@ -251,14 +294,19 @@ md-toast {
   color: #fff !important;
 }
 
-#desc-btn {
+.desc-btn {
   cursor: pointer;
   color: #fff !important;
 }
 
-#fav-btn {
+.fav-btn {
   cursor: pointer;
   color: var(--main-color) !important;
+}
+
+.remove-btn {
+  cursor: pointer;
+  color: rgb(115, 30, 30);
 }
 
 #volume-btn {
@@ -278,9 +326,13 @@ md-toast {
   border-bottom: 1px solid var(--main-color);
 }
 
+.played-icon {
+  color: var(--main-color) !important;
+}
+
 /* media queries for left navigation menu */
-@media screen and (max-width: 960px) { 
-  .menu-text { 
+@media screen and (max-width: 960px) {
+  .menu-text {
     display: none;
   }
 

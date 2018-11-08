@@ -9,7 +9,7 @@
         <md-input-container style="width:90%">
           <label>Default region</label>
           <md-select name="type" ng-model="region" ng-change="setRegion()">
-            <md-option ng-repeat="country in countries" ng-value="country.iso">{{ ::country.name }}</md-option>
+            <md-option ng-repeat="country in countries track by $index" ng-value="country.iso">{{ ::country.name }}</md-option>
           </md-select>
         </md-input-container>
       </div>
@@ -23,7 +23,7 @@
     </div>
     <div flex="50" class="row">
       <h3 style="color:white">
-        Shortcuts
+        Hotkeys
       </h3>
       <md-divider></md-divider>
       <table style="width:100%">
@@ -37,8 +37,17 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>Ctrl/Cmd</code> +
-            <code>a</code>
+            <code>{{ ::modKey }}</code> +
+            <code>e</code>
+          </td>
+          <td style="color:white">
+            Toggle sidebar
+          </td>
+        </tr>
+        <tr>
+          <td style="color:white">
+            <code>{{ ::modKey }}</code> +
+            <code>down arrow</code>
           </td>
           <td style="color:white">
             Volume Down
@@ -46,8 +55,8 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>Ctrl/Cmd</code> +
-            <code>s</code>
+            <code>{{ ::modKey }}</code> +
+            <code>up arrow</code>
           </td>
           <td style="color:white">
             Volume Up
@@ -55,8 +64,8 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>Ctrl/Cmd</code> +
-            <code>z</code>
+            <code>{{ ::modKey }}</code> +
+            <code>left arrow</code>
           </td>
           <td style="color:white">
             Rewind
@@ -64,8 +73,8 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>Ctrl/Cmd</code> +
-            <code>x</code>
+            <code>{{ ::modKey }}</code> +
+            <code>right arrow</code>
           </td>
           <td style="color:white">
             Forward
@@ -73,8 +82,8 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>Ctrl/Cmd</code> +
-            <code>q</code>
+            <code>{{ ::modKey }}</code> +
+            <code>1</code>
           </td>
           <td style="color:white">
             Jump to Toplists
@@ -82,8 +91,8 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>Ctrl/Cmd</code> +
-            <code>w</code>
+            <code>{{ ::modKey }}</code> +
+            <code>2/f/l</code>
           </td>
           <td style="color:white">
             Jump to Search
@@ -91,8 +100,8 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>Ctrl/Cmd</code> +
-            <code>e</code>
+            <code>{{ ::modKey }}</code> +
+            <code>3</code>
           </td>
           <td style="color:white">
             Jump to Favourites
@@ -100,8 +109,8 @@
         </tr>
         <tr>
           <td style="color:white">
-            <code>Ctrl/Cmd</code> +
-            <code>r</code>
+            <code>{{ ::modKey }}</code> +
+            <code>4</code>
           </td>
           <td style="color:white">
             Jump to Settings
@@ -134,10 +143,26 @@
           <md-divider></md-divider>
         </md-list-item>
       </md-list>
+      <br>
+      <table style="width:100%">
+        <tr>
+          <td>Poddr:</td>
+          <td>{{ ::appVersion }}</td>
+        </tr>
+        <tr>
+          <td>Electron:</td>
+          <td>{{ ::electronVersion }}</td>
+        </tr>
+        <tr>
+          <td>Storage:</td>
+          <td>{{ ::appStorage }}</td>
+        </tr>
+      </table>
+      <br>
     </div>
     <div flex="50">
       <h3 style="color:white;">
-        Poddr {{ ::appVersion }}
+        Support & Feedback
       </h3>
       <md-divider></md-divider>
       <md-list>
@@ -154,7 +179,7 @@
           </md-icon>
         </md-list-item>
         <md-list-item ng-click="openURL('https://ko-fi.com/sneitz')">
-          <span>Buy me a coffee</span>
+          <span>Buy me a coffee!</span>
           <md-icon class="md-secondary" md-font-library="material-icons">
             local_cafe
           </md-icon>

@@ -1,19 +1,23 @@
 angular
   .module("poddr")
-  .controller("SettingsController", function (
+  .controller("SettingsController", function(
     $scope,
     RegionService,
     ToastService
   ) {
     var storage = require("electron-json-storage");
-    var log = require('electron-log');
-    $scope.appVersion = require('electron').remote.app.getVersion();
+    var log = require("electron-log");
+    const app = require("electron").remote.app;
+    $scope.appVersion = app.getVersion();
+    $scope.appStorage = storage.getDataPath();
+    $scope.electronVersion = process.versions.electron;
+    $scope.modKey = process.platform == "darwin" ? "Cmd" : "Ctrl";
 
-    RegionService.regions(function (response) {
+    RegionService.regions(function(response) {
       $scope.countries = response;
     });
 
-    storage.get("region", function (error, data) {
+    storage.get("region", function(error, data) {
       if (error) {
         log.error(error);
         $scope.region = "us";
@@ -27,7 +31,7 @@ angular
       $scope.$digest();
     });
 
-    storage.get("theme", function (error, data) {
+    storage.get("theme", function(error, data) {
       if (!error && data.value) {
         $scope.color = data.value;
       } else {
@@ -36,14 +40,16 @@ angular
       $scope.$digest();
     });
 
-    $scope.openURL = function (url) {
+    $scope.openURL = function(url) {
       require("electron").shell.openExternal(url);
     };
 
-    $scope.changeColor = function () {
+    log.info(app.getAppPath());
+
+    $scope.changeColor = function() {
       var html = document.getElementsByTagName("html")[0];
       html.style.cssText = "--main-color: " + $scope.color;
-      storage.set("theme", { value: $scope.color }, function (error) {
+      storage.set("theme", { value: $scope.color }, function(error) {
         if (error) {
           log.error(error);
           ToastService.errorToast("Couldn't change color.");
@@ -51,8 +57,8 @@ angular
       });
     };
 
-    $scope.setRegion = function () {
-      storage.set("region", { value: $scope.region }, function (error) {
+    $scope.setRegion = function() {
+      storage.set("region", { value: $scope.region }, function(error) {
         if (error) {
           log.error(error);
           ToastService.errorToast("Couldn't change region.");

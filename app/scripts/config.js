@@ -7,26 +7,30 @@ function configureTheme($mdThemingProvider) {
   $mdThemingProvider.theme("default").dark();
 }
 
-app.filter("secondsToHHmmss", function ($filter) {
-  return function (seconds) {
-    return seconds ? $filter("date")(new Date(0, 0, 0).setSeconds(seconds), "HH:mm:ss") : "00:00:00";
+app.filter("secondsToHHmmss", function($filter) {
+  return function(seconds) {
+    return seconds
+      ? $filter("date")(new Date(0, 0, 0).setSeconds(seconds), "HH:mm:ss")
+      : "00:00:00";
   };
 });
 
-app.filter("itunesPodcastCover", function () {
-  return function (podcastCover) {
+app.filter("itunesPodcastCover", function() {
+  return function(podcastCover) {
     return podcastCover.replace("60x60", "250x250");
   };
 });
 
-app.filter("episodeDesc", function () {
-  return function (text) {
-    return text ? String(text).replace(/<[^>]+>/gm, '') : 'No description available';
+app.filter("episodeDesc", function() {
+  return function(text) {
+    return text
+      ? String(text).replace(/<[^>]+>/gm, "")
+      : "No description available";
   };
 });
 
 function ToastService($mdToast) {
-  this.successToast = function (text) {
+  this.successToast = function(text) {
     $mdToast.show(
       $mdToast
         .simple()
@@ -37,7 +41,7 @@ function ToastService($mdToast) {
     );
   };
 
-  this.errorToast = function (text) {
+  this.errorToast = function(text) {
     $mdToast.show(
       $mdToast
         .simple()
@@ -48,7 +52,7 @@ function ToastService($mdToast) {
     );
   };
 
-  this.confirmToast = function (text, callback) {
+  this.confirmToast = function(text, callback) {
     var toast = $mdToast
       .simple()
       .textContent("Are you sure?")
@@ -57,7 +61,7 @@ function ToastService($mdToast) {
       .action("Remove")
       .toastClass("md-toast-error");
 
-    $mdToast.show(toast).then(function (response) {
+    $mdToast.show(toast).then(function(response) {
       if (response == "ok") {
         callback(true);
       } else {
@@ -83,26 +87,32 @@ function PlayerService() {
   this.podcastDescription = "";
   this.podcastID = "0";
   this.podcastURL = "";
+  this.podcastGUID = "";
 
   this.latestSeenArtist = "";
   this.latestSeenID = "0";
   this.latestSeenCover = "";
 
-  this.saveState = function () {
-    storage.set("playerState", {
-      podcastURL: this.podcastURL,
-      podcastTitle: this.currentlyPlaying,
-      podcastArtist: this.podcastArtist,
-      podcastCover: this.podcastCover,
-      podcastID: this.podcastID,
-      podcastDescription: this.podcastDescription
-    }, function (error) {
-      if (error) {
-        log.error(error);
-      } else {
-        log.info('Saved playerstate!');
+  this.saveState = function() {
+    storage.set(
+      "playerState",
+      {
+        podcastURL: this.podcastURL,
+        podcastTitle: this.currentlyPlaying,
+        podcastArtist: this.podcastArtist,
+        podcastCover: this.podcastCover,
+        podcastID: this.podcastID,
+        podcastDescription: this.podcastDescription,
+        podcastGUID: this.podcastGUID
+      },
+      function(error) {
+        if (error) {
+          log.error(error);
+        } else {
+          log.info("Saved playerstate!");
+        }
       }
-    });
+    );
   };
 }
 app.service("PlayerService", PlayerService);
@@ -117,9 +127,9 @@ function FavouriteFactory($q) {
     all: []
   };
 
-  var getFavouriteKeys = function () {
+  var getFavouriteKeys = function() {
     const q = $q.defer();
-    storage.keys(function (error, keys) {
+    storage.keys(function(error, keys) {
       if (error) {
         log.error(error);
         return q.reject(err);
@@ -129,9 +139,9 @@ function FavouriteFactory($q) {
     return q.promise;
   };
 
-  var getAllFavourites = function () {
+  var getAllFavourites = function() {
     const q = $q.defer();
-    storage.getAll(function (error, data) {
+    storage.getAll(function(error, data) {
       if (error) {
         log.error(error);
         return q.reject(error);
@@ -140,28 +150,29 @@ function FavouriteFactory($q) {
       delete data.region;
       delete data.theme;
       delete data.playerState;
+      delete data.prevPlayed;
       q.resolve(data);
     });
     return q.promise;
   };
 
-  getFavouriteKeys().then(function (response) {
+  getFavouriteKeys().then(function(response) {
     favourites.keys = response;
   });
 
-  getAllFavourites().then(function (response) {
+  getAllFavourites().then(function(response) {
     favourites.all = response;
   });
 
   return {
-    getList: function () {
+    getList: function() {
       return favourites;
     },
-    updateList: function () {
-      getFavouriteKeys().then(function (response) {
+    updateList: function() {
+      getFavouriteKeys().then(function(response) {
         favourites.keys = response;
       });
-      getAllFavourites().then(function (response) {
+      getAllFavourites().then(function(response) {
         favourites.all = response;
       });
     }
@@ -174,7 +185,7 @@ function FavouriteService(ToastService, FavouriteFactory, $q) {
   var storage = require("electron-json-storage");
   var log = require("electron-log");
 
-  this.favourite = function (id, img, title, artist) {
+  this.favourite = function(id, img, title, artist) {
     storage.set(
       id,
       {
@@ -184,7 +195,7 @@ function FavouriteService(ToastService, FavouriteFactory, $q) {
         artist: artist,
         dateAdded: Date.now()
       },
-      function (error) {
+      function(error) {
         if (error) {
           log.error(error);
           ToastService.errorToast("Couldn't add podcast to favourites.");
@@ -193,14 +204,15 @@ function FavouriteService(ToastService, FavouriteFactory, $q) {
           log.info("Added " + artist + " to favourites.");
           ToastService.successToast("You now follow " + artist);
         }
-      });
+      }
+    );
   };
 
-  this.removeFavourite = function (id) {
+  this.removeFavourite = function(id) {
     const q = $q.defer();
-    ToastService.confirmToast("Are you sure?", function (response) {
+    ToastService.confirmToast("Are you sure?", function(response) {
       if (response) {
-        storage.remove(id, function (error) {
+        storage.remove(id, function(error) {
           if (error) {
             log.error(error);
             ToastService.errorToast("Couldn't remove favourite.");
@@ -221,15 +233,79 @@ function FavouriteService(ToastService, FavouriteFactory, $q) {
 }
 app.service("FavouriteService", FavouriteService);
 
+//Previously Played Factory
+function PrevPlayedFactory($q) {
+  var storage = require("electron-json-storage");
+  var log = require("electron-log");
+
+  var prevPlayedEpisodes = {
+    prevGUIDs: []
+  };
+
+  var getPrevPlayedEpisodes = function() {
+    const q = $q.defer();
+    storage.get("prevPlayed", function(error, data) {
+      if (error) {
+        log.error(error);
+        return q.reject(error);
+      }
+      q.resolve(data);
+    });
+    return q.promise;
+  };
+
+  getPrevPlayedEpisodes().then(function(response) {
+    prevPlayedEpisodes.prevGUIDs = response;
+  });
+
+  return {
+    getGUIDs: function() {
+      return prevPlayedEpisodes;
+    },
+    updateGUIDs: function() {
+      getPrevPlayedEpisodes().then(function(response) {
+        prevPlayedEpisodes.prevGUIDs = response;
+      });
+    }
+  };
+}
+app.factory("PrevPlayedFactory", PrevPlayedFactory);
+
+//Previously Played service
+function PrevPlayedService(PrevPlayedFactory, $q) {
+  var storage = require("electron-json-storage");
+  var log = require("electron-log");
+
+  this.setPrevPlayed = function(guid) {
+    var prevEpisodes = PrevPlayedFactory.getGUIDs().prevGUIDs;
+    if (angular.equals(prevEpisodes, {})) {
+      prevEpisodes = [guid];
+    } else {
+      prevEpisodes["guids"].push(guid);
+      prevEpisodes = prevEpisodes["guids"];
+      prevEpisodes = Array.from(new Set(prevEpisodes));
+    }
+    storage.set("prevPlayed", { guids: prevEpisodes }, function(error) {
+      if (error) {
+        log.error(error);
+      } else {
+        PrevPlayedFactory.updateGUIDs();
+        log.info("Added " + guid + " to previously played episodes.");
+      }
+    });
+  };
+}
+app.service("PrevPlayedService", PrevPlayedService);
+
 //regions service
 function RegionService(ToastService) {
   const fs = require("fs");
   var log = require("electron-log");
-  var countries = [];
-  this.regions = function (callback) {
+  this.regions = function(callback) {
+    var countries = [];
     log.info("Fetching storefronts...");
     //Load local JSON with iTunes storefronts
-    fs.readFile(__dirname + "/scripts/storefronts.json", function (
+    fs.readFile(__dirname + "/scripts/storefronts.json", function(
       error,
       response
     ) {
@@ -237,7 +313,7 @@ function RegionService(ToastService) {
         log.error(error);
         ToastService.errorToast("Couldn't load storefronts.");
       } else {
-        JSON.parse(response).data.forEach(function (obj) {
+        JSON.parse(response).data.forEach(function(obj) {
           countries.push({ iso: obj.id, name: obj.attributes.name });
         });
         log.info("Done fetching storefronts.");

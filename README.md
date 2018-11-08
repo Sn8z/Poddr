@@ -32,7 +32,7 @@ The downloaded file is a normal .exe file. Just doubleclick it and install as us
 
 #### Snap
 
-Coming soon...
+Available from [Snapcraft](https://snapcraft.io/poddr)
 
 #### AppImage
 
