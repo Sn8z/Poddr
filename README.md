@@ -3,7 +3,6 @@
     <h1>Poddr</h1>
     <img src="https://img.shields.io/github/release/sn8z/poddr.svg?style=flat-square">
     <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg?style=flat-square">
-    <img src="https://img.shields.io/github/release-date/sn8z/poddr.svg?style=flat-square">
     <img src="https://img.shields.io/david/sn8z/poddr.svg?style=flat-square">
     <img src="https://img.shields.io/badge/platforms-Windows%20%2F%20Linux%20%2F%20Mac-brightgreen.svg?style=flat-square">
 </div>
@@ -32,7 +31,7 @@ The downloaded file is a normal .exe file. Just doubleclick it and install as us
 
 #### Snap
 
-Available from [Snapcraft](https://snapcraft.io/poddr)
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/poddr)
 
 #### AppImage
 
@@ -49,4 +48,7 @@ A normal .dmg file, install as you would normally do with any Mac software.
 
 <hr>
 
-#### If you enjoy using Poddr and want to contribute feel free to [buy me a coffee!](https://ko-fi.com/sneitz)
+#### If you enjoy using Poddr and want to contribute feel free to buy me a coffee on Ko-fi!
+[![ko-fi](https://www.ko-fi.com/img/donate_sm.png)](https://ko-fi.com/O5O2ETUW)
+
+<hr>
