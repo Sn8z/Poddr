@@ -10,6 +10,25 @@ var log = require("electron-log");
 //Global reference to window object;
 var mainWindow = null;
 
+//Launch options
+const options = {
+  debug: false
+};
+
+const argv = process.argv.slice(1);
+log.info("Flags:");
+log.info(argv);
+for (const arg of argv) {
+  if (arg === "."){
+    continue;
+  } else if (arg === "--debug" || arg === "-d") {
+    log.info("Setting debug to true.");
+    options.debug = true;
+  } else {
+    log.info(arg + " is not a valid flag.");
+  }
+}
+
 //Quit when all windows are closed
 app.on("window-all-closed", function() {
   log.info("Exiting Poddr.");
@@ -110,7 +129,10 @@ app.once("ready", function() {
   mainWindow.loadURL("file://" + __dirname + "/app/index.html");
 
   //Devtools
-  //mainWindow.webContents.openDevTools({ mode: "detach" });
+  if (options.debug) {
+    log.info("Enabling devTools.");
+    mainWindow.webContents.openDevTools({ mode: "detach" });
+  }
 
   mainWindow.on("closed", function() {
     mainWindow = null;
