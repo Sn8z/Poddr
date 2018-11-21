@@ -86,16 +86,12 @@ angular
           player.src = data.podcastURL;
           PlayerService.podcastURL = data.podcastURL;
         }
-        if (data.podcastCover) {
-          PlayerService.podcastCover = data.podcastCover;
-          PlayerService.episodeCover = data.podcastCover;
-        }
+        if (data.podcastCover) PlayerService.podcastCover = data.podcastCover;
+        if (data.episodeCover) PlayerService.episodeCover = data.episodeCover;
         if (data.podcastTitle) PlayerService.currentlyPlaying = data.podcastTitle;
         if (data.podcastArtist) PlayerService.podcastArtist = data.podcastArtist;
         if (data.podcastID) PlayerService.podcastID = data.podcastID;
-        if (data.podcastDescription) {
-          PlayerService.podcastDescription = data.podcastDescription;
-        }
+        if (data.podcastDescription) PlayerService.podcastDescription = data.podcastDescription;
         if (data.podcastGUID) PlayerService.podcastGUID = data.podcastGUID;
 
         if (process.platform == "linux") {
@@ -128,12 +124,12 @@ angular
       }
     });
 
-    player.addEventListener("play", function(){
+    player.addEventListener("play", function () {
       log.info("Playing podcast.");
       if (process.platform == "linux") mprisPlayer.playbackStatus = "Playing";
     });
 
-    player.addEventListener("pause", function(){
+    player.addEventListener("pause", function () {
       log.info("Paused podcast.");
       if (process.platform == "linux") mprisPlayer.playbackStatus = "Stopped";
     });
@@ -226,7 +222,7 @@ angular
       true
     );
 
-    function changePlayerTime(amount){
+    function changePlayerTime(amount) {
       player.currentTime = player.currentTime + amount;
       $scope.$digest();
     }
@@ -236,7 +232,7 @@ angular
       return !player.paused;
     };
 
-    $scope.isMuted = function(){
+    $scope.isMuted = function () {
       return player.volume == 0 || player.muted;
     };
 

@@ -85,7 +85,7 @@
         </md-list-item>
       </md-list>
       <div style="position:absolute;bottom:0;width:100%;height:auto;">
-        <img ng-src='{{ playerService.episodeCover || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;" />
+        <img ng-src='{{ playerService.episodeCover || playerService.podcastCover || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;" />
       </div>
 
     </md-sidenav>
