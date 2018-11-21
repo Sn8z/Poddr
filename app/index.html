@@ -117,19 +117,19 @@
       <div class="box3" layout="column" ng-controller="PlayerController">
         <div class="row">
           <div id="progress">
-            <div id="bar" ng-style="{'width':barWidth}"></div>
+            <div id="bar" ng-style="{'width':barWidth + '%'}"></div>
           </div>
         </div>
         <div class="row" layout="row" style="height:100%">
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon class="media-btn" md-font-library="material-icons" ng-click="rewind(10)" tabindex="-1">replay_10</md-icon>
+            <md-icon class="media-btn" md-font-library="material-icons" ng-click="changePlayerTime(-10)" tabindex="-1">replay_10</md-icon>
           </div>
           <div layout="row" layout-align="center center">
             <md-icon id="play-btn" md-font-library="material-icons" ng-click="togglePlay()" tabindex="-1">{{
-              checkPlayBtn() }}</md-icon>
+              isPlaying() ? 'pause_circle_outline' : 'play_circle_outline' ;}}</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon class="media-btn" md-font-library="material-icons" ng-click="forward(10)" tabindex="-1">forward_10</md-icon>
+            <md-icon class="media-btn" md-font-library="material-icons" ng-click="changePlayerTime(10)" tabindex="-1">forward_10</md-icon>
           </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
             <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastcover)"
@@ -155,7 +155,7 @@
             <md-icon id="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon id="volume-btn" md-font-library="material-icons">{{ checkVolume() }}</md-icon>
+            <md-icon id="volume-btn" md-font-library="material-icons">{{ isMuted() ? 'volume_off' : 'volume_up' ; }}</md-icon>
           </div>
           <md-slider-container flex="10">
             <md-slider id="volume-slider" onmouseup="document.activeElement.blur()" ng-model="volume" ng-change="setVolume()"

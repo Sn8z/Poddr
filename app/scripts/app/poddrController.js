@@ -27,19 +27,19 @@ var app = angular
     });
     Mousetrap.bindGlobal("mod+up", function(e) {
       e.preventDefault();
-      $rootScope.volumeUp();
+      $rootScope.changeVolume(0.005);
     });
     Mousetrap.bindGlobal("mod+down", function(e) {
       e.preventDefault();
-      $rootScope.volumeDown();
+      $rootScope.changeVolume(-0.005);
     });
     Mousetrap.bindGlobal("mod+left", function(e) {
       e.preventDefault();
-      $rootScope.rewind(1);
+      $rootScope.changePlayerTime(-1);
     });
     Mousetrap.bindGlobal("mod+right", function(e) {
       e.preventDefault();
-      $rootScope.forward(1);
+      $rootScope.changePlayerTime(1);
     });
     Mousetrap.bindGlobal("mod+1", function(e) {
       e.preventDefault();

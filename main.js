@@ -19,7 +19,7 @@ const argv = process.argv.slice(1);
 log.info("Flags:");
 log.info(argv);
 for (const arg of argv) {
-  if (arg === "."){
+  if (arg === ".") {
     continue;
   } else if (arg === "--debug" || arg === "-d") {
     log.info("Setting debug to true.");
@@ -30,29 +30,29 @@ for (const arg of argv) {
 }
 
 //Quit when all windows are closed
-app.on("window-all-closed", function() {
+app.on("window-all-closed", function () {
   log.info("Exiting Poddr.");
   app.quit();
 });
 
-ipcMain.on("quit-app", function() {
+ipcMain.on("quit-app", function () {
   app.quit();
 });
 
-ipcMain.on("raise-app", function() {
+ipcMain.on("raise-app", function () {
   mainWindow.show();
   mainWindow.focus();
 });
 
 //When app is rdy, create window
-app.once("ready", function() {
+app.once("ready", function () {
   if (process.platform == "linux") {
     function registerBindings(desktopEnv, session) {
       session.getInterface(
         `org.${desktopEnv}.SettingsDaemon`,
         `/org/${desktopEnv}/SettingsDaemon/MediaKeys`,
         `org.${desktopEnv}.SettingsDaemon.MediaKeys`,
-        function(error, iface) {
+        function (error, iface) {
           if (error) {
             log.info(desktopEnv);
             log.info(error);
@@ -94,7 +94,7 @@ app.once("ready", function() {
     }
   } else {
     //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
-    globalShortcut.register("MediaPlayPause", function() {
+    globalShortcut.register("MediaPlayPause", function () {
       mainWindow.webContents.send("toggle-play", "playpause");
     });
   }
@@ -121,7 +121,7 @@ app.once("ready", function() {
 
   mainWindowState.manage(mainWindow);
 
-  mainWindow.on("ready-to-show", function() {
+  mainWindow.on("ready-to-show", function () {
     mainWindow.show();
     mainWindow.focus();
   });
@@ -130,11 +130,11 @@ app.once("ready", function() {
 
   //Devtools
   if (options.debug) {
-    log.info("Enabling devTools.");
+    log.info("Enabling DevTools.");
     mainWindow.webContents.openDevTools({ mode: "detach" });
   }
 
-  mainWindow.on("closed", function() {
+  mainWindow.on("closed", function () {
     mainWindow = null;
   });
 
@@ -147,7 +147,7 @@ app.once("ready", function() {
           {
             label: "Quit",
             accelerator: "Command+Q",
-            click: function() {
+            click: function () {
               app.quit();
             }
           }
@@ -176,7 +176,7 @@ app.once("ready", function() {
     { label: "Select all", accelerator: "CmdOrCtrl+A", role: "selectall" }
   ];
 
-  mainWindow.webContents.on("context-menu", function(e, params) {
+  mainWindow.webContents.on("context-menu", function (e, params) {
     Menu.buildFromTemplate(contextMenuTemplate).popup(
       mainWindow,
       params.x,
