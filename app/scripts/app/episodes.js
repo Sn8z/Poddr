@@ -6,7 +6,6 @@ angular
     $http,
     $filter,
     $mdSidenav,
-    $timeout,
     ToastService,
     PlayerService,
     PrevPlayedFactory
@@ -21,17 +20,23 @@ angular
 
     $scope.prevPlayedEpisodes = PrevPlayedFactory.getGUIDs();
 
-    $scope.albumCover = "";
+    $scope.podcastCover = "";
     $scope.isLoading = false;
     $scope.playPodcast = $rootScope.playPodcast;
     $scope.episodes = [];
     var allEpisodes = [];
+
+    var closeSidenav = function(){
+      $mdSidenav("right").close();
+    }
+    $scope.closeSidenav = closeSidenav;
 
     $rootScope.fetchEpisodes = function(id, title, podcastCover) {
       log.info("Fetching episodes...");
       PlayerService.latestSeenArtist = title;
       PlayerService.latestSeenID = id.toString();
       PlayerService.latestSeenCover = podcastCover;
+      $scope.podcastCover = podcastCover;
       $scope.limit = EPISODE_BASE_LIMIT;
       $scope.query = "";
 

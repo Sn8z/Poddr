@@ -94,7 +94,6 @@ function PlayerService() {
   this.latestSeenCover = "";
 
   this.saveState = function () {
-    log.info(this);
     storage.set(
       "playerState",
       {

@@ -40,8 +40,8 @@
   </div>
 
   <div flex layout="row">
-    <md-sidenav id="left-sidenav" flex="15" md-is-locked-open="true" md-component-id="left">
-      <md-list class="md-dense" flex md-no-ink>
+    <md-sidenav id="left-sidenav" flex="15" md-is-locked-open="true" md-component-id="left" layout-align="space-between start">
+      <md-list class="md-dense" md-no-ink style="padding:0;width: 100%;">
         <md-list-item class="menu-item" id="toplist-item" ng-click="changeView('podcasts')">
           <md-item-content class="menu-item-content" layout="row" layout-align="center center">
             <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
@@ -50,8 +50,6 @@
             </div>
           </md-item-content>
         </md-list-item>
-
-        <md-divider class="menu-divider"></md-divider>
 
         <md-list-item class="menu-item" id="search-item" ng-click="changeView('search')">
           <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
@@ -62,8 +60,6 @@
           </md-item-content>
         </md-list-item>
 
-        <md-divider class="menu-divider"></md-divider>
-
         <md-list-item class="menu-item" id="favourite-item" ng-click="changeView('favourites')">
           <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
             <md-icon class="menu-icon" md-font-library="material-icons">favorite_border</md-icon>
@@ -72,8 +68,6 @@
             </div>
           </md-item-content>
         </md-list-item>
-
-        <md-divider class="menu-divider"></md-divider>
 
         <md-list-item class="menu-item" id="settings-item" ng-click="changeView('settings')">
           <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
@@ -84,10 +78,7 @@
           </md-item-content>
         </md-list-item>
       </md-list>
-      <div style="position:absolute;bottom:0;width:100%;height:auto;">
-        <img ng-src='{{ playerService.episodeCover || playerService.podcastCover || "images/album_cover.png" }}' style="width:100%;height:auto;position:absolute;bottom:0;" />
-      </div>
-
+      <img src="{{ playerService.episodeCover || playerService.podcastCover || 'images/album_cover.png' }}" style="width:100%;height:auto;">
     </md-sidenav>
     <div layout="column" flex>
 
@@ -107,7 +98,7 @@
         </div>
       </div>
 
-      <md-sidenav class="md-sidenav-right" id="right-sidenav" md-whiteframe="8" md-component-id="right">
+      <md-sidenav class="md-sidenav-right" id="right-sidenav" md-component-id="right" md-disable-backdrop>
         <md-content style="background-color:transparent;">
           <episodes />
         </md-content>
@@ -132,7 +123,7 @@
             <md-icon class="media-btn" md-font-library="material-icons" ng-click="changePlayerTime(10)" tabindex="-1">forward_10</md-icon>
           </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
-            <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastcover)"
+            <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastCover)"
               style="color: white;text-decoration: none;">
               {{ playerService.currentlyPlaying }}
             </a>

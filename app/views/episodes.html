@@ -1,11 +1,16 @@
 <div ng-controller="EpisodesController">
-
-  <md-toolbar style="margin-bottom:15px;">
-    <div class="md-toolbar-tools">
-      <h2 flex md-truncate>{{ episodeTitle || 'Episodes' }}</h2>
-      <md-progress-circular md-mode="indeterminate" md-diameter="25" ng-if="isLoading"></md-progress-circular>
-    </div>
-  </md-toolbar>
+  <div class="row">
+    <md-icon md-font-library="material-icons" ng-click="closeSidenav()" style="cursor:pointer;padding:10px;">close</md-icon>
+  </div>
+  <div class="row" layout="row" layout-align="center center">
+    <img ng-src="{{ podcastCover || 'images/album_cover.png' }}" style="width:150px;height:150px;box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);" />
+  </div>
+  <div class="row" layout="row" layout-align="center center">
+    <h2 flex md-truncate style="text-align:center;">{{ episodeTitle || 'Podcast' }}</h2>
+  </div>
+  <div class="row" layout="row" layout-align="center center">
+    <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-if="isLoading"></md-progress-circular>
+  </div>
   <md-list>
     <md-list-item>
       <div class="row" layout="row" style="width: 100%">

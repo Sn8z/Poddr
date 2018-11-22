@@ -44,8 +44,6 @@ angular
       require("electron").shell.openExternal(url);
     };
 
-    log.info(app.getAppPath());
-
     $scope.changeColor = function() {
       var html = document.getElementsByTagName("html")[0];
       html.style.cssText = "--main-color: " + $scope.color;

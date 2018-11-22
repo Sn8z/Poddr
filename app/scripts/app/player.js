@@ -98,7 +98,7 @@ angular
           $timeout(function () {
             log.info("Initialize MPRIS metadata.");
             mprisPlayer.metadata = {
-              "mpris:artUrl": data.podcastCover || "",
+              "mpris:artUrl": data.episodeCover || data.podcastCover || "",
               "xesam:title": data.podcastTitle || "No title",
               "xesam:album": "Podcast",
               "xesam:artist": [data.podcastArtist || "No artist"]

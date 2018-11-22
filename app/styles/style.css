@@ -60,16 +60,11 @@ md-progress-circular path {
   stroke: var(--main-color) !important;
 }
 
-.box1,
 .box2,
 .box3 {
   display: flex;
   box-sizing: border-box;
   min-width: 100%;
-}
-
-.box1 {
-  height: auto;
 }
 
 .box2 {
@@ -85,8 +80,7 @@ md-progress-circular path {
 .box3 {
   z-index: 10;
   background: #151515;
-  height: 75px;
-  box-shadow: 0px -2px 5px #111;
+  height: 90px;
 }
 
 #left-sidenav {
@@ -94,8 +88,14 @@ md-progress-circular path {
 }
 
 #right-sidenav {
-  width: 450px;
+  z-index: 9;
+  max-width: 500px;
+  width: 500px;
+  top: 36px;
+  bottom: 75px;
   background-color: #222;
+  overflow-y: scroll;
+  overflow-x: none;
 }
 
 .menu-item {
@@ -104,13 +104,13 @@ md-progress-circular path {
 
 .menu-icon {
   color: var(--main-color) !important;
-  font-size: 35px !important;
-  width: 35px !important;
-  height: 35px !important;
+  font-size: 25px !important;
+  width: 25px !important;
+  height: 25px !important;
 }
 
 .menu-text {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .timer-text {
@@ -333,10 +333,6 @@ md-toast {
 /* media queries for left navigation menu */
 @media screen and (max-width: 960px) {
   .menu-text {
-    display: none;
-  }
-
-  .menu-divider {
     display: none;
   }
 
