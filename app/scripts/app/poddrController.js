@@ -74,12 +74,13 @@ var app = angular
         }
         var html = document.getElementsByTagName("html")[0];
         html.style.cssText = "--main-color: " + color;
-        log.info("Loaded CSS color variable.");
+        log.info("Loaded CSS color variable (" + color + ").");
       });
     };
 
     //check if update is available
     var checkUpdates = function() {
+      log.info("Checking for updates...");
       $http
         .get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json", {timeout: 10000})
         .then(function(response) {

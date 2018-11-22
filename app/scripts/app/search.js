@@ -73,7 +73,7 @@ angular
             angular.forEach($scope.results, function(result){
               getDescription(result);
             });
-            log.info("Found " + $scope.results.length + " matches.");
+            log.info("Found " + $scope.results.length + " matches for " + $scope.query);
             if ($scope.results.length == 0) {
               $scope.isEmpty = true;
             }
