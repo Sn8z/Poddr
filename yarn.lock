@@ -1482,11 +1482,6 @@ map-obj@^1.0.0, map-obj@^1.0.1:
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
   integrity sha1-2TPOuSBdgr3PSIb2dCvcK03qFG0=
 
-material-design-icons-iconfont@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/material-design-icons-iconfont/-/material-design-icons-iconfont-4.0.2.tgz#1671f6b7e9f4a58911997c4e0b964a520c059ec2"
-  integrity sha512-BYAtSuiD8EHlLD1TEzNc++KpRmfI5Wn6peBK+fsQfDBzxSbJg3SZ+ALXM+DAJ9ogSLjdmf4DG+6WGFkZABiIqA==
-
 mem@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/mem/-/mem-4.0.0.tgz#6437690d9471678f6cc83659c00cbafcd6b0cdaf"

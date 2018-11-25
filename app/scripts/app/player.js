@@ -238,7 +238,6 @@ angular
 
     function togglePlay() {
       log.info("Toggle Play/Pause.");
-      $window.document.getElementById("play-btn").blur();
       if (player.src) {
         if (player.paused) {
           player.play();

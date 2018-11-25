@@ -2,7 +2,6 @@
   <div class="row" layout="row">
     <form flex ng-submit="doSearch()">
       <md-input-container class="md-block" class="box1">
-        <md-icon md-font-library="material-icons">search</md-icon>
         <input id="search-input" ng-model="query" type="text" placeholder="Search..." />
       </md-input-container>
     </form>
@@ -20,11 +19,11 @@
           {{ ::podcast.description }}
         </p>
       </div>
-      <md-button class="md-secondary md-warn md-icon-button icon-btn" ng-if="!isFavourite(podcast.trackId.toString())" tabindex="-1">
-        <md-icon md-font-library="material-icons" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)">
+      <md-button class="md-secondary md-warn md-icon-button icon-btn" ng-if="!isFavourite(podcast.trackId.toString())"
+        tabindex="-1">
+        <i class="far fa-heart" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)">
           <md-tooltip md-direction="top" md-delay="250">Add to favourites</md-tooltip>
-          favorite
-        </md-icon>
+        </i>
       </md-button>
       <md-divider></md-divider>
     </md-list-item>

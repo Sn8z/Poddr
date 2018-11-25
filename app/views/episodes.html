@@ -1,6 +1,6 @@
 <div ng-controller="EpisodesController">
   <div class="row">
-    <md-icon md-font-library="material-icons" ng-click="closeSidenav()" style="cursor:pointer;padding:10px;">close</md-icon>
+    <i class="fas fa-times" ng-click="closeSidenav()" style="cursor:pointer;padding:10px;"></i>
   </div>
   <div class="row" layout="row" layout-align="center center">
     <img ng-src="{{ podcastCover || 'images/album_cover.png' }}" style="width:150px;height:150px;box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);" />
@@ -20,7 +20,7 @@
           </md-input-container>
         </div>
         <div flex="15" layout="row" layout-align="center center">
-          <md-icon md-font-library="material-icons" ng-click="toggleOrderBy()" style="cursor:pointer;">sort</md-icon>
+          <i class="fas fa-sort" ng-click="toggleOrderBy()" style="cursor:pointer;"></i>
         </div>
       </div>
     </md-list-item>
@@ -32,7 +32,7 @@
             <a href="#" style="color:white;text-decoration:none" tabindex="-1">{{ episode.title }}</a>
           </div>
           <div>
-            <md-icon class="played-icon" ng-if="isPlayed(episode.guid)" md-font-library="material-icons">done</md-icon>
+            <i class="fas fa-check played-icon" ng-if="isPlayed(episode.guid)"></i>
           </div>
         </div>
         <div class="row" layout="row" layout-align="center center">

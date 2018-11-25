@@ -39,12 +39,13 @@ body {
 #max-btn,
 #close-btn {
   cursor: pointer;
-  width: auto;
+  width: 20px;
   height: 35px;
   line-height: 35px;
   color: #aaa;
   padding-left: 5px;
   padding-right: 5px;
+  text-align: center;
 }
 
 #min-btn:hover,
@@ -61,7 +62,7 @@ md-progress-circular path {
 }
 
 .box2,
-.box3 {
+.player {
   display: flex;
   box-sizing: border-box;
   min-width: 100%;
@@ -77,7 +78,7 @@ md-progress-circular path {
   flex: 1 1 100%;
 }
 
-.box3 {
+.player {
   z-index: 10;
   background: #151515;
   height: 90px;
@@ -228,19 +229,19 @@ md-dialog-content {
 .media-btn {
   cursor: pointer;
   color: var(--main-color) !important;
-  font-size: 30px;
-  width: 30px;
-  height: 30px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
   user-select: none;
   outline: 0;
 }
 
-#play-btn {
+#play-btn, #pause-btn {
   cursor: pointer;
   color: var(--main-color) !important;
-  font-size: 40px;
-  width: 40px;
-  height: 40px;
+  font-size: 45px;
+  width: 45px;
+  height: 45px;
   user-select: none;
   outline: 0;
 }

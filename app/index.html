@@ -5,8 +5,9 @@
   <title>Poddr</title>
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans|Rubik" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="../node_modules/material-design-icons-iconfont/dist/material-design-icons.css">
 
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+    crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="../node_modules/angular-material/angular-material.css">
   <link rel="stylesheet" type="text/css" href="styles/style.css">
   <link rel="stylesheet" type="text/css" href="styles/scrollbar.css">
@@ -33,9 +34,9 @@
 <body layout="column" ng-controller="PoddrController" ng-init="init()" style="overflow-x:hidden;" ng-cloak>
   <div id="title-bar" md-whiteframe="8">
     <div id="title-bar-btns">
-      <md-icon id="min-btn" md-font-library="material-icons">remove</md-icon>
-      <md-icon id="max-btn" md-font-library="material-icons">crop_square</md-icon>
-      <md-icon id="close-btn" md-font-library="material-icons">close</md-icon>
+      <i id="min-btn" class="far fa-window-minimize"></i>
+      <i id="max-btn" class="far fa-square"></i>
+      <i id="close-btn" class="fas fa-times"></i>
     </div>
   </div>
 
@@ -44,7 +45,7 @@
       <md-list class="md-dense" md-no-ink style="padding:0;width: 100%;">
         <md-list-item class="menu-item" id="toplist-item" ng-click="changeView('podcasts')">
           <md-item-content class="menu-item-content" layout="row" layout-align="center center">
-            <md-icon class="menu-icon" md-font-library="material-icons">whatshot</md-icon>
+            <i class="fas fa-fire menu-icon"></i>
             <div class="inset menu-text">
               Toplists
             </div>
@@ -53,7 +54,7 @@
 
         <md-list-item class="menu-item" id="search-item" ng-click="changeView('search')">
           <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
-            <md-icon class="menu-icon" md-font-library="material-icons">search</md-icon>
+            <i class="fas fa-search menu-icon"></i>
             <div class="inset menu-text">
               Search
             </div>
@@ -62,7 +63,7 @@
 
         <md-list-item class="menu-item" id="favourite-item" ng-click="changeView('favourites')">
           <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
-            <md-icon class="menu-icon" md-font-library="material-icons">favorite_border</md-icon>
+            <i class="far fa-heart menu-icon"></i>
             <div class="inset menu-text">
               Favourites
             </div>
@@ -71,7 +72,7 @@
 
         <md-list-item class="menu-item" id="settings-item" ng-click="changeView('settings')">
           <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
-            <md-icon class="menu-icon" md-font-library="material-icons">settings</md-icon>
+            <i class="fas fa-cog menu-icon"></i>
             <div class="inset menu-text">
               Settings
             </div>
@@ -105,7 +106,7 @@
       </md-sidenav>
 
       <!-- Player -->
-      <div class="box3" layout="column" ng-controller="PlayerController">
+      <div class="player" layout="column" ng-controller="PlayerController">
         <div class="row">
           <div id="progress">
             <div id="bar" ng-style="{'width':barWidth + '%'}"></div>
@@ -113,14 +114,14 @@
         </div>
         <div class="row" layout="row" style="height:100%">
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon class="media-btn" md-font-library="material-icons" ng-click="changePlayerTime(-10)" tabindex="-1">replay_10</md-icon>
+            <i class="fas fa-backward media-btn" ng-click="changePlayerTime(-10)" tabindex="-1"></i>
           </div>
           <div layout="row" layout-align="center center">
-            <md-icon id="play-btn" md-font-library="material-icons" ng-click="togglePlay()" tabindex="-1">{{
-              isPlaying() ? 'pause_circle_outline' : 'play_circle_outline' ;}}</md-icon>
+            <i id="play-btn" class="far fa-play-circle" ng-if="!isPlaying()" ng-click="togglePlay()" tabindex="-1"></i>
+            <i id="pause-btn" class="far fa-pause-circle" ng-if="isPlaying()" ng-click="togglePlay()" tabindex="-1"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon class="media-btn" md-font-library="material-icons" ng-click="changePlayerTime(10)" tabindex="-1">forward_10</md-icon>
+            <i class="fas fa-forward media-btn" ng-click="changePlayerTime(10)" tabindex="-1"></i>
           </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
             <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastCover)"
@@ -136,17 +137,17 @@
             <md-progress-circular ng-if="isLoading" md-mode="indeterminate" md-diameter="25"></md-progress-circular>
           </div>
           <div flex="5" layout="row" layout-align="center center" ng-if="!isPlayerFavourite()">
-            <md-icon class="fav-btn" ng-click="setFavourite()" md-font-library="material-icons">favorite_border</md-icon>
+            <i class="far fa-heart fav-btn" ng-click="setFavourite()"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon class="desc-btn" ng-click="showDescription(playerService.currentlyPlaying, playerService.podcastDescription | episodeDesc)"
-              md-font-library="material-icons">info</md-icon>
+            <i class="fas fa-info-circle desc-btn" ng-click="showDescription(playerService.currentlyPlaying, playerService.podcastDescription | episodeDesc)"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon id="toggle-btn" ng-click="toggleSidebar()" md-font-library="material-icons">view_headline</md-icon>
+            <i id="toggle-btn" class="fas fa-bars" ng-click="toggleSidebar()"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <md-icon id="volume-btn" md-font-library="material-icons">{{ isMuted() ? 'volume_off' : 'volume_up' ; }}</md-icon>
+            <i id="volume-btn" class="fas fa-volume-up" ng-if="!isMuted()"></i>
+            <i id="volume-btn" class="fas fa-volume-off" ng-if="isMuted()"></i>
           </div>
           <md-slider-container flex="10">
             <md-slider id="volume-slider" onmouseup="document.activeElement.blur()" ng-model="volume" ng-change="setVolume()"

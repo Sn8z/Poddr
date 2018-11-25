@@ -19,10 +19,9 @@
             {{ ::favourite.title }}
           </div>
           <div flex="10">
-            <md-icon class="remove-btn" md-font-library="material-icons" ng-click="removeFavourite(favourite.id)">
+            <i class="fas fa-times remove-btn" ng-click="removeFavourite(favourite.id)">
               <md-tooltip md-direction="top" md-delay="250">Remove favourite</md-tooltip>
-              close
-            </md-icon>
+            </i>
           </div>
         </div>
       </div>
