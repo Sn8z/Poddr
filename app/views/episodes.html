@@ -16,7 +16,7 @@
       </md-input-container>
     </div>
     <div flex="15" layout="row" layout-align="center center">
-      <i class="fas fa-sort" ng-click="toggleOrderBy()" style="cursor:pointer;"></i>
+      <i ng-class="{true:'fas fa-long-arrow-alt-up', false:'fas fa-long-arrow-alt-down'}[toggleOrder]" ng-click="toggleOrderBy()" style="cursor:pointer;"></i>
     </div>
   </div>
   <div class="row" layout="row" layout-align="center center">

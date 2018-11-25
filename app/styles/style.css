@@ -236,7 +236,7 @@ md-dialog-content {
   outline: 0;
 }
 
-#play-btn, #pause-btn {
+#play-btn {
   cursor: pointer;
   color: var(--main-color) !important;
   font-size: 45px;

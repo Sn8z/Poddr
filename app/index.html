@@ -114,8 +114,8 @@
             <i class="fas fa-backward media-btn" ng-click="changePlayerTime(-10)" tabindex="-1"></i>
           </div>
           <div layout="row" layout-align="center center">
-            <i id="play-btn" class="far fa-play-circle" ng-if="!isPlaying()" ng-click="togglePlay()" tabindex="-1"></i>
-            <i id="pause-btn" class="far fa-pause-circle" ng-if="isPlaying()" ng-click="togglePlay()" tabindex="-1"></i>
+            <i id="play-btn" ng-class="{true:'far fa-pause-circle', false:'far fa-play-circle'}[isPlaying()]" ng-click="togglePlay()"
+              tabindex="-1"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
             <i class="fas fa-forward media-btn" ng-click="changePlayerTime(10)" tabindex="-1"></i>
@@ -143,8 +143,7 @@
             <i id="toggle-btn" class="fas fa-bars" ng-click="toggleSidebar()"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <i id="volume-btn" class="fas fa-volume-up" ng-if="!isMuted()"></i>
-            <i id="volume-btn" class="fas fa-volume-off" ng-if="isMuted()"></i>
+            <i id="volume-btn" ng-class="{true:'fas fa-volume-off', false:'fas fa-volume-up'}[isMuted()]"></i>
           </div>
           <md-slider-container flex="10">
             <md-slider id="volume-slider" onmouseup="document.activeElement.blur()" ng-model="volume" ng-change="setVolume()"
