@@ -8,22 +8,21 @@
   <div class="row" layout="row" layout-align="center center">
     <h2 flex md-truncate style="text-align:center;">{{ episodeTitle || 'Podcast' }}</h2>
   </div>
+  <div class="row" layout="row">
+    <div flex="5"></div>
+    <div flex="80">
+      <md-input-container class="md-block" style="margin: 0">
+        <input ng-model="query" ng-change="filterEpisodes()" type="text" placeholder="Filter by" />
+      </md-input-container>
+    </div>
+    <div flex="15" layout="row" layout-align="center center">
+      <i class="fas fa-sort" ng-click="toggleOrderBy()" style="cursor:pointer;"></i>
+    </div>
+  </div>
   <div class="row" layout="row" layout-align="center center">
     <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-if="isLoading"></md-progress-circular>
   </div>
   <md-list>
-    <md-list-item>
-      <div class="row" layout="row" style="width: 100%">
-        <div flex="85">
-          <md-input-container class="md-block" style="margin: 0">
-            <input ng-model="query" ng-change="filterEpisodes()" type="text" placeholder="Filter by" />
-          </md-input-container>
-        </div>
-        <div flex="15" layout="row" layout-align="center center">
-          <i class="fas fa-sort" ng-click="toggleOrderBy()" style="cursor:pointer;"></i>
-        </div>
-      </div>
-    </md-list-item>
     <md-list-item class="episode-item" ng-repeat="episode in episodes | limitTo:limit track by $index" layout-margin>
       <div layout="column" ng-click='playPodcast(episode, albumCover)' style="width:100%">
         <md-tooltip md-direction="left" md-delay="250">{{ episode.description | episodeDesc }}</md-tooltip>
