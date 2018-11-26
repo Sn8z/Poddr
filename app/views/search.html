@@ -1,9 +1,7 @@
-<div id="podcastGrid" ng-controller="SearchController" layout-padding ng-cloak>
-  <div class="row" layout="row">
+<div ng-controller="SearchController" layout-padding ng-cloak>
+  <div class="row" layout="row" style="padding-right:25px;">
     <form flex ng-submit="doSearch()">
-      <md-input-container class="md-block" class="box1">
-        <input id="search-input" ng-model="query" type="text" placeholder="Search..." />
-      </md-input-container>
+      <input id="search-input" ng-model="query" type="text" placeholder="Search..." />
     </form>
   </div>
   <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-if="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>

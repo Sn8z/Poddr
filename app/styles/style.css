@@ -111,7 +111,13 @@ md-progress-circular path {
 }
 
 .menu-text {
-  font-size: 14px;
+  font-size: 15px;
+}
+
+.fa-icon {
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 18px !important;
 }
 
 .timer-text {

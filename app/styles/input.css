@@ -1,0 +1,24 @@
+input[type=text] {
+    width: 100%;
+    margin-bottom: 15px;
+    background-color: #111;
+    border-radius: 7px;
+    padding: 7px;
+    font-size: 30px;
+    color: white;
+    border: 0;
+    box-shadow: 0px 3px 5px #000;
+    border-bottom: 1px solid #333;
+}
+
+input[type=text]:focus {
+    border-bottom: 1px solid var(--main-color);
+    outline: none !important;
+}
+
+#episode-filter-input {
+    margin: 0 !important;
+    padding: 4px !important;
+    font-size: 18px !important;
+    box-shadow: none !important;
+}
