@@ -141,7 +141,7 @@
             <i class="fas fa-info-circle fa-icon desc-btn" ng-click="showDescription(playerService.currentlyPlaying, playerService.podcastDescription | episodeDesc)"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <i id="toggle-btn" class="fas fa-bars fa-icon" ng-click="toggleSidebar()"></i>
+            <i id="toggle-btn" ng-class="{true:'fas fa-times fa-icon', false: 'fas fa-bars fa-icon'}[episodesNav.isOpen()]" ng-click="toggleSidebar()"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
             <i id="volume-btn" ng-class="{true:'fas fa-volume-off fa-icon', false:'fas fa-volume-up fa-icon'}[isMuted()]"></i>

@@ -14,6 +14,7 @@ angular
     var log = require('electron-log');
     $scope.amount = 50;
     $scope.podcasts = [];
+    $scope.layout = "grid";
 
     $scope.genres = GenreService.genres;
     $scope.genre = 26;

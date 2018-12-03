@@ -4,8 +4,8 @@ angular
     $scope,
     $rootScope,
     $mdDialog,
+    $mdSidenav,
     PlayerService,
-    $window,
     $timeout,
     ToastService,
     FavouriteService,
@@ -15,6 +15,8 @@ angular
     var storage = require("electron-json-storage");
     var ipc = require("electron").ipcRenderer;
     var log = require("electron-log");
+
+    $scope.episodesNav = $mdSidenav("right");
 
     var mprisPlayer;
     if (process.platform == "linux") {

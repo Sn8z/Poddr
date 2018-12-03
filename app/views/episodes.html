@@ -3,7 +3,7 @@
     <i class="fas fa-times" ng-click="closeSidenav()" style="cursor:pointer;padding:10px;"></i>
   </div>
   <div class="row" layout="row" layout-align="center center">
-    <img ng-src="{{ podcastCover || 'images/album_cover.png' }}" style="width:150px;height:150px;box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);" />
+    <img ng-src="{{ podcastCover || 'images/album_cover.png' }}" style="width:150px;height:150px;box-shadow: 0px 0px 8px 1px #000;border-radius: 5px;" />
   </div>
   <div class="row" layout="row" layout-align="center center">
     <h2 flex md-truncate style="text-align:center;">{{ episodeTitle || 'Podcast' }}</h2>
