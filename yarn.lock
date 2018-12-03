@@ -756,10 +756,10 @@ electron-download@^4.1.0:
     semver "^5.4.1"
     sumchecker "^2.0.2"
 
-electron-json-storage@^4.1.4:
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/electron-json-storage/-/electron-json-storage-4.1.4.tgz#5b2dda8e81e73b0aa473d12af3eb3052a063c78a"
-  integrity sha512-LxlpewrNo50xnueaH7JsFD1o3OImq6zV4xbKbu0tFjNHsHPLo2gj4ZmnFizEQrlVFOlA/uNQhuhlaLUXQeMVqg==
+electron-json-storage@^4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/electron-json-storage/-/electron-json-storage-4.1.5.tgz#72b0e15efe2e04cc42542e3408986c2be9e2b906"
+  integrity sha512-7Ptks1xqvXl+iGfrsY3lsVLjO0ybMceRCGJBRTHX5ci07p+gUi7dtOws6y/2nDRjbUGrapScms9ovV1LP8I4TQ==
   dependencies:
     async "^2.0.0"
     lockfile "^1.0.4"
