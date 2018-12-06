@@ -69,7 +69,7 @@ md-progress-circular path {
 }
 
 .box2 {
-  background: linear-gradient(to right, #222, #111);
+  background: #252525;
   overflow-y: scroll;
   overflow-x: none;
   width: 100%;

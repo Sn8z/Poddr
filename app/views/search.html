@@ -9,17 +9,18 @@
     <h3 style="color:white">No results</h3>
   </div>
   <div class="row" layout="row" layout-wrap>
-    <div class="grid-item" flex="100" layout="row" ng-repeat="podcast in results">
-      <div layout="row" style="background-color:#111;padding: 15px;width:100%;height:auto;border-radius: 5px;">
+    <div flex="100" layout="row" ng-repeat="podcast in results">
+      <div layout="row" style="background-color:#111;margin-top:5px;margin-bottom:5px;padding:10px;width:100%;height:auto;border-radius:5px;">
         <div flex-xs="20" flex-sm="20" flex-md="10" flex-lg="10" flex-xl="10">
           <img style="width:100%;height:auto;opacity:0;border-radius: 5px;cursor: pointer;" ng-click="showEpisodes(podcast.trackId, podcast.trackName, podcast.artworkUrl60 | itunesPodcastCover)"
             ng-src="{{ ::podcast.artworkUrl60 | itunesPodcastCover }}" onload="this.style.opacity = 1" />
         </div>
         <div flex style="padding-left:15px;">
           <h3 style="cursor:pointer;" ng-click="showEpisodes(podcast.trackId, podcast.trackName, podcast.artworkUrl60 | itunesPodcastCover)">
-            {{ ::podcast.artistName }}
+            {{ ::podcast.trackName }}
           </h3>
-          <p style="color:#777;font-size:12px;">{{ ::podcast.description }}</p>
+          <p style="color:#aaa;font-size:14px;">{{ ::podcast.artistName }}</p>
+          <p style="color:#666;font-size:12px;">{{ ::podcast.description }}</p>
         </div>
         <div flex="10" layout="row" layout-align="center center">
           <i class="far fa-heart fav-btn fa-icon" ng-if="!isFavourite(podcast.trackId.toString())" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)"></i>
@@ -27,28 +28,4 @@
       </div>
     </div>
   </div>
-
-  <!--
-  <md-list>
-    <md-list-item ng-if="isEmpty">
-      <h3 style="color:white">No results</h3>
-    </md-list-item>
-    <md-list-item ng-repeat="podcast in results" class="md-3-line md-long-text" ng-click="showEpisodes(podcast.trackId, podcast.trackName, podcast.artworkUrl60 | itunesPodcastCover)">
-      <img ng-src="{{ ::podcast.artworkUrl60 | itunesPodcastCover }}" onload="this.style.opacity = 1" class="podcast-img-small" />
-      <div class="md-list-item-text">
-        <h3>{{ ::podcast.artistName }}</h3>
-        <p>
-          {{ ::podcast.description }}
-        </p>
-      </div>
-      <md-button class="md-secondary md-warn md-icon-button icon-btn" ng-if="!isFavourite(podcast.trackId.toString())"
-        tabindex="-1">
-        <i class="far fa-heart" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)">
-          <md-tooltip md-direction="top" md-delay="250">Add to favourites</md-tooltip>
-        </i>
-      </md-button>
-      <md-divider></md-divider>
-    </md-list-item>
-  </md-list>
--->
 </div>

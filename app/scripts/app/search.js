@@ -4,6 +4,7 @@ angular
     $scope,
     $http,
     $rootScope,
+    $filter,
     $window,
     $timeout,
     FavouriteService,
@@ -35,7 +36,7 @@ angular
                 podcast.description = "No description available";
               } else {
                 if(data.description.long !== null && data.description.long.length){
-                  podcast.description = data.description.long;
+                  podcast.description = $filter("episodeDesc")(data.description.long);
                 } else {
                   podcast.description = "No description available";
                 }

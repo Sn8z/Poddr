@@ -52,8 +52,8 @@
     </div>
     <div ng-switch-when="list" style="width:100%">
       <div class="row" layout="row" layout-wrap>
-        <div class="grid-item" flex="100" layout="row" ng-repeat="podcast in podcasts">
-          <div layout="row" style="background-color:#111;padding: 15px;width:100%;height: auto;border-radius: 5px;">
+        <div flex="100" layout="row" ng-repeat="podcast in podcasts">
+          <div layout="row" style="background-color:#111;margin-top:5px;margin-bottom:5px;padding: 15px;width:100%;height: auto;border-radius: 5px;">
             <div flex-xs="20" flex-sm="20" flex-md="10" flex-lg="10" flex-xl="10">
               <img style="width:100%;height:auto;opacity:0;border-radius: 5px;cursor: pointer;" ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover )"
                 ng-src="{{ ::podcast['im:image'][1]['label'] | itunesPodcastCover }}" onload="this.style.opacity = 1" />
