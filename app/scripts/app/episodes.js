@@ -53,7 +53,7 @@ angular
             .then(
               function successCallback(response) {
                 log.info("Found iTunes data.");
-                log.info("Getting podcastfeed...");
+                log.info("Getting podcastfeed: " + response.data.results[0].feedUrl);
                 $http
                   .get(response.data.results[0].feedUrl)
                   .then(
