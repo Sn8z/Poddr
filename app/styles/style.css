@@ -169,7 +169,8 @@ md-switch.md-checked .md-ink-ripple {
 /* Dialog */
 .md-button.md-default-theme.md-primary,
 .md-button.md-primary {
-  color: var(--main-color) !important;
+  background-color: var(--main-color) !important;
+  color: white !important;
 }
 
 /* input */
