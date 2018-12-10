@@ -20,7 +20,7 @@ body {
   user-select: none;
   -webkit-app-region: drag;
   height: 35px;
-  background: #252525;
+  background: #151515;
   padding: none;
   margin: 0px;
   border-bottom: 1px solid var(--main-color);
@@ -80,12 +80,13 @@ md-progress-circular path {
 
 .player {
   z-index: 10;
-  background: #151515;
+  background: #111;
   height: 90px;
 }
 
 #left-sidenav {
-  background-color: rgba(15, 15, 15, 0.99);
+  background: #111;
+  z-index: 5;
 }
 
 #right-sidenav {
@@ -94,9 +95,18 @@ md-progress-circular path {
   width: 500px;
   top: 36px;
   bottom: 75px;
-  background-color: #222;
+  background-color: #151515;
   overflow-y: scroll;
   overflow-x: none;
+}
+
+/* backdrop when opening sidenav */
+md-backdrop.md-sidenav-backdrop {
+  z-index: 7 !important;
+}
+
+md-backdrop.md-dialog-backdrop {
+  z-index: 20 !important;
 }
 
 .menu-item {
@@ -125,6 +135,22 @@ md-progress-circular path {
   font-size: 14px;
   float: right;
   font-family: "Open Sans", sans-serif;
+}
+
+/* kbd tag styling */
+kbd {
+  padding:3px;
+  border:1px solid #000;
+  font-size:12px;
+  background-color:#111;
+  color:#aaa;
+  box-shadow:0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #222 inset;
+  border-radius:3px;
+  display:inline-block;
+  margin:0px;
+  text-shadow:0 1px 0 #000;
+  line-height:1.4;
+  white-space:nowrap;
 }
 
 /* switch */
@@ -229,6 +255,17 @@ md-dialog-content {
   padding-bottom: 8px !important;
   padding-left: 5px !important;
   padding-right: 5px !important;
+}
+
+.podcast-list-item {
+  background-color:#151515;
+  margin-left:15px;
+  margin-top:5px;
+  margin-bottom:10px;
+  padding:15px;
+  width:100%;
+  height:auto;
+  border-radius:5px;
 }
 
 /* Player */

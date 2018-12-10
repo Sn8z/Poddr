@@ -1,16 +1,16 @@
 <div ng-controller="SearchController" layout-padding ng-cloak>
-  <div class="row" layout="row" style="padding-right:25px;">
+  <div class="row" layout="row" style="padding-left:15px;padding-right:25px;">
     <form flex ng-submit="doSearch()">
       <input id="search-input" ng-model="query" type="text" placeholder="Search..." />
     </form>
   </div>
-  <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-if="isLoading" style="margin-left:50%;margin-right:50%;"></md-progress-circular>
+  <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-if="isLoading" style="margin-left:50%;margin-right:50%"></md-progress-circular>
   <div class="row" ng-if="isEmpty">
     <h3 style="color:white">No results</h3>
   </div>
   <div class="row" layout="row" layout-wrap>
     <div flex="100" layout="row" ng-repeat="podcast in results">
-      <div layout="row" style="background-color:#111;margin-top:5px;margin-bottom:5px;padding:10px;width:100%;height:auto;border-radius:5px;">
+      <div class="podcast-list-item" layout="row">
         <div flex-xs="20" flex-sm="20" flex-md="10" flex-lg="10" flex-xl="10">
           <img style="width:100%;height:auto;opacity:0;border-radius: 5px;cursor: pointer;" ng-click="showEpisodes(podcast.trackId, podcast.trackName, podcast.artworkUrl60 | itunesPodcastCover)"
             ng-src="{{ ::podcast.artworkUrl60 | itunesPodcastCover }}" onload="this.style.opacity = 1" />
