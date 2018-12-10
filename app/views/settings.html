@@ -15,6 +15,15 @@
           </md-select>
         </md-input-container>
       </div>
+      <div class="row" layout="row">
+        <md-input-container flex>
+          <label>Default layout</label>
+          <md-select name="type" ng-model="layout" ng-change="setLayout()">
+            <md-option value="grid"><i class="fas fa-th-large"> - Grid</i></md-option>
+            <md-option value="list"><i class="fas fa-th-list"> - List</i></md-option>
+          </md-select>
+        </md-input-container>
+      </div>
       <div class="row" layout="column">
         <md-input-container>
           <label>Color</label>

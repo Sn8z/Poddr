@@ -14,13 +14,26 @@ angular
     var log = require('electron-log');
     $scope.amount = 50;
     $scope.podcasts = [];
-    $scope.layout = "grid";
 
     $scope.genres = GenreService.genres;
     $scope.genre = 26;
 
     RegionService.regions(function (response) {
       $scope.countries = response;
+    });
+
+    storage.get("layout", function (error, data) {
+      if (error) {
+        log.error(error);
+        $scope.layout = "grid";
+      } else {
+        if (data.value) {
+          $scope.layout = data.value;
+        } else {
+          $scope.layout = "grid";
+        }
+      }
+      $scope.$digest();
     });
 
     storage.get("region", function (error, data) {

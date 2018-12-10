@@ -152,6 +152,7 @@ function FavouriteFactory($q) {
       delete data.theme;
       delete data.playerState;
       delete data.prevPlayed;
+      delete data.layout;
       q.resolve(data);
     });
     return q.promise;
