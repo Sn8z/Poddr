@@ -45,28 +45,50 @@ angular
       $scope.$digest();
     });
 
+    function changeColor(color) {
+      var html = document.getElementsByTagName("html")[0];
+      html.style.cssText = "--main-color: " + color;
+      storage.set("theme", { value: color }, function (error) {
+        if (error) {
+          log.error(error);
+          ToastService.errorToast("Couldn't change color to " + color);
+        } else {
+          log.info("Color set to " + color);
+        }
+      });
+    }
+
+    const pickr = Pickr.create({
+      el: '.clr-pickr',
+      default: 'fff',
+      defaultRepresentation: 'HEX',
+      components: {
+        preview: true,
+        opacity: false,
+        hue: true,
+        interaction: {
+          input: true,
+          save: true
+        }
+      },
+      strings: {
+        save: 'Set color'
+      },
+      onSave(hsva) {
+        changeColor(hsva.toHEX().toString());
+      }
+    });
+
     storage.get("theme", function (error, data) {
       if (!error && data.value) {
-        $scope.color = data.value;
+        pickr.setColor(data.value);
       } else {
-        $scope.color = "#ff9900";
+        pickr.setColor("#ff9900");
       }
-      $scope.$digest();
     });
 
     $scope.openURL = function (url) {
       require("electron").shell.openExternal(url);
-    };
-
-    $scope.changeColor = function () {
-      var html = document.getElementsByTagName("html")[0];
-      html.style.cssText = "--main-color: " + $scope.color;
-      storage.set("theme", { value: $scope.color }, function (error) {
-        if (error) {
-          log.error(error);
-          ToastService.errorToast("Couldn't change color.");
-        }
-      });
     };
 
     $scope.setRegion = function () {

@@ -10,8 +10,10 @@
   <link rel="stylesheet" type="text/css" href="styles/scrollbar.css">
   <link rel="stylesheet" type="text/css" href="styles/tooltip.css">
   <link rel="stylesheet" type="text/css" href="styles/input.css">
+  <link rel="stylesheet" type="text/css" href="styles/custom-pickr.css">
   <link rel="stylesheet" type="text/css" href="styles/fontawesome.min.css">
-
+  <link rel="stylesheet" href="../node_modules/pickr-widget/dist/pickr.min.css" />
+  <script src="../node_modules/pickr-widget/dist/pickr.min.js"></script>
   <script type="text/javascript" src="../node_modules/angular/angular.min.js"></script>
   <script type="text/javascript" src="../node_modules/angular-aria/angular-aria.min.js"></script>
   <script type="text/javascript" src="../node_modules/angular-animate/angular-animate.min.js"></script>
@@ -141,7 +143,8 @@
             <i class="fas fa-info-circle fa-icon desc-btn" ng-click="showDescription(playerService.currentlyPlaying, playerService.podcastDescription | episodeDesc)"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <i id="toggle-btn" ng-class="{true:'fas fa-times fa-icon', false: 'fas fa-bars fa-icon'}[episodesNav.isOpen()]" ng-click="toggleSidebar()"></i>
+            <i id="toggle-btn" ng-class="{true:'fas fa-times fa-icon', false: 'fas fa-bars fa-icon'}[episodesNav.isOpen()]"
+              ng-click="toggleSidebar()"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
             <i id="volume-btn" ng-class="{true:'fas fa-volume-off fa-icon', false:'fas fa-volume-up fa-icon'}[isMuted()]"></i>
