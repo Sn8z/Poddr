@@ -18,8 +18,11 @@
         ng-click="toggleOrderBy()" style="cursor:pointer;"></i>
     </div>
   </div>
-  <div class="row" layout="row" layout-align="center center">
-    <md-progress-circular md-mode="indeterminate" md-diameter="30" ng-if="isLoading" style="margin-top:20px;"></md-progress-circular>
+  <div class="row" layout="row" layout-align="center center" ng-if="isLoading">
+    <md-progress-circular md-mode="indeterminate" md-diameter="30" style="margin-top:20px;"></md-progress-circular>
+  </div>
+  <div class="row" layout="row" layout-align="center center" ng-if="episodes.length === 0 && !isLoading">
+    <p>No episodes</p>
   </div>
   <md-list>
     <md-list-item class="episode-item" ng-repeat="episode in episodes | limitTo:limit track by $index" layout-margin>
