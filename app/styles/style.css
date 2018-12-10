@@ -327,11 +327,11 @@ md-toast {
 }
 
 .md-toast-success .md-toast-content {
-  background-color: #252525 !important;
+  background-color: #444 !important;
 }
 
 .md-toast-error .md-toast-content {
-  background-color: red !important;
+  background-color: #ff0a0a !important;
 }
 
 #toggle-btn {
