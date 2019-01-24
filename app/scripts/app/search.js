@@ -24,7 +24,7 @@ angular
       $window.document.getElementById("search-input").focus();
     }, 50);
 
-    $scope.showEpisodes = $rootScope.fetchEpisodes;
+    $scope.showEpisodes = $rootScope.openEpisodesWithID;
 
     var getDescription = function(podcast){
       if(podcast.feedURL !== null && podcast.feedUrl.length){
@@ -85,7 +85,7 @@ angular
           });
       }
     };
-    $scope.setFavourite = FavouriteService.favourite;
+    $scope.setFavourite = FavouriteService.favouriteItunesId;
 
     $scope.favouriteList = FavouriteFactory.getList();
     $scope.isFavourite = function(id) {

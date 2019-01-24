@@ -23,7 +23,7 @@
           <p style="color:#666;font-size:12px;">{{ ::podcast.description }}</p>
         </div>
         <div flex="10" layout="row" layout-align="center center">
-          <i class="far fa-heart fav-btn fa-icon" ng-if="!isFavourite(podcast.trackId.toString())" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName, podcast.artistName)"></i>
+          <i class="far fa-heart fav-btn fa-icon" ng-if="!isFavourite(podcast.trackName)" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName)"></i>
         </div>
       </div>
     </div>

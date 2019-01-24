@@ -10,7 +10,9 @@ angular
     FavouriteService,
     FavouriteFactory
   ) {
-    var storage = require("electron-json-storage");
+    //var storage = require("electron-json-storage");
+    const Store = require("electron-store");
+    const store = new Store();
     var log = require('electron-log');
     $scope.amount = 50;
     $scope.podcasts = [];
@@ -18,39 +20,14 @@ angular
     $scope.genres = GenreService.genres;
     $scope.genre = 26;
 
-    RegionService.regions(function (response) {
-      $scope.countries = response;
-    });
-
-    storage.get("layout", function (error, data) {
-      if (error) {
-        log.error(error);
-        $scope.layout = "grid";
-      } else {
-        if (data.value) {
-          $scope.layout = data.value;
-        } else {
-          $scope.layout = "grid";
-        }
-      }
+    $scope.layout = store.get("layout", "grid");
+    $scope.region = store.get("region", "us");
+    $scope.countries = [];
+    RegionService.regions(function (data) {
+      $scope.countries = data;
       $scope.$digest();
     });
-
-    storage.get("region", function (error, data) {
-      if (error) {
-        log.error(error);
-        $scope.region = "us";
-      } else {
-        if (data.value) {
-          $scope.region = data.value;
-        } else {
-          $scope.region = "us";
-        }
-      }
-      $scope.$apply();
-      $scope.getPodcasts();
-    });
-
+    
     $scope.getPodcasts = function () {
       log.info('Fetching podcasts...');
       $scope.podcasts = [];
@@ -63,11 +40,11 @@ angular
           "/genre=" +
           $scope.genre +
           "/json"
-        , {timeout: 20000})
+          , { timeout: 20000 })
         .then(
           function successCallback(response) {
             $scope.podcasts = response.data.feed.entry;
-            log.info('Found ' + $scope.podcasts.length + ' podcasts.');
+						log.info('Found ' + $scope.podcasts.length + ' podcasts.');
           },
           function errorCallback(error) {
             log.error(error);
@@ -76,13 +53,13 @@ angular
         );
     };
 
-    $scope.showEpisodes = $rootScope.fetchEpisodes;
+    $scope.getPodcasts();
 
-    $scope.setFavourite = FavouriteService.favourite;
+    $scope.showEpisodes = $rootScope.openEpisodesWithID;
+    $scope.setFavourite = FavouriteService.favouriteItunesId;
 
     $scope.favouriteList = FavouriteFactory.getList();
-    $scope.isFavourite = function (id) {
-      return $scope.favouriteList.keys.indexOf(id) !== -1;
-    }
-
+    $scope.isFavourite = function (title) {
+      return $scope.favouriteList.titles.indexOf(title) !== -1;
+    };
   });

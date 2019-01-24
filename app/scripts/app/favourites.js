@@ -7,12 +7,6 @@ angular
     FavouriteFactory
   ) {
     $scope.favourites = FavouriteFactory.getList();
-    $scope.showEpisodes = $rootScope.fetchEpisodes;
-    $scope.removeFavourite = function (id) {
-      FavouriteService.removeFavourite(id).then(function (response) {
-        if (response) {
-          delete $scope.favourites[id];
-        }
-      });
-    }
+    $scope.showEpisodes = $rootScope.openEpisodes;
+    $scope.removeFavourite = FavouriteService.removeFavourite;
   });

@@ -46,7 +46,7 @@
         <md-list-item class="menu-item" id="toplist-item" ng-click="changeView('podcasts')">
           <md-item-content class="menu-item-content" layout="row" layout-align="center center">
             <i class="fas fa-fire menu-icon"></i>
-            <div class="inset menu-text">
+            <div class="inset menu-text" ng-class="{ active: mainContent === 'podcasts' }">
               Toplists
             </div>
           </md-item-content>
@@ -55,7 +55,7 @@
         <md-list-item class="menu-item" id="search-item" ng-click="changeView('search')">
           <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
             <i class="fas fa-search menu-icon"></i>
-            <div class="inset menu-text">
+            <div class="inset menu-text" ng-class="{ active: mainContent === 'search' }">
               Search
             </div>
           </md-item-content>
@@ -64,7 +64,7 @@
         <md-list-item class="menu-item" id="favourite-item" ng-click="changeView('favourites')">
           <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
             <i class="far fa-heart menu-icon"></i>
-            <div class="inset menu-text">
+            <div class="inset menu-text" ng-class="{ active: mainContent === 'favourites' }">
               Favourites
             </div>
           </md-item-content>
@@ -73,7 +73,7 @@
         <md-list-item class="menu-item" id="settings-item" ng-click="changeView('settings')">
           <md-item-content class="menu-item-content" md-ink-ripple layout="row" layout-align="center center">
             <i class="fas fa-cog menu-icon"></i>
-            <div class="inset menu-text">
+            <div class="inset menu-text" ng-class="{ active: mainContent === 'settings' }">
               Settings
             </div>
           </md-item-content>
@@ -124,9 +124,8 @@
             <i class="fas fa-forward media-btn" ng-click="changePlayerTime(10)" tabindex="-1"></i>
           </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
-            <a href ng-click="showEpisodes(playerService.podcastID, playerService.podcastArtist, playerService.podcastCover)"
-              style="color: white;text-decoration: none;">
-              {{ playerService.currentlyPlaying }}
+            <a style="color: white;text-decoration: none;">
+              {{ playerService.podcastEpisodeTitle }}
             </a>
             <span class="timer-text">{{ playerService.atTime | secondsToHHmmss }} / {{ playerService.podcastDuration |
               secondsToHHmmss
@@ -140,7 +139,7 @@
             <i class="far fa-heart fa-icon fav-btn" ng-click="setFavourite()"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
-            <i class="fas fa-info-circle fa-icon desc-btn" ng-click="showDescription(playerService.currentlyPlaying, playerService.podcastDescription | episodeDesc)"></i>
+            <i class="fas fa-info-circle fa-icon desc-btn" ng-click="showDescription(playerService.podcastTitle, playerService.podcastDescription | episodeDesc)"></i>
           </div>
           <div flex="5" layout="row" layout-align="center center">
             <i id="toggle-btn" ng-class="{true:'fas fa-times fa-icon', false: 'fas fa-bars fa-icon'}[episodesNav.isOpen()]"

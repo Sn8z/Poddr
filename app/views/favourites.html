@@ -10,16 +10,16 @@
     <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="favourite in favourites.all">
       <div class="podcast-frame">
         <div style="position:relative;width:100%;height:0;padding-top:100%;">
-          <img class="podcast-img" ng-click="showEpisodes(favourite.id, favourite.title, favourite.img)" ng-src="{{ ::favourite.img }}"
+          <img class="podcast-img" ng-click="showEpisodes(favourite.rss, favourite.title, favourite.img)" ng-src="{{ ::favourite.img }}"
             onload="this.style.opacity = 1" width="100%" height="100%" />
         </div>
         <div class="row podcast-title" layout="row" tabindex="-1">
-          <div md-truncate ng-click="showEpisodes(favourite.id, favourite.title, favourite.img)" flex>
+          <div md-truncate ng-click="showEpisodes(favourite.rss, favourite.title, favourite.img)" flex>
             <md-tooltip md-delay="250">{{ ::favourite.title }}</md-tooltip>
             {{ ::favourite.title }}
           </div>
           <div flex="10">
-            <i class="fas fa-times remove-btn" ng-click="removeFavourite(favourite.id)">
+            <i class="fas fa-times remove-btn" ng-click="removeFavourite(favourite.title)">
               <md-tooltip md-direction="top" md-delay="250">Remove favourite</md-tooltip>
             </i>
           </div>

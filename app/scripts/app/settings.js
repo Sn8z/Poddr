@@ -3,59 +3,31 @@ angular
   .controller("SettingsController", function (
     $scope,
     RegionService,
-    ToastService
+    $timeout
   ) {
-    var storage = require("electron-json-storage");
+    const Store = require("electron-store");
+    const store = new Store();
     var log = require("electron-log");
     var app = require("electron").remote.app;
+
     $scope.appVersion = app.getVersion();
-    $scope.appStorage = storage.getDataPath();
+    $scope.appStorage = app.getPath('userData');
     $scope.electronVersion = process.versions.electron;
     $scope.modKey = process.platform == "darwin" ? "Cmd" : "Ctrl";
 
-    RegionService.regions(function (response) {
-      $scope.countries = response;
-    });
-
-    storage.get("region", function (error, data) {
-      if (error) {
-        log.error(error);
-        $scope.region = "us";
-      } else {
-        if (data.value) {
-          $scope.region = data.value;
-        } else {
-          $scope.region = "us";
-        }
-      }
+    $scope.region = store.get("region", "us");
+    $scope.layout = store.get("layout", "grid");
+    $scope.countries = [];
+    RegionService.regions(function (data) {
+      $scope.countries = data;
       $scope.$digest();
     });
 
-    storage.get("layout", function (error, data) {
-      if (error) {
-        log.error(error);
-        $scope.layout = "grid";
-      } else {
-        if (data.value) {
-          $scope.layout = data.value;
-        } else {
-          $scope.layout = "grid";
-        }
-      }
-      $scope.$digest();
-    });
-
-    function changeColor(color) {
+    var changeColor = function (color) {
       var html = document.getElementsByTagName("html")[0];
       html.style.cssText = "--main-color: " + color;
-      storage.set("theme", { value: color }, function (error) {
-        if (error) {
-          log.error(error);
-          ToastService.errorToast("Couldn't change color to " + color);
-        } else {
-          log.info("Color set to " + color);
-        }
-      });
+      store.set("color", color);
+      log.info("Color set to " + color);
     }
 
     const pickr = Pickr.create({
@@ -79,33 +51,19 @@ angular
       }
     });
 
-    storage.get("theme", function (error, data) {
-      if (!error && data.value) {
-        pickr.setColor(data.value);
-      } else {
-        pickr.setColor("#ff9900");
-      }
-    });
+    pickr.setColor(store.get("color", "#ff9900"));
 
     $scope.openURL = function (url) {
       require("electron").shell.openExternal(url);
     };
 
     $scope.setRegion = function () {
-      storage.set("region", { value: $scope.region }, function (error) {
-        if (error) {
-          log.error(error);
-          ToastService.errorToast("Couldn't change region.");
-        }
-      });
+      store.set("region", $scope.region);
+      log.info("Setting default region to: " + $scope.region);
     };
 
     $scope.setLayout = function () {
-      storage.set("layout", { value: $scope.layout }, function (error) {
-        if (error) {
-          log.error(error);
-          ToastService.errorToast("Couldn't set default layout.");
-        }
-      });
+      store.set("layout", $scope.layout);
+      log.info("Setting default layout to: " + $scope.layout);
     };
   });

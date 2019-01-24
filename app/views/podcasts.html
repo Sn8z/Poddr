@@ -36,7 +36,7 @@
                 {{ ::podcast['im:name']['label'] }}
               </div>
               <div flex="15">
-                <i class="far fa-heart fav-btn" ng-if="!isFavourite(podcast['id']['attributes']['im:id'])" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][1]['label'] | itunesPodcastCover , podcast.title.label, podcast['im:name']['label'])">
+                <i class="far fa-heart fav-btn" ng-if="!isFavourite(podcast['im:name']['label'])" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][1]['label'] | itunesPodcastCover , podcast['im:name']['label'])">
                   <md-tooltip md-direction="top" md-delay="250">Add to favourites</md-tooltip>
                 </i>
               </div>

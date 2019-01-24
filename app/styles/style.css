@@ -124,6 +124,10 @@ md-backdrop.md-dialog-backdrop {
   font-size: 15px;
 }
 
+.menu-text.active {
+	color: var(--main-color);
+}
+
 .fa-icon {
   width: 18px !important;
   height: 18px !important;

@@ -11,10 +11,12 @@ var app = angular
     PlayerService
   ) {
     //preloading modules to cache to speed up first time view of for example search page
-    var storage = require("electron-json-storage");
+    const Store = require("electron-store");
+    const store = new Store();
     var log = require("electron-log");
     var parsePodcast = require("node-podcast-parser");
-    log.info("Settings are stored at " + storage.getDataPath());
+    var app = require("electron").remote.app;
+    log.info("Settings are stored at " + app.getPath('userData'));
 
     $scope.playerService = PlayerService;
 
@@ -67,15 +69,10 @@ var app = angular
     });
 
     $scope.init = function() {
-      storage.get("theme", function(error, data) {
-        var color = "#ff9900";
-        if (!error && data.value) {
-          color = data.value;
-        }
-        var html = document.getElementsByTagName("html")[0];
-        html.style.cssText = "--main-color: " + color;
-        log.info("Loaded CSS color variable (" + color + ").");
-      });
+      var color = store.get("color", "#FF9900");
+      var html = document.getElementsByTagName("html")[0];
+      html.style.cssText = "--main-color: " + color;
+      log.info("Loaded CSS color variable (" + color + ").");
     };
 
     //check if update is available

@@ -12,9 +12,10 @@ angular
     FavouriteFactory,
     PrevPlayedService
   ) {
-    var storage = require("electron-json-storage");
     var ipc = require("electron").ipcRenderer;
     var log = require("electron-log");
+    const Store = require("electron-store");
+    const store = new Store();
 
     $scope.episodesNav = $mdSidenav("right");
 
@@ -61,18 +62,13 @@ angular
         ipc.send("raise-app");
       });
     }
+
     //create the audio element
     var player = document.createElement("audio");
-    player.volume = 0.5;
-
+    player.volume = $scope.volume = 0.5;
     $scope.barWidth = 0;
-    $scope.volume = player.volume;
     $scope.isLoading = false;
     $scope.playerService = PlayerService;
-
-    $scope.showEpisodes = function (id, title, img) {
-      $rootScope.fetchEpisodes(id, title, img);
-    };
 
     //listen for messages from main process
     ipc.on("toggle-play", function (event, message) {
@@ -80,51 +76,33 @@ angular
       togglePlay();
     });
 
-    //get playerstate from last session
-    storage.get("playerState", function (error, data) {
-      log.info("Getting saved playerstate.");
-      if (!error) {
-        if (data.podcastURL) {
-          player.src = data.podcastURL;
-          PlayerService.podcastURL = data.podcastURL;
-        }
-        if (data.podcastCover) PlayerService.podcastCover = data.podcastCover;
-        if (data.episodeCover) PlayerService.episodeCover = data.episodeCover;
-        if (data.podcastTitle) PlayerService.currentlyPlaying = data.podcastTitle;
-        if (data.podcastArtist) PlayerService.podcastArtist = data.podcastArtist;
-        if (data.podcastID) PlayerService.podcastID = data.podcastID;
-        if (data.podcastDescription) PlayerService.podcastDescription = data.podcastDescription;
-        if (data.podcastGUID) PlayerService.podcastGUID = data.podcastGUID;
+    log.info("Getting saved playerstate.");
+    var playerState = store.get("playerState");
+    if (playerState) {
+      player.src = PlayerService.podcastURL = playerState.podcastURL;
+      PlayerService.podcastCover = playerState.podcastCover;
+      PlayerService.episodeCover = playerState.episodeCover;
+      PlayerService.podcastTitle = playerState.podcastTitle;
+      PlayerService.podcastEpisodeTitle = playerState.podcastEpisodeTitle;
+      PlayerService.podcastDescription = playerState.podcastDescription;
+      PlayerService.podcastGUID = playerState.podcastGUID;
+      log.info("Loaded playerstate.");
+    }
 
-        if (process.platform == "linux") {
-          $timeout(function () {
-            log.info("Initialize MPRIS metadata.");
-            mprisPlayer.metadata = {
-              "mpris:artUrl": data.episodeCover || data.podcastCover || "",
-              "xesam:title": data.podcastTitle || "No title",
-              "xesam:album": "Podcast",
-              "xesam:artist": [data.podcastArtist || "No artist"]
-            };
-          }, 5000);
-        }
-        log.info("Loaded playerstate.");
-      } else {
-        log.error(error);
-      }
-    });
+    if (process.platform == "linux") {
+      $timeout(function () {
+        log.info("Initialize MPRIS metadata.");
+        mprisPlayer.metadata = {
+          "mpris:artUrl": playerState.episodeCover || playerState.podcastCover || "",
+          "xesam:title": playerState.podcastEpisodeTitle || "No title",
+          "xesam:album": "Podcast",
+          "xesam:artist": [playerState.podcastTitle || "No artist"]
+        };
+      }, 3000);
+    }
 
-    //set initial volume based on previous session if available
-    storage.get("volume", function (error, data) {
-      log.info("Getting saved volume.");
-      if (!error) {
-        player.volume = data.value ? data.value : 0.5;
-        $scope.volume = player.volume;
-        $scope.$digest();
-        log.info("Loaded saved volume.");
-      } else {
-        log.error(error);
-      }
-    });
+    log.info("Getting saved volume.");
+    player.volume = $scope.volume = store.get("volume", 0.5);
 
     player.addEventListener("play", function () {
       log.info("Playing podcast.");
@@ -183,11 +161,11 @@ angular
       player.play();
 
       PlayerService.podcastURL = episode.enclosure.url;
-      PlayerService.currentlyPlaying = episode.title;
+      PlayerService.podcastEpisodeTitle = episode.title;
       PlayerService.podcastDuration = 0;
-      PlayerService.podcastArtist = PlayerService.latestSeenArtist;
+      PlayerService.podcastTitle = PlayerService.latestSeenTitle;
       PlayerService.podcastDescription = episode.description;
-      PlayerService.podcastID = PlayerService.latestSeenID;
+      PlayerService.podcastRSS = PlayerService.latestSeenRSS;
       PlayerService.podcastCover = PlayerService.latestSeenCover;
       PlayerService.podcastGUID = episode.guid;
 
@@ -202,9 +180,9 @@ angular
         log.info("Setting MPRIS metadata.");
         mprisPlayer.metadata = {
           "mpris:artUrl": PlayerService.episodeCover || "",
-          "xesam:title": PlayerService.currentlyPlaying || "No title",
+          "xesam:title": PlayerService.podcastEpisodeTitle || "No title",
           "xesam:album": "Podcast",
-          "xesam:artist": [PlayerService.podcastArtist || "No artist"]
+          "xesam:artist": [PlayerService.podcastTitle || "No artist"]
         };
       }
 
@@ -213,16 +191,12 @@ angular
     $rootScope.playPodcast = playPodcast;
 
     var progress = document.getElementById("progress");
-    progress.addEventListener(
-      "click",
-      function (event) {
-        log.info("Clicked progressbar.");
-        var width = event.clientX - progress.getBoundingClientRect().left;
-        var calc = (width / progress.offsetWidth) * player.duration;
-        player.currentTime = parseFloat(calc);
-      },
-      true
-    );
+    progress.addEventListener("click", function (event) {
+      log.info("Clicked progressbar.");
+      var width = event.clientX - progress.getBoundingClientRect().left;
+      var calc = (width / progress.offsetWidth) * player.duration;
+      player.currentTime = parseFloat(calc);
+    }, true);
 
     function changePlayerTime(amount) {
       player.currentTime = player.currentTime + amount;
@@ -251,19 +225,18 @@ angular
     $rootScope.togglePlay = togglePlay;
 
     $scope.setFavourite = function () {
-      if (PlayerService.podcastID != "0") {
+      if (PlayerService.podcastRSS != "0") {
         FavouriteService.favourite(
-          PlayerService.podcastID,
+          PlayerService.podcastRSS,
           PlayerService.podcastCover,
-          PlayerService.podcastArtist,
-          PlayerService.podcastArtist
+          PlayerService.podcastTitle
         );
       }
     };
 
     $scope.favouriteList = FavouriteFactory.getList();
     $scope.isPlayerFavourite = function () {
-      return $scope.favouriteList.keys.indexOf(PlayerService.podcastID) !== -1;
+      return $scope.favouriteList.titles.indexOf(PlayerService.podcastTitle) !== -1;
     };
 
     $scope.showDescription = function (title, text) {
@@ -281,18 +254,14 @@ angular
 
     $scope.setVolume = function () {
       player.volume = $scope.volume;
-      storage.set("volume", { value: player.volume }, function (error) {
-        if (error) log.error(error);
-      });
+      store.set("volume", player.volume);
     };
 
     function changeVolume(amount) {
       player.volume + amount > 1 ? player.volume = 1 : player.volume += amount;
       player.volume + amount < 0 ? player.volume = 0 : player.volume += amount;
       $scope.volume = player.volume;
-      storage.set("volume", { value: player.volume }, function (error) {
-        if (error) log.error(error);
-      });
+      store.set("volume", player.volume);
       $scope.$digest();
     }
     $rootScope.changeVolume = changeVolume;
