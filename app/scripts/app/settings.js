@@ -51,7 +51,9 @@ angular
 			}
 		});
 
-		pickr.setColor(store.get("color", "#ff9900"));
+		$timeout(function() {
+			pickr.setColor(store.get("color", "#ff9900"));
+		}, 50);
 
 		$scope.openURL = function (url) {
 			require("electron").shell.openExternal(url);
