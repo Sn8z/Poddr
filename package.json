@@ -54,7 +54,7 @@
     "angular-animate": "^1.7.6",
     "angular-aria": "^1.7.5",
     "angular-material": "^1.1.12",
-    "angular-messages": "^1.7.5",
+    "angular-messages": "^1.7.6",
     "dbus": "^1.0.3",
     "electron-json-storage": "^4.1.5",
     "electron-log": "^2.2.17",
