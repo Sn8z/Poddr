@@ -74,4 +74,10 @@ angular
 			app.relaunch();
 			app.exit(0);
 		};
+
+		$scope.openDevTools = function(){
+			log.info("Restarting Poddr with debug enabled.");
+			var mainWindow = require('electron').remote.BrowserWindow.getAllWindows()[0];
+			mainWindow.openDevTools();
+		};
 	});
