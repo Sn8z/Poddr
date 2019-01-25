@@ -8,5 +8,10 @@ angular
   ) {
     $scope.favourites = FavouriteFactory.getList();
     $scope.showEpisodes = $rootScope.openEpisodes;
-    $scope.removeFavourite = FavouriteService.removeFavourite;
+		$scope.removeFavourite = FavouriteService.removeFavourite;
+		
+		$scope.isFavouritesEmpty = function(obj) {
+			return angular.equals({}, obj);
+		};
+
   });
