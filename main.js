@@ -5,6 +5,7 @@ const ipcMain = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const globalShortcut = electron.globalShortcut;
 const windowStateKeeper = require("electron-window-state");
+const path = require("path");
 var log = require("electron-log");
 
 //Global reference to window object;
@@ -116,7 +117,7 @@ app.once("ready", function () {
     frame: false,
     show: false,
     backgroundColor: "#0f0f0f",
-    icon: __dirname + "/app/images/icon.png"
+    icon: path.join(__dirname, "/app/images/icon.png")
   });
 
   mainWindowState.manage(mainWindow);
