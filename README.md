@@ -1,6 +1,6 @@
 <div align="center">
     <img src="images/poddr_logo.png" alt="Poddr" width="60" height="60">
-    <h1><span style="color:#F97919;">P</span>oddr</h1>
+    <h1>Poddr</h1>
     <img src="https://img.shields.io/github/release/sn8z/poddr.svg?style=flat-square">
     <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg?style=flat-square">
     <img src="https://img.shields.io/david/sn8z/poddr.svg?style=flat-square">
