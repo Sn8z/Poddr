@@ -767,16 +767,17 @@ electron-download@^4.1.0:
     semver "^5.4.1"
     sumchecker "^2.0.2"
 
-electron-json-storage@^4.1.5:
-  version "4.1.5"
-  resolved "https://registry.yarnpkg.com/electron-json-storage/-/electron-json-storage-4.1.5.tgz#72b0e15efe2e04cc42542e3408986c2be9e2b906"
-  integrity sha512-7Ptks1xqvXl+iGfrsY3lsVLjO0ybMceRCGJBRTHX5ci07p+gUi7dtOws6y/2nDRjbUGrapScms9ovV1LP8I4TQ==
+electron-json-storage@^4.1.6:
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/electron-json-storage/-/electron-json-storage-4.1.6.tgz#4d7dfc6e6b64d023b24b8d7ad453f34c55bc1f10"
+  integrity sha512-00J852iP6YQS+hh3iJ7Bo3sOUHw20+SjkLMV9V4p9fOe7hCyDwGLL9Tw1S3fXhMj0el2soe7hQtDb+npC2oDbw==
   dependencies:
     async "^2.0.0"
     lockfile "^1.0.4"
     lodash "^4.0.1"
     mkdirp "^0.5.1"
     rimraf "^2.5.1"
+    write-file-atomic "^2.4.2"
 
 electron-log@^2.2.17:
   version "2.2.17"
@@ -2691,10 +2692,10 @@ wrappy@1:
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-write-file-atomic@^2.0.0, write-file-atomic@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-2.3.0.tgz#1ff61575c2e2a4e8e510d6fa4e243cce183999ab"
-  integrity sha512-xuPeK4OdjWqtfi59ylvVL0Yn35SF3zgcAcv7rBPFHVaEapaDr4GdGgm3j7ckTwH9wHL7fGmgfAnb0+THrHb8tA==
+write-file-atomic@^2.0.0, write-file-atomic@^2.3.0, write-file-atomic@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-2.4.2.tgz#a7181706dfba17855d221140a9c06e15fcdd87b9"
+  integrity sha512-s0b6vB3xIVRLWywa6X9TOMA7k9zio0TMOsl9ZnDkliA/cfJlpHXAscj0gbHVJiTdIuAYpIyqS5GW91fqm6gG5g==
   dependencies:
     graceful-fs "^4.1.11"
     imurmurhash "^0.1.4"
