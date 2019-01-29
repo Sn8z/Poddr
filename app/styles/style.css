@@ -20,7 +20,7 @@ body {
   user-select: none;
   -webkit-app-region: drag;
   height: 35px;
-  background: #151515;
+  background: #080808;
   padding: none;
   margin: 0px;
   border-bottom: 1px solid var(--main-color);
@@ -80,7 +80,7 @@ md-progress-circular path {
 
 .player {
   z-index: 10;
-  background: #111;
+  background: #080808;
   height: 90px;
 }
 
@@ -270,7 +270,6 @@ md-dialog-content {
   padding:15px;
   width:100%;
   height:auto;
-  border-radius:5px;
 }
 
 /* Player */
