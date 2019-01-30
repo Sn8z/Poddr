@@ -20,7 +20,7 @@ body {
   user-select: none;
   -webkit-app-region: drag;
   height: 35px;
-  background: #080808;
+  background: #111111;
   padding: none;
   margin: 0px;
   border-bottom: 1px solid var(--main-color);
@@ -80,12 +80,12 @@ md-progress-circular path {
 
 .player {
   z-index: 10;
-  background: #080808;
+  background: #121212;
   height: 90px;
 }
 
 #left-sidenav {
-  background: #111;
+  background: #121212;
   z-index: 5;
 }
 
