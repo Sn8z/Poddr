@@ -46,6 +46,16 @@ Quotes from [AppImage projectpage](https://appimage.org)
 
 A normal .dmg file, install as you would normally do with any Mac software.
 
+
+<hr>
+<br>
+<center>
+<img src="logo/PNG&JPG/Asset 3-8.png" width="80">
+
+### Thanks to Radu Dan Gratian for creating the logo for Poddr!
+Check out his [Instagram](https://www.instagram.com/radudangratian/)!
+</center>
+
 <hr>
 
 #### If you enjoy using Poddr and want to contribute feel free to buy me a coffee on Ko-fi!
