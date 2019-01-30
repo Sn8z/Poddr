@@ -26,7 +26,7 @@ angular
 
     $scope.showEpisodes = $rootScope.openEpisodesWithID;
 
-    var getDescription = function(podcast){
+    $scope.getDescription = function(podcast){
       if(podcast.feedURL !== null && podcast.feedUrl.length){
         $http.get(podcast.feedUrl, {timeout: 20000})
           .then(function(response){
@@ -71,9 +71,6 @@ angular
           )
           .then(function successCallback(response) {
             $scope.results = response.data.results;
-            angular.forEach($scope.results, function(result){
-              getDescription(result);
-            });
             log.info("Found " + $scope.results.length + " matches for " + $scope.query);
             if ($scope.results.length == 0) {
               $scope.isEmpty = true;

@@ -50,7 +50,6 @@ angular
 		};
 
 		var openEpisodes = function (rss, title, cover) {
-			log.info("OPENING EPISODES");
 			resetEpisodes(title, cover);
 			$scope.isLoading = true;
 			$mdSidenav("right").open().then(function () {
