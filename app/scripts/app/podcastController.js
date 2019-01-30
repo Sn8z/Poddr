@@ -10,7 +10,6 @@ angular
     FavouriteService,
     FavouriteFactory
   ) {
-    //var storage = require("electron-json-storage");
     const Store = require("electron-store");
     const store = new Store();
     var log = require('electron-log');
