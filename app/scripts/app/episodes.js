@@ -32,11 +32,6 @@ angular
 		}
 		$scope.closeSidenav = closeSidenav;
 
-		//TODO: Func that fetches RSS feeds from iTunes ID
-		//TODO: Split fetch into 2 functions, separation of concerns
-		//TODO: Update other controllers that depends on these functions ==> fetchEpisodes()
-		// getRssFeed(id); return rss, openEpisodes(rss); return null, fetchEpisodes(rss, title, cover); return null
-
 		var getRssFeed = function (id) {
 			var q = $q.defer();
 			log.info("Looking up iTunes id: " + id);
@@ -55,6 +50,7 @@ angular
 		};
 
 		var openEpisodes = function (rss, title, cover) {
+			log.info("OPENING EPISODES");
 			resetEpisodes(title, cover);
 			$scope.isLoading = true;
 			$mdSidenav("right").open().then(function () {

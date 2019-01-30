@@ -124,9 +124,9 @@
             <i class="fas fa-forward media-btn" ng-click="changePlayerTime(10)" tabindex="-1"></i>
           </div>
           <div flex layout="column" layout-align="center start" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow: 0px 0px 10px #000">
-            <a style="color: white;text-decoration: none;">
+            <p class="playing-title" ng-click="showEpisodes()">
               {{ playerService.podcastEpisodeTitle }}
-            </a>
+						</p>
             <span class="timer-text">{{ playerService.atTime | secondsToHHmmss }} / {{ playerService.podcastDuration |
               secondsToHHmmss
               }}
