@@ -1,33 +1,38 @@
 <div ng-controller="SearchController" layout-padding ng-cloak>
-  <div class="row" layout="row" style="padding-left:15px;padding-right:25px;">
-    <form flex ng-submit="doSearch()">
-      <input id="search-input" ng-model="query" type="text" placeholder="Search..." />
-    </form>
-  </div>
-  <md-progress-circular md-mode="indeterminate" md-diameter="40" ng-if="isLoading" style="margin-left:50%;margin-right:50%"></md-progress-circular>
-  <div class="row" ng-if="isEmpty">
-    <h3 style="color:white">No results</h3>
-  </div>
-  <div class="row" layout="row" layout-wrap>
-    <div flex="100" layout="row" ng-repeat="podcast in results">
-      <div class="podcast-list-item" layout="row">
-        <div flex-xs="20" flex-sm="20" flex-md="10" flex-lg="10" flex-xl="10" ng-click="showEpisodes(podcast.trackId, podcast.trackName, podcast.artworkUrl60 | itunesPodcastCover)">
-          <div style="position:relative;width:100%;height:0;padding-top:100%;" ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover)">
-            <img class="podcast-img" ng-src="{{ ::podcast.artworkUrl60 | itunesPodcastCover }}" onload="this.style.opacity = 1" />
-          </div>
-        </div>
-        <div flex style="padding-left:15px;" ng-click="showEpisodes(podcast.trackId, podcast.trackName, podcast.artworkUrl60 | itunesPodcastCover)">
-          <h3 style="cursor:pointer;">
-            {{ ::podcast.trackName }}
-          </h3>
+	<div class="row" layout="row" style="padding-left:15px;padding-right:25px;">
+		<form flex ng-submit="doSearch()">
+			<input id="search-input" ng-model="query" type="text" placeholder="Search..." />
+		</form>
+	</div>
+	<md-progress-circular md-mode="indeterminate" md-diameter="40" ng-if="isLoading" style="margin-left:50%;margin-right:50%"></md-progress-circular>
+	<div class="row" ng-if="isEmpty">
+		<h3 style="color:white">No results</h3>
+	</div>
+	<div class="row" layout="row" layout-wrap>
+		<div flex="100" layout="row" ng-repeat="podcast in results" ng-click="showEpisodes(podcast.trackId, podcast.trackName, podcast.artworkUrl60 | itunesPodcastCover)">
+			<div class="podcast-list-item" layout="row">
+				<div flex-xs="20" flex-sm="20" flex-md="10" flex-lg="10" flex-xl="10">
+					<div style="position:relative;width:100%;height:0;padding-top:100%;">
+						<img class="podcast-img" ng-src="{{ ::podcast.artworkUrl60 | itunesPodcastCover }}" onload="this.style.opacity = 1" />
+					</div>
+				</div>
+				<div flex style="padding-left:15px;">
+					<h3 style="cursor:pointer;">
+						{{ ::podcast.trackName }}
+					</h3>
 					<p style="color:#aaa;font-size:14px;">{{ ::podcast.artistName }}</p>
 					<p style="color:#666;font-size:12px;" ng-if="podcast.description">{{ ::podcast.description }}</p>
-					<p style="color:#666;font-size:12px;cursor:pointer;" ng-if="!podcast.description" ng-click="getDescription(podcast); $event.stopPropagation();">Get more info <i class="fas fa-chevron-right"></i></p>
-        </div>
-        <div flex="10" layout="row" layout-align="center center">
-          <i class="far fa-heart fav-btn fa-icon" ng-if="!isFavourite(podcast.trackName)" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName)"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+					<p style="color:#666;font-size:12px;cursor:pointer;" ng-if="!podcast.description" ng-click="getDescription(podcast); $event.stopPropagation();">Get
+						more info <i class="fas fa-chevron-right"></i></p>
+					<div class="row" layout="row">
+						<div class="genre-chip" ng-repeat="genre in podcast.genres" ng-if="genre!='Podcasts'">
+							<p>{{ genre }}</p>
+						</div>
+					</div>
+				</div>
+				<div flex="10" layout="row" layout-align="center center">
+					<i class="far fa-heart fav-btn fa-icon" ng-if="!isFavourite(podcast.trackName)" ng-click="setFavourite(podcast.trackId.toString(), podcast.artworkUrl60 | itunesPodcastCover, podcast.trackName); $event.stopPropagation();"></i>
+				</div>
+			</div>
+		</div>
+	</div>

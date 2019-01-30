@@ -71,7 +71,8 @@ angular
           )
           .then(function successCallback(response) {
             $scope.results = response.data.results;
-            log.info("Found " + $scope.results.length + " matches for " + $scope.query);
+						log.info("Found " + $scope.results.length + " matches for " + $scope.query);
+						log.info($scope.results[0]);
             if ($scope.results.length == 0) {
               $scope.isEmpty = true;
             }
