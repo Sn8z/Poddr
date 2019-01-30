@@ -48,13 +48,10 @@ A normal .dmg file, install as you would normally do with any Mac software.
 
 
 <hr>
-<br>
-<center>
 <img src="logo/PNG&JPG/Asset 3-8.png" width="80">
 
-### Thanks to Radu Dan Gratian for creating the logo for Poddr!
+### Thanks to Radu Dan for creating the logo for Poddr!
 Check out his [Instagram](https://www.instagram.com/radudangratian/)!
-</center>
 
 <hr>
 
