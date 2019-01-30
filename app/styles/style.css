@@ -283,6 +283,7 @@ md-dialog-content {
 	background-color: #333;
 	color:#ececec;
 	font-size:12px;
+	box-shadow:inset 0 0 5px #000000;
 }
 
 /* Player */
