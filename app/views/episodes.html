@@ -12,9 +12,9 @@
     <div flex="5"></div>
     <div flex="80">
       <input id="episode-filter-input" ng-model="query" ng-change="filterEpisodes()" type="text" placeholder="Filter by" />
-    </div>
+		</div>
     <div flex="15" layout="row" layout-align="center center">
-      <i ng-class="{true:'fas fa-long-arrow-alt-up fa-icon', false:'fas fa-long-arrow-alt-down fa-icon'}[toggleOrder]"
+      <i ng-class="{true:'fas fa-sort-amount-up fa-icon', false:'fas fa-sort-amount-down fa-icon'}[toggleOrder]"
         ng-click="toggleOrderBy()" style="cursor:pointer;"></i>
     </div>
   </div>
