@@ -66,7 +66,7 @@ angular
           .get(
             "https://itunes.apple.com/search?term=" +
               sQuery +
-              "&entity=podcast&attributes=titleTerm,artistTerm",
+              "&entity=podcast&attributes=titleTerm,artistTerm&limit=200",
               {timeout: 20000}
           )
           .then(function successCallback(response) {
