@@ -13,13 +13,10 @@
 				<md-option ng-repeat="country in countries track by $index" ng-value="country.iso">{{ ::country.name }}</md-option>
 			</md-select>
 		</md-input-container>
-		<md-input-container class="select-dropdown" flex="10">
-			<label>Layout</label>
-			<md-select name="type" ng-model="layout">
-				<md-option value="grid"><i class="fas fa-th-large"> - Grid</i></md-option>
-				<md-option value="list"><i class="fas fa-th-list"> - List</i></md-option>
-			</md-select>
-		</md-input-container>
+		<div flex="10" layout="row" layout-align="center center">
+			<div class="layout-btn left-btn" ng-class="{ active: layout === 'grid' }" ng-click="layout = 'grid'"><i class="fas fa-th-large"></i></div>
+			<div class="layout-btn right-btn" ng-class="{ active: layout === 'list' }" ng-click="layout = 'list'"><i class="fas fa-th-list"></i></div>
+		</div>
 	</div>
 	<div ng-switch="layout">
 		<div ng-switch-when="grid" style="width:100%">
