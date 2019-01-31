@@ -154,7 +154,7 @@ function FavouriteService($q, $http, ToastService, FavouriteFactory) {
 	var log = require("electron-log");
 
 	var setFavourite = function (rss, img, title) {
-		favStore.set(title, {
+		favStore.set(title.replace(/\./g, '\\.'), {
 			rss: rss,
 			title: title,
 			img: img,
@@ -237,7 +237,8 @@ function PrevPlayedService(PrevPlayedFactory) {
 	var log = require("electron-log");
 
 	this.setPrevPlayed = function (guid) {
-		prevPlayedStore.set(guid, Date.now());
+		//regexp disables dot notation for electron-store, keep until fixed
+		prevPlayedStore.set(guid.replace(/\./g, '\\.'), Date.now());
 		PrevPlayedFactory.updateGUIDs();
 		log.info("Added " + guid + " to previously played episodes.");
 	};
