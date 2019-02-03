@@ -115,7 +115,10 @@ app.once("ready", function () {
     x: mainWindowState.x,
     y: mainWindowState.y,
     frame: false,
-    show: false,
+		show: false,
+		webPreferences: {
+			nodeIntegration: true
+		},
     backgroundColor: "#0f0f0f",
     icon: path.join(__dirname, "/app/images/icon.png")
   });
