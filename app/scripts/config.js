@@ -154,7 +154,7 @@ function FavouriteService($q, $http, ToastService, FavouriteFactory) {
 	var log = require("electron-log");
 
 	var setFavourite = function (rss, img, title) {
-		favStore.set(title.replace(/\./g, '\\.'), {
+		favStore.set(rss.replace(/\./g, '\\.'), {
 			rss: rss,
 			title: title,
 			img: img,

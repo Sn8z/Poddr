@@ -104,7 +104,6 @@ var app = angular
 			log.info("Getting old favourites.");
 			var files = fs.readdirSync(app.getPath('userData') + "/storage");
 			files.forEach(function (file) {
-				//file = file.replace(/\.json/g, '');
 				if (/^([0-9]+.json)$/.test(file)) {
 					var data = fs.readFileSync(app.getPath('userData') + "/storage/" + file);
 					data = JSON.parse(data);
