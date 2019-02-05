@@ -4,6 +4,7 @@ const Menu = electron.Menu;
 const ipcMain = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const globalShortcut = electron.globalShortcut;
+const nativeImage = electron.nativeImage;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
 var log = require("electron-log");
@@ -106,6 +107,9 @@ app.once("ready", function () {
     defaultHeight: 900
   });
 
+
+  let icon = path.join(__dirname, "/app/images/icon.png");
+
   mainWindow = new BrowserWindow({
     name: "Poddr",
     minWidth: 640,
@@ -120,7 +124,7 @@ app.once("ready", function () {
 			nodeIntegration: true
 		},
     backgroundColor: "#0f0f0f",
-    icon: path.join(__dirname, "/app/images/icon.png")
+    icon: nativeImage.createFromPath(icon)
   });
 
   mainWindowState.manage(mainWindow);

@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="images/poddr_logo.png" alt="Poddr" width="60" height="60">
+    <img src="images/poddr-logo.png" alt="Poddr" width="60" height="60">
     <h1>Poddr</h1>
     <img src="https://img.shields.io/github/release/sn8z/poddr.svg?style=flat-square">
     <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg?style=flat-square">
