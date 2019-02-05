@@ -86,6 +86,6 @@ angular
 
     $scope.favouriteList = FavouriteFactory.getList();
     $scope.isFavourite = function(id) {
-      return $scope.favouriteList.keys.indexOf(id) !== -1;
+      return $scope.favouriteList.titles.indexOf(id) !== -1;
     };
   });

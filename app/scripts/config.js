@@ -193,7 +193,7 @@ function FavouriteService($q, $http, ToastService, FavouriteFactory) {
 	this.removeFavourite = function (rss) {
 		ToastService.confirmToast("Are you sure?", function (response) {
 			if (response) {
-				favStore.delete(rss);
+				favStore.delete(rss.replace(/\./g, '\\.'));
 				FavouriteFactory.updateList();
 				log.info("RSS feed: " + rss + " removed from favourites.");
 				ToastService.successToast("Removed podcast from favourites.");
@@ -241,6 +241,12 @@ function PrevPlayedService(PrevPlayedFactory) {
 		prevPlayedStore.set(guid.replace(/\./g, '\\.'), Date.now());
 		PrevPlayedFactory.updateGUIDs();
 		log.info("Added " + guid + " to previously played episodes.");
+	};
+
+	this.removePrevPlayed = function (guid) {
+		prevPlayedStore.delete(guid);
+		PrevPlayedFactory.updateGUIDs();
+		log.info("Removed " + guid + " from previously played episodes.");
 	};
 }
 app.service("PrevPlayedService", PrevPlayedService);

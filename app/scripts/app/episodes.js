@@ -9,7 +9,8 @@ angular
 		$q,
 		ToastService,
 		PlayerService,
-		PrevPlayedFactory
+		PrevPlayedFactory,
+		PrevPlayedService
 	) {
 		var parsePodcast = require("node-podcast-parser");
 		var log = require("electron-log");
@@ -107,6 +108,9 @@ angular
 				});
 		};
 		$rootScope.fetchEpisodes = fetchEpisodes;
+
+		$scope.setAsPlayed = PrevPlayedService.setPrevPlayed;
+		$scope.removePlayedEpisode = PrevPlayedService.removePrevPlayed;
 
 		//Check if episode is already played
 		$scope.isPlayed = function (id) {
