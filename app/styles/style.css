@@ -115,9 +115,9 @@ md-backdrop.md-dialog-backdrop {
 
 .menu-icon {
   color: var(--main-color) !important;
-  font-size: 25px !important;
-  width: 25px !important;
-  height: 25px !important;
+  font-size: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
 }
 
 .menu-text {
