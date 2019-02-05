@@ -436,8 +436,11 @@ md-toast {
   }
 
   .menu-icon {
-    margin-top: 15px;
-    margin-bottom: 15px;
+		margin-top: 15px;
+		margin-bottom: 15px;
+		font-size: 20px !important;
+		width: 20px !important;
+		height: 20px !important;
   }
 
   .menu-item-content {
