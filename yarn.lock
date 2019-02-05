@@ -42,10 +42,10 @@ angular-animate@^1.7.6:
   resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.7.6.tgz#3c48ac592a1a0d98a9ac9ab3fe3b4f6b9393fe7f"
   integrity sha512-WPzJkmpVQut8SrTPEjAImRqPfcB2E6TsZDndF7Z7Yu5hBDUIvOM/m62rWxLiWhQg2DlbDuejz6mKQwTakgMThA==
 
-angular-aria@^1.7.6:
-  version "1.7.6"
-  resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.6.tgz#8e6371af31f6749fe7c089cde8507ed024f480df"
-  integrity sha512-Odq3piJl1uc85h0vpHO+0ZSfqY+nc4PNmjl+9dIEkTBpfH+dGvGQxaldpTL54YQIP09hOPi7jkrRlEYa/rMzsg==
+angular-aria@^1.7.7:
+  version "1.7.7"
+  resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.7.tgz#f7d16f18fdd5ce1140213ef8e61ca813fa686827"
+  integrity sha512-Jju0VudfKVp+6FUtfzpDBuOJE8+8cGPSM10nRicXvJRX/Nx/YOu38f2aL3HQwThrRK+3E5jfo7yRwVNYoSmSxg==
 
 angular-material@^1.1.12:
   version "1.1.12"
