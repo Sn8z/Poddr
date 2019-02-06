@@ -21,7 +21,7 @@
 						{{ ::podcast.trackName }}
 					</h3>
 					<p style="color:#aaa;font-size:14px;">{{ ::podcast.artistName }}</p>
-					<p style="color:#666;font-size:13px;">Latest release: {{ podcast.releaseDate | date : format : timezone }} | {{ podcast.trackCount }} episodes</p>
+					<p style="color:#666;font-size:13px;">Latest release: {{ podcast.releaseDate | date : format : timezone }} | {{ podcast.trackCount }} {{ podcast.trackCount === 1 ? "episode": "episodes"}} </p>
 					<p style="color:#666;font-size:12px;" ng-if="podcast.description">{{ ::podcast.description }}</p>
 					<p style="color:#666;font-size:12px;cursor:pointer;" ng-if="!podcast.description" ng-click="getDescription(podcast); $event.stopPropagation();">More
 						info <i class="fas fa-chevron-right"></i></p>
