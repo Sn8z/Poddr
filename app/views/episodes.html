@@ -35,14 +35,14 @@
 				</div>
 				<div class="row" layout="row">
 					<div flex class="row" layout="row" layout-align="start center">
-						<span style="color:#bbb;font-size:12px;">{{ episode.published | date : format : timezone }}</span>
-					</div>
-					<div flex class="row" layout="row" layout-align="center center">
 						<span style="color:#bbb;font-size:12px;float:right;">{{ episode.duration | secondsToHHmmss }}</span>
 					</div>
+					<div flex class="row" layout="row" layout-align="center center">
+						<span style="color:#bbb;font-size:12px;">{{ episode.published | date : format : timezone }}</span>
+					</div>
 					<div flex class="row" layout="row" layout-align="end center">
-						<i class="fas fa-check" ng-if="!isPlayed(episode.guid)" ng-click="setAsPlayed(episode.guid); $event.stopPropagation();"></i>
-						<i class="fas fa-check played-icon" ng-if="isPlayed(episode.guid)" ng-click="removePlayedEpisode(episode.guid); $event.stopPropagation();"></i>
+						<i class="far fa-check-circle not-played-icon" ng-if="!isPlayed(episode.guid)" ng-click="setAsPlayed(episode.guid); $event.stopPropagation();"></i>
+						<i class="fas fa-check-circle played-icon" ng-if="isPlayed(episode.guid)" ng-click="removePlayedEpisode(episode.guid); $event.stopPropagation();"></i>
 					</div>
 				</div>
 			</div>

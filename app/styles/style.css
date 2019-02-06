@@ -425,6 +425,11 @@ md-toast {
   border-bottom: 1px solid var(--main-color);
 }
 
+
+.not-played-icon {
+	color: #080808;
+}
+
 .played-icon {
   color: var(--main-color) !important;
 }
