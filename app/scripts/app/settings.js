@@ -33,6 +33,7 @@ angular
 		const pickr = Pickr.create({
 			el: '.clr-pickr',
 			default: 'fff',
+			position: 'middle',
 			defaultRepresentation: 'HEX',
 			components: {
 				preview: true,

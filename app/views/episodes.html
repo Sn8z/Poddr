@@ -13,10 +13,11 @@
 		<div flex="80">
 			<input id="episode-filter-input" ng-model="query" ng-change="filterEpisodes()" type="text" placeholder="Filter by" />
 		</div>
-		<div flex="15" layout="row" layout-align="center center">
+		<div flex="10" layout="row" layout-align="center center">
 			<i ng-class="{true:'fas fa-sort-amount-up fa-icon', false:'fas fa-sort-amount-down fa-icon'}[toggleOrder]" ng-click="toggleOrderBy()"
 			 style="cursor:pointer;"></i>
 		</div>
+		<div flex="5"></div>
 	</div>
 	<div class="row" layout="row" layout-align="center center" ng-if="isLoading">
 		<md-progress-circular md-mode="indeterminate" md-diameter="30" style="margin-top:20px;"></md-progress-circular>
