@@ -79,66 +79,87 @@ var app = angular
 		};
 
 		var getOldColor = function () {
-			var color = JSON.parse(fs.readFileSync(app.getPath('userData') + "/storage/theme.json")).value;
-			store.set("color", color);
-			var html = document.getElementsByTagName("html")[0];
-			html.style.cssText = "--main-color: " + color;
-			log.info("Fetched color " + color + " from old settings.");
+			try {
+				var themeFilePath = app.getPath('userData') + "/storage/theme.json";
+				var themeFile = fs.readFileSync(themeFilePath);
+				var color = JSON.parse(themeFile).value;
+				if (color) store.set("color", color);
+				var html = document.getElementsByTagName("html")[0];
+				html.style.cssText = "--main-color: " + color;
+				log.info("Done getting color " + color + " from old settings.");
+			} catch (error) {
+				log.error(error);
+			}
 		};
 
 		var getOldRegion = function () {
-			var region = JSON.parse(fs.readFileSync(app.getPath('userData') + "/storage/region.json")).value;
-			store.set("region", region);
-			log.info("Fetched region " + region + " from old settings.");
+			try {
+				var region = JSON.parse(fs.readFileSync(app.getPath('userData') + "/storage/region.json")).value;
+				if (region) store.set("region", region);
+				log.info("Done getting region " + region + " from old settings.");
+			} catch (error) {
+				log.error(error);
+			}
 		};
 
 		var getOldPlayedEpisodes = function () {
-			var playedEpisodes = JSON.parse(fs.readFileSync(app.getPath('userData') + "/storage/prevPlayed.json")).guids;
-			playedEpisodes.forEach(function (guid) {
-				PrevPlayedService.setPrevPlayed(guid);
-				log.info("Added " + guid + " from old guids.");
-			});
+			try {
+				var playedEpisodes = JSON.parse(fs.readFileSync(app.getPath('userData') + "/storage/prevPlayed.json")).guids;
+				playedEpisodes.forEach(function (guid) {
+					PrevPlayedService.setPrevPlayed(guid);
+					log.info("Added " + guid + " from old guids.");
+				});
+				log.info("Done importing old played episodes.");
+			} catch (error) {
+				log.error(error);
+			}
 		};
 
 		var getOldFavs = function () {
-			log.info("Getting old favourites.");
-			var files = fs.readdirSync(app.getPath('userData') + "/storage");
-			files.forEach(function (file) {
-				if (/^([0-9]+.json)$/.test(file)) {
-					var data = fs.readFileSync(app.getPath('userData') + "/storage/" + file);
-					data = JSON.parse(data);
-					FavouriteService.favouriteItunesId(data.id, data.img, data.title);
-					log.info("Added iTunes ID " + file + " from old favourites.");
-				}
-			});
+			try {
+				log.info("Getting old favourites.");
+				var files = fs.readdirSync(app.getPath('userData') + "/storage");
+				files.forEach(function (file) {
+					if (/^([0-9]+.json)$/.test(file)) {
+						var data = fs.readFileSync(app.getPath('userData') + "/storage/" + file);
+						data = JSON.parse(data);
+						FavouriteService.favouriteItunesId(data.id, data.img, data.title);
+						log.info("Added iTunes ID " + file + " from old favourites.");
+					}
+				});
+			} catch (error) {
+				log.error(error);
+			}
 		};
 
 		var removeOldStorage = function () {
-			var files = fs.readdirSync(app.getPath('userData') + "/storage");
-			files.forEach(function (file) {
-				fs.unlinkSync(app.getPath('userData') + "/storage/" + file);
-			});
-			fs.rmdirSync(app.getPath('userData') + "/storage");
+			try {
+				log.info("Removing old storage folder.");
+				var files = fs.readdirSync(app.getPath('userData') + "/storage");
+				files.forEach(function (file) {
+					fs.unlinkSync(app.getPath('userData') + "/storage/" + file);
+				});
+				fs.rmdirSync(app.getPath('userData') + "/storage");
+				log.info("Done Removing old storage folder.");
+			} catch (error) {
+				log.error(error);
+			}
 		};
 
 		//Checks if there is old settings/favs and moves them to Poddr v1.1.0+ format
 		var checkOldStorage = function () {
 			var storageFolderPath = app.getPath('userData') + "/storage";
-			log.info("Getting old settings from " + storageFolderPath);
+			log.info("Checking for old settings in " + storageFolderPath);
 			if (fs.existsSync(storageFolderPath)) {
-				log.info("Found old data to retrieve.");
-				try {
-					getOldColor();
-					getOldRegion();
-					getOldPlayedEpisodes();
-					getOldFavs();
-					removeOldStorage();
-				}
-				catch (error) {
-					log.error(error);
-				} finally {
-					log.info("Done importing old settings and cleaning up.");
-				}
+				log.info("Getting old settings from " + storageFolderPath);
+				getOldColor();
+				getOldRegion();
+				getOldPlayedEpisodes();
+				getOldFavs();
+				removeOldStorage();
+				log.info("Done importing old settings and cleaning up.");
+			} else {
+				log.info("Nothing old to import.");
 			}
 		};
 		checkOldStorage();
