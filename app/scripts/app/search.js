@@ -1,6 +1,6 @@
 angular
   .module("poddr")
-  .controller("SearchController", function(
+  .controller("SearchController", function (
     $scope,
     $http,
     $rootScope,
@@ -20,29 +20,29 @@ angular
     $scope.isEmpty = false;
 
     //Set focus on input everytime this view gets rendered
-    $timeout(function() {
+    $timeout(function () {
       $window.document.getElementById("search-input").focus();
     }, 50);
 
     $scope.showEpisodes = $rootScope.openEpisodesWithID;
 
-    $scope.getDescription = function(podcast){
-      if(podcast.feedURL !== null && podcast.feedUrl.length){
-        $http.get(podcast.feedUrl, {timeout: 20000})
-          .then(function(response){
-            parsePodcast(response.data, function(error, data) {
+    $scope.getDescription = function (podcast) {
+      if (podcast.feedURL !== null && podcast.feedUrl.length) {
+        $http.get(podcast.feedUrl, { timeout: 20000 })
+          .then(function (response) {
+            parsePodcast(response.data, function (error, data) {
               if (error) {
                 log.error(error);
                 podcast.description = "No description available";
               } else {
-                if(data.description.long !== null && data.description.long.length){
+                if (data.description.long !== null && data.description.long.length) {
                   podcast.description = $filter("episodeDesc")(data.description.long);
                 } else {
                   podcast.description = "No description available";
                 }
               }
             });
-          }, function(error){
+          }, function (error) {
             log.error(error);
             podcast.description = "No description available";
           });
@@ -51,7 +51,7 @@ angular
       }
     };
 
-    $scope.doSearch = function() {
+    $scope.doSearch = function () {
       if ($scope.query) {
         log.info("Searching for " + $scope.query + "...");
         $scope.results = [];
@@ -65,19 +65,21 @@ angular
         $http
           .get(
             "https://itunes.apple.com/search?term=" +
-              sQuery +
-              "&entity=podcast&attributes=titleTerm,artistTerm&limit=200",
-              {timeout: 20000}
+            sQuery +
+            "&entity=podcast&attributes=titleTerm,artistTerm&limit=200",
+            { timeout: 20000 }
           )
           .then(function successCallback(response) {
             $scope.results = response.data.results;
-						log.info("Found " + $scope.results.length + " matches for " + $scope.query);
+            log.info("Found " + $scope.results.length + " matches for " + $scope.query);
             if ($scope.results.length == 0) {
               $scope.isEmpty = true;
+            } else {
+              $scope.isEmpty = false;
             }
-          }, function errorCallback(error){
+          }, function errorCallback(error) {
             log.error(error);
-          }).finally(function(){
+          }).finally(function () {
             $scope.isLoading = false;
           });
       }
@@ -85,7 +87,7 @@ angular
     $scope.setFavourite = FavouriteService.favouriteItunesId;
 
     $scope.favouriteList = FavouriteFactory.getList();
-    $scope.isFavourite = function(id) {
+    $scope.isFavourite = function (id) {
       return $scope.favouriteList.titles.indexOf(id) !== -1;
     };
   });
