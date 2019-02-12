@@ -263,8 +263,13 @@ angular
 		};
 
 		function changeVolume(amount) {
-			player.volume + amount > 1 ? player.volume = 1 : player.volume += amount;
-			player.volume + amount < 0 ? player.volume = 0 : player.volume += amount;
+			if (player.volume + amount > 1) {
+				player.volume = 1;
+			} else if (player.volume + amount < 0) {
+				player.volume = 0;
+			} else {
+				player.volume += amount;
+			}
 			$scope.volume = player.volume;
 			store.set("volume", player.volume);
 			$scope.$digest();
