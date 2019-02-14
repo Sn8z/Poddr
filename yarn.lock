@@ -1872,10 +1872,10 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-pickr-widget@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/pickr-widget/-/pickr-widget-0.3.4.tgz#066face3a3424ce940e8d6642e578e48534698a9"
-  integrity sha512-daZjMR8X0mek9CTHZ328eN4rgtZWMzhd8nz/Lzq0wkZMjtYEo8xrsE3KKgsT6Ao3NkFN+oUysWtgEUVKlcPAEg==
+pickr-widget@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/pickr-widget/-/pickr-widget-0.3.5.tgz#07d6484d60cde602e7030938ba743625c687da2a"
+  integrity sha512-NWDIrdam2MNBNsmrasYAAV1roSJYcxA1sRe06qE9gkwnqmlrdKA3m4SjG9AY1ca5z13TaXN1HF/Ve3CpGec05Q==
 
 pify@^2.0.0:
   version "2.3.0"
