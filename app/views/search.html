@@ -24,7 +24,7 @@
 						{{ ::podcast.trackName }}
 					</h2>
 					<p style="color:#aaa;font-size:14px;">{{ ::podcast.artistName }} |
-						{{ podcast.trackCount == 300 ? podcast.trackCount + "+" : podcast.trackCount }}
+						{{ podcast.trackCount === 300 ? podcast.trackCount + "+" : podcast.trackCount }}
 						{{ podcast.trackCount === 1 ? "episode": "episodes"}}</p>
 					<p style="color:#666;font-size:13px;">Latest release:
 						{{ podcast.releaseDate | date : format : timezone }}</p>
