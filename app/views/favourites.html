@@ -1,17 +1,20 @@
 <div id="podcastGrid" ng-controller="FavouritesController" layout="column" layout-padding ng-cloak>
   <div class="row" layout="row" layout-align="center center">
-    <h1 flex style="color:white;margin-left: 15px;">Favourites</h1>
-    <i style="cursor: pointer;" flex="nogrow" ng-click="addManualFavourite()" class="fas fa-plus"></i>
+    <h1 flex style="color:white">Favourites</h1>
+    <div flex="nogrow" class="add-btn" ng-click="addManualFavourite()">
+      <i class="fas fa-plus"></i>
+    </div>
   </div>
   <div class="row" ng-if="isFavouritesEmpty(favourites.all)">
     <h3 style="color:white;margin-left: 15px">No favourites added</h3>
   </div>
   <div class="row" layout="row" layout-wrap>
-    <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="favourite in favourites.all" ng-click="showEpisodes(favourite.rss, favourite.title, favourite.img)">
+    <div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20"
+      ng-repeat="favourite in favourites.all" ng-click="showEpisodes(favourite.rss, favourite.title, favourite.img)">
       <div class="podcast-frame">
         <div style="position:relative;width:100%;height:0;padding-top:100%;">
-          <img class="podcast-img" ng-src="{{ ::favourite.img }}"
-            onload="this.style.opacity = 1" width="100%" height="100%" />
+          <img class="podcast-img" ng-src="{{ ::favourite.img }}" onload="this.style.opacity = 1" width="100%"
+            height="100%" />
         </div>
         <div class="row podcast-title" layout="row" tabindex="-1">
           <div md-truncate flex>

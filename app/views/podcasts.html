@@ -1,6 +1,6 @@
 <div id="podcastGrid" ng-controller="PodcastController" layout="column" layout-padding ng-cloak>
 	<div class="row" layout="row">
-		<h1 flex style="color:white;margin-left: 15px;">Top {{ ::amount }}</h1>
+		<h1 flex style="color:white">Top {{ ::amount }}</h1>
 		<md-input-container class="select-dropdown" flex="20">
 			<label>Genre</label>
 			<md-select name="type" ng-model="genre" ng-change="getPodcasts()">
