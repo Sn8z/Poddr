@@ -1,5 +1,6 @@
 {
   "name": "poddr",
+  "productName": "Poddr",
   "version": "1.1.0",
   "description": "Podcast client",
   "main": "main.js",
@@ -25,7 +26,6 @@
     "spectron": "^5.0.0"
   },
   "build": {
-    "productName": "Poddr",
     "appId": "com.sn8z.poddr",
     "win": {
       "target": "nsis",
