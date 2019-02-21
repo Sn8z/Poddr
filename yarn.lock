@@ -47,10 +47,10 @@ angular-aria@^1.7.7:
   resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.7.tgz#f7d16f18fdd5ce1140213ef8e61ca813fa686827"
   integrity sha512-Jju0VudfKVp+6FUtfzpDBuOJE8+8cGPSM10nRicXvJRX/Nx/YOu38f2aL3HQwThrRK+3E5jfo7yRwVNYoSmSxg==
 
-angular-material@^1.1.12:
-  version "1.1.12"
-  resolved "https://registry.yarnpkg.com/angular-material/-/angular-material-1.1.12.tgz#e942413ed1dc160190834b2e8c1153263e8711d1"
-  integrity sha512-hvYgVSAxmXy+ozm+FcdGrTrBKm/TLubCgJ8xZR3LNYYmLfsIfzh4Eyk87inmTCXS02KYL0EX2dUeiVmanHlIaQ==
+angular-material@^1.1.13:
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/angular-material/-/angular-material-1.1.13.tgz#36c9cee590156f7e9d2be3bf6b2bf277f1293b4d"
+  integrity sha512-qWc5WOhRa/sbQmiRwenOla2Pky3w+wgW0l5Wp3J6jmB/WWxMWW7+JMdCXo1diGEETTKTF2vLdeWTceDTNehmSw==
 
 angular-messages@^1.7.7:
   version "1.7.7"
