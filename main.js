@@ -51,9 +51,6 @@ ipcMain.on("raise-app", function () {
 
 //When app is rdy, create window
 app.once("ready", function () {
-  log.info(app.getPath('userData'));
-  log.info(app.getPath('appData'));
-  log.info(app.getPath('music'));
   if (process.platform == "linux") {
     function registerBindings(desktopEnv, session) {
       session.getInterface(
