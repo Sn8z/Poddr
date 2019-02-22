@@ -22,7 +22,7 @@
   "devDependencies": {
     "electron": "4.0.5",
     "electron-builder": "20.38.5",
-    "mocha": "^6.0.0",
+    "mocha": "^6.0.1",
     "spectron": "^5.0.0"
   },
   "build": {
