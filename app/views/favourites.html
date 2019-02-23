@@ -1,10 +1,8 @@
 <div id="podcastGrid" ng-controller="FavouritesController" layout="column" layout-padding ng-cloak>
   <div class="row" layout="row" layout-align="center center">
     <h1 flex style="color:white">Favourites</h1>
-    <div flex="nogrow">
-      <md-button class="md-fab" style="background-color: #333333" ng-click="addManualFavourite()">
-        <i class="fas fa-plus"></i>
-      </md-button>
+    <div flex="nogrow" class="add-btn" ng-click="addManualFavourite()">
+      <i class="fas fa-plus"></i>
     </div>
   </div>
   <div class="row" ng-if="isFavouritesEmpty(favourites.all)">
