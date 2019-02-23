@@ -21,7 +21,7 @@
             <md-tooltip md-delay="250">{{ ::favourite.title }}</md-tooltip>
             {{ ::favourite.title }}
           </div>
-          <div flex="10">
+          <div flex="nogrow" style="margin-left:15px;margin-right:15px;">
             <i class="fas fa-times remove-btn" ng-click="removeFavourite(favourite.rss); $event.stopPropagation();">
               <md-tooltip md-direction="top" md-delay="250">Remove favourite</md-tooltip>
             </i>

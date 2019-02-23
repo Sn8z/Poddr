@@ -10,36 +10,45 @@
 		<md-input-container class="select-dropdown" flex="20">
 			<label>Country</label>
 			<md-select name="type" ng-model="region" ng-change="getPodcasts()">
-				<md-option ng-repeat="country in countries track by $index" ng-value="country.iso">{{ ::country.name }}</md-option>
+				<md-option ng-repeat="country in countries track by $index" ng-value="country.iso">{{ ::country.name }}
+				</md-option>
 			</md-select>
 		</md-input-container>
 		<div flex="nogrow" layout="row" layout-align="center center" style="margin-left:15px;">
-			<div class="layout-btn left-btn" ng-class="{ active: layout === 'grid' }" ng-click="layout = 'grid'"><i class="fas fa-th"></i></div>
-			<div class="layout-btn right-btn" ng-class="{ active: layout === 'list' }" ng-click="layout = 'list'"><i class="fas fa-list"></i></div>
+			<div class="layout-btn left-btn" ng-class="{ active: layout === 'grid' }" ng-click="layout = 'grid'"><i
+					class="fas fa-th"></i></div>
+			<div class="layout-btn right-btn" ng-class="{ active: layout === 'list' }" ng-click="layout = 'list'"><i
+					class="fas fa-list"></i></div>
 		</div>
 	</div>
 	<div ng-switch="layout">
 		<div ng-switch-when="grid" style="width:100%">
 			<div class="row" layout="row" layout-wrap>
-				<div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20" ng-repeat="podcast in podcasts"
-				 ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover)">
+				<div class="grid-item" flex-xs="100" flex-sm="50" flex-md="33" flex-lg="25" flex-xl="20"
+					ng-repeat="podcast in podcasts"
+					ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover)">
 					<div class="podcast-frame">
 						<div style="position:relative;width:100%;height:0;padding-top:100%;">
-							<img class="podcast-img" ng-src="{{ ::podcast['im:image'][1]['label'] | itunesPodcastCover }}" onload="this.style.opacity = 1" />
+							<img class="podcast-img"
+								ng-src="{{ ::podcast['im:image'][1]['label'] | itunesPodcastCover }}"
+								onload="this.style.opacity = 1" />
 						</div>
 						<div class="row podcast-title" layout="row" tabindex="-1">
 							<div md-truncate flex>
 								<md-tooltip md-delay="250">{{ ::podcast['im:name']['label'] }}</md-tooltip>
 								{{ ::podcast['im:name']['label'] }}
 							</div>
-							<div flex="15">
-								<i class="far fa-heart fav-btn" ng-if="!isFavourite(podcast['im:name']['label'])" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][1]['label'] | itunesPodcastCover , podcast['im:name']['label']); $event.stopPropagation();">
+							<div flex="nogrow" style="margin-right:10px;margin-left:10px;"
+								ng-if="!isFavourite(podcast['im:name']['label'])">
+								<i class="far fa-heart fav-btn"
+									ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][1]['label'] | itunesPodcastCover , podcast['im:name']['label']); $event.stopPropagation();">
 									<md-tooltip md-direction="top" md-delay="250">Add to favourites</md-tooltip>
 								</i>
 							</div>
-							<div flex="15">
+							<div flex="nogrow" style="margin-right:10px;;margin-left:10px;">
 								<i class="fas fa-info-circle desc-btn" tabindex="0">
-									<md-tooltip md-direction="top" md-delay="250">{{ ::podcast['summary']['label'] | episodeDesc }}</md-tooltip>
+									<md-tooltip md-direction="top" md-delay="250">
+										{{ ::podcast['summary']['label'] | episodeDesc }}</md-tooltip>
 								</i>
 							</div>
 						</div>
@@ -50,10 +59,13 @@
 		<div ng-switch-when="list" style="width:100%">
 			<div class="row" layout="row" layout-wrap>
 				<div flex="100" layout="row" ng-repeat="podcast in podcasts">
-					<div class="podcast-list-item" layout="row" ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover)">
+					<div class="podcast-list-item" layout="row"
+						ng-click="showEpisodes(podcast['id']['attributes']['im:id'], podcast['im:name']['label'], podcast['im:image'][1]['label'] | itunesPodcastCover)">
 						<div flex-xs="20" flex-sm="20" flex-md="10" flex-lg="10" flex-xl="10">
 							<div style="position:relative;width:100%;height:0;padding-top:100%;">
-								<img class="podcast-img" ng-src="{{ ::podcast['im:image'][1]['label'] | itunesPodcastCover }}" onload="this.style.opacity = 1" />
+								<img class="podcast-img"
+									ng-src="{{ ::podcast['im:image'][1]['label'] | itunesPodcastCover }}"
+									onload="this.style.opacity = 1" />
 							</div>
 						</div>
 						<div flex style="padding-left:15px;">
@@ -63,7 +75,8 @@
 							<p style="color:#777;font-size:12px;">{{ ::podcast['summary']['label'] | episodeDesc }}</p>
 						</div>
 						<div flex="10" layout="row" layout-align="center center">
-							<i class="far fa-heart fav-btn fa-icon" ng-if="!isFavourite(podcast['im:name']['label'])" ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][1]['label'] | itunesPodcastCover, podcast['im:name']['label']); $event.stopPropagation();"></i>
+							<i class="far fa-heart fav-btn fa-icon" ng-if="!isFavourite(podcast['im:name']['label'])"
+								ng-click="setFavourite(podcast['id']['attributes']['im:id'], podcast['im:image'][1]['label'] | itunesPodcastCover, podcast['im:name']['label']); $event.stopPropagation();"></i>
 						</div>
 					</div>
 				</div>
