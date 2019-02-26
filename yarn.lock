@@ -713,6 +713,13 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+dbus@^0.2.11:
+  version "0.2.23"
+  resolved "https://registry.yarnpkg.com/dbus/-/dbus-0.2.23.tgz#13764779ca3c081e75086d821636fc215bd9bc01"
+  integrity sha1-E3ZHeco8CB51CG2CFjb8IVvZvAE=
+  dependencies:
+    nan "^2.1.0"
+
 dbus@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/dbus/-/dbus-1.0.3.tgz#bceda148673bc2fcca2042ba06a95965762689bc"
@@ -2137,12 +2144,12 @@ mocha@^6.0.2:
     yargs-parser "11.1.1"
     yargs-unparser "1.5.0"
 
-mpris-service@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/mpris-service/-/mpris-service-1.1.4.tgz#d08f86d0b0b4bf05c07040cd7b60590eaacca7a5"
-  integrity sha512-meB5rDpfeg0H0/ddMFUvoCuVPyNIiRQtlmc3HPlxgPiuiYLtnmWM4eLgsZ71mRqeLK/sh4ylN4YdWrDz+9dabg==
+mpris-service@1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/mpris-service/-/mpris-service-1.1.3.tgz#194ba9f2fdfe56c820dd8bdb14c77c454a03aa58"
+  integrity sha1-GUup8v3+Vsgg3YvbFMd8RUoDqlg=
   dependencies:
-    dbus "^1.0.3"
+    dbus "^0.2.11"
 
 ms@2.0.0:
   version "2.0.0"
