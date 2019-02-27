@@ -34,6 +34,9 @@ for (const arg of argv) {
 //Fix for correctly naming the app...
 app.setPath('userData', app.getPath('userData').replace("Poddr", "poddr"));
 
+//Allow actions before user have interacted with the document
+app.commandLine.appendSwitch('--autoplay-policy','no-user-gesture-required');
+
 //Quit when all windows are closed
 app.on("window-all-closed", function () {
   log.info("Exiting Poddr.");
