@@ -28,6 +28,7 @@ angular
 
     $scope.getDescription = function (podcast) {
       if (podcast.feedURL !== null && podcast.feedUrl.length) {
+        log.info("Getting description for " + podcast.title);
         $http.get(podcast.feedUrl, { timeout: 20000 })
           .then(function (response) {
             parsePodcast(response.data, function (error, data) {

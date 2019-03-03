@@ -77,7 +77,7 @@ angular
 		};
 
 		$scope.openDevTools = function(){
-			log.info("Restarting Poddr with debug enabled.");
+			log.info("Opening DevTools.");
 			var mainWindow = require('electron').remote.BrowserWindow.getAllWindows()[0];
 			mainWindow.openDevTools();
 		};

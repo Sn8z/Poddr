@@ -194,24 +194,25 @@ function FavouriteService($q, $http, ToastService, FavouriteFactory) {
 		var parsePodcast = require("node-podcast-parser");
 		log.info("Manually adding " + rss + " to favourites.");
 		$http.get(rss, { timeout: 20000 })
-			.then(function successCallback(response) {
-				log.info("Successfully fetched podcastfeed.");
-				log.info("Parsing podcastfeed...");
-				parsePodcast(response.data, function (error, data) {
-					if (error) {
-						log.error(error);
-						ToastService.errorToast("Parsing podcastfeed failed.");
-					} else {
-						log.info("Parsing successful for " + data.title);
-						setFavourite(rss, data.image, data.title);
-					}
+			.then(
+				function successCallback(response) {
+					log.info("Successfully fetched podcastfeed.");
+					log.info("Parsing podcastfeed...");
+					parsePodcast(response.data, function (error, data) {
+						if (error) {
+							log.error(error);
+							ToastService.errorToast("Parsing podcastfeed failed.");
+						} else {
+							log.info("Parsing successful for " + data.title);
+							setFavourite(rss, data.image, data.title);
+						}
+					});
+					log.info("Successfully fetched and parsed podcastfeed.");
+				}, function errorCallback(error) {
+					ToastService.errorToast("Failed to add podcast feed.");
+					log.error("Couldn't add " + rss + " to favourites.");
+					log.error(error);
 				});
-			}, function errorCallback(error) {
-				log.error(error);
-				ToastService.errorToast("Failed to add podcast feed.");
-			}).finally(function () {
-				log.info("Successfully fetched and parsed podcastfeed.");
-			})
 	};
 
 	this.removeFavourite = function (rss) {
@@ -245,9 +246,11 @@ function PrevPlayedFactory() {
 
 	return {
 		getGUIDs: function () {
+			log.info("Returning GUIDs.");
 			return prevPlayedEpisodes;
 		},
 		updateGUIDs: function () {
+			log.info("Updating GUIDs.");
 			prevPlayedEpisodes.prevGUIDs = getPrevPlayedEpisodes();
 		}
 	};

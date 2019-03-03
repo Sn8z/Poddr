@@ -93,6 +93,7 @@ app.once("ready", function () {
     }
 
     try {
+      log.info("Registering mediakey bindings.");
       var DBus = require("dbus");
       var session = DBus.getBus("session");
       registerBindings("gnome", session);
