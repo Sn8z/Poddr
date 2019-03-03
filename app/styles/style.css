@@ -296,6 +296,7 @@ md-dialog-content {
   padding:15px;
   width:100%;
   height:auto;
+  cursor: pointer;
 }
 
 /* Genre chip */
