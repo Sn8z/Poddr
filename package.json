@@ -27,6 +27,14 @@
   },
   "build": {
     "appId": "com.sn8z.poddr",
+    "files": [
+      "**/*",
+      "!README.md",
+      "!test/*",
+      "!docs/*",
+      "!images/*",
+      "!logo/*"
+    ],
     "win": {
       "target": "nsis",
       "icon": "build/icon.ico"
