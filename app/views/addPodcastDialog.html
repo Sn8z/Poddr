@@ -1,0 +1,17 @@
+<md-dialog>
+    <md-toolbar>
+        <h2 md-truncate style="margin-left:15px;margin-right:15px">
+            Add podcast RSS feed
+        </h2>
+    </md-toolbar>
+    <md-dialog-content>
+        <div flex class="row" layout="row">
+            <form flex ng-submit="addPodcast(rss)">
+                <input style="font-size:14px;" ng-model="rss" type="text" placeholder="Enter podcast RSS feed" />
+            </form>
+        </div>
+        <div class="row" layout="row" layout-align="center center">
+            <md-button class="md-raised md-primary" ng-click="addPodcast(rss)">Add podcast</md-button>
+        </div>
+    </md-dialog-content>
+</md-dialog>

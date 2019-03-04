@@ -1,6 +1,7 @@
 {
   "name": "poddr",
-  "version": "1.0.9",
+  "productName": "Poddr",
+  "version": "1.1.0",
   "description": "Podcast client",
   "main": "main.js",
   "repository": {
@@ -19,14 +20,21 @@
   "author": "Sn8z",
   "license": "MIT",
   "devDependencies": {
-    "electron": "3.0.8",
-    "electron-builder": "20.31.2",
-    "mocha": "^5.0.1",
+    "electron": "4.0.6",
+    "electron-builder": "20.38.5",
+    "mocha": "^6.0.2",
     "spectron": "^5.0.0"
   },
   "build": {
-    "productName": "Poddr",
     "appId": "com.sn8z.poddr",
+    "files": [
+      "**/*",
+      "!README.md",
+      "!test/*",
+      "!docs/*",
+      "!images/*",
+      "!logo/*"
+    ],
     "win": {
       "target": "nsis",
       "icon": "build/icon.ico"
@@ -41,20 +49,26 @@
         "snap"
       ],
       "category": "Audio;Music;Player;AudioVideo;"
+    },
+    "snap": {
+      "plugs": [
+        "default",
+        "mpris"
+      ]
     }
   },
   "dependencies": {
-    "angular": "^1.7.5",
-    "angular-animate": "^1.7.5",
-    "angular-aria": "^1.7.5",
-    "angular-material": "^1.1.7",
-    "angular-messages": "^1.7.5",
+    "angular": "^1.7.7",
+    "angular-animate": "^1.7.7",
+    "angular-aria": "^1.7.7",
+    "angular-material": "^1.1.13",
+    "angular-messages": "^1.7.7",
     "dbus": "^1.0.3",
-    "electron-json-storage": "^4.1.4",
-    "electron-log": "^2.2.17",
-    "electron-window-state": "^5.0.2",
-    "material-design-icons-iconfont": "^4.0.2",
-    "mpris-service": "^1.1.4",
-    "node-podcast-parser": "^2.0.0"
+    "electron-log": "^3.0.1",
+    "electron-store": "^2.0.0",
+    "electron-window-state": "^5.0.3",
+    "mpris-service": "1.1.3",
+    "node-podcast-parser": "^2.0.0",
+    "pickr-widget": "0.3.5"
   }
 }

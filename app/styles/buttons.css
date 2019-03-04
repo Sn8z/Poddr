@@ -1,0 +1,14 @@
+/* add button */
+.add-btn {
+    background-color: #333;
+    color: #ececec;
+    padding: 10px;
+    text-align: center;
+    justify-content: center;
+    cursor: pointer;
+    background-clip: padding-box;
+}
+
+.add-btn:hover {
+    background-color: #454545;
+}

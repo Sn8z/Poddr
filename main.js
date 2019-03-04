@@ -4,36 +4,63 @@ const Menu = electron.Menu;
 const ipcMain = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const globalShortcut = electron.globalShortcut;
+const nativeImage = electron.nativeImage;
 const windowStateKeeper = require("electron-window-state");
+const path = require("path");
 var log = require("electron-log");
 
 //Global reference to window object;
 var mainWindow = null;
 
+//Launch options
+const options = {
+  debug: false
+};
+
+const argv = process.argv.slice(1);
+log.info("Flags:");
+log.info(argv);
+for (const arg of argv) {
+  if (arg === ".") {
+    continue;
+  } else if (arg === "--debug" || arg === "-d") {
+    log.info("Setting debug to true.");
+    options.debug = true;
+  } else {
+    log.info(arg + " is not a valid flag.");
+  }
+}
+
+//Fix for correctly naming the app...
+app.setPath('userData', app.getPath('userData').replace("Poddr", "poddr"));
+
+//Allow actions before user have interacted with the document
+app.commandLine.appendSwitch('--autoplay-policy','no-user-gesture-required');
+
 //Quit when all windows are closed
-app.on("window-all-closed", function() {
+app.on("window-all-closed", function () {
   log.info("Exiting Poddr.");
   app.quit();
 });
 
-ipcMain.on("quit-app", function() {
+ipcMain.on("quit-app", function () {
   app.quit();
 });
 
-ipcMain.on("raise-app", function() {
+ipcMain.on("raise-app", function () {
   mainWindow.show();
   mainWindow.focus();
 });
 
 //When app is rdy, create window
-app.once("ready", function() {
+app.once("ready", function () {
   if (process.platform == "linux") {
     function registerBindings(desktopEnv, session) {
       session.getInterface(
         `org.${desktopEnv}.SettingsDaemon`,
         `/org/${desktopEnv}/SettingsDaemon/MediaKeys`,
         `org.${desktopEnv}.SettingsDaemon.MediaKeys`,
-        function(error, iface) {
+        function (error, iface) {
           if (error) {
             log.info(desktopEnv);
             log.info(error);
@@ -66,6 +93,7 @@ app.once("ready", function() {
     }
 
     try {
+      log.info("Registering mediakey bindings.");
       var DBus = require("dbus");
       var session = DBus.getBus("session");
       registerBindings("gnome", session);
@@ -75,7 +103,7 @@ app.once("ready", function() {
     }
   } else {
     //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
-    globalShortcut.register("MediaPlayPause", function() {
+    globalShortcut.register("MediaPlayPause", function () {
       mainWindow.webContents.send("toggle-play", "playpause");
     });
   }
@@ -86,6 +114,9 @@ app.once("ready", function() {
     defaultHeight: 900
   });
 
+
+  let icon = path.join(__dirname, "/app/images/icon.png");
+
   mainWindow = new BrowserWindow({
     name: "Poddr",
     minWidth: 640,
@@ -95,14 +126,17 @@ app.once("ready", function() {
     x: mainWindowState.x,
     y: mainWindowState.y,
     frame: false,
-    show: false,
+		show: false,
+		webPreferences: {
+			nodeIntegration: true
+		},
     backgroundColor: "#0f0f0f",
-    icon: __dirname + "/app/images/icon.png"
+    icon: nativeImage.createFromPath(icon)
   });
 
   mainWindowState.manage(mainWindow);
 
-  mainWindow.on("ready-to-show", function() {
+  mainWindow.on("ready-to-show", function () {
     mainWindow.show();
     mainWindow.focus();
   });
@@ -110,9 +144,12 @@ app.once("ready", function() {
   mainWindow.loadURL("file://" + __dirname + "/app/index.html");
 
   //Devtools
-  //mainWindow.webContents.openDevTools({ mode: "detach" });
+  if (options.debug) {
+    log.info("Enabling DevTools.");
+    mainWindow.webContents.openDevTools({ mode: "detach" });
+  }
 
-  mainWindow.on("closed", function() {
+  mainWindow.on("closed", function () {
     mainWindow = null;
   });
 
@@ -125,7 +162,7 @@ app.once("ready", function() {
           {
             label: "Quit",
             accelerator: "Command+Q",
-            click: function() {
+            click: function () {
               app.quit();
             }
           }
@@ -154,7 +191,7 @@ app.once("ready", function() {
     { label: "Select all", accelerator: "CmdOrCtrl+A", role: "selectall" }
   ];
 
-  mainWindow.webContents.on("context-menu", function(e, params) {
+  mainWindow.webContents.on("context-menu", function (e, params) {
     Menu.buildFromTemplate(contextMenuTemplate).popup(
       mainWindow,
       params.x,
