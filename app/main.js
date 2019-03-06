@@ -115,7 +115,7 @@ app.once("ready", function () {
   });
 
 
-  let icon = path.join(__dirname, "/app/images/icon.png");
+  let icon = path.join(__dirname, "/images/icon.png");
 
   mainWindow = new BrowserWindow({
     name: "Poddr",
@@ -141,7 +141,7 @@ app.once("ready", function () {
     mainWindow.focus();
   });
 
-  mainWindow.loadURL("file://" + __dirname + "/app/index.html");
+  mainWindow.loadURL("file://" + __dirname + "/index.html");
 
   //Devtools
   if (options.debug) {
