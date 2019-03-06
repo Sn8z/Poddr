@@ -19,50 +19,6 @@ angular
 
 		$scope.episodesNav = $mdSidenav("right");
 
-		var mprisPlayer;
-		if (process.platform == "linux") {
-			var mpris = require("mpris-service");
-
-			mprisPlayer = mpris({
-				name: "poddr",
-				identity: "Poddr",
-				canRaise: true,
-				supportedInterfaces: ["player"]
-			});
-
-			mprisPlayer.rate = 1 + 1e-15;
-			mprisPlayer.minimumRate = 1 + 1e-15;
-			mprisPlayer.maximumRate = 1 + 1e-15;
-			mprisPlayer.canPlay = true;
-			mprisPlayer.canPause = true;
-			mprisPlayer.canSeek = false;
-			mprisPlayer.canControl = false;
-			mprisPlayer.canGoNext = false;
-			mprisPlayer.canGoPrevious = false;
-			mprisPlayer.canEditTracks = false;
-			mprisPlayer.playbackStatus = "Stopped";
-
-			mprisPlayer.on("playpause", function () {
-				togglePlay();
-			});
-
-			mprisPlayer.on("play", function () {
-				if (player.paused) togglePlay();
-			});
-
-			mprisPlayer.on("pause", function () {
-				if (!player.paused) togglePlay();
-			});
-
-			mprisPlayer.on("quit", function () {
-				ipc.send("quit-app");
-			});
-
-			mprisPlayer.on("raise", function () {
-				ipc.send("raise-app");
-			});
-		}
-
 		//create the audio element
 		var player = document.createElement("audio");
 		player.volume = $scope.volume = 0.5;
@@ -72,7 +28,6 @@ angular
 
 		//listen for messages from main process
 		ipc.on("toggle-play", function (event, message) {
-			log.info("IPC~ Toggle Play/Pause.");
 			togglePlay();
 		});
 
@@ -90,29 +45,25 @@ angular
 			log.info("Loaded playerstate.");
 		}
 
-		if (process.platform == "linux") {
-			$timeout(function () {
-				log.info("Initialize MPRIS metadata.");
-				mprisPlayer.metadata = {
-					"mpris:artUrl": playerState.episodeCover || playerState.podcastCover || "",
-					"xesam:title": playerState.podcastEpisodeTitle || "No title",
-					"xesam:album": "Podcast",
-					"xesam:artist": [playerState.podcastTitle || "No artist"]
-				};
-			}, 3000);
-		}
-
 		log.info("Getting saved volume.");
 		player.volume = $scope.volume = store.get("volume", 0.5);
 
+		//Update mediainfo on startup
+		var mediaObject = {
+			"image": playerState.episodeCover || playerState.podcastCover || "",
+			"title": playerState.podcastEpisodeTitle || "No title",
+			"artist": [playerState.podcastTitle || "No artist"]
+		}
+		ipc.send("media-update", mediaObject);
+
 		player.addEventListener("play", function () {
 			log.info("Playing podcast.");
-			if (process.platform == "linux") mprisPlayer.playbackStatus = "Playing";
+			ipc.send("media-play");
 		});
 
 		player.addEventListener("pause", function () {
 			log.info("Paused podcast.");
-			if (process.platform == "linux") mprisPlayer.playbackStatus = "Stopped";
+			ipc.send("media-pause");
 		});
 
 		player.addEventListener("loadstart", function () {
@@ -176,18 +127,15 @@ angular
 			} else {
 				PlayerService.episodeCover = episode.image;
 			}
-
-			if (process.platform == "linux") {
-				log.info("Setting MPRIS metadata.");
-				mprisPlayer.metadata = {
-					"mpris:artUrl": PlayerService.episodeCover || "",
-					"xesam:title": PlayerService.podcastEpisodeTitle || "No title",
-					"xesam:album": "Podcast",
-					"xesam:artist": [PlayerService.podcastTitle || "No artist"]
-				};
-			}
-
 			PlayerService.saveState();
+
+			//Update mediainfo
+			var mediaObject = {
+				"image": PlayerService.episodeCover || PlayerService.podcastCover || "",
+				"title": PlayerService.podcastEpisodeTitle || "No title",
+				"artist": [PlayerService.podcastTitle || "No artist"]
+			}
+			ipc.send("media-update", mediaObject);
 		}
 		$rootScope.playPodcast = playPodcast;
 

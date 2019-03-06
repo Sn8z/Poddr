@@ -271,7 +271,7 @@ function PrevPlayedService(PrevPlayedFactory) {
 	};
 
 	this.removePrevPlayed = function (guid) {
-		prevPlayedStore.delete(guid);
+		prevPlayedStore.delete(guid.replace(/\./g, '\\.'));
 		PrevPlayedFactory.updateGUIDs();
 		log.info("Removed " + guid + " from previously played episodes.");
 	};
