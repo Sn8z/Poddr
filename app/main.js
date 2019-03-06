@@ -1,6 +1,5 @@
 const electron = require("electron");
 const app = electron.app;
-const Menu = electron.Menu;
 const ipcMain = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const globalShortcut = electron.globalShortcut;
@@ -153,49 +152,7 @@ app.once("ready", function () {
     mainWindow = null;
   });
 
-  //Context & application menus
-  if (process.platform == "darwin") {
-    var menuTemplate = [
-      {
-        label: "Poddr",
-        submenu: [
-          {
-            label: "Quit",
-            accelerator: "Command+Q",
-            click: function () {
-              app.quit();
-            }
-          }
-        ]
-      },
-      {
-        label: "Edit",
-        submenu: [
-          { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-          { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-          { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-          {
-            label: "Select All",
-            accelerator: "CmdOrCtrl+A",
-            selector: "selectAll:"
-          }
-        ]
-      }
-    ];
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
-  }
-  contextMenuTemplate = [
-    { label: "Cut", accelerator: "CmdOrCtrl+X", role: "cut" },
-    { label: "Copy", accelerator: "CmdOrCtrl+C", role: "copy" },
-    { label: "Paste", accelerator: "CmdOrCtrl+V", role: "paste" },
-    { label: "Select all", accelerator: "CmdOrCtrl+A", role: "selectall" }
-  ];
 
-  mainWindow.webContents.on("context-menu", function (e, params) {
-    Menu.buildFromTemplate(contextMenuTemplate).popup(
-      mainWindow,
-      params.x,
-      params.y
-    );
-  });
+  //require menus
+  require("./scripts/contextMenu");
 });
