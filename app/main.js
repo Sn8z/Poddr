@@ -1,6 +1,5 @@
 const electron = require("electron");
 const app = electron.app;
-const ipcMain = electron.ipcMain;
 const BrowserWindow = electron.BrowserWindow;
 const nativeImage = electron.nativeImage;
 const windowStateKeeper = require("electron-window-state");
@@ -94,6 +93,7 @@ app.once("ready", function () {
   if (process.platform == "linux") {
     //require mpris module (and mby dbus module)
     require("./scripts/mpris");
+    require("./scripts/dbus");
   } else {
     //globalshortcuts for mediakeys (windows & mac)
     require("./scripts/mediakeys");
