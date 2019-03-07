@@ -728,7 +728,7 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-dbus-next@0.3.1, dbus-next@^0.3.1:
+dbus-next@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.3.1.tgz#748d54e0eabc7bce4852496f67e27d73b48e8917"
   integrity sha512-tTmAZmXrGtJpEaZ3EZUoxPSAZAaofZYhyVcxk2o9/g+KQOYNlEC8lMvLFFAgBn/kXOveLViZWEB0OUP2hR69Yg==
@@ -736,6 +736,21 @@ dbus-next@0.3.1, dbus-next@^0.3.1:
     event-stream "3.3.4"
     hexy "^0.2.10"
     jsbi "^2.0.5"
+    put "0.0.6"
+    safe-buffer "^5.1.1"
+    xml2js "^0.4.17"
+  optionalDependencies:
+    abstract-socket "^2.0.0"
+
+dbus-next@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.3.2.tgz#95cbd667ad80b27873a4e6bddd161d44318435e1"
+  integrity sha512-jdYP6WLBJgu59VfA/B/WtffURd0GFWbP+MMGv9W7sGmWX48BqRxeWRrgs8iy9vzwcpjMt0uuPGDSdwzEm3tDWg==
+  dependencies:
+    event-stream "3.3.4"
+    hexy "^0.2.10"
+    jsbi "^2.0.5"
+    long "^4.0.0"
     put "0.0.6"
     safe-buffer "^5.1.1"
     xml2js "^0.4.17"
@@ -2054,6 +2069,11 @@ log-symbols@2.2.0:
   integrity sha512-VeIAFslyIerEJLXHziedo2basKbMKtTw3vfn5IzG0XTjhAVEJyNHnL2p7vc+wBDSdQuUpNw3M2u6xb9QsAY5Eg==
   dependencies:
     chalk "^2.0.1"
+
+long@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
+  integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
 loud-rejection@^1.0.0:
   version "1.6.0"
