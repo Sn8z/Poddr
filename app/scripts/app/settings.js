@@ -46,15 +46,16 @@ angular
 			},
 			strings: {
 				save: 'Set color'
-			},
-			onSave(hsva) {
-				changeColor(hsva.toHEX().toString());
 			}
 		});
 
-		$timeout(function() {
+		pickr.on("init", function () {
 			pickr.setColor(store.get("color", "#ff9900"));
-		}, 50);
+		});
+
+		pickr.on("save", function (hsva) {
+			changeColor(hsva.toHEX().toString());
+		});
 
 		$scope.openURL = function (url) {
 			require("electron").shell.openExternal(url);
@@ -76,7 +77,7 @@ angular
 			app.exit(0);
 		};
 
-		$scope.openDevTools = function(){
+		$scope.openDevTools = function () {
 			log.info("Opening DevTools.");
 			var mainWindow = require('electron').remote.BrowserWindow.getAllWindows()[0];
 			mainWindow.openDevTools();

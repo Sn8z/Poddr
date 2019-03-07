@@ -58,6 +58,7 @@
     }
   },
   "dependencies": {
+    "@simonwep/pickr": "^0.4.2",
     "angular": "^1.7.7",
     "angular-animate": "^1.7.7",
     "angular-aria": "^1.7.7",
@@ -69,7 +70,6 @@
     "electron-store": "^2.0.0",
     "electron-window-state": "^5.0.3",
     "mpris-service": "2.0.0",
-    "node-podcast-parser": "^2.0.0",
-    "pickr-widget": "0.3.5"
+    "node-podcast-parser": "^2.0.0"
   }
 }
