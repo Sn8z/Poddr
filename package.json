@@ -58,7 +58,7 @@
     }
   },
   "dependencies": {
-    "@simonwep/pickr": "^0.4.2",
+    "@simonwep/pickr": "^0.4.3",
     "angular": "^1.7.7",
     "angular-animate": "^1.7.7",
     "angular-aria": "^1.7.7",
