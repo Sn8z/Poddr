@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-4.1.0.tgz#33eff662a5c39c0c2061170cc003c5120743fff0"
   integrity sha512-AsnBZN3a8/JcNt+KPkGGODaA4c7l3W5+WpeKgGSbstSLxqWtTXqd1ieJGBQ8IFCtRg8DmmKUcSkIkUc0A4p3YA==
 
-"@simonwep/pickr@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-0.4.2.tgz#a2926de6c6b024c833c377d92422f97e0240f92c"
-  integrity sha512-92ErTdTjVrJybS84qhbzjso/Pbce4KDgmUGiGldYg1zyZd1D/9ld14uShD4TnbVaoHrV/GP+STJyX7Mqu7bsEg==
+"@simonwep/pickr@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-0.4.3.tgz#ed380f90d440b9fa0fba06272ebd1f567772fea4"
+  integrity sha512-uD4UKKsFEWM7ChiWVOr3AMJcvjVd5lgYrHEhddPh2e2h+28DnQnog8eILxSVhknR1/KSfm0c+uSF+o3YKUnlEg==
 
 "@types/node@^10.12.18":
   version "10.12.18"
