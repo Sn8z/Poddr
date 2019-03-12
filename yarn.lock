@@ -55,10 +55,10 @@ angular-animate@^1.7.8:
   resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.7.8.tgz#c95f237efe7ecfe0e6003adb5e2c7ef0e5a2b9d4"
   integrity sha512-bINtzizq7TbJzfVrDpwLfTxVl0Qd7fRNWFb5jKYI1vaFZobQNX/QONXlLow6ySsDbZ6eLECycB7mvWtfh1YYaw==
 
-angular-aria@^1.7.7:
-  version "1.7.7"
-  resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.7.tgz#f7d16f18fdd5ce1140213ef8e61ca813fa686827"
-  integrity sha512-Jju0VudfKVp+6FUtfzpDBuOJE8+8cGPSM10nRicXvJRX/Nx/YOu38f2aL3HQwThrRK+3E5jfo7yRwVNYoSmSxg==
+angular-aria@^1.7.8:
+  version "1.7.8"
+  resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.8.tgz#3954250ef516b57cdd3cdf41ff4ee6fcfdc84ceb"
+  integrity sha512-facq/111sZKL2wUUqRA1GnGt+lZ8KAcX9Aw04cNA+OyEkoaoRC77NY4VSOTQxghlSd0OPAdLeFnmETnuiWrpLg==
 
 angular-material@^1.1.13:
   version "1.1.13"
