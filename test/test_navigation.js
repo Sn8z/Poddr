@@ -6,7 +6,7 @@ describe("Application navigation", function () {
   beforeEach(function () {
     this.app = new Application({
       path: `${__dirname}/../node_modules/.bin/electron`,
-      args: ["app/main.js"]
+      args: ["src/main.js"]
     });
     return this.app.start();
   });
