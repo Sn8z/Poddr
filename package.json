@@ -1,7 +1,7 @@
 {
   "name": "poddr",
   "productName": "Poddr",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Podcast client",
   "main": "src/main.js",
   "repository": {
