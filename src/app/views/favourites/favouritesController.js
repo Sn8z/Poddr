@@ -13,7 +13,7 @@ angular
 
     $scope.addManualFavourite = function () {
       $mdDialog.show({
-        templateUrl: __dirname + "/views/addPodcastDialog.html",
+        templateUrl: __dirname + "../../views/dialogs/addPodcastDialog.html",
         clickOutsideToClose: true,
         escapeToClose: true,
         controller: function ($scope, FavouriteService) {

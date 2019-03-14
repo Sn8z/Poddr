@@ -6,7 +6,6 @@ angular
 		$mdDialog,
 		$mdSidenav,
 		PlayerService,
-		$timeout,
 		ToastService,
 		FavouriteService,
 		FavouriteFactory,
@@ -194,7 +193,7 @@ angular
 
 		$scope.showDescription = function (title, text) {
 			$mdDialog.show({
-				templateUrl: __dirname + "/views/dialog.html",
+				templateUrl: __dirname + "../../views/dialogs/descriptionDialog.html",
 				locals: { title: title, text: text },
 				clickOutsideToClose: true,
 				escapeToClose: true,

@@ -49,7 +49,7 @@ app.once("ready", function () {
     defaultHeight: 900
   });
 
-  let icon = path.join(__dirname, "/images/icon.png");
+  let icon = path.join(__dirname, "/app/assets/images/icon.png");
 
   mainWindow = new BrowserWindow({
     name: "Poddr",
@@ -75,7 +75,7 @@ app.once("ready", function () {
     mainWindow.focus();
   });
 
-  mainWindow.loadURL("file://" + __dirname + "/index.html");
+  mainWindow.loadURL("file://" + __dirname + "/app/core/index.html");
 
   //Devtools
   if (options.debug) {
@@ -88,15 +88,15 @@ app.once("ready", function () {
   });
 
   //require menus
-  require("./scripts/contextMenu");
+  require("./utils/contextMenu");
 
   if (process.platform == "linux") {
     //require mpris module (and mby dbus module)
-    require("./scripts/mpris");
-    require("./scripts/dbus");
+    require("./utils/mpris");
+    require("./utils/dbus");
   } else {
     //globalshortcuts for mediakeys (windows & mac)
-    require("./scripts/mediakeys");
+    require("./utils/mediakeys");
   }
 
 });

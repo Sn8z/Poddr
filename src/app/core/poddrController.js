@@ -229,7 +229,7 @@ app.directive("podcasts", function () {
 	return {
 		restrict: "AE",
 		replace: true,
-		templateUrl: "views/podcasts.html"
+		templateUrl: "../views/toplist/toplist.html"
 	};
 });
 
@@ -237,7 +237,7 @@ app.directive("search", function () {
 	return {
 		restrict: "AE",
 		replace: true,
-		templateUrl: "views/search.html"
+		templateUrl: "../views/search/search.html"
 	};
 });
 
@@ -245,7 +245,7 @@ app.directive("favourites", function () {
 	return {
 		restrict: "AE",
 		replace: true,
-		templateUrl: "views/favourites.html"
+		templateUrl: "../views/favourites/favourites.html"
 	};
 });
 
@@ -253,7 +253,7 @@ app.directive("settings", function () {
 	return {
 		restrict: "AE",
 		replace: true,
-		templateUrl: "views/settings.html"
+		templateUrl: "../views/settings/settings.html"
 	};
 });
 
@@ -261,6 +261,6 @@ app.directive("episodes", function () {
 	return {
 		restrict: "AE",
 		replace: true,
-		templateUrl: "views/episodes.html"
+		templateUrl: "../views/episodes/episodes.html"
 	};
 });

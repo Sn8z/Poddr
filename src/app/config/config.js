@@ -286,7 +286,7 @@ function RegionService(ToastService) {
 		var countries = [];
 		log.info("Fetching storefronts...");
 		//Load local JSON with iTunes storefronts
-		fs.readFile(__dirname + "/scripts/storefronts.json", function (
+		fs.readFile(__dirname + "/../config/storefronts.json", function (
 			error,
 			response
 		) {
