@@ -1,3 +1,4 @@
+const app  = require("electron").app;
 const contextMenu = require('electron-context-menu');
 
 (function () {
@@ -16,6 +17,7 @@ const contextMenu = require('electron-context-menu');
     });
 
     if (process.platform == "darwin") {
+        const Menu = require("electron").Menu;
         var menuTemplate = [
             {
                 label: "Poddr",
