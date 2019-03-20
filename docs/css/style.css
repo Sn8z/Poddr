@@ -1,18 +1,52 @@
+* {
+    font-family: 'Rubik', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+html,
 body {
-  background-color: #FFF;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
-.icon-block {
-  padding: 0 15px;
+
+body {
+    display: flex;
+    flex-direction: column;
 }
-.icon-block .material-icons {
-	font-size: inherit;
+
+main {
+    flex: 1 0 auto;
 }
-#logo {
-  width: 75px;
-  height: 75px;
+
+.brand-logo>img {
+    width: 25px;
+    height: 25px;
 }
-#author {
-  color: black;
-  font-weight: bold;
-  font-style: italic;
+
+.brand-logo>span,
+.brand-logo>img {
+    vertical-align: middle;
+}
+
+a.anchor {
+    display: block;
+    position: relative;
+    top: -64px;
+    visibility: hidden;
+}
+
+.hello {
+    height: calc(100vh - 64px);
+    background-image: url("../images/poddr_bg.png") !important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
+}
+
+.screenshot {
+    box-shadow: 0px 0px 25px 2px #000;
 }
