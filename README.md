@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="images/poddr-logo.png" alt="Poddr" width="60" height="60">
+    <img src="docs/images/icon.png" alt="Poddr" width="60" height="60">
     <h1>Poddr</h1>
     <img src="https://img.shields.io/github/release/sn8z/poddr.svg?style=flat-square">
     <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg?style=flat-square">
@@ -8,16 +8,18 @@
 </div>
 
 
-
+[Website](https://sn8z.github.io/Poddr/)
  
-Podcast client built with Electron and AngularJS.
+Podcast client built with Electron and Angular.
  
 Poddr uses iTunes RSS feeds and Search API to gather information.
 ### Screenshots
 
-![Screenshot](images/poddr.png)
+![Screenshot](docs/images/screenshot_1.png)
 
-![Screenshot](images/poddr_2.png)
+![Screenshot](docs/images/screenshot_2.png)
+
+![Screenshot](docs/images/screenshot_5.png)
 
 ### Downloads
 
@@ -56,6 +58,6 @@ Check out his [Instagram](https://www.instagram.com/radudangratian/)!
 <hr>
 
 #### If you enjoy using Poddr and want to contribute feel free to buy me a coffee on Ko-fi!
-[![ko-fi](https://www.ko-fi.com/img/donate_sm.png)](https://ko-fi.com/O5O2ETUW)
+[![ko-fi](https://www.ko-fi.com/img/donate_sm.png)](https://ko-fi.com/sneitz)
 
 <hr>
