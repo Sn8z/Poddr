@@ -20,7 +20,7 @@
   "author": "Sn8z",
   "license": "MIT",
   "devDependencies": {
-    "electron": "4.1.0",
+    "electron": "4.1.1",
     "electron-builder": "20.39.0",
     "mocha": "^6.0.2",
     "spectron": "^5.0.0"
