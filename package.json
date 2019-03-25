@@ -66,7 +66,7 @@
     "angular-messages": "^1.7.8",
     "dbus-next": "^0.3.2",
     "electron-context-menu": "^0.11.0",
-    "electron-log": "^3.0.1",
+    "electron-log": "^3.0.3",
     "electron-store": "^3.0.0",
     "electron-window-state": "^5.0.3",
     "mpris-service": "2.0.0",
