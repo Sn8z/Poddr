@@ -18,7 +18,7 @@
     "dist:linux": "build --linux"
   },
   "author": "Sn8z",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "devDependencies": {
     "electron": "4.0.6",
     "electron-builder": "20.38.5",
