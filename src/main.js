@@ -71,6 +71,20 @@ app.once("ready", function () {
   mainWindowState.manage(mainWindow);
 
   mainWindow.on("ready-to-show", function () {
+
+    //require menus
+    require("./utils/contextMenu")();
+
+    if (process.platform == "linux") {
+      //require mpris module (and mby dbus module)
+      require("./utils/mpris")(mainWindow);
+      require("./utils/dbus")(mainWindow);
+    } else {
+      //globalshortcuts for mediakeys (windows & mac)
+      require("./utils/mediakeys")(mainWindow);
+    }
+
+    //Show and focus window
     mainWindow.show();
     mainWindow.focus();
   });
@@ -86,17 +100,5 @@ app.once("ready", function () {
   mainWindow.on("closed", function () {
     mainWindow = null;
   });
-
-  //require menus
-  require("./utils/contextMenu");
-
-  if (process.platform == "linux") {
-    //require mpris module (and mby dbus module)
-    require("./utils/mpris");
-    require("./utils/dbus");
-  } else {
-    //globalshortcuts for mediakeys (windows & mac)
-    require("./utils/mediakeys");
-  }
 
 });
