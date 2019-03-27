@@ -9,53 +9,21 @@
     "url": "git://github.com/Sn8z/Poddr.git"
   },
   "scripts": {
-    "postinstall": "electron-builder install-app-deps",
-    "test": "mocha",
     "start": "./node_modules/.bin/electron .",
-    "dist": "electron-builder -wl",
+    "dist": "build",
     "dist:mac": "build --mac",
     "dist:win": "build --win",
-    "dist:linux": "build --linux"
+    "dist:linux": "build --linux",
+    "postinstall": "build install-app-deps",
+    "test": "mocha"
   },
-  "author": "Sn8z",
-  "license": "MIT",
+  "author": "Marcus Sneitz <marcus.sneitz@gmail.com>",
+  "license": "GPL-3.0",
   "devDependencies": {
     "electron": "4.1.1",
     "electron-builder": "20.39.0",
     "mocha": "^6.0.2",
     "spectron": "^5.0.0"
-  },
-  "build": {
-    "appId": "com.sn8z.poddr",
-    "files": [
-      "**/*",
-      "!README.md",
-      "!test/*",
-      "!docs/*",
-      "!images/*",
-      "!logo/*"
-    ],
-    "win": {
-      "target": "nsis",
-      "icon": "build/icon.ico"
-    },
-    "mac": {
-      "target": "dmg",
-      "icon": "build/icon.icns"
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "snap"
-      ],
-      "category": "Audio;Music;Player;AudioVideo;"
-    },
-    "snap": {
-      "plugs": [
-        "default",
-        "mpris"
-      ]
-    }
   },
   "dependencies": {
     "@simonwep/pickr": "^0.4.4",
