@@ -34,15 +34,6 @@ module.exports = mainWindow => {
       "org." + desktop + ".SettingsDaemon.MediaKeys",
       0
     );
-
-    //Grab mediakeys again on focus to make sure another program haven't taken them
-    mainWindow.on("focus", function() {
-      log.info("Grabbing mediakeys.");
-      mediaKeys.GrabMediaPlayerKeys(
-        "org." + desktop + ".SettingsDaemon.MediaKeys",
-        0
-      );
-    });
   }
 
   try {
