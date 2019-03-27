@@ -1,14 +1,11 @@
-const electron = require("electron");
-const globalShortcut = electron.globalShortcut;
-const BrowserWindow = electron.BrowserWindow;
+const globalShortcut = require("electron").globalShortcut;
 const log = require("electron-log");
 
-(function() {
+module.exports = (mainWindow) => {
   log.info("Loading globalshortcuts for " + process.platform);
-  var mainWindow = BrowserWindow.getAllWindows()[0];
 
   //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
-  globalShortcut.register("MediaPlayPause", function() {
+  globalShortcut.register("MediaPlayPause", function () {
     mainWindow.webContents.send("toggle-play");
   });
-})();
+}
