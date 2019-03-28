@@ -1,6 +1,6 @@
 {
   "appId": "com.sn8z.poddr",
-  "files": ["**/*", "!README.md", "!test/*", "!docs/*", "!images/*", "!logo/*"],
+  "files": ["**/*", "!README.md", "!docs/*", "!images/*", "!logo/*", "!src/", "!dist/"],
   "win": { "target": "nsis", "icon": "build/icon.ico" },
   "mac": { "target": "dmg", "icon": "build/icon.icns" },
   "linux":

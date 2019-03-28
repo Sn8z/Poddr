@@ -1,0 +1,35 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url("https://fonts.googleapis.com/css?family=Rubik");
+@import url("https://use.fontawesome.com/releases/v5.8.1/css/all.css");
+@import "../node_modules/bulma/css/bulma.min.css";
+@import "./assets/styles/scrollbar.css";
+
+:root {
+  --primary-color: rgb(248, 162, 2);
+  --primary-bg-color: #111;
+  --secondary-bg-color: #222;
+  --third-bg-color: #444;
+  --titlebar-height: 35px;
+}
+
+* {
+  font-family: "Rubik", sans-serif;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100vh;
+  max-height: 100vh;
+  width: 100vw;
+  max-width: 100vw;
+  background-color: var(--primary-bg-color);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+}
