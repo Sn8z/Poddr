@@ -32,7 +32,7 @@
     "angular-aria": "^1.7.8",
     "angular-material": "^1.1.14",
     "angular-messages": "^1.7.8",
-    "dbus-next": "^0.4.1",
+    "dbus-next": "^0.4.2",
     "electron-context-menu": "^0.11.0",
     "electron-log": "^3.0.3",
     "electron-store": "^3.0.0",

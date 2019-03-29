@@ -752,10 +752,10 @@ dbus-next@0.3.1:
   optionalDependencies:
     abstract-socket "^2.0.0"
 
-dbus-next@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.4.1.tgz#544337cdfdc8e342f78da215535068a6149826df"
-  integrity sha512-0DyIHpN2GK/zmpXFuM8C372dWSBIPuhaFaHcgcM2NPaZBPwviTclCgwZbn0mILPct/WI5C4rTTik08zkN5+jrw==
+dbus-next@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.4.2.tgz#dbd6f17b78c876118dd4676de7b22efb524386f3"
+  integrity sha512-i6ZY6R1GjxsDMkZ1QkeIzK+3qBWh7YDcRDwWAFtTCIgrcV1TRTkSHYYJXBFaI+CH9b27owmCKgxGuRR5Aoejxg==
   dependencies:
     event-stream "3.3.4"
     hexy "^0.2.10"
