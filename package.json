@@ -20,7 +20,7 @@
   "author": "Marcus Sneitz <marcus.sneitz@gmail.com>",
   "license": "GPL-3.0",
   "devDependencies": {
-    "electron": "4.1.1",
+    "electron": "4.1.2",
     "electron-builder": "20.39.0",
     "mocha": "^6.0.2",
     "spectron": "^5.0.0"
