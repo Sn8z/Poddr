@@ -60,10 +60,10 @@ angular-aria@^1.7.8:
   resolved "https://registry.yarnpkg.com/angular-aria/-/angular-aria-1.7.8.tgz#3954250ef516b57cdd3cdf41ff4ee6fcfdc84ceb"
   integrity sha512-facq/111sZKL2wUUqRA1GnGt+lZ8KAcX9Aw04cNA+OyEkoaoRC77NY4VSOTQxghlSd0OPAdLeFnmETnuiWrpLg==
 
-angular-material@^1.1.14:
-  version "1.1.14"
-  resolved "https://registry.yarnpkg.com/angular-material/-/angular-material-1.1.14.tgz#1f5e1a272a953d96870adfdb333d943617939978"
-  integrity sha512-vlimuonLiR615j/2Vi+zr+yt4xZ6oE+8ZSj2r2QJpkcV7NPh9Qwy5gpypA5gPfyCN7/4DmT/oq+hFgecWlOaeQ==
+angular-material@^1.1.17:
+  version "1.1.17"
+  resolved "https://registry.yarnpkg.com/angular-material/-/angular-material-1.1.17.tgz#0a82a6630e9cb3518e2f1e6303fd74740953a640"
+  integrity sha512-PenTkOngqjoAN0Tahpo0fr7qNqrF0PRNRhJn+fnmAW3GdJyP+IV2UTl6ksoebyeEiV8mq65LfwCcsMjTS+MucA==
 
 angular-messages@^1.7.8:
   version "1.7.8"
