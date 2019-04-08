@@ -30,7 +30,7 @@
     "angular": "^1.7.8",
     "angular-animate": "^1.7.8",
     "angular-aria": "^1.7.8",
-    "angular-material": "^1.1.14",
+    "angular-material": "^1.1.18",
     "angular-messages": "^1.7.8",
     "dbus-next": "^0.4.1",
     "electron-context-menu": "^0.11.0",
