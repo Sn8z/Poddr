@@ -61,7 +61,7 @@
     "bulma": "^0.7.4",
     "bulma-toast": "^1.5.1",
     "core-js": "^2.5.4",
-    "dbus-next": "^0.4.1",
+    "dbus-next": "^0.5.1",
     "electron-context-menu": "^0.11.0",
     "electron-log": "^3.0.3",
     "electron-store": "^3.0.0",
