@@ -2112,21 +2112,6 @@ date-now@^0.1.4:
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
   integrity sha1-6vQ5/U1ISK105cx9vvIAZyueNFs=
 
-dbus-next@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.4.1.tgz#544337cdfdc8e342f78da215535068a6149826df"
-  integrity sha512-0DyIHpN2GK/zmpXFuM8C372dWSBIPuhaFaHcgcM2NPaZBPwviTclCgwZbn0mILPct/WI5C4rTTik08zkN5+jrw==
-  dependencies:
-    event-stream "3.3.4"
-    hexy "^0.2.10"
-    jsbi "^2.0.5"
-    long "^4.0.0"
-    put "0.0.6"
-    safe-buffer "^5.1.1"
-    xml2js "^0.4.17"
-  optionalDependencies:
-    abstract-socket "^2.0.0"
-
 dbus-next@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.5.1.tgz#94bb1a30d744bc75045be40e40b59e7a195fd882"
