@@ -331,10 +331,10 @@
     semver "5.6.0"
     semver-intersect "1.4.0"
 
-"@simonwep/pickr@^0.4.4":
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-0.4.4.tgz#5151de21d9e28ad7e7fa20b3c9e8042782ea8220"
-  integrity sha512-dP5x3sn/Y6Auu2nVdHKBBg7GHA5BBoTY5YKspe9HLhf0Ve+5OixRJyhUg8r6UimrlxCT3PX40Umxy2c+bZmsaA==
+"@simonwep/pickr@^0.4.7":
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-0.4.7.tgz#647c921dc0c1c903b59e25b11b42e9044a3d99a3"
+  integrity sha512-STb4Ep5U2IndcLYbZ4illL41A9yK8lhS55bArTqF7U4uPPoIZaN37X57thheuhh9ztygQEzMjXv2cyGOlXYK/g==
 
 "@types/jasmine@*":
   version "3.3.12"
@@ -5298,11 +5298,6 @@ normalize-range@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/normalize-range/-/normalize-range-0.1.2.tgz#2d10c06bdfd312ea9777695a4d28439456b75942"
   integrity sha1-LRDAa9/TEuqXd2laTShDlFa3WUI=
-
-nouislider@^13.1.4:
-  version "13.1.4"
-  resolved "https://registry.yarnpkg.com/nouislider/-/nouislider-13.1.4.tgz#1927e8787b3f8876d7b942999e9968b234e8bc8f"
-  integrity sha512-XcGdAkjDNjaciL4rBdf6/0Yfj7cVCPD9lUjFfOJnUdku4XaJUFa3Im3w8NnCuJFZ3NraRATREjpqDfbQIRRU0w==
 
 npm-bundled@^1.0.1:
   version "1.0.6"
