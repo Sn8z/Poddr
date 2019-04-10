@@ -2112,24 +2112,25 @@ date-now@^0.1.4:
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
   integrity sha1-6vQ5/U1ISK105cx9vvIAZyueNFs=
 
-dbus-next@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.3.1.tgz#748d54e0eabc7bce4852496f67e27d73b48e8917"
-  integrity sha512-tTmAZmXrGtJpEaZ3EZUoxPSAZAaofZYhyVcxk2o9/g+KQOYNlEC8lMvLFFAgBn/kXOveLViZWEB0OUP2hR69Yg==
+dbus-next@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.4.1.tgz#544337cdfdc8e342f78da215535068a6149826df"
+  integrity sha512-0DyIHpN2GK/zmpXFuM8C372dWSBIPuhaFaHcgcM2NPaZBPwviTclCgwZbn0mILPct/WI5C4rTTik08zkN5+jrw==
   dependencies:
     event-stream "3.3.4"
     hexy "^0.2.10"
     jsbi "^2.0.5"
+    long "^4.0.0"
     put "0.0.6"
     safe-buffer "^5.1.1"
     xml2js "^0.4.17"
   optionalDependencies:
     abstract-socket "^2.0.0"
 
-dbus-next@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.4.1.tgz#544337cdfdc8e342f78da215535068a6149826df"
-  integrity sha512-0DyIHpN2GK/zmpXFuM8C372dWSBIPuhaFaHcgcM2NPaZBPwviTclCgwZbn0mILPct/WI5C4rTTik08zkN5+jrw==
+dbus-next@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.5.1.tgz#94bb1a30d744bc75045be40e40b59e7a195fd882"
+  integrity sha512-PzsudTX5HMLocSuwHefIohto8L4Gnh5ST2+VNAoax9Xurh+lTosmXIfgi/Mrc93vqUU3D1v7jE9/vjiWd3KIbA==
   dependencies:
     event-stream "3.3.4"
     hexy "^0.2.10"
@@ -5043,13 +5044,14 @@ move-concurrently@^1.0.1:
     rimraf "^2.5.4"
     run-queue "^1.0.3"
 
-mpris-service@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/mpris-service/-/mpris-service-2.0.0.tgz#98d34e1c4a6b9c5ec5b45309e1c59e13bbfabe45"
-  integrity sha512-qlAOD1GJ0BJvfijNcpdJODPy4Iu1aKh0dt9mnfZpAp8KnfHDIjcUv4/TAYF0m9gucsgVMeK5OeMnaY+miuy+6Q==
+mpris-service@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/mpris-service/-/mpris-service-2.1.0.tgz#0bbfb5b47a9b3e01ce8b9a41a8aef0ad3210c909"
+  integrity sha512-HWFimtWYrfm7iMz8VjTrY68c2vwBMb5kDXqAQ9GmgIMv5exfgz+w277F1XFBc72Nu6FM3QH6jqMGT89m2MMDBg==
   dependencies:
-    dbus-next "0.3.1"
-    source-map-support "^0.5.9"
+    dbus-next "^0.5.1"
+    deep-equal "^1.0.1"
+    source-map-support "^0.5.11"
 
 ms@2.0.0:
   version "2.0.0"
@@ -5298,11 +5300,6 @@ normalize-range@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/normalize-range/-/normalize-range-0.1.2.tgz#2d10c06bdfd312ea9777695a4d28439456b75942"
   integrity sha1-LRDAa9/TEuqXd2laTShDlFa3WUI=
-
-nouislider@^13.1.4:
-  version "13.1.4"
-  resolved "https://registry.yarnpkg.com/nouislider/-/nouislider-13.1.4.tgz#1927e8787b3f8876d7b942999e9968b234e8bc8f"
-  integrity sha512-XcGdAkjDNjaciL4rBdf6/0Yfj7cVCPD9lUjFfOJnUdku4XaJUFa3Im3w8NnCuJFZ3NraRATREjpqDfbQIRRU0w==
 
 npm-bundled@^1.0.1:
   version "1.0.6"
@@ -6988,7 +6985,7 @@ source-map-resolve@^0.5.0:
     source-map-url "^0.4.0"
     urix "^0.1.0"
 
-source-map-support@0.5.10, source-map-support@^0.5.10, source-map-support@^0.5.9:
+source-map-support@0.5.10:
   version "0.5.10"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.10.tgz#2214080bc9d51832511ee2bab96e3c2f9353120c"
   integrity sha512-YfQ3tQFTK/yzlGJuX8pTwa4tifQj4QS2Mj7UegOu8jAz59MqIiMGPXxQhVQiIMNzayuUSF/jEuVnfFF5JqybmQ==
@@ -6996,10 +6993,10 @@ source-map-support@0.5.10, source-map-support@^0.5.10, source-map-support@^0.5.9
     buffer-from "^1.0.0"
     source-map "^0.6.0"
 
-source-map-support@^0.5.5, source-map-support@^0.5.6, source-map-support@~0.5.10:
-  version "0.5.11"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.11.tgz#efac2ce0800355d026326a0ca23e162aeac9a4e2"
-  integrity sha512-//sajEx/fGL3iw6fltKMdPvy8kL3kJ2O3iuYlRoT3k9Kb4BjOoZ+BZzaNHeuaruSt+Kf3Zk9tnfAQg9/AJqUVQ==
+source-map-support@^0.5.10, source-map-support@^0.5.11, source-map-support@^0.5.5, source-map-support@^0.5.6, source-map-support@~0.5.10:
+  version "0.5.12"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.12.tgz#b4f3b10d51857a5af0138d3ce8003b201613d599"
+  integrity sha512-4h2Pbvyy15EE02G+JOZpUCmqWJuqrs+sEkzewTm++BPi7Hvn/HwcqLAcNxYAyI0x13CpPPn+kMjl+hplXMHITQ==
   dependencies:
     buffer-from "^1.0.0"
     source-map "^0.6.0"
