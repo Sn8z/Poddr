@@ -4,36 +4,17 @@
   </div>
 </div>
 <div class="columns is-gapless is-marginless is-mobile">
-  <div id="sidebar" class="column is-one-fifth">
-    <aside class="menu" style="padding:10px;">
-      <p class="menu-label">
-        Podcasts
-      </p>
-      <ul class="menu-list">
-        <li><a>Toplists</a></li>
-        <li><a>Favourites</a></li>
-        <li><a>Explore</a></li>
-        <li><a>Search</a></li>
-      </ul>
-      <p class="menu-label">
-        Settings
-      </p>
-      <ul class="menu-list">
-        <li><a>General</a></li>
-        <li><a>Theme</a></li>
-      </ul>
-    </aside>
-    <img
-      class="podcast-cover"
-      src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/e705a534040642.56c2206da74cf.jpg"
-    />
+  <div id="sidebar" class="column is-narrow">
+    <app-sidenav></app-sidenav>
   </div>
   <div class="column">
     <div id="content">
       <div id="content-router">
         <router-outlet></router-outlet>
       </div>
-      <div id="player"></div>
+      <div id="player">
+        <app-player></app-player>
+      </div>
     </div>
   </div>
 </div>

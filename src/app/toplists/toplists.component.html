@@ -1,0 +1,55 @@
+<div class="level is-mobile top-level">
+  <div class="level-left">
+    <div class="level-item">
+      <h1 class="title is-1 primary-title">Top {{ amount }}</h1>
+    </div>
+    <div class="level-item">
+      <h4 class="subtitle is-4 secondary-title">Sweden</h4>
+    </div>
+  </div>
+  <div class="level-right">
+    <div class="level-item">
+      <select class="shadow">
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="opel">Opel</option>
+        <option value="audi">Audi</option>
+      </select>
+    </div>
+
+    <div class="level-item">
+      <select class="shadow">
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="opel">Opel</option>
+        <option value="audi">Audi</option>
+      </select>
+    </div>
+
+    <div class="level-item">
+      <i class="fas fa-th"></i>
+    </div>
+    <div class="level-item">
+      <i class="fas fa-list"></i>
+    </div>
+  </div>
+</div>
+<div class="columns is-mobile is-multiline">
+  <div *ngFor="let number of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]"
+    class="column is-6-mobile is-4-tablet is-one-fifth-desktop">
+    <div class="frame shadow">
+      <figure class="image is-square">
+        <img src="https://upload.wikimedia.org/wikipedia/en/6/68/AV%C4%AACI_%2801%29.jpg" />
+      </figure>
+      <div class="level is-mobile">
+        <div class="level-left">
+          <p>BAMF</p>
+        </div>
+        <div class="level-right">
+          <i class="far fa-heart"></i>
+          <i class="far fa-heart"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

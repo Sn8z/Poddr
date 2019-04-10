@@ -1,0 +1,60 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0;
+  height: calc(100vh - var(--titlebar-height));
+  background-color: var(--secondary-bg-color);
+  width: 200px;
+}
+
+#menu {
+  padding: 0.75rem;
+}
+
+.menu-label {
+  color: var(--secondary-text-color);
+  font-size: 12px;
+}
+
+.menu-item {
+  padding-left: 0.75rem;
+}
+
+.menu-item > a {
+  color: var(--primary-text-color);
+  font-size: 18px;
+  transition: all 0.1s linear;
+}
+
+.menu-item > a.active {
+  color: var(--primary-color);
+}
+
+.menu-item > a:hover {
+  color: var(--primary-color);
+}
+
+/* media queries for left navigation menu */
+@media screen and (max-width: 960px) {
+  :host {
+    width: 75px;
+  }
+
+  .menu-item > a {
+    display: none;
+  }
+
+  .menu-icon {
+		margin-top: 15px;
+		margin-bottom: 15px;
+		font-size: 20px !important;
+		width: 20px !important;
+		height: 20px !important;
+  }
+
+  .menu-item > .menu-icon {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

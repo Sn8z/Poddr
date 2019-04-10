@@ -2,9 +2,10 @@
   user-select: none;
   -webkit-app-region: drag;
   background: var(--primary-bg-color);
-  border-bottom: 1px solid orange;
+  border-bottom: 1px solid var(--primary-color);
   box-shadow: 0px 2px 5px #111;
   height: calc(var(--titlebar-height) - 1px);
+  padding-left: 10px;
 }
 
 #titlebar-btns {
@@ -16,20 +17,15 @@
 #max-btn,
 #close-btn {
   cursor: pointer;
-  width: 20px;
-  height: 20px;
-  color: #aaa;
-  margin-right: 10px;
-  margin-left: 10px;
+  color: var(--secondary-text-color);
+  padding: 10px;
 }
 
 #min-btn:hover,
 #max-btn:hover {
-  color: #777;
-  transform: scale(1.2);
+  background-color: #444;
 }
 
 #close-btn:hover {
-  color: rgb(115, 30, 30);
-  transform: scale(1.2);
+  background-color: rgb(115, 30, 30);
 }

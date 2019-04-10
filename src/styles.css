@@ -3,19 +3,28 @@
 @import url("https://fonts.googleapis.com/css?family=Rubik");
 @import url("https://use.fontawesome.com/releases/v5.8.1/css/all.css");
 @import "../node_modules/bulma/css/bulma.min.css";
+@import "./assets/styles/animate.css";
 @import "./assets/styles/scrollbar.css";
+@import "./assets/styles/dropdown.css";
+@import "./assets/styles/range-input.css";
+@import "./assets/styles/shadow.css";
 
 :root {
-  --primary-color: rgb(248, 162, 2);
-  --primary-bg-color: #111;
-  --secondary-bg-color: #222;
-  --third-bg-color: #444;
+  --primary-color: #ff8800;
+
+  --primary-bg-color: #181818;
+  --secondary-bg-color: #272727;
+  --third-bg-color: #454545;
+
+  --primary-text-color: #cfcfcf;
+  --secondary-text-color: #666666;
   --titlebar-height: 35px;
 }
 
 * {
   font-family: "Rubik", sans-serif;
   box-sizing: border-box;
+  color: var(--primary-text-color);
 }
 
 html,
@@ -32,4 +41,31 @@ body {
 
 body {
   display: flex;
+}
+
+.top-level {
+    height: 90px;
+    width: 100%;
+    margin: 0;
+}
+
+.primary-title {
+  color: var(--primary-text-color);
+  margin: 0;
+}
+
+.secondary-title {
+  color: var(--secondary-text-color);
+}
+
+.frame {
+  background-color: var(--primary-bg-color);
+  height: auto;
+  border-bottom: 1px solid var(--primary-color);
+  transition: all 0.1s linear;
+  cursor: pointer;
+}
+
+.frame:hover {
+  transform: scale(1.02);
 }

@@ -7,6 +7,13 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-4.1.0.tgz#33eff662a5c39c0c2061170cc003c5120743fff0"
   integrity sha512-AsnBZN3a8/JcNt+KPkGGODaA4c7l3W5+WpeKgGSbstSLxqWtTXqd1ieJGBQ8IFCtRg8DmmKUcSkIkUc0A4p3YA==
 
+"@angular-builders/custom-webpack@^7.4.3":
+  version "7.4.3"
+  resolved "https://registry.yarnpkg.com/@angular-builders/custom-webpack/-/custom-webpack-7.4.3.tgz#c95e32f007ca956cbeac703206f7c3b573029aee"
+  integrity sha512-dizPcKBSdgM8ztVbhOdVxHnfV/FBkTi1ZirsxWaw1B0S0KuPTESnsJaZA15i8Y2l202hCPs5fJfqy5aCoRrs1Q==
+  dependencies:
+    lodash "^4.17.10"
+
 "@angular-devkit/architect@0.13.6":
   version "0.13.6"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.13.6.tgz#7758ab9f288cfd4f64d8b88b0700bac5c4961d06"
@@ -1379,6 +1386,11 @@ builtins@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/builtins/-/builtins-1.0.3.tgz#cb94faeb61c8696451db36534e1422f94f0aee88"
   integrity sha1-y5T662HIaWRR2zZTThQi+U8K7og=
+
+bulma-toast@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/bulma-toast/-/bulma-toast-1.5.1.tgz#a88a4c0aee224b6344dfa5dfbcc49f7a25e865d1"
+  integrity sha512-RgJ9jaQmN418PySZSMHk9ukG6gOpmPu5U96ahe21kgaN3jS6FoA1T8RLu3v73GSLGIAfayyVS73hbR71lh7fug==
 
 bulma@^0.7.4:
   version "0.7.4"
@@ -5286,6 +5298,11 @@ normalize-range@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/normalize-range/-/normalize-range-0.1.2.tgz#2d10c06bdfd312ea9777695a4d28439456b75942"
   integrity sha1-LRDAa9/TEuqXd2laTShDlFa3WUI=
+
+nouislider@^13.1.4:
+  version "13.1.4"
+  resolved "https://registry.yarnpkg.com/nouislider/-/nouislider-13.1.4.tgz#1927e8787b3f8876d7b942999e9968b234e8bc8f"
+  integrity sha512-XcGdAkjDNjaciL4rBdf6/0Yfj7cVCPD9lUjFfOJnUdku4XaJUFa3Im3w8NnCuJFZ3NraRATREjpqDfbQIRRU0w==
 
 npm-bundled@^1.0.1:
   version "1.0.6"

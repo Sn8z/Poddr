@@ -2,9 +2,10 @@ const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const nativeImage = electron.nativeImage;
+const ipc = electron.ipcMain;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
-var log = require("electron-log");
+const log = require("electron-log");
 
 //Global reference to window object;
 var mainWindow = null;
@@ -61,7 +62,7 @@ app.once("ready", function() {
     frame: false,
     show: false,
     webPreferences: {
-      nodeIntegration: false
+      nodeIntegration: true
     },
     backgroundColor: "#111",
     icon: nativeImage.createFromPath(icon)
@@ -76,6 +77,10 @@ app.once("ready", function() {
   });
 
   mainWindow.loadURL("file://" + __dirname + "/app/poddr/index.html");
+
+  mainWindow.on("closed", function() {
+    mainWindow = null;
+  });
 
   //Devtools
   if (options.debug) {
@@ -92,7 +97,24 @@ app.once("ready", function() {
     require("./utils/mediakeys")(mainWindow);
   }
 
-  mainWindow.on("closed", function() {
-    mainWindow = null;
+  //Listen for window changes
+  ipc.on("window-update", (event, arg) => {
+    switch (arg) {
+      case "minimize":
+        mainWindow.minimize();
+        break;
+      case "maximize":
+        if (mainWindow.isMaximized()) {
+          mainWindow.unmaximize();
+        } else {
+          mainWindow.maximize();
+        }
+        break;
+      case "close":
+        app.quit();
+        break;
+      default:
+        break;
+    }
   });
 });

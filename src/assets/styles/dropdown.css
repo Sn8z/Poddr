@@ -1,0 +1,9 @@
+select {
+    border: 0 none;
+    border-radius: 3px;
+    color: var(--primary-text-color);
+    background-color: var(--secondary-bg-color);
+    font-size: 18px;
+    padding: 5px 15px;
+    width: auto;
+}

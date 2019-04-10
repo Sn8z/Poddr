@@ -3,15 +3,6 @@
   height: 100%;
 }
 
-#sidebar {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 0;
-  height: calc(100vh - var(--titlebar-height));
-  background-color: var(--secondary-bg-color);
-}
-
 #content {
   display: flex;
   flex-direction: column;
@@ -22,14 +13,16 @@
   flex: 1 1 100%;
   background-color: grey;
   margin: 0;
+  padding: 1.5rem;
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: var(--third-bg-color);
 }
 
 #player {
-  height: 90px;
+  height: 100px;
   min-width: 100%;
   margin: 0;
-  background-color: var(--secondary-bg-color);
 }
+
+
