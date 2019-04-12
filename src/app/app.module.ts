@@ -1,6 +1,13 @@
+// Angular modules
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
+// Pipes
+import { ItunesImage } from './pipes/itunes-image.pipe';
+
+// Routing & Components
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TitlebarComponent } from './titlebar/titlebar.component';
@@ -12,10 +19,12 @@ import { SearchComponent } from './search/search.component';
 import { DiscoverComponent } from './discover/discover.component';
 import { SettingsComponent } from './settings/settings.component';
 import { AppearanceComponent } from './appearance/appearance.component';
+import { PodcastComponent } from './podcast/podcast.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
+		AppComponent,
+		ItunesImage,
     TitlebarComponent,
     SidenavComponent,
     PlayerComponent,
@@ -24,10 +33,13 @@ import { AppearanceComponent } from './appearance/appearance.component';
     SearchComponent,
     DiscoverComponent,
     SettingsComponent,
-    AppearanceComponent
+    AppearanceComponent,
+    PodcastComponent
   ],
   imports: [
-    BrowserModule,
+		BrowserModule,
+		FormsModule,
+		HttpClientModule,
     AppRoutingModule
   ],
   providers: [],
