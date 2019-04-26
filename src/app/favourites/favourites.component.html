@@ -1,3 +1,21 @@
-<p>
-  favourites works!
-</p>
+<div class="banner">
+    <h1>Favourites</h1>
+    <i class="fas fa-th"></i>
+    <i class="fas fa-list"></i>
+</div>
+<div class="grid">
+    <div class="grid-item" *ngFor="let f of favourites">
+        <a [routerLink]="['/podcast', f.rss]" class="podcast-frame shadow">
+            <div class="podcast-frame-image">
+                <img [src]="f.img">
+            </div>
+            <div class="podcast-frame-info">
+                <div class="podcast-frame-title">{{ f.title }}</div>
+                <div class="podcast-frame-btns">
+                    <i class="far fa-heart podcast-frame-btn"></i>
+                    <i class="fas fa-info-circle podcast-frame-btn"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

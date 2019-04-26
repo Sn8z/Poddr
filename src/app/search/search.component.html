@@ -1,2 +1,6 @@
-<a class="button" (click)="search()">Search</a>
-<a class="button" (click)="error()">Search</a>
+<div class="search-banner shadow-bottom">
+    <input id="search" type="text" [(ngModel)]="query" (keyup.enter)="search()">
+</div>
+<a [routerLink]="['/podcast', r.feedUrl]" *ngFor="let r of results">
+    <p>{{ r.collectionName }}</p>
+</a>

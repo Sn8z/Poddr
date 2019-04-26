@@ -1,3 +1,56 @@
-<p>
-	ID: {{ id }}
-</p>
+<!--
+<div class="columns">
+	<div class="column is-one-third level">
+		<div class="level-item has-text-centered" style="height:100%">
+			<figure class='image is-128x128 shadow'><img [src]="image"></figure>
+		</div>
+	</div>
+	<div class="column is-two-thirds">
+		<h2 class="title is-2 primary-title">{{ title }}</h2>
+		<h4 class="title is-4 secondary-title">{{ author }}</h4>
+		<p class="primary-text">{{ description | description }}</p>
+	</div>
+</div>
+-->
+
+<div id="banner">
+	<img id="banner-image" [src]="image">
+	<div id="banner-info">
+		<h5 id="banner-info-author">{{ author }}</h5>
+		<h1 id="banner-info-title">{{ title }}</h1>
+	</div>
+</div>
+<div id="podcast-content">
+	<div id="podcast-details">
+		<h5>Latest episode</h5>
+		<div id="latest-podcast" (click)="play(latestEpisode)">
+			<img [src]="latestEpisode.image || image">
+			<div id="latest-podcast-info">
+				<h3>{{ latestEpisode.title }}</h3>
+				<span class="time">{{ latestEpisode.duration | secondsToHhMmSs }}</span>
+				<span>{{ latestEpisode.published | date }}</span>
+			</div>
+		</div>
+		<h5>About</h5>
+		<p id="banner-info-details">{{ description | description }}</p>
+		<div id="podcast-links">
+			<span><i class="fas fa-globe-europe"></i> {{ website }}</span>
+			<span><i class="fas fa-rss"></i> {{ rss }}</span>
+			<span><i class="far fa-envelope"></i> {{ email }}</span>
+		</div>
+	</div>
+	<div id="podcast-items">
+		<div class="podcast-item" *ngFor="let e of episodes" (click)="play(e)">
+			<div class="podcast-title">{{ e.title }}</div>
+			<div class="podcast-info">
+				<div class="podcast-duration time">{{ e.duration | secondsToHhMmSs }}</div>
+				<div class="podcast-date time">{{ e.published | date }}</div>
+				<div class="podcast-btns">
+					<i class="fas fa-info-circle"></i>
+					<i class="fas fa-download"></i>
+					<i class="far fa-check-circle"></i>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

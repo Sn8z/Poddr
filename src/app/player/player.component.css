@@ -5,56 +5,65 @@
 #progress {
   height: 10px;
   width: 100%;
-  background-color: #353535;
+  background-color: var(--secondary-bg-color);
+  cursor: pointer;
 }
 
 #progress-bar {
   height: 100%;
-  width: 35%;
-  background-color: var(--primary-color);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.1), transparent), var(--primary-color);
 }
 
 #player-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   height: 90px;
   width: 100%;
 }
 
 #now-playing {
-    align-items: flex-start;
-    justify-content: left;
-    flex-direction: column;
-    margin-left: 15px;
-    margin-right: 15px;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  flex-direction: column;
+  flex: 1 1 auto;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
 }
 
 #now-playing-author {
-    font-size: 12px;
-    color: var(--secondary-text-color);
+  font-size: 12px;
+  color: var(--secondary-text-color);
+  padding: 0;
+  margin: 0;
 }
 
 #now-playing-episode {
-    font-size: 16px;
-    color: var(--primary-text-color);
+  font-size: 16px;
+  color: var(--primary-text-color);
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  margin: 0;
 }
 
 #now-playing-time {
-    font-size: 12px;
-    color: var(--primary-text-color);
+  font-size: 12px;
+  color: var(--primary-text-color);
+  padding: 0;
+  margin: 0;
 }
 
-.player-btn,
-#rewind-btn,
-#play-btn,
-#forward-btn {
-    user-select: none;
-    outline: 0;
-    cursor: pointer;
-    margin-left: 10px;
-    margin-right: 10px;
+.player-btn, #rewind-btn, #play-btn, #forward-btn {
+  user-select: none;
+  outline: 0;
+  cursor: pointer;
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  flex: 0 1 auto;
 }
 
-#rewind-btn,
-#forward-btn {
+#rewind-btn, #forward-btn {
   width: 25px;
   height: 25px;
   line-height: 25px;
@@ -79,7 +88,8 @@
 }
 
 #volume-slider {
+  flex: 0 1 auto;
   margin-right: 1.5rem;
   margin-left: 1.5rem;
-  width: 125px;
+  width: 150px;
 }

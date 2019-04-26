@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AudioService } from '../services/audio.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit {
+  public image: string = "";
 
-  constructor() { }
+  constructor(private audio: AudioService) { }
 
   ngOnInit() {
+    this.audio.episodeCover.subscribe(value => {
+      this.image = value;
+    });
   }
 
 }

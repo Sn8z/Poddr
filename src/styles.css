@@ -1,34 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import url("https://fonts.googleapis.com/css?family=Rubik");
+@import url('https://fonts.googleapis.com/css?family=Cutive+Mono');
 @import url("https://use.fontawesome.com/releases/v5.8.1/css/all.css");
-@import "../node_modules/bulma/css/bulma.min.css";
-@import "./assets/styles/animate.css";
 @import "./assets/styles/scrollbar.css";
 @import "./assets/styles/dropdown.css";
+@import "./assets/styles/grid.css";
 @import "./assets/styles/range-input.css";
 @import "./assets/styles/shadow.css";
-
+@import "./assets/styles/loader.css";
 :root {
-  --primary-color: #ff8800;
-
-  --primary-bg-color: #181818;
-  --secondary-bg-color: #272727;
-  --third-bg-color: #454545;
-
-  --primary-text-color: #cfcfcf;
-  --secondary-text-color: #666666;
+  --primary-color: #ff6600;
+  --primary-bg-color: #151515;
+  --secondary-bg-color: #252525;
+  --third-bg-color: #333333;
+  --primary-text-color: #eeeeee;
+  --secondary-text-color: #aaaaaa;
   --titlebar-height: 35px;
 }
 
 * {
   font-family: "Rubik", sans-serif;
-  box-sizing: border-box;
   color: var(--primary-text-color);
+  box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
   height: 100vh;
   max-height: 100vh;
   width: 100vw;
@@ -41,12 +38,22 @@ body {
 
 body {
   display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
 }
 
-.top-level {
-    height: 90px;
-    width: 100%;
-    margin: 0;
+.time {
+  font-family: 'Cutive Mono', monospace;
+}
+
+.banner {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: var(--primary-bg-color);
 }
 
 .primary-title {
@@ -58,14 +65,8 @@ body {
   color: var(--secondary-text-color);
 }
 
-.frame {
-  background-color: var(--primary-bg-color);
-  height: auto;
-  border-bottom: 1px solid var(--primary-color);
-  transition: all 0.1s linear;
-  cursor: pointer;
-}
-
-.frame:hover {
-  transform: scale(1.02);
+.primary-text {
+  color: var(--primary-text-color);
+  font-size: 12px;
+  font-weight: 200;
 }

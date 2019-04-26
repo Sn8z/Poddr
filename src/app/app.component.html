@@ -1,20 +1,16 @@
-<div class="columns is-gapless is-marginless is-mobile">
-  <div class="column is-full">
-    <app-titlebar></app-titlebar>
-  </div>
+<div id="titlebar">
+  <app-titlebar></app-titlebar>
 </div>
-<div class="columns is-gapless is-marginless is-mobile">
-  <div id="sidebar" class="column is-narrow">
+<div id="content">
+  <div id="sidenav">
     <app-sidenav></app-sidenav>
   </div>
-  <div class="column">
-    <div id="content">
-      <div id="content-router">
-        <router-outlet></router-outlet>
-      </div>
-      <div id="player">
-        <app-player></app-player>
-      </div>
+  <div id="content-container">
+    <div id="content-router">
+      <router-outlet></router-outlet>
+    </div>
+    <div id="player">
+      <app-player></app-player>
     </div>
   </div>
 </div>

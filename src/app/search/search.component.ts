@@ -7,18 +7,20 @@ import { PodcastService } from '../services/podcast.service';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+  query: String;
+  results: Array<Object>;
 
   constructor(private podcasts: PodcastService) { }
 
   ngOnInit() {
+    document.getElementById("search").focus();
   }
 
   search(){
-    this.podcasts.search();
-  }
-
-  error(){
-    this.podcasts.s2();
+    this.podcasts.search(this.query).subscribe((data) => {
+      console.log(data);
+      this.results = data.results;
+    });
   }
 
 }

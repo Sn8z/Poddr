@@ -1,32 +1,62 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import * as log from 'electron-log';
-import { BehaviorSubject, Observable } from 'rxjs';
+import * as Store from 'electron-store';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class AudioService implements OnInit {
-	private audio: HTMLAudioElement;
-	private loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
+export class AudioService {
+	private store = new Store();
+	private audio: HTMLAudioElement = new Audio();
+	private rss: string = "";
+	private guid: string = "";
 
-	constructor() { }
+	public loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
+	public playing: BehaviorSubject<boolean> = new BehaviorSubject(false);
+	public muted: BehaviorSubject<boolean> = new BehaviorSubject(false);
+	public podcast: BehaviorSubject<string> = new BehaviorSubject("No title");
+	public episode: BehaviorSubject<string> = new BehaviorSubject("No title");
+	public description: BehaviorSubject<string> = new BehaviorSubject("No description");
+	public podcastCover: BehaviorSubject<string> = new BehaviorSubject("");
+	public episodeCover: BehaviorSubject<string> = new BehaviorSubject("");
+	public time: BehaviorSubject<number> = new BehaviorSubject(0);
+	public duration: BehaviorSubject<number> = new BehaviorSubject(0);
+	public percentPlayed: BehaviorSubject<number> = new BehaviorSubject(0);
+	public volume: BehaviorSubject<number> = new BehaviorSubject(0);
 
-	ngOnInit() {
+	constructor() {
+		log.info("Initializing audio service");
 		this.initIpcListeners();
 		this.initAudio();
 		this.initAudioListeners();
+		log.info("Initializing audio service - Done!");
 	}
 
 	private initIpcListeners(): void {
+		log.info("Initializing audio service - IPC listeners");
 		// Listen for IPC events from main process
 	}
 
 	private initAudio(): void {
-		this.audio = new Audio();
-		this.audio.volume = 0.5;
+		log.info("Initializing audio service - Audio");
+		this.audio.volume = this.store.get("volume", 0.5);
+
+		let playerState = this.store.get("playerState");
+		if (playerState) {
+			this.podcast.next(playerState.podcastTitle);
+			this.episode.next(playerState.podcastEpisodeTitle);
+			this.podcastCover.next(playerState.podcastCover);
+			this.episodeCover.next(playerState.episodeCover);
+			this.description.next(playerState.podcastDescription);
+		}
+		//player.src = PlayerService.podcastURL = playerState.podcastURL;
+		//PlayerService.podcastGUID = playerState.podcastGUID;
+		//PlayerService.podcastRSS = playerState.podcastRSS;
 	}
 
 	private initAudioListeners(): void {
+		log.info("Initializing audio service - Event listeners");
 		this.audio.addEventListener('play', this.onPlay);
 		this.audio.addEventListener('pause', this.onPause);
 		this.audio.addEventListener('loadstart', this.onLoadStart);
@@ -38,58 +68,78 @@ export class AudioService implements OnInit {
 		this.audio.addEventListener('error', this.onError);
 	}
 
-	private onPlay(): void {
+	private onPlay = () => {
 		log.info("Playing");
+		this.playing.next(true);
 		// mpris update
 	}
 
-	private onPause(): void {
+	private onPause = () => {
 		log.info("Paused");
+		this.playing.next(false);
 		// mpris update
 	}
 
-	private onLoadStart(): void {
+	private onLoadStart = () => {
 		log.info("Started loading");
-		// show loading indicator
+		this.loading.next(true);
 	}
 
-	private onTimeUpdate(): void {
-		// update progress bar
+	private onTimeUpdate = () => {
+		this.percentPlayed.next((this.audio.currentTime / this.audio.duration) * 100 || 0);
+		this.time.next(this.audio.currentTime);
 	}
 
-	private onVolumeChange(): void {
+	private onVolumeChange = () => {
 		log.info("Changed volume");
+		this.volume.next(this.audio.volume);
+		this.store.set("volume", this.audio.volume);
+		this.muted.next(this.audio.volume === 0 || this.audio.muted);
 		// store volume
 		// debounce this call to avoid hogging to much power
 	}
 
-	private onSeeking(): void {
+	private onSeeking = () => {
 		log.info("Seeking");
+		this.loading.next(true);
 		// show loading indicator
 	}
 
-	private onCanPlayThrough(): void {
+	private onCanPlayThrough = () => {
 		log.info("Can play through");
-		// Hide loading indicator
+		this.loading.next(false);
+		this.duration.next(this.audio.duration);
 	}
 
-	private onEnded(): void {
+	private onEnded = () => {
 		log.info("Podcast ended");
 		// Add episode to previously played episodes
 		// toast
 	}
 
-	private onError(e): void {
+	private onError = (e) => {
 		log.error(e.target.error.message);
 		// toast (user friendly error)
+		this.loading.next(false);
 		// Hide loading indicator
 	}
 
 	// public methods
-
-	loadAudio(podcast: Podcast): void {
+	loadAudio(podcast, pTitle, pRSS, pCover): void {
 		this.audio.src = podcast.src;
-		this.play();
+		this.rss = pRSS;
+		this.guid = podcast.guid;
+		this.podcast.next(pTitle);
+		this.episode.next(podcast.episodeTitle);
+		this.duration.next(0);
+		this.time.next(0);
+
+		this.podcastCover.next(pCover);
+		if(podcast.cover){
+			this.episodeCover.next(podcast.cover);
+		}else{
+			this.episodeCover.next(pCover);
+		}
 	}
 
 	play(): void {
@@ -112,30 +162,22 @@ export class AudioService implements OnInit {
 		this.audio.currentTime += amount;
 	}
 
-	getTime(): number {
-		return this.audio.currentTime;
+	getDuration(): number {
+		return this.audio.duration;
 	}
 
-	changeVolume(amount: number): void {
-		if (this.audio.volume + amount > 1) {
+	setVolume(volume: number): void {
+		this.audio.volume = volume;
+	}
+
+	changeVolume(diff: number): void {
+		if (this.audio.volume + diff > 1) {
 			this.audio.volume = 1;
-		} else if (this.audio.volume + amount < 0) {
+		} else if (this.audio.volume + diff < 0) {
 			this.audio.volume = 0;
 		} else {
-			this.audio.volume += amount;
+			this.audio.volume += diff;
 		}
-	}
-
-	isPlaying(): boolean {
-		return !this.audio.paused;
-	}
-
-	isLoading(): Observable<boolean> {
-		return this.loading.asObservable();
-	}
-
-	isMuted(): boolean {
-		return this.audio.muted || this.audio.volume === 0;
 	}
 
 	getAudio(): HTMLAudioElement {

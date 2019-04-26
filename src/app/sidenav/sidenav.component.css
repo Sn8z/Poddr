@@ -3,57 +3,69 @@
   flex-direction: column;
   justify-content: space-between;
   margin: 0;
-  height: calc(100vh - var(--titlebar-height));
-  background-color: var(--secondary-bg-color);
-  width: 200px;
+  height: 100%;
+  width: 100%;
 }
 
 #menu {
-  padding: 0.75rem;
+  list-style-type: none;
+  padding: 0.5rem;
+  margin: 0;
 }
 
 .menu-label {
   color: var(--secondary-text-color);
   font-size: 12px;
+  padding: 0.5rem 0 0.25rem 0;
+  margin: 0;
+}
+
+.menu-items {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 .menu-item {
-  padding-left: 0.75rem;
+  padding: 0.1rem 0 0.1rem 0.25rem;
 }
 
-.menu-item > a {
+.menu-item>a {
   color: var(--primary-text-color);
-  font-size: 18px;
+  font-size: 15px;
   transition: all 0.1s linear;
+  text-decoration: none;
+  padding-left: 1.5rem;
 }
 
-.menu-item > a.active {
+.menu-item>a.active {
+  color: var(--primary-color);
+  border-left: 3px solid var(--primary-color);
+}
+
+.menu-item>a:hover {
   color: var(--primary-color);
 }
 
-.menu-item > a:hover {
-  color: var(--primary-color);
+#podcast-cover {
+  width: 100%;
+  height: auto;
 }
 
 /* media queries for left navigation menu */
-@media screen and (max-width: 960px) {
-  :host {
-    width: 75px;
-  }
 
-  .menu-item > a {
+@media screen and (max-width: 960px) {
+  .menu-item>a {
     display: none;
   }
-
   .menu-icon {
-		margin-top: 15px;
-		margin-bottom: 15px;
-		font-size: 20px !important;
-		width: 20px !important;
-		height: 20px !important;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
   }
-
-  .menu-item > .menu-icon {
+  .menu-item>.menu-icon {
     margin-left: auto;
     margin-right: auto;
   }

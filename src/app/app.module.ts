@@ -6,6 +6,8 @@ import { HttpClientModule } from '@angular/common/http';
 
 // Pipes
 import { ItunesImage } from './pipes/itunes-image.pipe';
+import { Description } from './pipes/description.pipe';
+import { SecondsToHhMmSs } from './pipes/secondsToHhMmSs.pipe';
 
 // Routing & Components
 import { AppRoutingModule } from './app-routing.module';
@@ -24,7 +26,9 @@ import { PodcastComponent } from './podcast/podcast.component';
 @NgModule({
   declarations: [
 		AppComponent,
-		ItunesImage,
+    ItunesImage,
+    Description,
+    SecondsToHhMmSs,
     TitlebarComponent,
     SidenavComponent,
     PlayerComponent,

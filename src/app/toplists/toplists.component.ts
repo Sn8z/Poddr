@@ -31,7 +31,9 @@ export class ToplistsComponent implements OnInit {
 	}
 
 	getPodcasts() {
-		this.podcastService.getToplist(this.region, this.category, this.amount).subscribe((data) => { this.podcasts = data['feed']['entry'] });
+		this.podcastService.getToplist(this.region, this.category, this.amount).subscribe((data) => {
+			this.podcasts = data['feed']['entry']
+		});
 	}
 
 }

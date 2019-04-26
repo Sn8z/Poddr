@@ -16,13 +16,19 @@ export class PodcastService {
 		return this.http.get("https://itunes.apple.com/" + region + "/rss/topaudiopodcasts/limit=" + amount + "/genre=" + category + "/json");
 	}
 
-	search(query: String = ""): void {
-		log.info("Searching for: " + query);
-		this.toast.info("SEARCH");
+	search(query: String = ""): Observable<any> {
+		//replace åäö
+		let sQuery = query.replace(/[\u00e4\u00c4\u00c5\u00e5]/g, "a");
+		sQuery = sQuery.replace(/[\u00d6\u00f6]/g, "o");
+		return this.http.get("https://itunes.apple.com/search?term=" + sQuery + "&entity=podcast&attributes=titleTerm,artistTerm&limit=200");
 	}
 
-	s2(): void {
-		this.toast.error();
+	getRssFeed(id: String): Observable<any> {
+		return this.http.get("https://itunes.apple.com/lookup?id=" + id);
+	}
+
+	getPodcastFeed(rss: String): Observable<any> {
+		return this.http.get("" + rss, { responseType: 'text' });
 	}
 
 	getRegions(): Array<any> {

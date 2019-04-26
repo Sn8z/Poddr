@@ -1,28 +1,49 @@
 :host {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#titlebar {
+  border-bottom: 1px solid var(--primary-color);
+  background: var(--primary-bg-color);
+  height: calc(var(--titlebar-height) - 1px);
 }
 
 #content {
   display: flex;
-  flex-direction: column;
+  flex: 1;
+  flex-direction: row;
+}
+
+#sidenav {
+  width: 200px;
   height: calc(100vh - var(--titlebar-height));
+  background-color: var(--secondary-bg-color);
+}
+
+#content-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 
 #content-router {
   flex: 1 1 100%;
-  background-color: grey;
   margin: 0;
-  padding: 1.5rem;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden;
   background-color: var(--third-bg-color);
 }
 
 #player {
-  height: 100px;
-  min-width: 100%;
-  margin: 0;
+  flex: 0 0 100px;
 }
 
+/* media queries for left navigation menu */
 
+@media screen and (max-width: 960px) {
+  #sidenav {
+    width: 75px;
+  }
+}

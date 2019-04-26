@@ -1,48 +1,28 @@
-<div class="level is-mobile top-level">
-	<div class="level-left">
-		<div class="level-item">
-			<h1 class="title is-1 primary-title">Top {{ amount }}</h1>
-		</div>
-		<div class="level-item">
-			<h4 class="subtitle is-4 secondary-title">Sweden</h4>
-		</div>
-	</div>
-	<div class="level-right">
-		<div class="level-item">
-			<select class="shadow" [(ngModel)]="category" (change)="getPodcasts()">
-				<option *ngFor="let c of categories" [value]="c.id">{{ c.genre }}</option>
-			</select>
-		</div>
-
-		<div class="level-item">
-			<select class="shadow" [(ngModel)]="region" (change)="getPodcasts()">
-				<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
-			</select>
-		</div>
-
-		<div class="level-item">
-			<i class="fas fa-th"></i>
-		</div>
-		<div class="level-item">
-			<i class="fas fa-list"></i>
-		</div>
-	</div>
+<div class="banner">
+	<h1>Top {{ amount }}</h1>
+	<h3>Sweden</h3>
+	<select class="shadow" [(ngModel)]="category" (change)="getPodcasts()">
+		<option *ngFor="let c of categories" [value]="c.id">{{ c.genre }}</option>
+	</select>
+	<select class="shadow" [(ngModel)]="region" (change)="getPodcasts()">
+		<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
+	</select>
+	<i class="fas fa-th"></i>
+	<i class="fas fa-list"></i>
 </div>
-<div class="columns is-mobile is-multiline">
-	<div *ngFor="let p of podcasts" class="column is-6-mobile is-4-tablet is-3-desktop is-one-fifth-fullhd">
-		<div class="frame shadow" [routerLink]="['/podcast', p['summary']['label']]">
-			<figure class="image is-square">
-				<img [src]="p['im:image'][1]['label'] | itunesImage" />
-			</figure>
-			<div class="level is-mobile">
-				<div class="level-left">
-					<p>{{ p['im:name']['label'] }}</p>
-				</div>
-				<div class="level-right">
-					<i class="far fa-heart"></i>
-					<i class="far fa-heart"></i>
+<div class="grid">
+	<div class="grid-item" *ngFor="let p of podcasts">
+		<a [routerLink]="['/podcast', p['id']['attributes']['im:id']]" class="podcast-frame shadow">
+			<div class="podcast-frame-image">
+				<img [src]="p['im:image'][1]['label'] | itunesImage">
+			</div>
+			<div class="podcast-frame-info">
+				<div class="podcast-frame-title">{{ p['im:name']['label'] }}</div>
+				<div class="podcast-frame-btns">
+					<i class="far fa-heart podcast-frame-btn"></i>
+					<i class="fas fa-info-circle podcast-frame-btn"></i>
 				</div>
 			</div>
-		</div>
+		</a>
 	</div>
 </div>

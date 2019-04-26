@@ -1,22 +1,16 @@
-<ul id="menu">
-  <li class="menu-label">PODCASTS</li>
-  <li>
-    <ul>
-      <li class="menu-item"><a routerLink="/toplists" routerLinkActive="active">Toplists</a></li>
-      <li class="menu-item"><a routerLink="/favourites" routerLinkActive="active">Favourites</a></li>
-      <li class="menu-item"><a routerLink="/discover" routerLinkActive="active">Discover</a></li>
-      <li class="menu-item"><a routerLink="/search" routerLinkActive="active">Search</a></li>
-    </ul>
-  </li>
-  <li class="menu-label">SETTINGS</li>
-  <li>
-    <ul>
-      <li class="menu-item"><a routerLink="/settings" routerLinkActive="active">General</a></li>
-      <li class="menu-item"><a routerLink="/appearance" routerLinkActive="active">Appearance</a></li>
-    </ul>
-  </li>
-</ul>
-<img
-  class="podcast-cover"
-  src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/e705a534040642.56c2206da74cf.jpg"
-/>
+<div id="menu">
+  <p class="menu-label">PODCASTS</p>
+  <ul class="menu-items">
+    <li class="menu-item"><a routerLink="/toplists" routerLinkActive="active">Toplists</a></li>
+    <li class="menu-item"><a routerLink="/favourites" routerLinkActive="active">Favourites</a></li>
+    <li class="menu-item"><a routerLink="/discover" routerLinkActive="active">Discover</a></li>
+    <li class="menu-item"><a routerLink="/search" routerLinkActive="active">Search</a></li>
+  </ul>
+  <p class="menu-label">SETTINGS</p>
+  <ul class="menu-items">
+    <li class="menu-item"><a routerLink="/settings" routerLinkActive="active">General</a></li>
+    <li class="menu-item"><a routerLink="/appearance" routerLinkActive="active">Appearance</a></li>
+  </ul>
+</div>
+
+<img id="podcast-cover" [src]="image" />
