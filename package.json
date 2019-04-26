@@ -59,7 +59,7 @@
     "@angular/router": "~7.2.0",
     "@simonwep/pickr": "^0.4.7",
     "core-js": "2.6.5",
-    "dbus-next": "^0.5.1",
+    "dbus-next": "^0.6.1",
     "electron-context-menu": "^0.12.0",
     "electron-log": "^3.0.5",
     "electron-store": "^3.1.0",

@@ -2070,6 +2070,21 @@ dbus-next@^0.5.1:
   optionalDependencies:
     abstract-socket "^2.0.0"
 
+dbus-next@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.6.1.tgz#841bff291a38db0233d19dfde43a9bf18d291f38"
+  integrity sha512-4huuqmErCAtp7x77KmBXg1jD/0Xj+zU3r53MVpfkO17QICwbvaZCrEAOjqo5tMP4tybOlEpsgiutYyQdjuheYw==
+  dependencies:
+    event-stream "3.3.4"
+    hexy "^0.2.10"
+    jsbi "^2.0.5"
+    long "^4.0.0"
+    put "0.0.6"
+    safe-buffer "^5.1.1"
+    xml2js "^0.4.17"
+  optionalDependencies:
+    abstract-socket "^2.0.0"
+
 debug@*, debug@^4.1.0, debug@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
