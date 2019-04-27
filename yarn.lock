@@ -336,15 +336,10 @@
   resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-0.4.7.tgz#647c921dc0c1c903b59e25b11b42e9044a3d99a3"
   integrity sha512-STb4Ep5U2IndcLYbZ4illL41A9yK8lhS55bArTqF7U4uPPoIZaN37X57thheuhh9ztygQEzMjXv2cyGOlXYK/g==
 
-"@types/jasmine@*":
+"@types/jasmine@*", "@types/jasmine@~3.3.12":
   version "3.3.12"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-3.3.12.tgz#bf282cb540e9ad7a0a04b742082c073b655eab39"
   integrity sha512-lXvr2xFQEVQLkIhuGaR3GC1L9lMU1IxeWnAF/wNY5ZWpC4p9dgxkKkzMp7pntpAdv9pZSnYqgsBkCg32MXSZMg==
-
-"@types/jasmine@~2.8.8":
-  version "2.8.16"
-  resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.8.16.tgz#a6cb24b1149d65293bd616923500014838e14e7d"
-  integrity sha512-056oRlBBp7MDzr+HoU5su099s/s7wjZ3KcHxLfv+Byqb9MwdLUvsfLgw1VS97hsh3ddxSPyQu+olHMnoVTUY6g==
 
 "@types/jasminewd2@~2.0.3":
   version "2.0.6"
