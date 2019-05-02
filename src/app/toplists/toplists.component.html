@@ -1,14 +1,16 @@
 <div class="banner">
-	<h1>Top {{ amount }}</h1>
-	<h3>Sweden</h3>
-	<select class="shadow" [(ngModel)]="category" (change)="getPodcasts()">
-		<option *ngFor="let c of categories" [value]="c.id">{{ c.genre }}</option>
-	</select>
-	<select class="shadow" [(ngModel)]="region" (change)="getPodcasts()">
-		<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
-	</select>
-	<i class="fas fa-th"></i>
-	<i class="fas fa-list"></i>
+	<div>
+		<h5 class="secondary-title">Sweden</h5>
+		<h1 class="primary-title">Top {{ amount }}</h1>
+	</div>
+	<div>
+		<select class="shadow" [(ngModel)]="category" (change)="getPodcasts()">
+			<option *ngFor="let c of categories" [value]="c.id">{{ c.genre }}</option>
+		</select>
+		<select class="shadow" [(ngModel)]="region" (change)="getPodcasts()">
+			<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
+		</select>
+	</div>
 </div>
 <div class="grid">
 	<div class="grid-item" *ngFor="let p of podcasts">
@@ -17,7 +19,7 @@
 				<img [src]="p['im:image'][1]['label'] | itunesImage">
 			</div>
 			<div class="podcast-frame-info">
-				<div class="podcast-frame-title">{{ p['im:name']['label'] }}</div>
+				<div class="podcast-frame-title truncate">{{ p['im:name']['label'] }}</div>
 				<div class="podcast-frame-btns">
 					<i class="far fa-heart podcast-frame-btn"></i>
 					<i class="fas fa-info-circle podcast-frame-btn"></i>

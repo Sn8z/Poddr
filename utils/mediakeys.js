@@ -6,6 +6,6 @@ module.exports = (mainWindow) => {
 
   //Global shortcut for Play/Pause toggle, player.js listens for the toggle-play event
   globalShortcut.register("MediaPlayPause", function () {
-    mainWindow.webContents.send("toggle-play");
+    mainWindow.webContents.send("player:toggle-play");
   });
 }

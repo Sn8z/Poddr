@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
+import { FavouritesService } from '../services/favourites.service';
 
 @Component({
   selector: 'app-search',
@@ -10,17 +11,20 @@ export class SearchComponent implements OnInit {
   query: String;
   results: Array<Object>;
 
-  constructor(private podcasts: PodcastService) { }
+  constructor(private podcasts: PodcastService, private favService: FavouritesService) { }
 
   ngOnInit() {
     document.getElementById("search").focus();
   }
 
-  search(){
+  search = () => {
     this.podcasts.search(this.query).subscribe((data) => {
-      console.log(data);
       this.results = data.results;
     });
+  }
+
+  addToFavourites = (rss) => {
+    this.favService.addFavourite(rss);
   }
 
 }

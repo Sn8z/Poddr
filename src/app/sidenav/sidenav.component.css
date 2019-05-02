@@ -54,7 +54,7 @@
 
 /* media queries for left navigation menu */
 
-@media screen and (max-width: 960px) {
+@media (max-width: 768px) {
   .menu-item>a {
     display: none;
   }

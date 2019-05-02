@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ipcRenderer as ipc} from 'electron';
 import * as log from 'electron-log';
+import { Location } from '@angular/common';
 
 @Component({
   selector: "app-titlebar",
@@ -9,10 +10,18 @@ import * as log from 'electron-log';
 })
 export class TitlebarComponent implements OnInit {
   
-  constructor() {}
+  constructor(private location: Location) {}
 
   ngOnInit() {
     log.info("Loaded titlebar component.");
+  }
+
+  public goBack(): void {
+    this.location.back();
+  }
+
+  public goForward(): void {
+    this.location.forward();
   }
 
   public minimize() {

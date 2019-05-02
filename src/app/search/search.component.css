@@ -19,9 +19,42 @@
     color: var(--primary-text-color);
     background-color: var(--primary-bg-color);
     border: 0;
+    padding-left: 1rem;
 }
 
 #search:focus {
     border-bottom: 1px solid var(--primary-color);
     outline: 0;
+}
+
+.podcast-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.podcast-list-item {
+    flex: 0 0 auto;
+    background: var(--secondary-bg-color);
+    margin: 1.5rem;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    transition: all 0.1s linear;
+}
+
+.podcast-list-item:hover {
+    background: var(--primary-bg-color);
+}
+
+.podcast-list-item>img {
+    height: 125px;
+    width: auto;
+}
+
+.podcast-list-item-info {
+    flex: 1;
+    padding: 0.75rem;
 }

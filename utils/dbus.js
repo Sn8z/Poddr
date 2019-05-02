@@ -1,6 +1,6 @@
 const log = require("electron-log");
 
-module.exports = mainWindow => {
+module.exports = (mainWindow) => {
   async function registerDbus(desktop, bus) {
     var object = await bus.getProxyObject(
       "org." + desktop + ".SettingsDaemon",
@@ -9,20 +9,24 @@ module.exports = mainWindow => {
     var mediaKeys = object.getInterface(
       "org." + desktop + ".SettingsDaemon.MediaKeys"
     );
-    mediaKeys.on("MediaPlayerKeyPressed", function(interface, key, error) {
+    mediaKeys.on("MediaPlayerKeyPressed", function (interface, key, error) {
       if (error) log.error(error);
       switch (key) {
         case "Next":
-          log.info("next");
+          mainWindow.webContents.send("player:next");
+          log.info("DBUS => NEXT");
           return;
         case "Previous":
-          log.info("prev");
+          mainWindow.webContents.send("player:previous");
+          log.info("DBUS => PREVIOUS");
           return;
         case "Play":
-          mainWindow.webContents.send("toggle-play");
+          mainWindow.webContents.send("player:toggle-play");
+          log.info("DBUS => PLAY");
           return;
         case "Stop":
-          log.info("stop");
+          mainWindow.webContents.send("player:stop");
+          log.info("DBUS => STOP");
           return;
         default:
           return;
@@ -43,6 +47,6 @@ module.exports = mainWindow => {
     registerDbus("gnome", bus);
     registerDbus("mate", bus);
   } catch (e) {
-    log.error(e);
+    log.error("Error binding Dbus interface.");
   }
 };

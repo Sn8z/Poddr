@@ -13,7 +13,7 @@
     height: auto;
     overflow: hidden;
     box-sizing: border-box;
-    padding: 0.75rem;
+    padding: 1.25rem;
 }
 
 .podcast-frame {
@@ -53,9 +53,6 @@
 
 .podcast-frame-title {
     flex: 1 1 auto;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     font-size: 14px;
     color: var(--primary-text-color);
 }
@@ -75,13 +72,13 @@
 
 /* Media queries for responsive grid */
 
-@media (min-width: 1281px) {
+@media (min-width: 1601px) {
     .grid-item {
         flex-basis: 20%;
     }
 }
 
-@media (min-width: 1025px) and (max-width: 1280px) {
+@media (min-width: 1025px) and (max-width: 1600px) {
     .grid-item {
         flex-basis: 25%;
     }

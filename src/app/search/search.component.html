@@ -1,6 +1,14 @@
 <div class="search-banner shadow-bottom">
     <input id="search" type="text" [(ngModel)]="query" (keyup.enter)="search()">
 </div>
-<a [routerLink]="['/podcast', r.feedUrl]" *ngFor="let r of results">
-    <p>{{ r.collectionName }}</p>
-</a>
+<div class="podcast-list">
+    <div class="podcast-list-item" *ngFor="let r of results" [routerLink]="['/podcast', r.feedUrl]">
+        <img [src]="r.artworkUrl600">
+        <div class="podcast-list-item-info">
+            <h5 class="secondary-title">{{ r.artistName }}</h5>
+            <h1 class="primary-title">{{ r.collectionName }}</h1>
+            <p class="secondary-text">{{ r.primaryGenreName }}</p>
+            <button (click)="addToFavourites(r.feedUrl)">Add to favs</button>
+        </div>
+    </div>
+</div>

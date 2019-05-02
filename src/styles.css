@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import url("https://fonts.googleapis.com/css?family=Rubik");
-@import url('https://fonts.googleapis.com/css?family=Cutive+Mono');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 @import url("https://use.fontawesome.com/releases/v5.8.1/css/all.css");
 @import "./assets/styles/scrollbar.css";
 @import "./assets/styles/dropdown.css";
@@ -11,11 +11,11 @@
 @import "./assets/styles/loader.css";
 :root {
   --primary-color: #ff6600;
-  --primary-bg-color: #151515;
-  --secondary-bg-color: #252525;
-  --third-bg-color: #333333;
-  --primary-text-color: #eeeeee;
-  --secondary-text-color: #aaaaaa;
+  --primary-bg-color: #050505;
+  --secondary-bg-color: #151515;
+  --third-bg-color: #222222;
+  --primary-text-color: #efefef;
+  --secondary-text-color: #ababab;
   --titlebar-height: 35px;
 }
 
@@ -43,7 +43,7 @@ body {
 }
 
 .time {
-  font-family: 'Cutive Mono', monospace;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .banner {
@@ -63,10 +63,19 @@ body {
 
 .secondary-title {
   color: var(--secondary-text-color);
+  margin: 0;
 }
 
 .primary-text {
   color: var(--primary-text-color);
-  font-size: 12px;
-  font-weight: 200;
+}
+
+.secondary-text {
+  color: var(--secondary-text-color);
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import * as log from 'electron-log';
 import * as Store from 'electron-store';
+import { ToastService } from './toast.service';
+const ipc = require('electron').ipcRenderer;
 
 @Injectable({
 	providedIn: 'root'
@@ -25,7 +27,7 @@ export class AudioService {
 	public percentPlayed: BehaviorSubject<number> = new BehaviorSubject(0);
 	public volume: BehaviorSubject<number> = new BehaviorSubject(0);
 
-	constructor() {
+	constructor(private toast: ToastService) {
 		log.info("Initializing audio service");
 		this.initIpcListeners();
 		this.initAudio();
@@ -35,24 +37,28 @@ export class AudioService {
 
 	private initIpcListeners(): void {
 		log.info("Initializing audio service - IPC listeners");
-		// Listen for IPC events from main process
+		ipc.on("player:toggle-play", () => { this.togglePlay() });
 	}
 
 	private initAudio(): void {
 		log.info("Initializing audio service - Audio");
-		this.audio.volume = this.store.get("volume", 0.5);
 
-		let playerState = this.store.get("playerState");
+		this.audio.volume = this.store.get("volume", 0.5) as number;
+		this.volume.next(this.audio.volume);
+
+		let playerState: any = this.store.get("playerState");
 		if (playerState) {
+			this.audio.src = playerState.podcastURL;
+			this.rss = playerState.podcastRSS;
+			this.guid = playerState.podcastGUID;
 			this.podcast.next(playerState.podcastTitle);
 			this.episode.next(playerState.podcastEpisodeTitle);
 			this.podcastCover.next(playerState.podcastCover);
 			this.episodeCover.next(playerState.episodeCover);
 			this.description.next(playerState.podcastDescription);
 		}
-		//player.src = PlayerService.podcastURL = playerState.podcastURL;
-		//PlayerService.podcastGUID = playerState.podcastGUID;
-		//PlayerService.podcastRSS = playerState.podcastRSS;
+
+		this.updateMedia();
 	}
 
 	private initAudioListeners(): void {
@@ -71,13 +77,13 @@ export class AudioService {
 	private onPlay = () => {
 		log.info("Playing");
 		this.playing.next(true);
-		// mpris update
+		ipc.send("media-play");
 	}
 
 	private onPause = () => {
 		log.info("Paused");
 		this.playing.next(false);
-		// mpris update
+		ipc.send("media-pause");
 	}
 
 	private onLoadStart = () => {
@@ -93,16 +99,13 @@ export class AudioService {
 	private onVolumeChange = () => {
 		log.info("Changed volume");
 		this.volume.next(this.audio.volume);
-		this.store.set("volume", this.audio.volume);
 		this.muted.next(this.audio.volume === 0 || this.audio.muted);
-		// store volume
-		// debounce this call to avoid hogging to much power
+		this.store.set("volume", this.audio.volume); // debounce this call to avoid hogging to much power
 	}
 
 	private onSeeking = () => {
 		log.info("Seeking");
 		this.loading.next(true);
-		// show loading indicator
 	}
 
 	private onCanPlayThrough = () => {
@@ -112,16 +115,23 @@ export class AudioService {
 	}
 
 	private onEnded = () => {
-		log.info("Podcast ended");
+		log.info("Podcast ended.");
+		this.toast.info("Podcast ended");
 		// Add episode to previously played episodes
-		// toast
 	}
 
 	private onError = (e) => {
 		log.error(e.target.error.message);
-		// toast (user friendly error)
+		this.toast.error("Something went wrong");
 		this.loading.next(false);
-		// Hide loading indicator
+	}
+
+	private updateMedia = () => {
+		ipc.send("media-update", {
+			image: this.episodeCover.value,
+			title: this.episode.value,
+			artist: this.podcast.value
+		});
 	}
 
 	// public methods
@@ -131,15 +141,29 @@ export class AudioService {
 		this.guid = podcast.guid;
 		this.podcast.next(pTitle);
 		this.episode.next(podcast.episodeTitle);
+		this.description.next(podcast.description);
 		this.duration.next(0);
 		this.time.next(0);
 
 		this.podcastCover.next(pCover);
-		if(podcast.cover){
+		if (podcast.cover) {
 			this.episodeCover.next(podcast.cover);
-		}else{
+		} else {
 			this.episodeCover.next(pCover);
 		}
+
+		this.store.set("playerState", {
+			podcastURL: this.audio.src,
+			podcastTitle: this.podcast.value,
+			podcastEpisodeTitle: this.episode.value,
+			podcastCover: this.podcastCover.value,
+			episodeCover: this.episodeCover.value,
+			podcastRSS: this.rss,
+			podcastDescription: this.description.value,
+			podcastGUID: this.guid
+		});
+
+		this.updateMedia();
 	}
 
 	play(): void {

@@ -30,6 +30,7 @@
   flex: 1 1 auto;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
+  overflow: hidden;
 }
 
 #now-playing-author {

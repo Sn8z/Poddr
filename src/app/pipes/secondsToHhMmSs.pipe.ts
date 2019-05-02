@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { formatDate } from '@angular/common';
 
 @Pipe({ name: 'secondsToHhMmSs' })
 export class SecondsToHhMmSs implements PipeTransform {

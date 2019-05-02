@@ -20,13 +20,10 @@ export class ToplistsComponent implements OnInit {
 
 	ngOnInit() {
 		this.amount = 50;
-
 		this.categories = this.podcastService.getCategories();
 		this.category = 26;
-
 		this.regions = this.podcastService.getRegions();
-		this.region = this.store.get("region", "us");
-
+		this.region = this.store.get("region", "us") as string;
 		this.getPodcasts();
 	}
 
@@ -35,5 +32,4 @@ export class ToplistsComponent implements OnInit {
 			this.podcasts = data['feed']['entry']
 		});
 	}
-
 }

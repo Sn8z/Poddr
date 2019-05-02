@@ -26,41 +26,45 @@ module.exports = mainWindow => {
   mprisPlayer.canEditTracks = false;
   mprisPlayer.playbackStatus = "Stopped";
 
-  mprisPlayer.on("playpause", function() {
-    mainWindow.webContents.send("toggle-play");
+  mprisPlayer.on("playpause", function () {
+    mainWindow.webContents.send("player:toggle-play");
+    log.info("MPRIS - PLAYPAUSE");
   });
 
-  mprisPlayer.on("play", function() {
-    if (player.paused) mainWindow.webContents.send("toggle-play");
+  mprisPlayer.on("play", function () {
+    mainWindow.webContents.send("player:toggle-play");
+    log.info("MPRIS - PLAY");
   });
 
-  mprisPlayer.on("pause", function() {
-    if (!player.paused) mainWindow.webContents.send("toggle-play");
+  mprisPlayer.on("pause", function () {
+    mainWindow.webContents.send("player:toggle-play");
+    log.info("MPRIS - PAUSE");
   });
 
-  mprisPlayer.on("quit", function() {
+  mprisPlayer.on("quit", function () {
     app.quit();
   });
 
-  mprisPlayer.on("raise", function() {
+  mprisPlayer.on("raise", function () {
     mainWindow.show();
     mainWindow.focus();
   });
 
-  ipc.on("media-update", function(event, mediaObject) {
+  ipc.on("media-update", function (event, mediaObject) {
+    log.info("MPRIS - Media update.");
     mprisPlayer.metadata = {
-      "mpris:artUrl": mediaObject.image,
-      "xesam:title": mediaObject.title,
+      "mpris:artUrl": mediaObject.image || "",
+      "xesam:title": mediaObject.title || "No title",
       "xesam:album": "Podcast",
-      "xesam:artist": mediaObject.artist
+      "xesam:artist": [mediaObject.artist || "No artist"]
     };
   });
 
-  ipc.on("media-play", function() {
+  ipc.on("media-play", function () {
     mprisPlayer.playbackStatus = "Playing";
   });
 
-  ipc.on("media-pause", function() {
+  ipc.on("media-pause", function () {
     mprisPlayer.playbackStatus = "Stopped";
   });
 };

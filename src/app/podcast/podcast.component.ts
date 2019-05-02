@@ -51,7 +51,6 @@ export class PodcastComponent implements OnInit {
         if(error){
           console.log(error);
         } else {
-          log.info(data);
           this.title = data.title;
           this.author = data.author;
           this.description = data.description.long;
@@ -67,7 +66,6 @@ export class PodcastComponent implements OnInit {
   }
 
   play(podcastObject: any): void {
-    console.log(podcastObject);
     let podcast = {
       src: podcastObject.enclosure.url,
       episodeTitle: podcastObject.title,

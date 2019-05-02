@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AudioService } from '../services/audio.service';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-player',
@@ -16,8 +17,9 @@ export class PlayerComponent implements OnInit {
   time: number = 0;
   podcast: string;
   episode: string;
+  description: string;
 
-  constructor(private audio: AudioService) { }
+  constructor(private audio: AudioService, private toast: ToastService) { }
 
   ngOnInit() {
     this.audio.loading.subscribe(value => { this.isLoading = value; });
@@ -29,6 +31,7 @@ export class PlayerComponent implements OnInit {
     this.audio.duration.subscribe(value => { this.duration = value });
     this.audio.episode.subscribe(value => { this.episode = value });
     this.audio.podcast.subscribe(value => { this.podcast = value });
+    this.audio.description.subscribe(value => { this.description = value});
   }
 
   togglePlay(): void {
@@ -44,11 +47,14 @@ export class PlayerComponent implements OnInit {
     let clickX = event.clientX - progress.getBoundingClientRect().left;
     let progressWidth = progress.offsetWidth;
     let time = ((clickX / progressWidth) * this.audio.getDuration()) || 0;
-    console.log(clickX + " : " + progressWidth + " : " + time);
     this.audio.setTime(time);
   }
 
   updateVolume(): void {
     this.audio.setVolume(this.volume);
+  }
+
+  showDescription(): void {
+    this.toast.message(this.description);
   }
 }

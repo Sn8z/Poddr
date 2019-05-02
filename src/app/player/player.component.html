@@ -6,13 +6,13 @@
   <i id="play-btn" [ngClass]="(isPlaying) ? 'far fa-pause-circle' : 'far fa-play-circle'" (click)="togglePlay()"></i>
   <i id="forward-btn" class="fas fa-forward" (click)="changeTime(10)"></i>
   <div id="now-playing">
-    <p id="now-playing-author">{{ podcast }}</p>
-    <p id="now-playing-episode">{{ episode }}</p>
-    <p id="now-playing-time" class="time">{{ time | secondsToHhMmSs }} / {{ duration | secondsToHhMmSs }}</p>
+    <p id="now-playing-author" class="truncate">{{ podcast }}</p>
+    <p id="now-playing-episode" class="truncate">{{ episode }}</p>
+    <p id="now-playing-time" class="time truncate">{{ time | secondsToHhMmSs }} / {{ duration | secondsToHhMmSs }}</p>
   </div>
   <div class="loader-small" *ngIf="isLoading"></div>
   <i class="far fa-heart player-btn"></i>
-  <i class="fas fa-circle-notch player-btn"></i>
+  <i class="fas fa-circle-notch player-btn" (click)="showDescription()"></i>
   <i class="fas fa-bars player-btn"></i>
   <i class="fa fa-volume-up player-btn"></i>
   <input type="range" id="volume-slider" min="0" max="1" step="0.001" [(ngModel)]="volume" (input)="updateVolume()">
