@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
+import { FavouritesService } from '../services/favourites.service';
+import { ToastService } from '../services/toast.service';
 import * as Store from 'electron-store';
+import { Description } from '../pipes/description.pipe';
 
 @Component({
 	selector: 'app-toplists',
 	templateUrl: './toplists.component.html',
-	styleUrls: ['./toplists.component.css']
+	styleUrls: ['./toplists.component.css'],
+	providers: [ Description ]
 })
 export class ToplistsComponent implements OnInit {
 	store = new Store();
@@ -15,8 +19,9 @@ export class ToplistsComponent implements OnInit {
 	category: number;
 	regions = [];
 	region: String;
+	favs: string[];
 
-	constructor(private podcastService: PodcastService) { }
+	constructor(private podcastService: PodcastService, private favService: FavouritesService, private toast: ToastService, private descriptionPipe: Description) { }
 
 	ngOnInit() {
 		this.amount = 50;
@@ -25,11 +30,26 @@ export class ToplistsComponent implements OnInit {
 		this.regions = this.podcastService.getRegions();
 		this.region = this.store.get("region", "us") as string;
 		this.getPodcasts();
+		this.favService.favouriteTitles.subscribe(value => {
+			this.favs = value;
+		});
 	}
 
-	getPodcasts() {
+	getPodcasts = () => {
 		this.podcastService.getToplist(this.region, this.category, this.amount).subscribe((data) => {
 			this.podcasts = data['feed']['entry']
 		});
 	}
+
+	addPodcast = (id) => {
+		this.favService.addItunesFavourite(id);
+	}
+
+	showDescription = (description) => {
+		this.toast.message(this.descriptionPipe.transform(description));
+	}
+
+	isFavourite = (title) => {
+		return this.favs.indexOf(title) !== -1;
+	};
 }

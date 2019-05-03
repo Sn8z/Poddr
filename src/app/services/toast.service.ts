@@ -8,7 +8,7 @@ export class ToastService {
 
   constructor() { }
 
-  info(msg: string = "Hello there!"): void {
+  toast(msg: string = "Hello there!"): void {
     Swal.fire({
       toast: true,
       text: msg,

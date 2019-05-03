@@ -116,7 +116,7 @@ export class AudioService {
 
 	private onEnded = () => {
 		log.info("Podcast ended.");
-		this.toast.info("Podcast ended");
+		this.toast.toast("Podcast ended");
 		// Add episode to previously played episodes
 	}
 

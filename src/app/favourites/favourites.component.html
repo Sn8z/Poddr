@@ -1,19 +1,19 @@
 <div class="banner">
-    <h1>Favourites</h1>
+	<h1>Favourites</h1>
 </div>
 <div class="grid">
-    <div class="grid-item" *ngFor="let f of favourites">
-        <a [routerLink]="['/podcast', f.rss]" class="podcast-frame shadow">
-            <div class="podcast-frame-image">
-                <img [src]="f.img">
-            </div>
-            <div class="podcast-frame-info">
-                <div class="podcast-frame-title truncate">{{ f.title }}</div>
-                <div class="podcast-frame-btns">
-                    <i class="far fa-heart podcast-frame-btn"></i>
-                    <i class="fas fa-info-circle podcast-frame-btn"></i>
-                </div>
-            </div>
-        </a>
-    </div>
+	<div class="grid-item" *ngFor="let f of favourites">
+		<div class="podcast-frame shadow">
+			<div class="podcast-frame-image" [routerLink]="['/podcast', f.rss]">
+				<img [src]="f.img">
+			</div>
+			<div class="podcast-frame-info">
+				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', f.rss]">{{ f.title }}</div>
+				<div class="podcast-frame-btns">
+					<i class="far fa-heart podcast-frame-btn"></i>
+					<i class="fas fa-info-circle podcast-frame-btn" (click)="remove(f.rss)"></i>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

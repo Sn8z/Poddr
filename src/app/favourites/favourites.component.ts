@@ -9,14 +9,17 @@ import * as log from 'electron-log';
 })
 export class FavouritesComponent implements OnInit {
   favourites: Object;
-  test: string = "Testing...";
 
   constructor(private favService: FavouritesService) { }
 
   ngOnInit() {
     this.favService.favourites.subscribe(value => {
-      this.favourites = value;
+			this.favourites = value;
     });
-  }
+	}
+	
+	remove = (rss) => {
+		this.favService.removeFavourite(rss);
+	}
 
 }
