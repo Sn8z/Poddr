@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { AudioService } from '../services/audio.service';
 import { ToastService } from '../services/toast.service';
 import { Description } from '../pipes/description.pipe';
+import { FavouritesService } from '../services/favourites.service';
 
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
-	styleUrls: ['./player.component.css'],
-	providers: [ Description ]
+  styleUrls: ['./player.component.css'],
+  providers: [Description]
 })
 export class PlayerComponent implements OnInit {
   volume: number;
@@ -21,7 +22,10 @@ export class PlayerComponent implements OnInit {
   episode: string;
   description: string;
 
-  constructor(private audio: AudioService, private toast: ToastService, private descriptionPipe: Description) { }
+  constructor(private audio: AudioService,
+    private toast: ToastService,
+    private descriptionPipe: Description,
+    private favService: FavouritesService) { }
 
   ngOnInit() {
     this.audio.loading.subscribe(value => { this.isLoading = value; });
@@ -33,7 +37,7 @@ export class PlayerComponent implements OnInit {
     this.audio.duration.subscribe(value => { this.duration = value });
     this.audio.episode.subscribe(value => { this.episode = value });
     this.audio.podcast.subscribe(value => { this.podcast = value });
-    this.audio.description.subscribe(value => { this.description = value});
+    this.audio.description.subscribe(value => { this.description = value });
   }
 
   togglePlay(): void {
@@ -58,5 +62,9 @@ export class PlayerComponent implements OnInit {
 
   showDescription(): void {
     this.toast.message(this.descriptionPipe.transform(this.description));
+  }
+
+  addPodcast = () => {
+    this.favService.addFavourite(this.audio.getRSS());
   }
 }

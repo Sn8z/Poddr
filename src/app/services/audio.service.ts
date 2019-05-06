@@ -204,6 +204,10 @@ export class AudioService {
 		}
 	}
 
+	getRSS = (): string => {
+		return this.rss;
+	}
+
 	getAudio(): HTMLAudioElement {
 		return this.audio;
 	}

@@ -11,6 +11,7 @@ export class ToastService {
   toast(msg: string = "Hello there!"): void {
     Swal.fire({
       toast: true,
+      type: 'success',
       text: msg,
       position: 'top-end',
       showConfirmButton: false,
