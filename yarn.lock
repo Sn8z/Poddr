@@ -7390,10 +7390,10 @@ supports-color@^6.0.0, supports-color@^6.1.0:
   dependencies:
     has-flag "^3.0.0"
 
-sweetalert2@^8.9.0:
-  version "8.9.0"
-  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-8.9.0.tgz#94a46eb79b0cb069f41f0bc7937f020fd843101d"
-  integrity sha512-gI+wL44QRbfd6FvRVB8KKLQPhD/8jP3XUNrvYGcSlU7IA09dQtQw3rrLCbM3c+HY0L3O8VTz1Gvu29n8ryIgag==
+sweetalert2@^8.10.0:
+  version "8.10.0"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-8.10.0.tgz#45f3227eaeb2be4dc828f6ab655574413b0cc6e1"
+  integrity sha512-7N1Zld9uEZfy1h5jNGFVmcrb4hQmcZBcpQSZbBgs+gyQr5sy0wrWKMH+8go0WO+IHdzK5YPHNWQGf5NbbCWJOQ==
 
 symbol-observable@1.2.0:
   version "1.2.0"
