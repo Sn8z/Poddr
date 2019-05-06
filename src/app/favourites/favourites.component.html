@@ -10,8 +10,7 @@
 			<div class="podcast-frame-info">
 				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', f.rss]">{{ f.title }}</div>
 				<div class="podcast-frame-btns">
-					<i class="far fa-heart podcast-frame-btn"></i>
-					<i class="fas fa-info-circle podcast-frame-btn" (click)="remove(f.rss)"></i>
+					<i class="fas fa-times podcast-frame-btn" (click)="remove(f.rss)"></i>
 				</div>
 			</div>
 		</div>
