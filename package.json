@@ -11,9 +11,9 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "build": "ng build --prod=true --aot=true --buildOptimizer=true",
+    "build": "ng build --prod=true --buildOptimizer=true",
     "electron": "./node_modules/.bin/electron .",
-    "start": "ng build --prod=true --aot=true --buildOptimizer=true && ./node_modules/.bin/electron .",
+    "start": "ng build --prod=true --buildOptimizer=true && ./node_modules/.bin/electron .",
     "dist": "electron-builder",
     "dist:mac": "electron-builder --mac",
     "dist:win": "electron-builder --win",

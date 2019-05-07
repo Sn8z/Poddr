@@ -2,7 +2,8 @@
   width: 100vw;
   height: 100vh;
   display: flex;
-  flex-direction: column;
+	flex-direction: column;
+	overflow: hidden;
 }
 
 #titlebar {
@@ -25,7 +26,8 @@
 #content-container {
   flex: 1 1 auto;
   display: flex;
-  flex-direction: column;
+	flex-direction: column;
+	overflow: hidden;
 }
 
 #content-router {
@@ -42,6 +44,6 @@
 
 @media (max-width: 768px) {
   #sidenav {
-    flex: 0 0 75px;
+    flex: 0 0 100px;
   }
 }
