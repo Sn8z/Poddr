@@ -1,16 +1,9 @@
-<div id="menu">
-  <p class="menu-label">PODCASTS</p>
-  <ul class="menu-items">
-    <li class="menu-item"><a routerLink="/toplists" routerLinkActive="active">Toplists</a></li>
-    <li class="menu-item"><a routerLink="/favourites" routerLinkActive="active">Favourites</a></li>
-    <li class="menu-item"><a routerLink="/discover" routerLinkActive="active">Discover</a></li>
-    <li class="menu-item"><a routerLink="/search" routerLinkActive="active">Search</a></li>
-  </ul>
-  <p class="menu-label">SETTINGS</p>
-  <ul class="menu-items">
-    <li class="menu-item"><a routerLink="/settings" routerLinkActive="active">General</a></li>
-    <li class="menu-item"><a routerLink="/appearance" routerLinkActive="active">Appearance</a></li>
-  </ul>
+<div id="menu-test">
+	<div class="menu-item" routerLink="/toplists" routerLinkActive="active"><i class="fas fa-fire menu-item-icon"></i><span class="menu-item-text">Toplists</span></div>
+	<div class="menu-item" routerLink="/search" routerLinkActive="active"><i class="fas fa-search menu-item-icon"></i><span class="menu-item-text">Search</span></div>
+	<div class="menu-item" routerLink="/favourites" routerLinkActive="active"><i class="far fa-heart menu-item-icon"></i><span class="menu-item-text">Favourites</span></div>
+	<div class="menu-item" routerLink="/discover" routerLinkActive="active"><i class="fas fa-globe-europe menu-item-icon"></i><span class="menu-item-text">Discover</span></div>
+	<div class="menu-item" routerLink="/settings" routerLinkActive="active"><i class="fas fa-tools menu-item-icon"></i><span class="menu-item-text">Settings</span></div>
 </div>
 
 <img id="podcast-cover" [src]="image" />
