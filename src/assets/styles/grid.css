@@ -28,10 +28,6 @@
     cursor: pointer;
 }
 
-.podcast-frame:hover {
-    transform: scale(1.02);
-}
-
 .podcast-frame-image {
     height: auto;
     width: 100%;
@@ -68,6 +64,11 @@
     padding: 0.25rem;
     font-size: 12px;
     color: var(--secondary-text-color);
+		transition: all 0.1s linear;
+}
+
+.podcast-frame-btn:hover {
+	color: var(--primary-text-color);
 }
 
 /* Media queries for responsive grid */
