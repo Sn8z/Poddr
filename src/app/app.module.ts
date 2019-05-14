@@ -20,7 +20,6 @@ import { FavouritesComponent } from './favourites/favourites.component';
 import { SearchComponent } from './search/search.component';
 import { DiscoverComponent } from './discover/discover.component';
 import { SettingsComponent } from './settings/settings.component';
-import { AppearanceComponent } from './appearance/appearance.component';
 import { PodcastComponent } from './podcast/podcast.component';
 
 @NgModule({
@@ -37,7 +36,6 @@ import { PodcastComponent } from './podcast/podcast.component';
     SearchComponent,
     DiscoverComponent,
     SettingsComponent,
-    AppearanceComponent,
     PodcastComponent
   ],
   imports: [
