@@ -7413,10 +7413,10 @@ supports-color@^6.1.0:
   dependencies:
     has-flag "^3.0.0"
 
-sweetalert2@^8.10.7:
-  version "8.10.7"
-  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-8.10.7.tgz#ebef1978d30e9c8ec4123f61425120133c5aa9f0"
-  integrity sha512-C+bW8QiN/sv1EgemKYZTz9FXWyAdYLzhXfgkVxCX1/JNsiS3e9CmZizpelvPqSBw5hPULlN5iAC2En1f7/G1DQ==
+sweetalert2@^8.11.1:
+  version "8.11.1"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-8.11.1.tgz#deb4a729618ae536db6210028fb5d133ccb5a17b"
+  integrity sha512-yjN01bRiIagiL47zhiR6IHh2F0KcMdw8azeJzeFaOpIR28LqHcVZnH7xLsxD32xmCwoDk/BuuAwCosmQHhy+Ag==
 
 symbol-observable@1.2.0:
   version "1.2.0"
