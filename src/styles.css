@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import url("https://fonts.googleapis.com/css?family=Rubik");
-@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 @import url("https://use.fontawesome.com/releases/v5.8.1/css/all.css");
 @import "./assets/styles/scrollbar.css";
 @import "./assets/styles/dropdown.css";
@@ -43,7 +43,7 @@ body {
 }
 
 .time {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .banner {
