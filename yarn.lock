@@ -331,10 +331,10 @@
     semver "5.6.0"
     semver-intersect "1.4.0"
 
-"@simonwep/pickr@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-0.5.0.tgz#5f54a9964c2df0add5db94fd6dcd14eadc6bf957"
-  integrity sha512-/t+O1pI/qsjOSg/xeYVHsEuPhQBjRAnnCrLMKnriUJ52JCuvhu839Xq0m/jA4eqV0JJs1hNTsJS1O0/EFa1q3A==
+"@simonwep/pickr@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-0.5.1.tgz#675a6e0e348bb02869d3c8e21e3f9f2b7acb72aa"
+  integrity sha512-5qeyG/zEOygNpObM4Hpjb9VbpUtaW3lTrY9x9xPylcbgZCRkUDHQyOhZmUYxzHrGjWkbAmggopx/MzizHAe2Mg==
 
 "@types/jasmine@*", "@types/jasmine@~3.3.12":
   version "3.3.12"
@@ -1956,7 +1956,12 @@ copy-webpack-plugin@4.6.0:
     p-limit "^1.0.0"
     serialize-javascript "^1.4.0"
 
-core-js@2.6.5, core-js@^2.2.0, core-js@^2.4.0:
+core-js@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.1.0.tgz#7118f0dad99054204b6821c1f82e67b42cc21628"
+  integrity sha512-EyF8cMvUWRDWRLmC3+i50D1DqK4aFZWb/6PDPP2QfX2r0zXkgR2V9wt7jX7TRM0Qdj/3f6+JQkqfCaGkSj92iQ==
+
+core-js@^2.2.0, core-js@^2.4.0:
   version "2.6.5"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.5.tgz#44bc8d249e7fb2ff5d00e0341a7ffb94fbf67895"
   integrity sha512-klh/kDpwX8hryYL14M9w/xei6vrv6sE8gTHDG7/T/+SEovB/G4ejwcfE/CBzO6Edsu+OETZMZ3wcX/EjUkrl5A==
