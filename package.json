@@ -58,7 +58,7 @@
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
     "@simonwep/pickr": "^0.5.0",
-    "core-js": "2.6.5",
+    "core-js": "3.1.0",
     "dbus-next": "^0.6.1",
     "electron-context-menu": "^0.12.1",
     "electron-log": "^3.0.5",
