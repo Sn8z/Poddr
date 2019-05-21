@@ -3,7 +3,7 @@
   -webkit-app-region: drag;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   width: 100%;
   height: 100%;
@@ -27,14 +27,4 @@
 
 #close-btn:hover {
   background-color: rgb(115, 30, 30);
-}
-
-#back-btn, #forward-btn {
-  cursor: pointer;
-  color: var(--primary-text-color);
-  padding: 10px;
-}
-
-#back-btn:disabled, #forward-btn:disabled {
-  color: var(--secondary-text-color);
 }

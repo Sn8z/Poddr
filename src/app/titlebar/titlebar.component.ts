@@ -16,14 +16,6 @@ export class TitlebarComponent implements OnInit {
     log.info("Loaded titlebar component.");
   }
 
-  public goBack(): void {
-    this.location.back();
-  }
-
-  public goForward(): void {
-    this.location.forward();
-  }
-
   public minimize() {
     ipc.send("window-update", "minimize");
   }

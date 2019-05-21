@@ -25,7 +25,6 @@ export class FavouritesService {
 		this.favourites.next(Object.values(this.store.store) as Object[]);
 		this.favouriteKeys.next(Object.keys(this.store.store) as string[]);
 		this.favouriteTitles.next(Object.values(this.store.store).map((x: any) => { return x.title; }) as string[]);
-		log.info(this.store.store);
 	}
 
 	addItunesFavourite = (id) => {
