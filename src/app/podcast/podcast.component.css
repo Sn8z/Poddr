@@ -61,7 +61,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    background-color: var(--secondary-bg-color);
+    background-color: #181818;
 }
 
 .podcast-item {
@@ -70,7 +70,7 @@
     flex-direction: column;
     cursor: pointer;
     padding: 0.5rem;
-    border-bottom: 1px solid var(--secondary-bg-color);
+    border-bottom: 1px solid var(--primary-color);
     transition: all 0.1s linear;
 }
 
@@ -127,7 +127,7 @@
 }
 
 #latest-podcast:hover {
-    background: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent), var(--secondary-bg-color);
+    background: var(--secondary-bg-color);
 }
 
 #latest-podcast>img {

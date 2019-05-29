@@ -46,7 +46,7 @@ export class ToplistsComponent implements OnInit {
 	}
 
 	showDescription = (description) => {
-		this.toast.message(this.descriptionPipe.transform(description));
+		this.toast.modal("Episode description", this.descriptionPipe.transform(description));
 	}
 
 	isFavourite = (title) => {

@@ -1,0 +1,26 @@
+.toast-popup-class {
+    background: var(--third-bg-color) !important;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7) !important;
+}
+
+.toast-content-class {
+    color: var(--primary-text-color) !important;
+}
+
+.modal-popup-class {
+    background: var(--third-bg-color) !important;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7) !important;
+}
+
+.modal-content-class {
+    color: var(--primary-text-color) !important;
+    white-space: pre-line !important;
+}
+
+.modal-content-class>#swal2-content {
+    text-align: left !important;
+}
+
+.modal-title-class {
+    color: var(--secondary-text-color) !important;
+}

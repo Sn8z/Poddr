@@ -8,7 +8,22 @@ export class ToastService {
 
   constructor() { }
 
-  toast(msg: string = "Hello there!"): void {
+  toast(msg: string = ""): void {
+    Swal.fire({
+      toast: true,
+      text: msg,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 5000,
+      animation: true,
+      customClass: {
+        content: 'toast-content-class',
+        popup: 'toast-popup-class'
+      }
+    })
+  }
+
+  toastSuccess(msg: string = ""): void {
     Swal.fire({
       toast: true,
       type: 'success',
@@ -17,32 +32,67 @@ export class ToastService {
       showConfirmButton: false,
       timer: 5000,
       animation: true,
-      background: "var(--third-bg-color)"
+      customClass: {
+        content: 'toast-content-class',
+        popup: 'toast-popup-class'
+      }
     })
   }
 
-  success(msg: string = "Something went well."): void {
+  toastError(msg: string = ""): void {
+    Swal.fire({
+      toast: true,
+      type: 'error',
+      text: msg,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 5000,
+      animation: true,
+      customClass: {
+        content: 'toast-content-class',
+        popup: 'toast-popup-class'
+      }
+    })
+  }
+
+  //Modals
+
+  modal(title: string = "", msg: string = ""): void {
+    Swal.fire({
+      title: title,
+      text: msg,
+      showConfirmButton: false,
+      customClass: {
+        content: 'modal-content-class',
+        popup: 'modal-popup-class',
+        title: 'modal-title-class'
+      }
+    });
+  }
+
+  successModal(msg: string = ""): void {
     Swal.fire({
       type: 'success',
       text: msg,
-      showConfirmButton: false
+      showConfirmButton: false,
+      customClass: {
+        content: 'modal-content-class',
+        popup: 'modal-popup-class',
+        title: 'modal-title-class'
+      }
     });
   }
 
-  error(error: string = "Something went wrong."): void {
+  errorModal(error: string = "Something went wrong."): void {
     Swal.fire({
       type: 'error',
       text: error,
-      showConfirmButton: false
-    });
-  }
-
-  message(msg: string = ""): void {
-    Swal.fire({
-      title: "Episode description",
-      text: msg,
-      background: 'var(--third-bg-color)',
-      showConfirmButton: false
+      showConfirmButton: false,
+      customClass: {
+        content: 'modal-content-class',
+        popup: 'modal-popup-class',
+        title: 'modal-title-class'
+      }
     });
   }
 }

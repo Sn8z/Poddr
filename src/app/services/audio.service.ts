@@ -122,7 +122,7 @@ export class AudioService {
 
 	private onError = (e) => {
 		log.error(e.target.error.message);
-		this.toast.error("Something went wrong");
+		this.toast.toastError("Something went wrong");
 		this.loading.next(false);
 	}
 

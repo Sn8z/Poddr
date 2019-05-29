@@ -4,7 +4,6 @@ import { AudioService } from '../services/audio.service';
 import { ToastService } from '../services/toast.service';
 import { PodcastService } from '../services/podcast.service';
 import * as parsePodcast from 'node-podcast-parser';
-import * as log from 'electron-log';
 
 @Component({
   selector: 'app-podcast',

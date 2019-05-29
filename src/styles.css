@@ -9,6 +9,7 @@
 @import "./assets/styles/range-input.css";
 @import "./assets/styles/shadow.css";
 @import "./assets/styles/loader.css";
+@import "./assets/styles/sweet-alert.css";
 :root {
   --primary-color: #ff6600;
   --primary-bg-color: #111111;
@@ -40,6 +41,10 @@ body {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
+}
+
+body.using-mouse :focus {
+  outline: none;
 }
 
 .time {

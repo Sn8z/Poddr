@@ -45,7 +45,7 @@ export class FavouritesService {
 						img: data.image,
 						dateAdded: Date.now()
 					});
-					this.toast.toast("Added " + data.title + " to favourites!");
+					this.toast.toastSuccess("Added " + data.title + " to favourites!");
 					this.updateFavourites();
 					log.info("Added " + data.title + " to favourites.");
 				}
@@ -55,7 +55,7 @@ export class FavouritesService {
 
 	removeFavourite = (rss) => {
 		this.store.delete(rss.replace(/\./g, '\\.'));
-		this.toast.toast("Unfollowed podcast");
+		this.toast.toastError("Unfollowed podcast");
 		this.updateFavourites();
 		log.info("Removed " + rss + " from favourites.");
 	}

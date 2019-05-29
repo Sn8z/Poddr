@@ -61,7 +61,7 @@ export class PlayerComponent implements OnInit {
   }
 
   showDescription(): void {
-    this.toast.message(this.descriptionPipe.transform(this.description));
+    this.toast.modal("Podcast description", this.descriptionPipe.transform(this.description));
   }
 
   addPodcast = () => {
