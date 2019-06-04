@@ -33,7 +33,7 @@
     "@types/jasmine": "~3.3.12",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~12.0.2",
-    "codelyzer": "~5.0.1",
+    "codelyzer": "~5.1.0",
     "electron": "5.0.2",
     "electron-builder": "20.41.0",
     "jasmine-core": "~3.4.0",
