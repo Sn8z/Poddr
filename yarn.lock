@@ -317,6 +317,11 @@
     tree-kill "1.2.1"
     webpack-sources "1.3.0"
 
+"@nornagon/put@0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@nornagon/put/-/put-0.0.8.tgz#9d497ec46c9364acc3f8b59aa3cf8ee4134ae337"
+  integrity sha512-ugvXJjwF5ldtUpa7D95kruNJ41yFQDEKyF5CW4TgKJnh+W/zmlBzXXeKTyqIgwMFrkePN2JqOBqcF0M0oOunow==
+
 "@schematics/angular@8.0.1":
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-8.0.1.tgz#8d5bfb00c0ba79cc248c6d17b4782b00b6453d79"
@@ -2132,16 +2137,16 @@ dbus-next@^0.5.1:
   optionalDependencies:
     abstract-socket "^2.0.0"
 
-dbus-next@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.6.1.tgz#841bff291a38db0233d19dfde43a9bf18d291f38"
-  integrity sha512-4huuqmErCAtp7x77KmBXg1jD/0Xj+zU3r53MVpfkO17QICwbvaZCrEAOjqo5tMP4tybOlEpsgiutYyQdjuheYw==
+dbus-next@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.7.1.tgz#9d89d0415c8691177a456efe0ea98196fb1e7f7e"
+  integrity sha512-3za7fLvf2b3hje+2mnG28EQwUhLMcvsEQ94EXYEFkbKJVpuo5uVQH7bp2NG4Zi5kJWmOceF/z1PZYbHa8Cgx/Q==
   dependencies:
+    "@nornagon/put" "0.0.8"
     event-stream "3.3.4"
     hexy "^0.2.10"
     jsbi "^2.0.5"
     long "^4.0.0"
-    put "0.0.6"
     safe-buffer "^5.1.1"
     xml2js "^0.4.17"
   optionalDependencies:
