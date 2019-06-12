@@ -62,7 +62,7 @@
     "dbus-next": "^0.7.1",
     "electron-context-menu": "^0.12.1",
     "electron-log": "^3.0.6",
-    "electron-store": "^3.2.0",
+    "electron-store": "^3.3.0",
     "electron-window-state": "^5.0.3",
     "mousetrap": "^1.6.3",
     "mpris-service": "2.1.0",
