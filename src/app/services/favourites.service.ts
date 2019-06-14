@@ -11,7 +11,7 @@ import * as log from 'electron-log';
 	providedIn: 'root'
 })
 export class FavouritesService {
-	private store: Store = new Store({ name: "favourites" });
+	private store: Store<any> = new Store({ name: "favourites" });
 
 	favourites: BehaviorSubject<Object[]> = new BehaviorSubject<Object[]>([]);
 	favouriteKeys: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
