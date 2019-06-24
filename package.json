@@ -32,7 +32,7 @@
     "@angular/language-service": "~8.0.1",
     "@types/jasmine": "~3.3.13",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "~12.0.8",
+    "@types/node": "~12.0.10",
     "codelyzer": "~5.1.0",
     "electron": "5.0.3",
     "electron-builder": "20.43.0",
