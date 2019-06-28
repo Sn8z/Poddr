@@ -8,7 +8,7 @@
             <h5 class="secondary-title">{{ r.artistName }}</h5>
             <h1 class="primary-title">{{ r.collectionName }}</h1>
             <p class="secondary-text">{{ r.primaryGenreName }}</p>
-            <button (click)="addToFavourites(r.feedUrl)">Add to favs</button>
+            <i *ngIf="favs.indexOf(r.collectionName) == -1" class="far fa-heart player-btn" (click)="addToFavourites(r.feedUrl)"></i>
         </div>
     </div>
 </div>

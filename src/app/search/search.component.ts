@@ -10,11 +10,13 @@ import { FavouritesService } from '../services/favourites.service';
 export class SearchComponent implements OnInit {
   query: String;
   results: Array<Object>;
+  favs: string[];
 
   constructor(private podcasts: PodcastService, private favService: FavouritesService) { }
 
   ngOnInit() {
     document.getElementById("search").focus();
+    this.favService.favouriteTitles.subscribe(value => { this.favs = value});
   }
 
   search = () => {

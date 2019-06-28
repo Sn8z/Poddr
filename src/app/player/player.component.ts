@@ -21,6 +21,7 @@ export class PlayerComponent implements OnInit {
   podcast: string;
   episode: string;
   description: string;
+  favs: string[];
 
   constructor(private audio: AudioService,
     private toast: ToastService,
@@ -38,6 +39,7 @@ export class PlayerComponent implements OnInit {
     this.audio.episode.subscribe(value => { this.episode = value });
     this.audio.podcast.subscribe(value => { this.podcast = value });
     this.audio.description.subscribe(value => { this.description = value });
+    this.favService.favouriteTitles.subscribe(value => { this.favs = value});
   }
 
   togglePlay(): void {

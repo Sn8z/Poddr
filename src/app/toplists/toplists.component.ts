@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
 import { FavouritesService } from '../services/favourites.service';
 import { ToastService } from '../services/toast.service';
-import * as Store from 'electron-store';
 import { Description } from '../pipes/description.pipe';
+import * as Store from 'electron-store';
+import * as log from 'electron-log';
 
 @Component({
 	selector: 'app-toplists',
@@ -32,6 +33,7 @@ export class ToplistsComponent implements OnInit {
 		this.getPodcasts();
 		this.favService.favouriteTitles.subscribe(value => {
 			this.favs = value;
+			log.info(this.favs);
 		});
 	}
 

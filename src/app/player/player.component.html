@@ -11,7 +11,7 @@
     <p id="now-playing-time" class="time truncate">{{ time | secondsToHhMmSs }} / {{ duration | secondsToHhMmSs }}</p>
   </div>
   <div class="loader-small" *ngIf="isLoading"></div>
-  <i class="far fa-heart player-btn" (click)="addPodcast()"></i>
+  <i *ngIf="favs.indexOf(podcast) == -1" class="far fa-heart player-btn" (click)="addPodcast()"></i>
   <i class="fas fa-info-circle player-btn" (click)="showDescription()"></i>
   <input type="range" id="volume-slider" min="0" max="1" step="0.001" [(ngModel)]="volume" (input)="updateVolume()">
 </div>
