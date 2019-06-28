@@ -87,5 +87,11 @@ export class HotkeysService {
       e.preventDefault();
       this.router.navigateByUrl("/discover");
     });
+
+    Mousetrap.bindGlobal("mod+5", (e) => {
+      e.preventDefault();
+      this.router.navigateByUrl("/settings");
+    });
+
   }
 }
