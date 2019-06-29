@@ -3,7 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { AudioService } from '../services/audio.service';
 import { ToastService } from '../services/toast.service';
 import { PodcastService } from '../services/podcast.service';
+import { PlayedService } from '../services/played.service';
 import * as parsePodcast from 'node-podcast-parser';
+import * as log from 'electron-log';
 
 @Component({
   selector: 'app-podcast',
@@ -24,8 +26,18 @@ export class PodcastComponent implements OnInit {
   email: String;
   episodes: Array<any>;
   latestEpisode: any;
+  playedEpisodes: string[];
 
-  constructor(private route: ActivatedRoute, private audio: AudioService, private toast: ToastService, private podcastService: PodcastService) { }
+  constructor(private route: ActivatedRoute,
+    private audio: AudioService,
+    private prevPlayed: PlayedService,
+    private toast: ToastService,
+    private podcastService: PodcastService) {
+    this.prevPlayed.playedEpisodes.subscribe(value => {
+      this.playedEpisodes = value;
+      console.log(value);
+    });
+  }
 
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
@@ -47,7 +59,7 @@ export class PodcastComponent implements OnInit {
     this.rss = rss;
     this.podcastService.getPodcastFeed(rss).subscribe((response) => {
       parsePodcast(response, (error, data) => {
-        if(error){
+        if (error) {
           console.log(error);
         } else {
           this.title = data.title;

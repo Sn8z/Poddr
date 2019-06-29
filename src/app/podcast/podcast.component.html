@@ -33,7 +33,7 @@
 				<div class="podcast-btns">
 					<i class="fas fa-info-circle"></i>
 					<i class="fas fa-download"></i>
-					<i class="far fa-check-circle"></i>
+					<i *ngIf="playedEpisodes.indexOf(e.guid) == -1" class="far fa-check-circle"></i>
 				</div>
 			</div>
 		</div>

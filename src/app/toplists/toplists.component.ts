@@ -33,7 +33,6 @@ export class ToplistsComponent implements OnInit {
 		this.getPodcasts();
 		this.favService.favouriteTitles.subscribe(value => {
 			this.favs = value;
-			log.info(this.favs);
 		});
 	}
 
