@@ -344,10 +344,10 @@
     semver "6.0.0"
     semver-intersect "1.4.0"
 
-"@simonwep/pickr@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-1.1.2.tgz#47c621150c2e1b55fb09cf176482707862c116ea"
-  integrity sha512-he9OLznmFJNV0qQ3dotkgDIIwQmjztCNwkIOu8bK+CAyCUecQhI9IQ4imT6MsxSlroEvV+ykeakFoQIflz3jMA==
+"@simonwep/pickr@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-1.2.0.tgz#9fead37efe53e0afa89185a2a43177ac0d6b1d79"
+  integrity sha512-pdJ5jVVHFe4NBEXkbLvgT35Rz8ximd03dJEL2K5XkvEE2IKCsvwln32jJBOf59R/38CCquURgCm8fdcDohzytQ==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
