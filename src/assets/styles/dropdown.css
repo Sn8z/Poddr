@@ -3,7 +3,8 @@ select {
     color: var(--primary-text-color);
     background-color: var(--secondary-bg-color);
     font-size: 14px;
-    padding: 5px;
+		padding: 5px;
+		margin: 10px;
     width: auto;
     transition: all 100ms linear;
     cursor: pointer;

@@ -4,7 +4,6 @@ import { FavouritesService } from '../services/favourites.service';
 import { ToastService } from '../services/toast.service';
 import { Description } from '../pipes/description.pipe';
 import * as Store from 'electron-store';
-import * as log from 'electron-log';
 
 @Component({
 	selector: 'app-toplists',
