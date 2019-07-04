@@ -1,0 +1,19 @@
+details {
+	background: #333;
+}
+
+details summary {
+	font-size: 17px;
+	vertical-align: top;
+	background: #222;
+	color: #FFF;
+	padding: 20px;
+	outline: none;
+	cursor: pointer;
+	border-bottom: 1px solid #666;
+}
+
+details[open] summary {
+	background: var(--primary-color);
+	color: #333;
+}

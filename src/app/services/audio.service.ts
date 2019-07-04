@@ -97,7 +97,7 @@ export class AudioService {
 	}
 
 	private onVolumeChange = () => {
-		log.info("Changed volume");
+		log.info("Changed volume (" + this.audio.volume + ")");
 		this.volume.next(this.audio.volume);
 		this.muted.next(this.audio.volume === 0 || this.audio.muted);
 		this.store.set("volume", this.audio.volume); // debounce this call to avoid hogging to much power

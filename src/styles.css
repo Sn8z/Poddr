@@ -10,6 +10,8 @@
 @import "./assets/styles/shadow.css";
 @import "./assets/styles/loader.css";
 @import "./assets/styles/sweet-alert.css";
+@import "./assets/styles/details.css";
+
 :root {
   --primary-color: #ff6600;
   --primary-bg-color: #111111;
