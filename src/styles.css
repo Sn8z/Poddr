@@ -11,6 +11,7 @@
 @import "./assets/styles/loader.css";
 @import "./assets/styles/sweet-alert.css";
 @import "./assets/styles/details.css";
+@import '../node_modules/@simonwep/pickr/dist/themes/classic.min.css';
 
 :root {
   --primary-color: #ff6600;

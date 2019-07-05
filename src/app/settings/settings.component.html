@@ -6,12 +6,14 @@
 </div>
 <div id="settings-content">
 	<div id="settings-left">
-		Default region
-		<br>
-		Default layout
-		<br>
-		Default color
-		<br>
+		<select class="shadow" [(ngModel)]="region" (change)="setRegion()">
+			<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
+		</select>
+		<select class="shadow" [(ngModel)]="layout" (change)="setLayout()">
+			<option value="grid">Grid</option>
+			<option value="list">List</option>
+		</select>
+		<div class="clr-pickr"></div>
 	</div>
 	<div id="settings-right">
 		<details>

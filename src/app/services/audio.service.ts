@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { ToastService } from './toast.service';
 import * as log from 'electron-log';
 import * as Store from 'electron-store';
-import { ToastService } from './toast.service';
 const ipc = require('electron').ipcRenderer;
 
 @Injectable({
