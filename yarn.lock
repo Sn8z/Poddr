@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-4.1.0.tgz#33eff662a5c39c0c2061170cc003c5120743fff0"
   integrity sha512-AsnBZN3a8/JcNt+KPkGGODaA4c7l3W5+WpeKgGSbstSLxqWtTXqd1ieJGBQ8IFCtRg8DmmKUcSkIkUc0A4p3YA==
 
-"@angular-builders/custom-webpack@^8.0.2":
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/@angular-builders/custom-webpack/-/custom-webpack-8.0.2.tgz#0303d87e13f3fe3336098875ed109e093ab0c49b"
-  integrity sha512-ZxR931h0FX/5YZC6RBBczeMkgwOO0eD83EoOtjcshK2mw6jBarONlifhr6Ud0ALyU7fGueOCTgqgGaVwT1QEbw==
+"@angular-builders/custom-webpack@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@angular-builders/custom-webpack/-/custom-webpack-8.1.0.tgz#63a3b7ada2cd01a0c02db4e7d18f52cfbaa62678"
+  integrity sha512-5JOrq+J6BhCG8VK8R4vdWfEFXBeNfH32U/3CfAzb3YxnKpPJgNmyPMy+wnK0byLJKIp3IsF5rkpq43d/ZyPRaw==
   dependencies:
     lodash "^4.17.10"
     webpack-merge "^4.2.1"
