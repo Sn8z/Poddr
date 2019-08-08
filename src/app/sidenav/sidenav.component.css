@@ -1,15 +1,15 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 0;
-  height: 100%;
-  width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	margin: 0;
+	height: 100%;
+	width: 100%;
 }
 
 #menu {
-  padding: 0.5rem;
-  margin: 0;
+	padding: 0.5rem;
+	margin: 0;
 }
 
 .menu-item {
@@ -40,20 +40,21 @@
 }
 
 #podcast-cover {
-  width: 100%;
-  height: auto;
+	width: 100%;
+	height: auto;
 }
 
 /* media queries for left navigation menu */
+
 @media (max-width: 768px) {
 	.menu-item-text {
 		display: none;
 	}
-  .menu-item-icon {
+	.menu-item-icon {
 		margin-left: auto !important;
 		margin-right: auto !important;
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
+		font-size: 20px;
+		width: 20px;
+		height: 20px;
+	}
 }

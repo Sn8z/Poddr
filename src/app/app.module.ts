@@ -18,7 +18,6 @@ import { PlayerComponent } from './player/player.component';
 import { ToplistsComponent } from './toplists/toplists.component';
 import { FavouritesComponent } from './favourites/favourites.component';
 import { SearchComponent } from './search/search.component';
-import { DiscoverComponent } from './discover/discover.component';
 import { SettingsComponent } from './settings/settings.component';
 import { PodcastComponent } from './podcast/podcast.component';
 
@@ -34,7 +33,6 @@ import { PodcastComponent } from './podcast/podcast.component';
     ToplistsComponent,
     FavouritesComponent,
     SearchComponent,
-    DiscoverComponent,
     SettingsComponent,
     PodcastComponent
   ],
