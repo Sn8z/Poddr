@@ -47,12 +47,13 @@
 /* media queries for left navigation menu */
 
 @media (max-width: 768px) {
+	.menu-item {
+		text-align: center;
+	}
 	.menu-item-text {
 		display: none;
 	}
 	.menu-item-icon {
-		margin-left: auto !important;
-		margin-right: auto !important;
 		font-size: 20px;
 		width: 20px;
 		height: 20px;
