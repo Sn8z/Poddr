@@ -11,9 +11,9 @@ const ipc = require('electron').ipcRenderer;
 export class AudioService {
 	private store = new Store();
 	private audio: HTMLAudioElement = new Audio();
-	private rss: string = "";
 	private guid: string = "";
 
+	public rss: BehaviorSubject<string> = new BehaviorSubject("");
 	public loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 	public playing: BehaviorSubject<boolean> = new BehaviorSubject(false);
 	public muted: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -49,8 +49,8 @@ export class AudioService {
 		let playerState: any = this.store.get("playerState");
 		if (playerState) {
 			this.audio.src = playerState.podcastURL;
-			this.rss = playerState.podcastRSS;
 			this.guid = playerState.podcastGUID;
+			this.rss.next(playerState.podcastRSS);
 			this.podcast.next(playerState.podcastTitle);
 			this.episode.next(playerState.podcastEpisodeTitle);
 			this.podcastCover.next(playerState.podcastCover);
@@ -137,8 +137,8 @@ export class AudioService {
 	// public methods
 	loadAudio(podcast, pTitle, pRSS, pCover): void {
 		this.audio.src = podcast.src;
-		this.rss = pRSS;
 		this.guid = podcast.guid;
+		this.rss.next(pRSS);
 		this.podcast.next(pTitle);
 		this.episode.next(podcast.episodeTitle);
 		this.description.next(podcast.description);
@@ -158,7 +158,7 @@ export class AudioService {
 			podcastEpisodeTitle: this.episode.value,
 			podcastCover: this.podcastCover.value,
 			episodeCover: this.episodeCover.value,
-			podcastRSS: this.rss,
+			podcastRSS: this.rss.value,
 			podcastDescription: this.description.value,
 			podcastGUID: this.guid
 		});
@@ -205,10 +205,10 @@ export class AudioService {
 	}
 
 	getRSS = (): string => {
-		return this.rss;
+		return this.rss.value;
 	}
 
-	getAudio(): HTMLAudioElement {
+	getAudio = (): HTMLAudioElement => {
 		return this.audio;
 	}
 }

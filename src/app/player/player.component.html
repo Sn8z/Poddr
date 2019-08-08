@@ -5,7 +5,7 @@
   <i id="rewind-btn" class="fas fa-backward" (click)="changeTime(-10)"></i>
   <i id="play-btn" [ngClass]="(isPlaying) ? 'far fa-pause-circle' : 'far fa-play-circle'" (click)="togglePlay()"></i>
   <i id="forward-btn" class="fas fa-forward" (click)="changeTime(10)"></i>
-  <div id="now-playing">
+  <div id="now-playing" [routerLink]="['/podcast', rss]">
     <p id="now-playing-author" class="truncate">{{ podcast }}</p>
     <p id="now-playing-episode" class="truncate">{{ episode }}</p>
     <p id="now-playing-time" class="time truncate">{{ time | secondsToHhMmSs }} / {{ duration | secondsToHhMmSs }}</p>
