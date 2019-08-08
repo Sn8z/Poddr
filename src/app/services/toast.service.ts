@@ -8,13 +8,13 @@ export class ToastService {
 
   constructor() { }
 
-  toast(msg: string = ""): void {
+  toast(msg: string = "", timer: number = 5000): void {
     Swal.fire({
       toast: true,
       text: msg,
       position: 'top-end',
       showConfirmButton: false,
-      timer: 5000,
+      timer: timer,
       animation: true,
       customClass: {
         content: 'toast-content-class',
