@@ -60,7 +60,7 @@
     "@simonwep/pickr": "^1.2.0",
     "core-js": "3.1.4",
     "dbus-next": "^0.7.1",
-    "electron-context-menu": "^0.13.0",
+    "electron-context-menu": "^0.14.0",
     "electron-log": "^3.0.6",
     "electron-store": "^4.0.0",
     "electron-window-state": "^5.0.3",
