@@ -13,7 +13,7 @@
 }
 
 #settings-left {
-	flex: 1 1 auto;
+	flex: 1 1 50%;
 	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
@@ -21,8 +21,29 @@
 }
 
 #settings-right {
-	flex: 1 1 auto;
+	flex: 1 1 50%;
 	display: flex;
 	flex-direction: column;
 	overflow-y: auto;
+	padding: 0.75rem;
+}
+
+#hotkeys-section {
+	display: flex;
+	flex-direction: column;
+	padding: 0.5rem;
+}
+
+.hotkeys-item {
+	display: flex;
+	flex-direction: row;
+	padding: 0.25rem;
+}
+
+.hotkey-combination {
+	flex: 0 1 50%;
+}
+
+.hotkey-action {
+	flex: 0 1 50%;
 }

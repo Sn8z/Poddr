@@ -6,19 +6,73 @@
 </div>
 <div id="settings-content">
 	<div id="settings-left">
+		<p>Default region:</p>
 		<select class="shadow" [(ngModel)]="region" (change)="setRegion()">
 			<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
 		</select>
+		<p>Default layout:</p>
 		<select class="shadow" [(ngModel)]="layout" (change)="setLayout()">
 			<option value="grid">Grid</option>
 			<option value="list">List</option>
 		</select>
+		<p>Color:</p>
 		<div class="clr-pickr"></div>
 	</div>
 	<div id="settings-right">
 		<details>
 			<summary>Hotkeys</summary>
-			<p>Content</p>
+
+			<div id="hotkeys-section">
+				<div class="hotkeys-item">
+					<div class="hotkey-combination"><kbd>Space</kbd></div>
+					<div class="hotkey-action">Toggle Play/Pause</div>
+				</div>
+				<div class="hotkeys-item">
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>e</kbd></div>
+					<div class="hotkey-action">Toggle sidebar</div>
+				</div>
+
+				<div class="hotkeys-item">
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>down arrow</kbd></div>
+					<div class="hotkey-action">Volume Down</div>
+				</div>
+
+				<div class="hotkeys-item">
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>up arrow</kbd></div>
+					<div class="hotkey-action">Volume Up</div>
+				</div>
+
+				<div class="hotkeys-item">
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>left arrow</kbd></div>
+					<div class="hotkey-action">Rewind</div>
+				</div>
+
+				<div class="hotkeys-item">
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>right arrow</kbd></div>
+					<div class="hotkey-action">Forward</div>
+				</div>
+
+				<div class="hotkeys-item">
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>1</kbd></div>
+					<div class="hotkey-action">Jump to Toplists</div>
+				</div>
+
+				<div class="hotkeys-item">
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>2/f/l</kbd></div>
+					<div class="hotkey-action">Jump to Search</div>
+				</div>
+
+				<div class="hotkeys-item">
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>3</kbd></div>
+					<div class="hotkey-action">Jump to Favourites</div>
+				</div>
+
+				<div class="hotkeys-item">
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>4</kbd></div>
+					<div class="hotkey-action">Jump to Settings</div>
+				</div>
+			</div>
+
 		</details>
 		<details>
 			<summary>Support</summary>
@@ -30,7 +84,9 @@
 		</details>
 		<details>
 			<summary>Debug info</summary>
-			<p>Content</p>
+			<p>App version: {{ appVersion }}</p>
+			<p>Electron version: {{ electronVersion }}</p>
+			<p>Storage path {{ appStorage }}</p>
 		</details>
 	</div>
 </div>

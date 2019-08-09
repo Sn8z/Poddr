@@ -3,6 +3,7 @@ import { PodcastService } from '../services/podcast.service';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
 import Pickr from '@simonwep/pickr';
+import * as app from 'electron';
 
 @Component({
 	selector: 'app-settings',
@@ -15,6 +16,11 @@ export class SettingsComponent implements OnInit {
 	public regions: string[] = [];
 	public region: string = "";
 	public layout: string = "";
+	public modKey: string = process.platform == "darwin" ? "Cmd" : "Ctrl";
+
+	public appVersion: string = app.remote.app.getVersion();
+	public appStorage: string = app.remote.app.getPath('userData');
+	public electronVersion: string = process.versions.electron;
 
 	constructor(private podcastService: PodcastService) { }
 
