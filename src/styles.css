@@ -12,6 +12,7 @@
 @import "./assets/styles/sweet-alert.css";
 @import "./assets/styles/details.css";
 @import "./assets/styles/kbd.css";
+@import "./assets/styles/button.css";
 @import '../node_modules/@simonwep/pickr/dist/themes/classic.min.css';
 
 :root {

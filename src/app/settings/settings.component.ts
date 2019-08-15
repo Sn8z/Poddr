@@ -70,7 +70,24 @@ export class SettingsComponent implements OnInit {
 		log.info("Color set to " + color);
 	}
 
-	//restart
-	//open devtools
-	//open URL
+	openURL = (url) => {
+		log.info(url);
+		try {
+			app.shell.openExternal(url);
+		} catch (error) {
+			log.error(error);
+		}
+	}
+
+	restart = () => {
+		log.info("Restarting Poddr.");
+		app.remote.app.relaunch();
+		app.remote.app.exit(0);
+	}
+
+	openDevTools = () => {
+		log.info("Opening DevTools.");
+		app.remote.getCurrentWindow().webContents.openDevTools();
+	}
+
 }

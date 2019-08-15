@@ -22,7 +22,7 @@
 		<details>
 			<summary>Hotkeys</summary>
 
-			<div id="hotkeys-section">
+			<div class="settings-section">
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>Space</kbd></div>
 					<div class="hotkey-action">Toggle Play/Pause</div>
@@ -76,17 +76,30 @@
 		</details>
 		<details>
 			<summary>Support</summary>
-			<p>Content</p>
+			<div class="settings-section">
+				<p>If you're having any issue or want to give some feedback then open an issue in the repository.</p>
+				<button (click)="openURL('https://github.com/Sn8z/Poddr/issues')"><i class="fab fa-github"></i> GitHub</button>
+			</div>
 		</details>
 		<details>
 			<summary>Donate</summary>
-			<p>Content</p>
+			<div id="donate-section">
+				<button (click)="openURL('https://paypal.me/pools/c/8hmwPy1X5c')"><i class="fab fa-paypal"></i> PayPal</button>
+				<button (click)="openURL('https://www.patreon.com/join/poddr')"><i class="fab fa-patreon"></i> Patreon</button>
+				<button (click)="openURL('https://ko-fi.com/sneitz')"><i class="fas fa-coffee"></i> Ko-Fi</button>
+			</div>
 		</details>
 		<details>
 			<summary>Debug info</summary>
-			<p>App version: {{ appVersion }}</p>
-			<p>Electron version: {{ electronVersion }}</p>
-			<p>Storage path {{ appStorage }}</p>
+			<div class="settings-section">
+				<span>App version: {{ appVersion }}</span>
+				<span>Electron version: {{ electronVersion }}</span>
+				<span>Storage path: {{ appStorage }}</span>
+				<div id="debug-section">
+					<button (click)="restart()">Restart</button>
+					<button (click)="openDevTools()">Show developer tools</button>
+				</div>
+			</div>
 		</details>
 	</div>
 </div>
