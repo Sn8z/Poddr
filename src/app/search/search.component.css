@@ -27,6 +27,12 @@
     outline: 0;
 }
 
+#feedback-section {
+	display: flex;
+	justify-content: center;
+	padding: 1.5rem;
+}
+
 .podcast-list {
     flex: 1;
     overflow-y: auto;

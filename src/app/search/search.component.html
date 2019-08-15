@@ -1,6 +1,10 @@
 <div class="search-banner shadow-bottom">
 	<input id="search" type="text" [(ngModel)]="query" (keyup.enter)="search()">
 </div>
+<div id="feedback-section" *ngIf="isLoading || isEmpty">
+	<div class="loader" *ngIf="isLoading"></div>
+	<h2 *ngIf="isEmpty">No results</h2>
+</div>
 <div class="podcast-list">
 	<div class="podcast-list-item" *ngFor="let r of results" [routerLink]="['/podcast', r.feedUrl]">
 		<div class="podcast-list-item-image">

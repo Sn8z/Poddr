@@ -75,7 +75,8 @@ export class HotkeysService {
 
     Mousetrap.bindGlobal(["mod+2", "mod+f", "mod+l"], (e) => {
       e.preventDefault();
-      this.router.navigateByUrl("/search");
+			this.router.navigateByUrl("/search");
+			document.getElementById("search").focus();
     });
 
     Mousetrap.bindGlobal("mod+3", (e) => {
