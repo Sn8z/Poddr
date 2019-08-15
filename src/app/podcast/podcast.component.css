@@ -15,8 +15,7 @@
 }
 
 #banner-image {
-    height: 150px;
-    width: auto;
+	flex: 0 0 150px;
 }
 
 #banner-info {
@@ -130,14 +129,14 @@
     background: var(--secondary-bg-color);
 }
 
-#latest-podcast>img {
-    height: 100px;
-    width: 100px;
+#latest-podcast-image {
+	flex: 0 0 100px;
 }
 
 #latest-podcast-info {
     display: flex;
-    flex-direction: column;
+		flex-direction: column;
+		flex: 1;
     padding: 0.75rem;
     overflow: hidden;
 }

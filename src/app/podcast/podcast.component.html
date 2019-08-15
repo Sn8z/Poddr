@@ -1,5 +1,9 @@
 <div id="banner">
-	<img id="banner-image" [src]="image">
+	<div id="banner-image">
+		<div class="image-container">
+			<img class="image-cover" [src]="image" onload="this.style.opacity = 1">
+		</div>
+	</div>
 	<div id="banner-info">
 		<h5 id="banner-info-author">{{ author }}</h5>
 		<h1 id="banner-info-title">{{ title }}</h1>
@@ -9,7 +13,11 @@
 	<div id="podcast-details">
 		<h5 class="secondary-title">Latest episode</h5>
 		<div id="latest-podcast" (click)="play(latestEpisode)">
-			<img [src]="latestEpisode.image || image">
+			<div id="latest-podcast-image">
+				<div class="image-container">
+					<img class="image-cover" [src]="latestEpisode.image || image" onload="this.style.opacity = 1">
+				</div>
+			</div>
 			<div id="latest-podcast-info">
 				<h3 class="primary-title truncate">{{ latestEpisode.title }}</h3>
 				<span class="secondary-text time">{{ latestEpisode.duration | secondsToHhMmSs }}</span>

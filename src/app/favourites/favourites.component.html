@@ -4,8 +4,8 @@
 <div class="grid">
 	<div class="grid-item" *ngFor="let f of favourites">
 		<div class="podcast-frame shadow">
-			<div class="podcast-frame-image" [routerLink]="['/podcast', f.rss]">
-				<img [src]="f.img">
+			<div class="image-container" [routerLink]="['/podcast', f.rss]">
+				<img class="image-cover" [src]="f.img" onload="this.style.opacity = 1">
 			</div>
 			<div class="podcast-frame-info">
 				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', f.rss]">{{ f.title }}</div>

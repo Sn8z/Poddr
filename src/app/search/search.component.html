@@ -1,14 +1,19 @@
 <div class="search-banner shadow-bottom">
-    <input id="search" type="text" [(ngModel)]="query" (keyup.enter)="search()">
+	<input id="search" type="text" [(ngModel)]="query" (keyup.enter)="search()">
 </div>
 <div class="podcast-list">
-    <div class="podcast-list-item" *ngFor="let r of results" [routerLink]="['/podcast', r.feedUrl]">
-        <img [src]="r.artworkUrl600">
-        <div class="podcast-list-item-info">
-            <h5 class="secondary-title">{{ r.artistName }}</h5>
-            <h1 class="primary-title">{{ r.collectionName }}</h1>
-            <p class="secondary-text">{{ r.primaryGenreName }}</p>
-            <i *ngIf="favs.indexOf(r.collectionName) == -1" class="far fa-heart player-btn" (click)="addToFavourites(r.feedUrl)"></i>
-        </div>
-    </div>
+	<div class="podcast-list-item" *ngFor="let r of results" [routerLink]="['/podcast', r.feedUrl]">
+		<div class="podcast-list-item-image">
+			<div class="image-container">
+				<img class="image-cover" [src]="r.artworkUrl600" onload="this.style.opacity = 1">
+			</div>
+		</div>
+		<div class="podcast-list-item-info">
+			<h5 class="secondary-title">{{ r.artistName }}</h5>
+			<h1 class="primary-title">{{ r.collectionName }}</h1>
+			<p class="secondary-text">{{ r.primaryGenreName }}</p>
+			<i *ngIf="favs.indexOf(r.collectionName) == -1" class="far fa-heart player-btn"
+				(click)="addToFavourites(r.feedUrl)"></i>
+		</div>
+	</div>
 </div>

@@ -49,9 +49,8 @@
     background: var(--primary-bg-color);
 }
 
-.podcast-list-item>img {
-    height: 125px;
-    width: auto;
+.podcast-list-item-image {
+	flex: 0 0 150px;
 }
 
 .podcast-list-item-info {
