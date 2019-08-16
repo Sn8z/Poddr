@@ -1,6 +1,5 @@
 <div class="banner">
 	<div>
-		<h5 class="secondary-title">Sweden</h5>
 		<h1 class="primary-title">Top {{ amount }}</h1>
 	</div>
 	<div>
@@ -16,7 +15,8 @@
 	<div class="grid-item" *ngFor="let p of podcasts">
 		<div class="podcast-frame shadow">
 			<div class="image-container" [routerLink]="['/podcast', p['id']['attributes']['im:id']]">
-				<img class="image-cover" [src]="p['im:image'][1]['label'] | itunesImage" onload="this.style.opacity = 1">
+				<img class="image-cover" [src]="p['im:image'][1]['label'] | itunesImage"
+					onload="this.style.opacity = 1">
 			</div>
 			<div class="podcast-frame-info">
 				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', p['id']['attributes']['im:id']]">
@@ -24,7 +24,8 @@
 				<div class="podcast-frame-btns">
 					<i *ngIf="favs.indexOf(p['im:name']['label']) == -1" class="far fa-heart podcast-frame-btn"
 						(click)="addPodcast(p['id']['attributes']['im:id'])"></i>
-					<i class="fas fa-info-circle podcast-frame-btn" (click)="showDescription(p['summary']['label'])"></i>
+					<i class="fas fa-info-circle podcast-frame-btn"
+						(click)="showDescription(p['summary']['label'])"></i>
 				</div>
 			</div>
 		</div>
