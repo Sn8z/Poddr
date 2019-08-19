@@ -31,7 +31,7 @@
 }
 
 .list-item-image {
-	flex: 0 0 150px;
+	flex: 0 0 100px;
 }
 
 .list-item-info {
@@ -46,4 +46,8 @@
 	flex-direction: row;
 	align-items: center;
 	padding: 2rem;
+}
+
+.list-item-actions>i {
+	padding: 1rem;
 }
