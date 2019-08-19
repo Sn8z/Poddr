@@ -5,6 +5,10 @@
     flex-direction: column;
 }
 
+.active-btn {
+	color: var(--primary-color);
+}
+
 .list {
 	flex: 1;
 	overflow-y: auto;

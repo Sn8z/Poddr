@@ -9,8 +9,8 @@
 		<select class="shadow" [(ngModel)]="region" (change)="getPodcasts()">
 			<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
 		</select>
-		<button class="btn" (click)="layout = 'grid'"><i class="fas fa-th"></i></button>
-		<button class="btn" (click)="layout = 'list'"><i class="fas fa-list"></i></button>
+		<button class="btn" (click)="layout = 'grid'"><i class="fas fa-th" [ngClass]="{'active-btn': layout == 'grid'}"></i></button>
+		<button class="btn" (click)="layout = 'list'"><i class="fas fa-list" [ngClass]="{'active-btn': layout == 'list'}"></i></button>
 	</div>
 </div>
 <div class="grid" *ngIf="layout == 'grid'">
