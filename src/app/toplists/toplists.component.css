@@ -4,3 +4,42 @@
     display: flex;
     flex-direction: column;
 }
+
+.list {
+	flex: 1;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.list-item {
+	flex: 0 0 auto;
+	background: var(--secondary-bg-color);
+	margin: 0.75rem 1.5rem 0.75rem 1.5rem;
+	display: flex;
+	flex-direction: row;
+	cursor: pointer;
+	transition: all 0.1s linear;
+}
+
+.list-item:hover {
+	background: var(--primary-bg-color);
+}
+
+.list-item-image {
+	flex: 0 0 150px;
+}
+
+.list-item-info {
+	flex: 1;
+	padding: 0.75rem;
+	overflow: hidden;
+}
+
+.list-item-actions {
+	display: flex;
+	flex: 0 0 auto;
+	flex-direction: row;
+	align-items: center;
+	padding: 2rem;
+}

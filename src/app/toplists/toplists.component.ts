@@ -20,6 +20,7 @@ export class ToplistsComponent implements OnInit {
 	regions = [];
 	region: String;
 	favs: string[];
+	layout: string = "grid";
 
 	constructor(private podcastService: PodcastService, private favService: FavouritesService, private toast: ToastService, private descriptionPipe: Description) { }
 
