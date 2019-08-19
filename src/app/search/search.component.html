@@ -6,16 +6,18 @@
 	<h2 *ngIf="isEmpty">No results</h2>
 </div>
 <div class="podcast-list">
-	<div class="podcast-list-item" *ngFor="let r of results" [routerLink]="['/podcast', r.feedUrl]">
+	<div class="podcast-list-item shadow" *ngFor="let r of results" [routerLink]="['/podcast', r.feedUrl]">
 		<div class="podcast-list-item-image">
 			<div class="image-container">
 				<img class="image-cover" [src]="r.artworkUrl600" onload="this.style.opacity = 1">
 			</div>
 		</div>
 		<div class="podcast-list-item-info">
-			<h5 class="secondary-title">{{ r.artistName }}</h5>
-			<h1 class="primary-title">{{ r.collectionName }}</h1>
-			<p class="secondary-text">{{ r.primaryGenreName }}</p>
+			<h5 class="secondary-title truncate">{{ r.artistName }}</h5>
+			<h1 class="primary-title truncate">{{ r.collectionName }}</h1>
+			<p class="secondary-text truncate">{{ r.primaryGenreName }}</p>
+		</div>
+		<div class="podcast-list-item-actions">
 			<i *ngIf="favs.indexOf(r.collectionName) == -1" class="far fa-heart player-btn"
 				(click)="addToFavourites(r.feedUrl)"></i>
 		</div>

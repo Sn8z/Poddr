@@ -43,8 +43,7 @@
 .podcast-list-item {
     flex: 0 0 auto;
     background: var(--secondary-bg-color);
-    margin: 1.5rem;
-    padding: 0.75rem;
+    margin: 0.75rem 1.5rem 0.75rem 1.5rem;
     display: flex;
     flex-direction: row;
     cursor: pointer;
@@ -61,5 +60,14 @@
 
 .podcast-list-item-info {
     flex: 1;
-    padding: 0.75rem;
+		padding: 0.75rem;
+		overflow: hidden;
+}
+
+.podcast-list-item-actions {
+	display: flex;
+	flex: 0 0 auto;
+	flex-direction: row;
+	align-items: center;
+	padding: 2rem;
 }
