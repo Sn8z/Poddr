@@ -45,6 +45,6 @@
 }
 
 .swal2-validation-message {
-	background: transparent;
+	background: transparent !important;
 	color: var(--primary-text-color) !important;
 }
