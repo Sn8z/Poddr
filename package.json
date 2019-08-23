@@ -29,7 +29,7 @@
     "@angular-devkit/build-angular": "~0.802.2",
     "@angular/cli": "~8.2.2",
     "@angular/compiler-cli": "~8.2.2",
-    "@angular/language-service": "~8.2.2",
+    "@angular/language-service": "~8.2.3",
     "@types/jasmine": "~3.4.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~12.7.2",
