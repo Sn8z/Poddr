@@ -9,8 +9,10 @@
 		<select class="shadow" [(ngModel)]="region" (change)="getPodcasts()">
 			<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
 		</select>
-		<button class="btn" (click)="layout = 'grid'"><i class="fas fa-th" [ngClass]="{'active-btn': layout == 'grid'}"></i></button>
-		<button class="btn" (click)="layout = 'list'"><i class="fas fa-list" [ngClass]="{'active-btn': layout == 'list'}"></i></button>
+		<button class="btn" (click)="layout = 'grid'"><i class="fas fa-th"
+				[ngClass]="{'active-btn': layout == 'grid'}"></i></button>
+		<button class="btn" (click)="layout = 'list'"><i class="fas fa-list"
+				[ngClass]="{'active-btn': layout == 'list'}"></i></button>
 	</div>
 </div>
 <div class="grid" *ngIf="layout == 'grid'">
@@ -42,7 +44,7 @@
 			<h1 class="primary-title truncate">{{ p['im:name']['label'] }}</h1>
 		</div>
 		<div class="list-item-actions">
-			<i *ngIf="favs.indexOf(p['im:name']['label']) == -1" class="far fa-heart player-btn"
+			<i *ngIf="favs.indexOf(p['im:name']['label']) == -1" class="far fa-heart  podcast-frame-btn"
 				(click)="addPodcast(p['id']['attributes']['im:id'])"></i>
 			<i class="fas fa-info-circle podcast-frame-btn" (click)="showDescription(p['summary']['label'])"></i>
 		</div>

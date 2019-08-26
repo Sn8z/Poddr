@@ -1,4 +1,5 @@
 <div id="banner">
+	<div class="loader" *ngIf="isLoading"></div>
 	<div id="banner-image">
 		<div class="image-container">
 			<img class="image-cover" [src]="image" onload="this.style.opacity = 1">
@@ -6,8 +7,12 @@
 	</div>
 	<div id="banner-info">
 		<h5 id="banner-info-author">{{ author }}</h5>
-		<h1 id="banner-info-title">{{ title }}</h1>
+		<h1 id="banner-info-title" class="primary-title">{{ title }}</h1>
 	</div>
+</div>
+<div id="filter-actions">
+	<input id="filter" type="text" placeholder="Filter" [(ngModel)]="query" (change)="filter()">
+	<i (click)="toggleOrder()" class="fas fa-sort sort-btn"></i>
 </div>
 <div id="podcast-content">
 	<div id="podcast-details">
@@ -27,9 +32,15 @@
 		<h5 class="secondary-title">About</h5>
 		<p id="banner-info-details">{{ description | description }}</p>
 		<div id="podcast-links">
+			<i class="fas fa-globe-europe podcast-link-btn" (click)="showInfo('Website', website)"></i>
+			<i class="fas fa-rss podcast-link-btn" (click)="showInfo('RSS', rss)"></i>
+			<i class="far fa-envelope podcast-link-btn" (click)="showInfo('Email', email)"></i>
+
+			<!--
 			<span class="secondary-text"><i class="fas fa-globe-europe"></i> {{ website }}</span>
 			<span class="secondary-text"><i class="fas fa-rss"></i> {{ rss }}</span>
 			<span class="secondary-text"><i class="far fa-envelope"></i> {{ email }}</span>
+			-->
 		</div>
 	</div>
 	<div id="podcast-items">
@@ -39,9 +50,17 @@
 				<div class="podcast-duration time">{{ e.duration | secondsToHhMmSs }}</div>
 				<div class="podcast-date time">{{ e.published | date }}</div>
 				<div class="podcast-btns">
-					<i class="fas fa-info-circle"></i>
-					<i class="fas fa-download"></i>
-					<i *ngIf="playedEpisodes.indexOf(e.guid) == -1" class="far fa-check-circle"></i>
+					<div>
+						<i class="fas fa-info-circle" (click)="showDescription()"></i>
+					</div>
+					<div>
+						<i class="fas fa-download"></i>
+					</div>
+					<div>
+						<i
+							[ngClass]="{'far fa-check-circle': playedEpisodes.indexOf(e.guid) == -1, 'fas fa-globe-europe': playedEpisodes.indexOf(e.guid) !== -1}">
+						</i>
+					</div>
 				</div>
 			</div>
 		</div>

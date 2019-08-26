@@ -2,7 +2,9 @@
 
 @import url("https://fonts.googleapis.com/css?family=Rubik");
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+/* 
 @import url("https://use.fontawesome.com/releases/v5.8.1/css/all.css");
+*/
 @import "./assets/styles/scrollbar.css";
 @import "./assets/styles/dropdown.css";
 @import "./assets/styles/grid.css";
@@ -15,6 +17,7 @@
 @import "./assets/styles/button.css";
 @import "./assets/styles/image.css";
 @import '../node_modules/@simonwep/pickr/dist/themes/classic.min.css';
+@import "../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
 
 :root {
   --primary-color: #ff6600;
@@ -28,7 +31,6 @@
 
 * {
   font-family: "Rubik", sans-serif;
-  color: var(--primary-text-color);
   box-sizing: border-box;
 }
 

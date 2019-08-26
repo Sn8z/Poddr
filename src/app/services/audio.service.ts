@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ToastService } from './toast.service';
+import { PlayedService } from './played.service';
 import * as log from 'electron-log';
 import * as Store from 'electron-store';
 const ipc = require('electron').ipcRenderer;
@@ -27,7 +28,7 @@ export class AudioService {
 	public percentPlayed: BehaviorSubject<number> = new BehaviorSubject(0);
 	public volume: BehaviorSubject<number> = new BehaviorSubject(0);
 
-	constructor(private toast: ToastService) {
+	constructor(private toast: ToastService, private played: PlayedService) {
 		log.info("Initializing audio service");
 		this.initIpcListeners();
 		this.initAudio();
@@ -117,7 +118,7 @@ export class AudioService {
 	private onEnded = () => {
 		log.info("Podcast ended.");
 		this.toast.toast("Podcast ended");
-		// Add episode to previously played episodes
+		this.played.markAsPlayed(this.guid);
 	}
 
 	private onError = (e) => {

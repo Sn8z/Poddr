@@ -40,7 +40,7 @@ import { PodcastComponent } from './podcast/podcast.component';
 		BrowserModule,
 		FormsModule,
 		HttpClientModule,
-    AppRoutingModule
+		AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

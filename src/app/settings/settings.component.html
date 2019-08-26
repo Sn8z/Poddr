@@ -6,17 +6,17 @@
 </div>
 <div id="settings-content">
 	<div id="settings-left">
-		<p>Default region</p>
+		<p class="primary-text">Default region</p>
 		<select class="shadow" [(ngModel)]="region" (change)="setRegion()">
 			<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
 		</select>
-		<p>Default layout</p>
+		<p class="primary-text">Default layout</p>
 		<select class="shadow" [(ngModel)]="layout" (change)="setLayout()">
 			<option value="grid">Grid</option>
 			<option value="list">List</option>
 		</select>
 		<div id="theme-section">
-			<p>Color</p>
+			<p class="primary-text">Color</p>
 			<div class="clr-pickr"></div>
 		</div>
 	</div>
@@ -27,51 +27,51 @@
 			<div class="settings-section">
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>Space</kbd></div>
-					<div class="hotkey-action">Toggle Play/Pause</div>
+					<div class="hotkey-action primary-text">Toggle Play/Pause</div>
 				</div>
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>e</kbd></div>
-					<div class="hotkey-action">Toggle sidebar</div>
+					<div class="hotkey-action primary-text">Toggle sidebar</div>
 				</div>
 
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>down arrow</kbd></div>
-					<div class="hotkey-action">Volume Down</div>
+					<div class="hotkey-action primary-text">Volume Down</div>
 				</div>
 
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>up arrow</kbd></div>
-					<div class="hotkey-action">Volume Up</div>
+					<div class="hotkey-action primary-text">Volume Up</div>
 				</div>
 
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>left arrow</kbd></div>
-					<div class="hotkey-action">Rewind</div>
+					<div class="hotkey-action primary-text">Rewind</div>
 				</div>
 
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>right arrow</kbd></div>
-					<div class="hotkey-action">Forward</div>
+					<div class="hotkey-action primary-text">Forward</div>
 				</div>
 
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>1</kbd></div>
-					<div class="hotkey-action">Jump to Toplists</div>
+					<div class="hotkey-action primary-text">Jump to Toplists</div>
 				</div>
 
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>2/f/l</kbd></div>
-					<div class="hotkey-action">Jump to Search</div>
+					<div class="hotkey-action primary-text">Jump to Search</div>
 				</div>
 
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>3</kbd></div>
-					<div class="hotkey-action">Jump to Favourites</div>
+					<div class="hotkey-action primary-text">Jump to Favourites</div>
 				</div>
 
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> + <kbd>4</kbd></div>
-					<div class="hotkey-action">Jump to Settings</div>
+					<div class="hotkey-action primary-text">Jump to Settings</div>
 				</div>
 			</div>
 
@@ -79,27 +79,27 @@
 		<details>
 			<summary>Support</summary>
 			<div class="settings-section">
-				<p>If you're having any issue or want to give some feedback then open an issue in the repository.</p>
-				<button (click)="openURL('https://github.com/Sn8z/Poddr/issues')"><i class="fab fa-github"></i> GitHub</button>
+				<p class="primary-text">If you're having any issue or want to give some feedback then open an issue in the repository.</p>
+				<button class="btn-border" (click)="openURL('https://github.com/Sn8z/Poddr/issues')"><i class="fab fa-github"></i> GitHub</button>
 			</div>
 		</details>
 		<details>
 			<summary>Donate</summary>
 			<div id="donate-section">
-				<button (click)="openURL('https://paypal.me/pools/c/8hmwPy1X5c')"><i class="fab fa-paypal"></i> PayPal</button>
-				<button (click)="openURL('https://www.patreon.com/join/poddr')"><i class="fab fa-patreon"></i> Patreon</button>
-				<button (click)="openURL('https://ko-fi.com/sneitz')"><i class="fas fa-coffee"></i> Ko-Fi</button>
+				<button class="btn-border" (click)="openURL('https://paypal.me/pools/c/8hmwPy1X5c')"><i class="fab fa-paypal"></i> PayPal</button>
+				<button class="btn-border" (click)="openURL('https://www.patreon.com/join/poddr')"><i class="fab fa-patreon"></i> Patreon</button>
+				<button class="btn-border" (click)="openURL('https://ko-fi.com/sneitz')"><i class="fas fa-coffee"></i> Ko-Fi</button>
 			</div>
 		</details>
 		<details>
 			<summary>Debug info</summary>
 			<div class="settings-section">
-				<span>App version: {{ appVersion }}</span>
-				<span>Electron version: {{ electronVersion }}</span>
-				<span>Storage path: {{ appStorage }}</span>
+				<span class="primary-text">App version: {{ appVersion }}</span>
+				<span class="primary-text">Electron version: {{ electronVersion }}</span>
+				<span class="primary-text">Storage path: {{ appStorage }}</span>
 				<div id="debug-section">
-					<button (click)="restart()">Restart</button>
-					<button (click)="openDevTools()">Show developer tools</button>
+					<button class="btn-border" (click)="restart()">Restart</button>
+					<button class="btn-border" (click)="openDevTools()">Show developer tools</button>
 				</div>
 			</div>
 		</details>

@@ -1,9 +1,9 @@
 <div class="search-banner shadow-bottom">
-	<input id="search" type="text" [(ngModel)]="query" (keyup.enter)="search()">
+	<input id="search" type="text" [(ngModel)]="query" (keyup.enter)="search()" placeholder="Search">
 </div>
 <div id="feedback-section" *ngIf="isLoading || isEmpty">
 	<div class="loader" *ngIf="isLoading"></div>
-	<h2 *ngIf="isEmpty">No results</h2>
+	<h2 class="primary-text" *ngIf="isEmpty">No results</h2>
 </div>
 <div class="podcast-list">
 	<div class="podcast-list-item shadow" *ngFor="let r of results" [routerLink]="['/podcast', r.feedUrl]">
@@ -18,7 +18,7 @@
 			<p class="secondary-text truncate">{{ r.primaryGenreName }}</p>
 		</div>
 		<div class="podcast-list-item-actions">
-			<i *ngIf="favs.indexOf(r.collectionName) == -1" class="far fa-heart player-btn"
+			<i *ngIf="favs.indexOf(r.collectionName) == -1" class="far fa-heart primary-text"
 				(click)="addToFavourites(r.feedUrl)"></i>
 		</div>
 	</div>
