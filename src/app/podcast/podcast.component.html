@@ -32,15 +32,9 @@
 		<h5 class="secondary-title">About</h5>
 		<p id="banner-info-details">{{ description | description }}</p>
 		<div id="podcast-links">
-			<i class="fas fa-globe-europe podcast-link-btn" (click)="showInfo('Website', website)"></i>
-			<i class="fas fa-rss podcast-link-btn" (click)="showInfo('RSS', rss)"></i>
-			<i class="far fa-envelope podcast-link-btn" (click)="showInfo('Email', email)"></i>
-
-			<!--
-			<span class="secondary-text"><i class="fas fa-globe-europe"></i> {{ website }}</span>
-			<span class="secondary-text"><i class="fas fa-rss"></i> {{ rss }}</span>
-			<span class="secondary-text"><i class="far fa-envelope"></i> {{ email }}</span>
-			-->
+			<i *ngIf="!isLoading" class="fas fa-globe-europe podcast-link-btn" (click)="showInfo('Website', website)"></i>
+			<i *ngIf="!isLoading" class="fas fa-rss podcast-link-btn" (click)="showInfo('RSS', rss)"></i>
+			<i *ngIf="!isLoading" class="far fa-envelope podcast-link-btn" (click)="showInfo('Email', email)"></i>
 		</div>
 	</div>
 	<div id="podcast-items">
