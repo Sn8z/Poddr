@@ -19,7 +19,18 @@
 }
 
 #banner-info {
-    margin-left: 0.75rem;
+	flex: 1 0 auto;
+  margin-left: 0.75rem;
+}
+
+#banner-actions {
+	flex: 0 0 100px;
+	justify-content: center;
+	text-align: center;
+}
+
+#fav-btn {
+	cursor: pointer;
 }
 
 #banner-info-author {
@@ -166,6 +177,7 @@
 #latest-podcast-info {
     display: flex;
 		flex-direction: column;
+		justify-content: space-around;
 		flex: 1;
     padding: 0.75rem;
     overflow: hidden;

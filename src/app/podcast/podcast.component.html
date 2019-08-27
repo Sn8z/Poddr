@@ -9,6 +9,9 @@
 		<h5 id="banner-info-author">{{ author }}</h5>
 		<h1 id="banner-info-title" class="primary-title">{{ title }}</h1>
 	</div>
+	<div id="banner-actions">
+		<i *ngIf="favs.indexOf(title) == -1 && !isLoading" class="far fa-heart primary-text" id="fav-btn" (click)="addFavourite()"></i>
+	</div>
 </div>
 <div id="filter-actions">
 	<input id="filter" type="text" placeholder="Filter" [(ngModel)]="query" (change)="filter()">
@@ -45,15 +48,10 @@
 				<div class="podcast-date time">{{ e.published | date }}</div>
 				<div class="podcast-btns">
 					<div>
-						<i class="fas fa-info-circle" (click)="showDescription()"></i>
+						<i class="fas fa-info-circle" (click)="showDescription($event, e.description)"></i>
 					</div>
 					<div>
-						<i class="fas fa-download"></i>
-					</div>
-					<div>
-						<i
-							[ngClass]="{'far fa-check-circle': playedEpisodes.indexOf(e.guid) == -1, 'fas fa-globe-europe': playedEpisodes.indexOf(e.guid) !== -1}">
-						</i>
+						<i [ngClass]="playedEpisodes.indexOf(e.guid) == -1 ? 'far fa-circle':'fas fa-circle'"></i>
 					</div>
 				</div>
 			</div>

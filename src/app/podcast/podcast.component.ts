@@ -4,13 +4,16 @@ import { AudioService } from '../services/audio.service';
 import { PodcastService } from '../services/podcast.service';
 import { PlayedService } from '../services/played.service';
 import { ToastService } from '../services/toast.service';
+import { Description } from '../pipes/description.pipe';
 import * as parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
+import { FavouritesService } from '../services/favourites.service';
 
 @Component({
 	selector: 'app-podcast',
 	templateUrl: './podcast.component.html',
-	styleUrls: ['./podcast.component.css']
+	styleUrls: ['./podcast.component.css'],
+	providers: [Description]
 })
 export class PodcastComponent implements OnInit {
 	private id: string;
@@ -18,7 +21,7 @@ export class PodcastComponent implements OnInit {
 
 	isLoading: Boolean = true;
 	rss: String;
-	title: String;
+	title: string;
 	author: String;
 	description: String;
 	image: String;
@@ -31,12 +34,15 @@ export class PodcastComponent implements OnInit {
 	latestEpisode: any;
 	playedEpisodes: string[];
 	query: string = "";
+	favs: string[];
 
 	constructor(private route: ActivatedRoute,
 		private audio: AudioService,
 		private prevPlayed: PlayedService,
 		private podcastService: PodcastService,
-		private toast: ToastService) {
+		private toast: ToastService,
+		private favouriteService: FavouritesService,
+		private descriptionPipe: Description) {
 		this.prevPlayed.playedEpisodes.subscribe(value => {
 			this.playedEpisodes = value;
 		});
@@ -49,6 +55,9 @@ export class PodcastComponent implements OnInit {
 		} else {
 			this.parseRSS(this.id);
 		}
+		this.favouriteService.favouriteTitles.subscribe(value => {
+			this.favs = value;
+		});
 	}
 
 	//Extra step needed if we only have the iTunes ID
@@ -119,7 +128,12 @@ export class PodcastComponent implements OnInit {
 		this.toast.modal(title, info);
 	}
 
-	showDescription(): void {
-		//Show description modal
+	showDescription(event, description): void {
+		event.stopPropagation();
+		this.toast.modal("Episode description", this.descriptionPipe.transform(description));
+	}
+
+	addFavourite(): void {
+		this.favouriteService.addFavourite(this.rss);
 	}
 }
