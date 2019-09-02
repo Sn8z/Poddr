@@ -8379,6 +8379,16 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
+typeface-open-sans@^0.0.75:
+  version "0.0.75"
+  resolved "https://registry.yarnpkg.com/typeface-open-sans/-/typeface-open-sans-0.0.75.tgz#20d0c330f14c0c40463c334adbedd6005389abe4"
+  integrity sha512-0lLmB7pfj113OP4T78SbpSmC4OCdFQ0vUxdSXQccsSb6qF76F92iEuC/DghFgmPswTyidk8+Hwf+PS/htiJoRQ==
+
+typeface-rubik@^0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/typeface-rubik/-/typeface-rubik-0.0.72.tgz#85d028dc66e8388a941f8c7ce194fad963d1824e"
+  integrity sha512-dRJrtCEHfY3e39zq/U4JpFPVVbEogpDKCGnS70sXur253gnrwunjai26KCZbwdF3NEdMAYMTBu4CIn3hJp4xSA==
+
 typescript@3.5.3, typescript@~3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.3.tgz#c830f657f93f1ea846819e929092f5fe5983e977"
