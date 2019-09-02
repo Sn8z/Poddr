@@ -60,7 +60,8 @@ app.once("ready", function() {
     x: mainWindowState.x,
     y: mainWindowState.y,
     frame: false,
-    show: false,
+		show: false,
+		simpleFullscreen: true,
     webPreferences: {
       nodeIntegration: true
     },
