@@ -15,7 +15,7 @@
 </div>
 <div id="filter-actions">
 	<input id="filter" type="text" placeholder="Filter" [(ngModel)]="query" (change)="filter()">
-	<i (click)="toggleOrder()" class="fas fa-sort sort-btn"></i>
+	<i (click)="toggleOrder()" class="sort-btn" [ngClass]="(sortBy == 'asc') ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up'"></i>
 </div>
 <div id="podcast-content">
 	<div id="podcast-details">

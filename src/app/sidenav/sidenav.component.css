@@ -46,7 +46,7 @@
 
 /* media queries for left navigation menu */
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
 	.menu-item {
 		text-align: center;
 	}

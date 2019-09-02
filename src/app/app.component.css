@@ -42,7 +42,7 @@
 
 /* media queries for left navigation menu */
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   #sidenav {
     flex: 0 0 100px;
   }

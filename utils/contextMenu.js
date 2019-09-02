@@ -1,50 +1,64 @@
-const app = require("electron").app;
-const contextMenu = require("electron-context-menu");
+const electron = require("electron");
 
-module.exports = function() {
-  contextMenu({
-    saveImageAs: true,
-    labels: {
-      cut: "Cut",
-      copy: "Copy",
-      paste: "Paste",
-      save: "Save Image",
-      saveImageAs: "Save Image As…",
-      copyLink: "Copy Link",
-      copyImageAddress: "Copy Image Address",
-      inspect: "Poddr DevTools"
-    }
-  });
+module.exports = function () {
+	const application = {
+		label: 'Application',
+		submenu: [
+			{
+				label: 'About Application',
+				role: 'about',
+			},
+			{
+				type: 'separator',
+			},
+			{
+				label: 'Quit',
+				accelerator: 'Command+Q',
+				click: () => {
+					electron.app.quit();
+				},
+			},
+		],
+	};
 
-  if (process.platform == "darwin") {
-    const Menu = require("electron").Menu;
-    var menuTemplate = [
-      {
-        label: "Poddr",
-        submenu: [
-          {
-            label: "Quit",
-            accelerator: "Command+Q",
-            click: function() {
-              app.quit();
-            }
-          }
-        ]
-      },
-      {
-        label: "Edit",
-        submenu: [
-          { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-          { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-          { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-          {
-            label: "Select All",
-            accelerator: "CmdOrCtrl+A",
-            selector: "selectAll:"
-          }
-        ]
-      }
-    ];
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
-  }
+	const edit = {
+		label: 'Edit',
+		submenu: [
+			{
+				label: 'Undo',
+				accelerator: 'CmdOrCtrl+Z',
+				role: 'undo',
+			},
+			{
+				label: 'Redo',
+				accelerator: 'Shift+CmdOrCtrl+Z',
+				role: 'redo',
+			},
+			{
+				type: 'separator',
+			},
+			{
+				label: 'Cut',
+				accelerator: 'CmdOrCtrl+X',
+				role: 'cut',
+			},
+			{
+				label: 'Copy',
+				accelerator: 'CmdOrCtrl+C',
+				role: 'copy',
+			},
+			{
+				label: 'Paste',
+				accelerator: 'CmdOrCtrl+V',
+				role: 'paste',
+			},
+			{
+				label: 'Select All',
+				accelerator: 'CmdOrCtrl+A',
+				role: 'selectAll',
+			},
+		],
+	};
+	const template = [application, edit];
+	electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate(template));
 };

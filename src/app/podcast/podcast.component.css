@@ -167,7 +167,7 @@
 }
 
 #latest-podcast:hover {
-    background: var(--secondary-bg-color);
+    background: var(--primary-bg-color);
 }
 
 #latest-podcast-image {
@@ -202,5 +202,15 @@
 
 .podcast-link-btn:hover {
 	color: var(--primary-color);
+}
+
+@media (max-width: 960px) {
+	#podcast-content {
+    flex-direction: column;
+	}
+	#podcast-details {
+    flex: 0 0 auto;
+    overflow-y: auto;
+	}
 }
 

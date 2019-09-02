@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
-import Pickr from '@simonwep/pickr';
 import * as app from 'electron';
+import Pickr from '@simonwep/pickr';
 
 @Component({
 	selector: 'app-settings',
