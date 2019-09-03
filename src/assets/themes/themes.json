@@ -1,0 +1,25 @@
+{
+	"themes": {
+		"Dark": {
+			"primaryBackground": "#111111",
+			"secondaryBackground": "#151515",
+			"thirdBackground": "#222222",
+			"primaryTextColor": "#efefef",
+			"secondaryTextColor": "#ababab"
+		},
+		"Light": {
+			"primaryBackground": "#d1d1d1",
+			"secondaryBackground": "#d8d8d8",
+			"thirdBackground": "#efefef",
+			"primaryTextColor": "#252525",
+			"secondaryTextColor": "#353535"
+		},
+		"Mixed": {
+			"primaryBackground": "#312e30",
+			"secondaryBackground": "#3b3b3b",
+			"thirdBackground": "#bbbbbb",
+			"primaryTextColor": "#efefef",
+			"secondaryTextColor": "#959595"
+		}
+	}
+}

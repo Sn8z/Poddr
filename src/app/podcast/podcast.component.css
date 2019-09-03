@@ -100,7 +100,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    background-color: #181818;
+    background-color: var(--primary-bg-color);
 }
 
 .podcast-item {
@@ -114,7 +114,7 @@
 }
 
 .podcast-item:hover, .podcast-item:focus {
-		background: var(--primary-bg-color);
+		background: var(--secondary-bg-color);
 		outline: none;
 }
 

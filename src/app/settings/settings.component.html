@@ -15,6 +15,10 @@
 			<option value="grid">Grid</option>
 			<option value="list">List</option>
 		</select>
+		<p class="primary-text">Theme</p>
+		<select class="shadow" [(ngModel)]="theme" (change)="setTheme()">
+			<option *ngFor="let t of themes" [value]="t">{{ t }}</option>
+		</select>
 		<div id="theme-section">
 			<p class="primary-text">Color</p>
 			<div class="clr-pickr"></div>

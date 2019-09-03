@@ -5,6 +5,7 @@ import { ToastService } from './services/toast.service';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
 import * as electron from 'electron';
+const themesJSON = require('../assets/themes/themes.json');
 
 @Component({
 	selector: 'app-root',
@@ -32,16 +33,27 @@ export class AppComponent implements OnInit {
 	}
 
 	initTheme = () => {
+		const root = document.documentElement;
+
+		//Load accent color
 		const color = this.store.get("color", "#FF9900");
-		const html = document.getElementsByTagName("html")[0];
-		html.style.cssText = "--primary-color: " + color;
+		root.style.setProperty('--primary-color', color);
 		log.info("Loaded CSS color variable (" + color + ").");
+
+		//Load theme colors
+		const theme = this.store.get("theme", "Dark");
+		root.style.setProperty('--primary-bg-color', themesJSON.themes[theme]['primaryBackground']);
+		root.style.setProperty('--secondary-bg-color', themesJSON.themes[theme]['secondaryBackground']);
+		root.style.setProperty('--third-bg-color', themesJSON.themes[theme]['thirdBackground']);
+		root.style.setProperty('--primary-text-color', themesJSON.themes[theme]['primaryTextColor']);
+		root.style.setProperty('--secondary-text-color', themesJSON.themes[theme]['secondaryTextColor']);
+		log.info("Loaded " + theme + " theme.");
 	}
 
 	initUpdateCheck = () => {
 		log.info("Checking for updates...");
 		this.http.get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json").subscribe((response) => {
-			if (response['version'] != electron.remote.app.getVersion()){
+			if (response['version'] != electron.remote.app.getVersion()) {
 				log.info("Found update " + response['version'] + "!");
 				this.toast.toast(response['version'] + " is now available!", 10000);
 			} else {

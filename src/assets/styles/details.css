@@ -1,18 +1,17 @@
 details {
-	background: #333;
+	background: var(--secondary-bg-color);
 }
 
 details summary {
 	font-size: 17px;
-	background: #222;
-	color: #FFF;
+	background: var(--primary-bg-color);
+	color: var(--primary-text-color);
 	padding: 20px;
 	outline: none;
 	cursor: pointer;
-	border-bottom: 1px solid #666;
+	border-bottom: 1px solid var(--secondary-bg-color);
 }
 
 details[open] summary {
 	background: var(--primary-color);
-	color: #333;
 }

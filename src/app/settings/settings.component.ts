@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
+import Pickr from '@simonwep/pickr';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
 import * as app from 'electron';
-import Pickr from '@simonwep/pickr';
+
+const themesJSON = require('../../assets/themes/themes.json');
 
 @Component({
 	selector: 'app-settings',
@@ -16,6 +18,8 @@ export class SettingsComponent implements OnInit {
 	public regions: string[] = [];
 	public region: string = "";
 	public layout: string = "";
+	public themes: string[] = [];
+	public theme: string = "";
 	public modKey: string = process.platform == "darwin" ? "Cmd" : "Ctrl";
 
 	public appVersion: string = app.remote.app.getVersion();
@@ -28,6 +32,8 @@ export class SettingsComponent implements OnInit {
 		this.regions = this.podcastService.getRegions();
 		this.region = this.store.get("region", "us");
 		this.layout = this.store.get("layout", "grid");
+		this.themes = Object.keys(themesJSON.themes);
+		this.theme = this.store.get("theme", "Dark");
 		this.initPickr();
 	}
 
@@ -63,9 +69,20 @@ export class SettingsComponent implements OnInit {
 		log.info("Setting default layout to: " + this.layout);
 	}
 
+	setTheme = () => {
+		const root = document.documentElement;
+		root.style.setProperty('--primary-bg-color', themesJSON.themes[this.theme]['primaryBackground']);
+		root.style.setProperty('--secondary-bg-color', themesJSON.themes[this.theme]['secondaryBackground']);
+		root.style.setProperty('--third-bg-color', themesJSON.themes[this.theme]['thirdBackground']);
+		root.style.setProperty('--primary-text-color', themesJSON.themes[this.theme]['primaryTextColor']);
+		root.style.setProperty('--secondary-text-color', themesJSON.themes[this.theme]['secondaryTextColor']);
+		this.store.set("theme", this.theme);
+		log.info("Setting theme to: " + this.theme);
+	}
+
 	setColor = (color) => {
-		const html = document.getElementsByTagName("html")[0];
-		html.style.cssText = "--primary-color: " + color;
+		const root = document.documentElement;
+		root.style.setProperty('--primary-color', color);
 		this.store.set("color", color);
 		log.info("Color set to " + color);
 	}
