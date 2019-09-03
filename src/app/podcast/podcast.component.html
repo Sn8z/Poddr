@@ -41,7 +41,7 @@
 		</div>
 	</div>
 	<div id="podcast-items">
-		<div class="podcast-item" *ngFor="let e of episodes" (click)="play(e)">
+		<div tabindex="0" class="podcast-item" *ngFor="let e of episodes" (click)="play(e)" (keyup.enter)="play(e)">
 			<div class="podcast-title">{{ e.title }}</div>
 			<div class="podcast-info">
 				<div class="podcast-duration time">{{ e.duration | secondsToHhMmSs }}</div>

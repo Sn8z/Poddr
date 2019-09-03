@@ -24,6 +24,7 @@
 	flex-direction: row;
 	cursor: pointer;
 	transition: all 0.1s linear;
+	text-decoration: none;
 }
 
 .list-item:hover {
@@ -31,7 +32,7 @@
 }
 
 .list-item-image {
-	flex: 0 0 100px;
+	flex: 0 0 150px;
 }
 
 .list-item-info {

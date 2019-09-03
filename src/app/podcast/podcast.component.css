@@ -88,7 +88,7 @@
 }
 
 #podcast-details {
-    flex: 0 1 40%;
+    flex: 0 0 40%;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -113,8 +113,9 @@
     transition: all 0.1s linear;
 }
 
-.podcast-item:hover {
-    background: var(--primary-bg-color)
+.podcast-item:hover, .podcast-item:focus {
+		background: var(--primary-bg-color);
+		outline: none;
 }
 
 .podcast-title {

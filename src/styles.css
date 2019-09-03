@@ -29,6 +29,12 @@
   box-sizing: border-box;
 }
 
+:focus {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: var(--primary-color);
+}
+
 html, body {
   height: 100vh;
   max-height: 100vh;

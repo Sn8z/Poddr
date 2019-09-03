@@ -4,17 +4,17 @@
 		<h1 class="primary-title">Favourites</h1>
 	</div>
 	<div>
-		<button class="btn-border" (click)="add()">+</button>
+		<button class="btn-border" (click)="add()"><i class="fas fa-plus"></i></button>
 	</div>
 </div>
 <div class="grid">
 	<div class="grid-item" *ngFor="let f of favourites">
 		<div class="podcast-frame shadow">
-			<div class="image-container" [routerLink]="['/podcast', f.rss]">
+			<a class="image-container" [routerLink]="['/podcast', f.rss]">
 				<img class="image-cover" [src]="f.img" onload="this.style.opacity = 1">
-			</div>
+			</a>
 			<div class="podcast-frame-info">
-				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', f.rss]">{{ f.title }}</div>
+				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', f.rss]" tabindex="-1">{{ f.title }}</div>
 				<div class="podcast-frame-btns">
 					<i class="fas fa-times podcast-frame-btn podcast-frame-remove-btn" (click)="remove(f.rss)"></i>
 				</div>

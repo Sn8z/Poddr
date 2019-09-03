@@ -18,11 +18,12 @@
 <div class="grid" *ngIf="layout == 'grid'">
 	<div class="grid-item" *ngFor="let p of podcasts">
 		<div class="podcast-frame shadow">
-			<div class="image-container" [routerLink]="['/podcast', p['id']['attributes']['im:id']]">
+			<a class="image-container" [routerLink]="['/podcast', p['id']['attributes']['im:id']]">
 				<img class="image-cover" [src]="p['im:image'][1]['label'] | itunesImage" onload="this.style.opacity = 1">
-			</div>
+			</a>
 			<div class="podcast-frame-info">
-				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', p['id']['attributes']['im:id']]">
+				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', p['id']['attributes']['im:id']]"
+					tabindex="-1">
 					{{ p['im:name']['label'] }}</div>
 				<div class="podcast-frame-btns">
 					<i *ngIf="favs.indexOf(p['im:name']['label']) == -1" class="far fa-heart podcast-frame-btn"
@@ -34,7 +35,7 @@
 	</div>
 </div>
 <div class="list" *ngIf="layout == 'list'">
-	<div class="list-item shadow" *ngFor="let p of podcasts" [routerLink]="['/podcast', p['id']['attributes']['im:id']]">
+	<a class="list-item shadow" *ngFor="let p of podcasts" [routerLink]="['/podcast', p['id']['attributes']['im:id']]">
 		<div class="list-item-image">
 			<div class="image-container">
 				<img class="image-cover" [src]="p['im:image'][1]['label'] | itunesImage" onload="this.style.opacity = 1">
@@ -48,5 +49,5 @@
 				(click)="addPodcast(p['id']['attributes']['im:id'])"></i>
 			<i class="fas fa-info-circle podcast-frame-btn" (click)="showDescription(p['summary']['label'])"></i>
 		</div>
-	</div>
+	</a>
 </div>

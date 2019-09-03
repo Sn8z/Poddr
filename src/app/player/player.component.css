@@ -46,7 +46,13 @@
   color: var(--primary-text-color);
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
-  margin: 0;
+	margin: 0;
+	text-decoration: none;
+}
+
+#now-playing-episode:hover, #now-playing-episode:focus {
+	text-decoration: underline var(--primary-color);
+	outline: none;
 }
 
 #now-playing-time {
@@ -57,8 +63,8 @@
 }
 
 .player-btn, #rewind-btn, #play-btn, #forward-btn {
-  user-select: none;
-  outline: 0;
+	user-select: none;
+	outline: 0;
   cursor: pointer;
   margin-left: 0.75rem;
   margin-right: 0.75rem;

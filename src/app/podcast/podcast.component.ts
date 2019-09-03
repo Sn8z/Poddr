@@ -5,9 +5,9 @@ import { PodcastService } from '../services/podcast.service';
 import { PlayedService } from '../services/played.service';
 import { ToastService } from '../services/toast.service';
 import { Description } from '../pipes/description.pipe';
+import { FavouritesService } from '../services/favourites.service';
 import * as parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
-import { FavouritesService } from '../services/favourites.service';
 
 @Component({
 	selector: 'app-podcast',
@@ -46,19 +46,22 @@ export class PodcastComponent implements OnInit {
 		this.prevPlayed.playedEpisodes.subscribe(value => {
 			this.playedEpisodes = value;
 		});
-	}
-
-	ngOnInit() {
-		this.id = this.route.snapshot.params['id'];
-		if (this.regPattern.test(this.id)) {
-			this.getRSS(this.id);
-		} else {
-			this.parseRSS(this.id);
-		}
-		this.favouriteService.favouriteTitles.subscribe(value => {
-			this.favs = value;
+		
+		//Listen for parameter changes
+		this.route.params.subscribe(val => {
+			this.id = this.route.snapshot.params['id'];
+			if (this.regPattern.test(this.id)) {
+				this.getRSS(this.id);
+			} else {
+				this.parseRSS(this.id);
+			}
+			this.favouriteService.favouriteTitles.subscribe(value => {
+				this.favs = value;
+			});
 		});
 	}
+
+	ngOnInit() { }
 
 	//Extra step needed if we only have the iTunes ID
 	private getRSS(id: String): void {

@@ -6,7 +6,7 @@
 	<h2 class="primary-text" *ngIf="isEmpty">No results</h2>
 </div>
 <div class="podcast-list">
-	<div class="podcast-list-item shadow" *ngFor="let r of results" [routerLink]="['/podcast', r.feedUrl]">
+	<a class="podcast-list-item shadow" *ngFor="let r of results" [routerLink]="['/podcast', r.feedUrl]">
 		<div class="podcast-list-item-image">
 			<div class="image-container">
 				<img class="image-cover" [src]="r.artworkUrl600" onload="this.style.opacity = 1">
@@ -21,5 +21,5 @@
 			<i *ngIf="favs.indexOf(r.collectionName) == -1" class="far fa-heart primary-text"
 				(click)="addToFavourites(r.feedUrl)"></i>
 		</div>
-	</div>
+	</a>
 </div>
