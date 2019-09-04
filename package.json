@@ -61,7 +61,7 @@
     "@simonwep/pickr": "^1.4.0",
     "core-js": "3.2.1",
     "dbus-next": "^0.7.1",
-    "electron-log": "^3.0.6",
+    "electron-log": "^3.0.7",
     "electron-store": "^4.0.0",
     "electron-window-state": "^5.0.3",
     "mousetrap": "^1.6.3",
