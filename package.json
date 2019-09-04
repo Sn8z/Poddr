@@ -58,7 +58,7 @@
     "@angular/platform-browser-dynamic": "~8.2.3",
     "@angular/router": "~8.2.3",
     "@fortawesome/fontawesome-free": "^5.10.2",
-    "@simonwep/pickr": "^1.4.0",
+    "@simonwep/pickr": "^1.4.1",
     "core-js": "3.2.1",
     "dbus-next": "^0.7.1",
     "electron-log": "^3.0.6",
