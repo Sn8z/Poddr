@@ -3,7 +3,7 @@
 	border: 2px solid var(--primary-color);
 	background-color: transparent;
 	transition-duration: 0.4s;
-	padding: 6px 12px;
+	padding: 10px;
 	cursor: pointer;
 }
 
@@ -16,7 +16,7 @@
 	border: none;
 	background-color: transparent;
 	transition-duration: 0.4s;
-	padding: 6px 12px;
+	padding: 10px;
 	cursor: pointer;
 }
 

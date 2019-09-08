@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ToastService } from './toast.service';
 import { HttpClient } from '@angular/common/http';
-import * as log from 'electron-log';
 import { Observable } from 'rxjs';
+import * as log from 'electron-log';
 
 @Injectable({
 	providedIn: 'root'

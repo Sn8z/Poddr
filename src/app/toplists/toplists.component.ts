@@ -31,6 +31,7 @@ export class ToplistsComponent implements OnInit {
 		this.regions = this.podcastService.getRegions();
 		this.region = this.store.get("region", "us") as string;
 		this.getPodcasts();
+		this.layout = this.store.get("layout", "grid") as string;
 		this.favService.favouriteTitles.subscribe(value => {
 			this.favs = value;
 		});
@@ -38,15 +39,15 @@ export class ToplistsComponent implements OnInit {
 
 	getPodcasts = () => {
 		this.podcastService.getToplist(this.region, this.category, this.amount).subscribe((data) => {
-			this.podcasts = data['feed']['entry']
+			this.podcasts = data['feed']['entry'];
 		});
 	}
 
-	addPodcast = (id) => {
+	addPodcast(id): void {
 		this.favService.addItunesFavourite(id);
 	}
 
-	showDescription = (description) => {
+	showDescription(description): void {
 		this.toast.modal("Episode description", this.descriptionPipe.transform(description));
 	}
 

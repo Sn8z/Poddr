@@ -184,6 +184,10 @@
     overflow: hidden;
 }
 
+.played-episode {
+	color: var(--primary-color);
+}
+
 #podcast-links {
     display: flex;
 		flex-direction: row;
