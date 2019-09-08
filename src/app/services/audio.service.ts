@@ -4,6 +4,7 @@ import { ToastService } from './toast.service';
 import { PlayedService } from './played.service';
 import * as log from 'electron-log';
 import * as Store from 'electron-store';
+
 const ipc = require('electron').ipcRenderer;
 
 @Injectable({
@@ -39,14 +40,25 @@ export class AudioService {
 	private initIpcListeners(): void {
 		log.info("Initializing audio service - IPC listeners");
 		ipc.on("player:toggle-play", () => { this.togglePlay() });
+		ipc.on("app:close", () => {
+			log.info("player - close");
+			this.store.set("volume", this.audio.volume);
+			this.store.set("time", this.audio.currentTime);
+			ipc.send("app:closed");
+		});
 	}
 
 	private initAudio(): void {
 		log.info("Initializing audio service - Audio");
 
+		//Load stored volume
 		this.audio.volume = this.store.get("volume", 0.5) as number;
 		this.volume.next(this.audio.volume);
 
+		//Load stored time
+		this.audio.currentTime = this.store.get("time", 0) as number;
+
+		//Load stored playerstate
 		let playerState: any = this.store.get("playerState");
 		if (playerState) {
 			this.audio.src = playerState.podcastURL;
@@ -98,10 +110,8 @@ export class AudioService {
 	}
 
 	private onVolumeChange = () => {
-		log.info("Changed volume (" + this.audio.volume + ")");
 		this.volume.next(this.audio.volume);
 		this.muted.next(this.audio.volume === 0 || this.audio.muted);
-		this.store.set("volume", this.audio.volume); // debounce this call to avoid hogging to much power
 	}
 
 	private onSeeking = () => {
