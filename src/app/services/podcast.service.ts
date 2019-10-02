@@ -12,7 +12,7 @@ export class PodcastService {
 	constructor(private toast: ToastService, private http: HttpClient) { }
 
 	getToplist(region: String, category: Number, amount: Number): Observable<any> {
-		log.info("Fetching top " + amount + " podcasts in " + region + " (" + category + ")");
+		log.info("Podcast service :: Fetching top " + amount + " podcasts in " + region + " (" + category + ")");
 		return this.http.get("https://itunes.apple.com/" + region + "/rss/topaudiopodcasts/limit=" + amount + "/genre=" + category + "/json");
 	}
 
@@ -20,19 +20,22 @@ export class PodcastService {
 		//replace åäö
 		let sQuery = query.replace(/[\u00e4\u00c4\u00c5\u00e5]/g, "a");
 		sQuery = sQuery.replace(/[\u00d6\u00f6]/g, "o");
+		log.info("Podcast service :: Searching using query => " + sQuery);
 		return this.http.get("https://itunes.apple.com/search?term=" + sQuery + "&entity=podcast&attributes=titleTerm,artistTerm&limit=200");
 	}
 
 	getRssFeed(id: String): Observable<any> {
+		log.info("Podcast service :: Getting RSS feed using ID => " + id);
 		return this.http.get("https://itunes.apple.com/lookup?id=" + id);
 	}
 
 	getPodcastFeed(rss: String): Observable<any> {
+		log.info("Podcast service :: Getting Podcastfeed using RSS => " + rss);
 		return this.http.get("" + rss, { responseType: 'text' });
 	}
 
 	getEpisodeBlob(url: String): Observable<Blob> {
-		log.info("Getting podcast at: " + url);
+		log.info("Podcast Service :: Getting podcast at: " + url);
 		return this.http.get("" + url, { responseType: 'blob' });
 	}
 

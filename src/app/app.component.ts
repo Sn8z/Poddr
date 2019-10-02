@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
 		//Load accent color
 		const color = this.store.get("color", "#FF9900");
 		root.style.setProperty('--primary-color', color);
-		log.info("Loaded CSS color variable (" + color + ").");
+		log.info("App setup :: Loaded CSS color variable (" + color + ").");
 
 		//Load theme colors
 		const theme = this.store.get("theme", "Dark");
@@ -48,17 +48,17 @@ export class AppComponent implements OnInit {
 		root.style.setProperty('--third-bg-color', themesJSON.themes[theme]['thirdBackground']);
 		root.style.setProperty('--primary-text-color', themesJSON.themes[theme]['primaryTextColor']);
 		root.style.setProperty('--secondary-text-color', themesJSON.themes[theme]['secondaryTextColor']);
-		log.info("Loaded " + theme + " theme.");
+		log.info("App setup :: Loaded " + theme + " theme.");
 	}
 
 	initUpdateCheck = () => {
-		log.info("Checking for updates...");
+		log.info("App setup :: Checking for updates...");
 		this.http.get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json").subscribe((response) => {
 			if (response['version'] != electron.remote.app.getVersion()) {
-				log.info("Found update " + response['version'] + "!");
+				log.info("App setup :: Found update " + response['version'] + "!");
 				this.toast.toast(response['version'] + " is now available!", 10000);
 			} else {
-				log.info("No updates found!");
+				log.info("App setup :: No updates found.");
 			}
 		});
 	}

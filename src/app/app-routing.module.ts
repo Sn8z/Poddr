@@ -5,18 +5,23 @@ import { FavouritesComponent } from './favourites/favourites.component';
 import { SearchComponent } from './search/search.component';
 import { SettingsComponent } from './settings/settings.component';
 import { PodcastComponent } from './podcast/podcast.component';
+import * as log from 'electron-log';
 
 const routes: Routes = [
-  { path: "", redirectTo: "/toplists", pathMatch: "full" },
-  { path: "toplists", component: ToplistsComponent },
-  { path: "favourites", component: FavouritesComponent},
-  { path: "search", component: SearchComponent},
-  { path: "settings", component: SettingsComponent},
-	{ path: "podcast/:id", component: PodcastComponent}
+	{ path: "", redirectTo: "/toplists", pathMatch: "full" },
+	{ path: "toplists", component: ToplistsComponent },
+	{ path: "favourites", component: FavouritesComponent },
+	{ path: "search", component: SearchComponent },
+	{ path: "settings", component: SettingsComponent },
+	{ path: "podcast/:id", component: PodcastComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+	imports: [RouterModule.forRoot(routes)],
+	exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+	constructor() {
+		log.info("App routes :: Initialized routes.");
+	}
+}

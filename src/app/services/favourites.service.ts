@@ -37,7 +37,7 @@ export class FavouritesService {
 		this.podcastService.getPodcastFeed(rss).subscribe((response) => {
 			parsePodcast(response, (error, data) => {
 				if (error) {
-					log.error(error);
+					log.error("Favourite service :: " + error);
 				} else {
 					this.store.set(rss.replace(/\./g, '\\.'), {
 						rss: rss,
@@ -47,7 +47,7 @@ export class FavouritesService {
 					});
 					this.toast.toastSuccess("Added " + data.title + " to favourites!");
 					this.updateFavourites();
-					log.info("Added " + data.title + " to favourites.");
+					log.info("Favourite service :: Added " + data.title + " to favourites.");
 				}
 			})
 		});
@@ -57,6 +57,6 @@ export class FavouritesService {
 		this.store.delete(rss.replace(/\./g, '\\.'));
 		this.toast.toastError("Unfollowed podcast");
 		this.updateFavourites();
-		log.info("Removed " + rss + " from favourites.");
+		log.info("Favourite service :: Removed " + rss + " from favourites.");
 	}
 }

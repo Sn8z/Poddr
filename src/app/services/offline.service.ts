@@ -27,12 +27,12 @@ export class OfflineService {
 
 	remove = (guid) => {
 		const filePath = this.store.get(guid).src;
-		log.info("Removing offline episode: " + filePath);
+		log.info("Offline service :: Removing offline episode: " + filePath);
 		fs.unlink(filePath, (error) => {
 			if (error) {
-				log.error(error);
+				log.error("Offline service :: " + error);
 			} else {
-				log.info("Successfully removed " + filePath);
+				log.info("Offline service :: Successfully removed " + filePath);
 			}
 		});
 		this.store.delete(guid);
@@ -44,11 +44,11 @@ export class OfflineService {
 
 		const storagePath = app.remote.app.getPath('downloads') + '/Poddr/';
 
-		log.info("Checking if download folder exists...");
+		log.info("Offline service :: Checking if download folder exists...");
 		if (fs.existsSync(storagePath)) {
-			log.info("Download folder exists.");
+			log.info("Offline service :: Download folder exists.");
 		} else {
-			log.info("Creating download folder at: " + storagePath);
+			log.info("Offline service :: Creating download folder at: " + storagePath);
 			fs.mkdirSync(storagePath, { recursive: true });
 		}
 
@@ -56,12 +56,12 @@ export class OfflineService {
 			const fileName = (title.toLowerCase() + "-" + podcastObject.title.toLowerCase() + "." + this.getFileExtension(podcastObject.enclosure.type)).replace(/\W/g, '_');
 			fs.writeFile(storagePath + fileName, Buffer.from(response), (error) => {
 				if (error) {
-					log.error("An error ocurred creating the file > ERROR MSG: " + error.message);
+					log.error("Offline service :: An error ocurred creating the file > ERROR MSG: " + error.message);
 					this.toast.toastError("Something went wrong with the download.");
 				} else {
 					const podcast = { episodeTitle: podcastObject.title, author: title, rss: rss, guid: podcastObject.guid, src: storagePath + fileName };
 					this.store.set(podcastObject.guid, podcast);
-					log.info("Saved file at: " + storagePath + fileName);
+					log.info("Offline service :: Saved file at: " + storagePath + fileName);
 					this.toast.toastSuccess("Completed " + podcastObject.title);
 					this.updateOfflineEpisodes();
 				}

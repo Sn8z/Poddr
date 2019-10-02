@@ -30,15 +30,14 @@ export class AudioService {
 	public volume: BehaviorSubject<number> = new BehaviorSubject(0);
 
 	constructor(private toast: ToastService, private played: PlayedService) {
-		log.info("Initializing audio service");
 		this.initIpcListeners();
 		this.initAudio();
 		this.initAudioListeners();
-		log.info("Initializing audio service - Done!");
+		log.info("Audio service :: Initialized audio service.");
 	}
 
 	private initIpcListeners(): void {
-		log.info("Initializing audio service - IPC listeners");
+		log.info("Audio service :: Initializing IPC listeners.");
 		ipc.on("player:toggle-play", () => { this.togglePlay() });
 		ipc.on("app:close", () => {
 			this.store.set("volume", this.audio.volume);
@@ -48,7 +47,7 @@ export class AudioService {
 	}
 
 	private initAudio(): void {
-		log.info("Initializing audio service - Audio");
+		log.info("Audio service :: Initializing Audio.");
 
 		//Load stored volume
 		this.audio.volume = this.store.get("volume", 0.5) as number;
@@ -74,7 +73,7 @@ export class AudioService {
 	}
 
 	private initAudioListeners(): void {
-		log.info("Initializing audio service - Event listeners");
+		log.info("Audio service :: Initializing Event listeners.");
 		this.audio.addEventListener('play', this.onPlay);
 		this.audio.addEventListener('pause', this.onPause);
 		this.audio.addEventListener('loadstart', this.onLoadStart);
@@ -87,19 +86,19 @@ export class AudioService {
 	}
 
 	private onPlay = () => {
-		log.info("Playing");
+		log.info("Audio service :: Playing.");
 		this.playing.next(true);
 		ipc.send("media-play");
 	}
 
 	private onPause = () => {
-		log.info("Paused");
+		log.info("Audio service :: Paused.");
 		this.playing.next(false);
 		ipc.send("media-pause");
 	}
 
 	private onLoadStart = () => {
-		log.info("Started loading");
+		log.info("Audio service :: Started loading.");
 		this.loading.next(true);
 	}
 
@@ -114,24 +113,24 @@ export class AudioService {
 	}
 
 	private onSeeking = () => {
-		log.info("Seeking");
+		log.info("Audio service :: Seeking.");
 		this.loading.next(true);
 	}
 
 	private onCanPlayThrough = () => {
-		log.info("Can play through");
+		log.info("Audio service :: Can play through.");
 		this.loading.next(false);
 		this.duration.next(this.audio.duration);
 	}
 
 	private onEnded = () => {
-		log.info("Podcast ended.");
+		log.info("Audio service :: Podcast ended.");
 		this.toast.toast("Podcast ended");
 		this.played.markAsPlayed(this.guid);
 	}
 
 	private onError = (e) => {
-		log.error(e.target.error.message);
+		log.error("Audio service :: " + e.target.error.message);
 		this.toast.toastError("Something went wrong");
 		this.loading.next(false);
 	}
@@ -146,7 +145,6 @@ export class AudioService {
 
 	// public methods
 	loadAudio(podcast, pTitle, pRSS, pCover): void {
-		log.info("RSS: " + pRSS);
 		this.audio.src = podcast.src;
 		this.guid = podcast.guid;
 		this.rss.next(pRSS);

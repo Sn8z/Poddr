@@ -3,7 +3,6 @@ import { AudioService } from '../services/audio.service';
 import { FavouritesService } from '../services/favourites.service';
 import { OfflineService } from '../services/offline.service';
 import { ToastService } from '../services/toast.service';
-import * as log from 'electron-log';
 
 @Component({
 	selector: 'app-favourites',
@@ -40,7 +39,6 @@ export class FavouritesComponent implements OnInit {
 	}
 
 	removeOffline = (guid) => {
-		log.info("removing: " + guid);
 		this.offlineService.remove(guid);
 	}
 

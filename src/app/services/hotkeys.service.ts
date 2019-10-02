@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import * as log from 'electron-log';
 import { AudioService } from './audio.service';
-import * as Mousetrap from 'mousetrap';
 import { Router } from '@angular/router';
+import * as Mousetrap from 'mousetrap';
+import * as log from 'electron-log';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class HotkeysService {
 
   constructor(private audio: AudioService, private router: Router) {
-    log.info("Loading hotkeys");
+    log.info("Hotkeys service :: Loading hotkeys.");
     this.addGlobalBind();
     this.loadBinds();
   }

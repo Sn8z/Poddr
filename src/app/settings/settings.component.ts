@@ -35,6 +35,7 @@ export class SettingsComponent implements OnInit {
 		this.themes = Object.keys(themesJSON.themes);
 		this.theme = this.store.get("theme", "Dark");
 		this.initPickr();
+		log.info("Settings component :: Initialized settings.");
 	}
 
 	private initPickr = () => {
@@ -61,12 +62,12 @@ export class SettingsComponent implements OnInit {
 
 	setRegion = () => {
 		this.store.set("region", this.region);
-		log.info("Setting default region to: " + this.region);
+		log.info("Settings component :: Setting default region to: " + this.region);
 	}
 
 	setLayout = () => {
 		this.store.set("layout", this.layout);
-		log.info("Setting default layout to: " + this.layout);
+		log.info("Settings component :: Setting default layout to: " + this.layout);
 	}
 
 	setTheme = () => {
@@ -77,14 +78,14 @@ export class SettingsComponent implements OnInit {
 		root.style.setProperty('--primary-text-color', themesJSON.themes[this.theme]['primaryTextColor']);
 		root.style.setProperty('--secondary-text-color', themesJSON.themes[this.theme]['secondaryTextColor']);
 		this.store.set("theme", this.theme);
-		log.info("Setting theme to: " + this.theme);
+		log.info("Settings component :: Setting theme to: " + this.theme);
 	}
 
 	setColor = (color) => {
 		const root = document.documentElement;
 		root.style.setProperty('--primary-color', color);
 		this.store.set("color", color);
-		log.info("Color set to " + color);
+		log.info("Settings component :: Color set to " + color);
 	}
 
 	openURL = (url) => {
@@ -92,18 +93,18 @@ export class SettingsComponent implements OnInit {
 		try {
 			app.shell.openExternal(url);
 		} catch (error) {
-			log.error(error);
+			log.error("Settings component :: " + error);
 		}
 	}
 
 	restart = () => {
-		log.info("Restarting Poddr.");
+		log.info("Settings component :: Restarting Poddr.");
 		app.remote.app.relaunch();
 		app.remote.app.exit(0);
 	}
 
 	openDevTools = () => {
-		log.info("Opening DevTools.");
+		log.info("Settings component :: Opening DevTools.");
 		app.remote.getCurrentWindow().webContents.openDevTools();
 	}
 

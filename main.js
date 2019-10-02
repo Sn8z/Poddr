@@ -15,7 +15,7 @@ app.setPath("userData", app.getPath("userData").replace("Poddr", "poddr"));
 //Set up logging
 const log = require("electron-log");
 log.transports.file.init();
-log.info("Storing logs at: " + log.transports.file.file);
+log.info("Main Process :: Storing logs at: " + log.transports.file.file);
 
 //Allow actions before user have interacted with the document
 app.commandLine.appendSwitch("--autoplay-policy", "no-user-gesture-required");
@@ -26,21 +26,21 @@ const options = {
 };
 
 const argv = process.argv.slice(1);
-log.info("Flags: " + argv);
+log.info("Main Process :: Flags: " + argv);
 for (const arg of argv) {
 	if (arg === ".") {
 		continue;
 	} else if (arg === "--debug" || arg === "-d") {
-		log.info("Setting debug to true.");
+		log.info("Main Process :: Setting debug to true.");
 		options.debug = true;
 	} else {
-		log.info(arg + " is not a valid flag.");
+		log.info("Main Process :: " + arg + " is not a valid flag.");
 	}
 }
 
 //Quit when all windows are closed
 app.on("window-all-closed", function () {
-	log.info("Exiting Poddr.");
+	log.info("Main Process :: Exiting Poddr.");
 	app.quit();
 });
 
@@ -83,7 +83,7 @@ app.once("ready", function () {
 
 	mainWindow.once("close", function (event) {
 		event.preventDefault();
-		log.info("Closing app.");
+		log.info("Main Process :: Closing app.");
 		mainWindow.webContents.send("app:close");
 	});
 
@@ -97,7 +97,7 @@ app.once("ready", function () {
 
 	//Devtools
 	if (options.debug) {
-		log.info("Enabling DevTools.");
+		log.info("Main Process :: Enabling DevTools.");
 		mainWindow.webContents.openDevTools({ mode: "detach" });
 	}
 

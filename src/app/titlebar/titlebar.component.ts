@@ -1,30 +1,27 @@
 import { Component, OnInit } from "@angular/core";
-import { ipcRenderer as ipc} from 'electron';
+import { ipcRenderer as ipc } from 'electron';
 import { Location } from '@angular/common';
-import * as log from 'electron-log';
 
 @Component({
-  selector: "app-titlebar",
-  templateUrl: "./titlebar.component.html",
-  styleUrls: ["./titlebar.component.css"]
+	selector: "app-titlebar",
+	templateUrl: "./titlebar.component.html",
+	styleUrls: ["./titlebar.component.css"]
 })
 export class TitlebarComponent implements OnInit {
-	
-  constructor(private location: Location) {}
 
-  ngOnInit() {
-    log.info("Loaded titlebar component.");
-  }
+	constructor(private location: Location) { }
 
-  public minimize() {
-    ipc.send("window-update", "minimize");
-  }
-  
-  public maximize() {
-    ipc.send("window-update", "maximize");
-  }
+	ngOnInit() { }
 
-  public close() {
-    ipc.send("window-update", "close");
-  }
+	public minimize() {
+		ipc.send("window-update", "minimize");
+	}
+
+	public maximize() {
+		ipc.send("window-update", "maximize");
+	}
+
+	public close() {
+		ipc.send("window-update", "close");
+	}
 }

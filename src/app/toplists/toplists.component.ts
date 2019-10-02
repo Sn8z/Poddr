@@ -9,18 +9,18 @@ import * as Store from 'electron-store';
 	selector: 'app-toplists',
 	templateUrl: './toplists.component.html',
 	styleUrls: ['./toplists.component.css'],
-	providers: [ Description ]
+	providers: [Description]
 })
 export class ToplistsComponent implements OnInit {
-	store = new Store();
-	podcasts = [];
-	amount: number;
-	categories = [];
-	category: number;
-	regions = [];
-	region: String;
-	favs: string[];
-	layout: string = "grid";
+	private store = new Store();
+	public podcasts = [];
+	public amount: number;
+	public categories = [];
+	public category: number;
+	public regions = [];
+	public region: String;
+	public favs: string[];
+	public layout: string = "grid";
 
 	constructor(private podcastService: PodcastService, private favService: FavouritesService, private toast: ToastService, private descriptionPipe: Description) { }
 
