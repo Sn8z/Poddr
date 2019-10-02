@@ -10,23 +10,23 @@ module.exports = (mainWindow) => {
       "org." + desktop + ".SettingsDaemon.MediaKeys"
     );
     mediaKeys.on("MediaPlayerKeyPressed", function (interface, key, error) {
-      if (error) log.error(error);
+      if (error) log.error("Main Process :: " + error);
       switch (key) {
         case "Next":
           mainWindow.webContents.send("player:next");
-          log.info("DBUS => NEXT");
+          log.info("Main Process :: DBUS => NEXT");
           return;
         case "Previous":
           mainWindow.webContents.send("player:previous");
-          log.info("DBUS => PREVIOUS");
+          log.info("Main Process :: DBUS => PREVIOUS");
           return;
         case "Play":
           mainWindow.webContents.send("player:toggle-play");
-          log.info("DBUS => PLAY");
+          log.info("Main Process :: DBUS => PLAY");
           return;
         case "Stop":
           mainWindow.webContents.send("player:stop");
-          log.info("DBUS => STOP");
+          log.info("Main Process :: DBUS => STOP");
           return;
         default:
           return;
@@ -41,12 +41,12 @@ module.exports = (mainWindow) => {
   }
 
   try {
-    log.info("Registering mediakey bindings using DBUS.");
+    log.info("Main Process :: Registering mediakey bindings using DBUS.");
     var dbus = require("dbus-next");
     var bus = dbus.sessionBus();
     registerDbus("gnome", bus);
     registerDbus("mate", bus);
   } catch (e) {
-    log.error("Error binding Dbus interface.");
+    log.error("Main Process :: Error binding Dbus interface.");
   }
 };

@@ -5,7 +5,7 @@ const mpris = require("mpris-service");
 const log = require("electron-log");
 
 module.exports = mainWindow => {
-  log.info("Loading MPRIS module.");
+  log.info("Main Process :: Loading MPRIS module.");
 
   mprisPlayer = mpris({
     name: "poddr",
@@ -28,17 +28,17 @@ module.exports = mainWindow => {
 
   mprisPlayer.on("playpause", function () {
     mainWindow.webContents.send("player:toggle-play");
-    log.info("MPRIS - PLAYPAUSE");
+    log.info("Main Process :: MPRIS => PLAYPAUSE");
   });
 
   mprisPlayer.on("play", function () {
     mainWindow.webContents.send("player:toggle-play");
-    log.info("MPRIS - PLAY");
+    log.info("Main Process :: MPRIS => PLAY");
   });
 
   mprisPlayer.on("pause", function () {
     mainWindow.webContents.send("player:toggle-play");
-    log.info("MPRIS - PAUSE");
+    log.info("Main Process :: MPRIS => PAUSE");
   });
 
   mprisPlayer.on("quit", function () {
@@ -51,7 +51,7 @@ module.exports = mainWindow => {
   });
 
   ipc.on("media-update", function (event, mediaObject) {
-    log.info("MPRIS - Media update.");
+    log.info("Main Process :: MPRIS => Media update.");
     mprisPlayer.metadata = {
       "mpris:artUrl": mediaObject.image || "",
       "xesam:title": mediaObject.title || "No title",

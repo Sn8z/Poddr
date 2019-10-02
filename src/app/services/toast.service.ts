@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import Swal from 'sweetalert2';
+import * as log from 'electron-log';
 
 @Injectable({
 	providedIn: "root"
@@ -8,10 +9,8 @@ export class ToastService {
 
 	constructor() { }
 
-
-	//Toasts
-
 	toast(msg: string = "", timer: number = 5000): void {
+		log.info("Toast service :: Showing toast => " + msg);
 		Swal.fire({
 			toast: true,
 			text: msg,
@@ -27,6 +26,7 @@ export class ToastService {
 	}
 
 	toastSuccess(msg: string = ""): void {
+		log.info("Toast service :: Showing success toast => " + msg);
 		Swal.fire({
 			toast: true,
 			type: 'success',
@@ -43,6 +43,7 @@ export class ToastService {
 	}
 
 	toastError(msg: string = ""): void {
+		log.info("Toast service :: Showing error toast => " + msg);
 		Swal.fire({
 			toast: true,
 			type: 'error',
@@ -61,6 +62,7 @@ export class ToastService {
 	//Modals
 
 	modal(title: string = "", msg: string = ""): void {
+		log.info("Toast service :: Showing modal.");
 		Swal.fire({
 			title: title,
 			text: msg,
@@ -74,6 +76,7 @@ export class ToastService {
 	}
 
 	successModal(msg: string = ""): void {
+		log.info("Toast service :: Showing success modal.");
 		Swal.fire({
 			type: 'success',
 			text: msg,
@@ -87,6 +90,7 @@ export class ToastService {
 	}
 
 	errorModal(error: string = "Something went wrong."): void {
+		log.info("Toast service :: Showing error modal.");
 		Swal.fire({
 			type: 'error',
 			text: error,
@@ -100,14 +104,13 @@ export class ToastService {
 	}
 
 	//Inputs
-
 	async inputRSSModal() {
+		log.info("Toast service :: Showing input modal.");
 		const url = await Swal.fire({
 			title: 'Enter RSS feed',
 			input: 'url',
 			inputPlaceholder: 'RSS feed...'
 		})
-
 		if (url) return url;
 	}
 }

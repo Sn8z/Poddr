@@ -22,13 +22,13 @@ export class PlayedService {
   markAsPlayed = (guid: string) => {
     this.store.set(guid.replace(/\./g, '\\.'), Date.now());
     this.updatePlayedEpisodes();
-    log.info("Added " + guid + " to previously played episodes.");
+    log.info("PrevPlayed service :: Added " + guid + " to previously played episodes.");
   }
 
   unmarkAsPlayed = (guid: string) => {
     this.store.delete(guid);
     this.updatePlayedEpisodes();
-    log.info("Removed " + guid + " from previously played episodes.");
+    log.info("PrevPlayed service :: Removed " + guid + " from previously played episodes.");
   }
 
 }
