@@ -5,10 +5,20 @@ const nativeImage = electron.nativeImage;
 const ipc = electron.ipcMain;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
-const log = require("electron-log");
 
 //Global reference to window object;
 var mainWindow = null;
+
+//Fix for correctly naming the app...
+app.setPath("userData", app.getPath("userData").replace("Poddr", "poddr"));
+
+//Set up logging
+const log = require("electron-log");
+log.transports.file.init();
+log.info("Storing logs at: " + log.transports.file.file);
+
+//Allow actions before user have interacted with the document
+app.commandLine.appendSwitch("--autoplay-policy", "no-user-gesture-required");
 
 //Launch options
 const options = {
@@ -16,8 +26,7 @@ const options = {
 };
 
 const argv = process.argv.slice(1);
-log.info("Flags:");
-log.info(argv);
+log.info("Flags: " + argv);
 for (const arg of argv) {
 	if (arg === ".") {
 		continue;
@@ -29,21 +38,15 @@ for (const arg of argv) {
 	}
 }
 
-//Fix for correctly naming the app...
-app.setPath("userData", app.getPath("userData").replace("Poddr", "poddr"));
-
-//Allow actions before user have interacted with the document
-app.commandLine.appendSwitch("--autoplay-policy", "no-user-gesture-required");
-
 //Quit when all windows are closed
 app.on("window-all-closed", function () {
 	log.info("Exiting Poddr.");
 	app.quit();
 });
 
-//When app is rdy, create window
+//When app is ready, create window
 app.once("ready", function () {
-	//default window size
+
 	let mainWindowState = windowStateKeeper({
 		defaultWidth: 1200,
 		defaultHeight: 900
@@ -72,7 +75,6 @@ app.once("ready", function () {
 	mainWindowState.manage(mainWindow);
 
 	mainWindow.on("ready-to-show", function () {
-		//Show and focus window
 		mainWindow.show();
 		mainWindow.focus();
 	});
