@@ -39,7 +39,7 @@ export class OfflineService {
 		this.updateOfflineEpisodes();
 	}
 
-	download = (author, rss, podcastObject) => {
+	download = (title, rss, podcastObject) => {
 		this.toast.toast("Downloading " + podcastObject.title);
 
 		const storagePath = app.remote.app.getPath('downloads') + '/Poddr/';
@@ -53,13 +53,13 @@ export class OfflineService {
 		}
 
 		this.http.get(podcastObject.enclosure.url, { responseType: 'arraybuffer' }).subscribe((response) => {
-			const fileName = (author.toLowerCase() + "-" + podcastObject.title.toLowerCase() + "." + this.getFileExtension(podcastObject.enclosure.type)).replace(/\W/g, '_');
+			const fileName = (title.toLowerCase() + "-" + podcastObject.title.toLowerCase() + "." + this.getFileExtension(podcastObject.enclosure.type)).replace(/\W/g, '_');
 			fs.writeFile(storagePath + fileName, Buffer.from(response), (error) => {
 				if (error) {
 					log.error("An error ocurred creating the file > ERROR MSG: " + error.message);
 					this.toast.toastError("Something went wrong with the download.");
 				} else {
-					const podcast = { episodeTitle: podcastObject.title, author: author, rss: rss, guid: podcastObject.guid, src: storagePath + fileName };
+					const podcast = { episodeTitle: podcastObject.title, author: title, rss: rss, guid: podcastObject.guid, src: storagePath + fileName };
 					this.store.set(podcastObject.guid, podcast);
 					log.info("Saved file at: " + storagePath + fileName);
 					this.toast.toastSuccess("Completed " + podcastObject.title);

@@ -128,7 +128,7 @@ export class PodcastComponent implements OnInit {
 	download(event, podcastObject: any): void {
 		event.stopPropagation();
 
-		this.offlineService.download(this.author, this.rss, podcastObject);
+		this.offlineService.download(this.title, this.rss, podcastObject);
 	}
 
 	filter(): void {
