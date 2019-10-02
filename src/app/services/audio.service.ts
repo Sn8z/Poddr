@@ -41,7 +41,6 @@ export class AudioService {
 		log.info("Initializing audio service - IPC listeners");
 		ipc.on("player:toggle-play", () => { this.togglePlay() });
 		ipc.on("app:close", () => {
-			log.info("player - close");
 			this.store.set("volume", this.audio.volume);
 			this.store.set("time", this.audio.currentTime);
 			ipc.send("app:closed");
@@ -147,6 +146,7 @@ export class AudioService {
 
 	// public methods
 	loadAudio(podcast, pTitle, pRSS, pCover): void {
+		log.info("RSS: " + pRSS);
 		this.audio.src = podcast.src;
 		this.guid = podcast.guid;
 		this.rss.next(pRSS);

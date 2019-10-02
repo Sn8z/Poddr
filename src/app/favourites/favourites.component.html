@@ -7,11 +7,19 @@
 		<button class="btn-border" (click)="add()"><i class="fas fa-plus"></i></button>
 	</div>
 </div>
-<div class="grid">
+<div class="favourite-actions">
+	<div class="favourite-action-btn" (click)="content = 'favourites'" [ngClass]="{'active': content == 'favourites'}">
+		Favourites
+	</div>
+	<div class="favourite-action-btn" (click)="content = 'offline'" [ngClass]="{'active': content == 'offline'}">
+		Offline Episodes
+	</div>
+</div>
+<div class="grid" *ngIf="content === 'favourites'">
 	<div class="grid-item" *ngFor="let f of favourites">
 		<div class="podcast-frame shadow">
 			<a class="image-container" [routerLink]="['/podcast', f.rss]">
-				<img class="image-cover" [src]="f.img" onload="this.style.opacity = 1">
+				<img class="image-cover" [src]="f.img || 'assets/images/album_cover.png'" onload="this.style.opacity = 1">
 			</a>
 			<div class="podcast-frame-info">
 				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', f.rss]" tabindex="-1">{{ f.title }}</div>
@@ -19,6 +27,14 @@
 					<i class="fas fa-times podcast-frame-btn podcast-frame-remove-btn" (click)="remove(f.rss)"></i>
 				</div>
 			</div>
+		</div>
+	</div>
+</div>
+<div class="offline-episodes" *ngIf="content === 'offline'">
+	<div class="offline-episode" *ngFor="let o of offlineEpisodes" (click)="playOffline(o)">
+		<div class="offline-episode-title">{{ o.episodeTitle }} <span class="secondary-text">{{ " - " + o.author }}</span></div>
+		<div class="offline-episode-actions">
+			<i class="fas fa-times podcast-frame-remove-btn" (click)="removeOffline(o.guid)"></i>
 		</div>
 	</div>
 </div>

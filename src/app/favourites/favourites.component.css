@@ -15,3 +15,59 @@
 .podcast-frame-remove-btn:hover {
 	color: #cc3333;
 }
+
+.favourite-actions {
+	display: flex;
+	flex: 0 1 auto;
+	flex-direction: row;
+	background: var(--secondary-bg-color);
+}
+
+.favourite-action-btn {
+	display: flex;
+	flex: 1;
+	justify-content: center;
+	cursor: pointer;
+	color: var(--primary-text-color);
+	padding: 0.5rem;
+}
+
+.favourite-action-btn:hover {
+	background: var(--third-bg-color);
+}
+
+.favourite-action-btn.active {
+	border-bottom: 1px solid var(--primary-color);
+}
+
+.offline-episodes {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	overflow: auto;
+}
+
+.offline-episode {
+	display: flex;
+	flex-direction: row;
+	padding: 0.5rem;
+	margin: 0.5rem;
+	background: var(--primary-bg-color);
+	cursor: pointer;
+}
+
+.offline-episode:hover {
+	background: var(--secondary-bg-color);
+}
+
+.offline-episode-title {	
+	display: flex;
+	flex: 1;
+	color: var(--primary-text-color);
+}
+
+.offline-episode-actions {
+	display: flex;
+	flex: 0 1 auto;
+	justify-content: center;
+}

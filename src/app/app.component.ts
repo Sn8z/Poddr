@@ -5,6 +5,7 @@ import { ToastService } from './services/toast.service';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
 import * as electron from 'electron';
+
 const themesJSON = require('../assets/themes/themes.json');
 
 @Component({

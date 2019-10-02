@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AudioService } from '../services/audio.service';
 import { PodcastService } from '../services/podcast.service';
@@ -6,6 +6,7 @@ import { PlayedService } from '../services/played.service';
 import { ToastService } from '../services/toast.service';
 import { Description } from '../pipes/description.pipe';
 import { FavouritesService } from '../services/favourites.service';
+import { OfflineService } from '../services/offline.service';
 import * as parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
 
@@ -19,22 +20,23 @@ export class PodcastComponent implements OnInit {
 	private id: string;
 	private regPattern: RegExp = /^[0-9]+$/;
 
-	isLoading: Boolean = true;
-	rss: String;
-	title: string;
-	author: String;
-	description: String;
-	image: String;
-	updated: String;
-	website: String;
-	email: String;
-	episodes: any[];
-	allEpisodes: any[];
-	sortBy: string = "asc";
-	latestEpisode: any;
-	playedEpisodes: string[];
-	query: string = "";
-	favs: string[];
+	public isLoading: Boolean = true;
+	public rss: String;
+	public title: string;
+	public author: String;
+	public description: String;
+	public image: String;
+	public updated: String;
+	public website: String;
+	public email: String;
+	public episodes: any[];
+	public allEpisodes: any[];
+	public sortBy: string = "asc";
+	public latestEpisode: any;
+	public playedEpisodes: string[];
+	public offlineEpisodes: string[];
+	public query: string = "";
+	public favs: string[];
 
 	constructor(private route: ActivatedRoute,
 		private audio: AudioService,
@@ -42,26 +44,38 @@ export class PodcastComponent implements OnInit {
 		private podcastService: PodcastService,
 		private toast: ToastService,
 		private favouriteService: FavouritesService,
-		private descriptionPipe: Description) {
-		this.prevPlayed.playedEpisodes.subscribe(value => {
-			this.playedEpisodes = value;
-		});
-		
+		private offlineService: OfflineService,
+		private descriptionPipe: Description,
+		private zone: NgZone) {
+
 		//Listen for parameter changes
-		this.route.params.subscribe(val => {
+		this.route.params.subscribe(value => {
 			this.id = this.route.snapshot.params['id'];
 			if (this.regPattern.test(this.id)) {
 				this.getRSS(this.id);
 			} else {
 				this.parseRSS(this.id);
 			}
-			this.favouriteService.favouriteTitles.subscribe(value => {
+		});
+	}
+
+	ngOnInit() {
+		this.prevPlayed.playedEpisodes.subscribe(value => {
+			this.zone.run(() => {
+				this.playedEpisodes = value;
+			});
+		});
+		this.offlineService.offlineKeys.subscribe(value => {
+			this.zone.run(() => {
+				this.offlineEpisodes = value;
+			});
+		});
+		this.favouriteService.favouriteTitles.subscribe(value => {
+			this.zone.run(() => {
 				this.favs = value;
 			});
 		});
 	}
-
-	ngOnInit() { }
 
 	//Extra step needed if we only have the iTunes ID
 	private getRSS(id: String): void {
@@ -109,6 +123,12 @@ export class PodcastComponent implements OnInit {
 
 	pause(): void {
 		this.audio.pause();
+	}
+
+	download(event, podcastObject: any): void {
+		event.stopPropagation();
+
+		this.offlineService.download(this.author, this.rss, podcastObject);
 	}
 
 	filter(): void {

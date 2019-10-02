@@ -2,7 +2,7 @@
 	<div class="loader" *ngIf="isLoading"></div>
 	<div id="banner-image">
 		<div class="image-container">
-			<img class="image-cover" [src]="image" onload="this.style.opacity = 1">
+			<img class="image-cover" [src]="image || 'assets/images/album_cover.png'" onload="this.style.opacity = 1">
 		</div>
 	</div>
 	<div id="banner-info">
@@ -25,7 +25,7 @@
 		<div id="latest-podcast" (click)="play(latestEpisode)">
 			<div id="latest-podcast-image">
 				<div class="image-container">
-					<img class="image-cover" [src]="latestEpisode.image || image" onload="this.style.opacity = 1">
+					<img class="image-cover" [src]="latestEpisode.image || image  || 'assets/images/album_cover.png'" onload="this.style.opacity = 1">
 				</div>
 			</div>
 			<div id="latest-podcast-info">
@@ -44,7 +44,7 @@
 	</div>
 	<div id="podcast-items">
 		<div class="podcast-item" *ngIf="episodes.length === 0">
-				<div class="podcast-title">No episodes</div>
+			<div class="podcast-title">No episodes</div>
 		</div>
 		<div tabindex="0" class="podcast-item" *ngFor="let e of episodes" (click)="play(e)" (keyup.enter)="play(e)">
 			<div class="podcast-title">{{ e.title }}</div>
@@ -58,6 +58,9 @@
 					<div>
 						<i
 							[ngClass]="playedEpisodes.indexOf(e.guid) == -1 ? 'far fa-circle':'fas fa-check-circle played-episode'"></i>
+					</div>
+					<div>
+						<i class="fas fa-download" [ngClass]="offlineEpisodes.indexOf(e.guid) == -1 ? '':'played-episode'" (click)="download($event, e)"></i>
 					</div>
 				</div>
 			</div>

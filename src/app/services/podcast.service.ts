@@ -31,6 +31,11 @@ export class PodcastService {
 		return this.http.get("" + rss, { responseType: 'text' });
 	}
 
+	getEpisodeBlob(url: String): Observable<Blob> {
+		log.info("Getting podcast at: " + url);
+		return this.http.get("" + url, { responseType: 'blob' });
+	}
+
 	getRegions(): Array<any> {
 		return [
 			{
