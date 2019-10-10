@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
 import Pickr from '@simonwep/pickr';
 import * as Store from 'electron-store';
@@ -12,8 +12,9 @@ const themesJSON = require('../../assets/themes/themes.json');
 	templateUrl: './settings.component.html',
 	styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
 	private store: Store<any> = new Store();
+	private pickr: Pickr;
 
 	public regions: string[] = [];
 	public region: string = "";
@@ -38,8 +39,12 @@ export class SettingsComponent implements OnInit {
 		log.info("Settings component :: Initialized settings.");
 	}
 
+	ngOnDestroy() {
+		this.pickr.destroyAndRemove();
+	}
+
 	private initPickr = () => {
-		const pickr = new Pickr({
+		this.pickr = new Pickr({
 			el: '.clr-pickr',
 			default: '#00FFAA',
 			theme: 'classic',
@@ -53,8 +58,8 @@ export class SettingsComponent implements OnInit {
 				}
 			}
 		});
-		pickr.on('init', instance => {
-			pickr.setColor(this.store.get("color", "#FF9900"));
+		this.pickr.on('init', instance => {
+			this.pickr.setColor(this.store.get("color", "#FF9900"));
 		}).on('save', (color, instance) => {
 			this.setColor(color.toHEXA().toString());
 		});

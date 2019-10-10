@@ -8,14 +8,19 @@
 	</div>
 </div>
 <div class="favourite-actions">
-	<div class="favourite-action-btn" (click)="content = 'favourites'" [ngClass]="{'active': content == 'favourites'}">
+	<div class="favourite-action-btn" tabindex="0" (click)="content = 'favourites'" (keyup.enter)="content = 'favourites'"
+		[ngClass]="{'active': content == 'favourites'}">
 		Favourites
 	</div>
-	<div class="favourite-action-btn" (click)="content = 'offline'" [ngClass]="{'active': content == 'offline'}">
+	<div class="favourite-action-btn" tabindex="0" (click)="content = 'offline'" (keyup.enter)="content = 'offline'"
+		[ngClass]="{'active': content == 'offline'}">
 		Offline Episodes
 	</div>
 </div>
 <div class="grid" *ngIf="content === 'favourites'">
+	<div class="feedback-section" *ngIf="favourites.length === 0">
+		<h2 class="primary-text">No favourites added</h2>
+	</div>
 	<div class="grid-item" *ngFor="let f of favourites">
 		<div class="podcast-frame shadow">
 			<a class="image-container" [routerLink]="['/podcast', f.rss]">
@@ -31,8 +36,12 @@
 	</div>
 </div>
 <div class="offline-episodes" *ngIf="content === 'offline'">
+	<div class="feedback-section" *ngIf="offlineEpisodes.length === 0">
+		<h2 class="primary-text">No downloaded episodes</h2>
+	</div>
 	<div class="offline-episode" *ngFor="let o of offlineEpisodes" (click)="playOffline(o)">
-		<div class="offline-episode-title">{{ o.episodeTitle }} <span class="secondary-text">{{ " - " + o.author }}</span></div>
+		<div class="offline-episode-title">{{ o.episodeTitle }} <span class="secondary-text">{{ " - " + o.author }}</span>
+		</div>
 		<div class="offline-episode-actions">
 			<i class="fas fa-times podcast-frame-remove-btn" (click)="removeOffline(o.guid)"></i>
 		</div>

@@ -70,6 +70,13 @@ body.using-mouse :focus {
   background-color: var(--primary-bg-color);
 }
 
+.feedback-section {
+	display: flex;
+	flex: 1;
+	justify-content: center;
+	padding: 1.5rem;	
+}
+
 .primary-title {
   color: var(--primary-text-color);
   margin: 0;
