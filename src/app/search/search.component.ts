@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
 import { FavouritesService } from '../services/favourites.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
 	selector: 'app-search',
@@ -14,11 +15,27 @@ export class SearchComponent implements OnInit {
 	public isLoading: Boolean = false;
 	public isEmpty: Boolean = false;
 
-	constructor(private podcasts: PodcastService, private favService: FavouritesService) { }
+	constructor(private route: ActivatedRoute, private router: Router, private podcasts: PodcastService, private favService: FavouritesService) { }
 
 	ngOnInit() {
 		document.getElementById("search").focus();
+
+		//Listen for changes in URL parameters
+		this.route.paramMap.subscribe(params => {
+			this.query = params.get("query");
+			if (this.query) {
+				this.search();
+			} else {
+				this.results = [];
+				this.isEmpty = false;
+			}
+		})
+
 		this.favService.favouriteTitles.subscribe(value => { this.favs = value });
+	}
+
+	searchNavigation = () => {
+		this.router.navigate(['/search', { query: this.query }]);
 	}
 
 	search = () => {

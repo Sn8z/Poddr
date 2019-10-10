@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PodcastService } from '../services/podcast.service';
 import { FavouritesService } from '../services/favourites.service';
 import { ToastService } from '../services/toast.service';
@@ -16,25 +17,38 @@ export class ToplistsComponent implements OnInit {
 	public podcasts = [];
 	public amount: number;
 	public categories = [];
-	public category: number;
+	public category: String;
 	public regions = [];
 	public region: String;
 	public favs: string[];
 	public layout: string = "grid";
 
-	constructor(private podcastService: PodcastService, private favService: FavouritesService, private toast: ToastService, private descriptionPipe: Description) { }
+	constructor(private route: ActivatedRoute,
+		private router: Router,
+		private podcastService: PodcastService,
+		private favService: FavouritesService,
+		private toast: ToastService,
+		private descriptionPipe: Description) { }
 
 	ngOnInit() {
 		this.amount = 50;
 		this.categories = this.podcastService.getCategories();
-		this.category = 26;
 		this.regions = this.podcastService.getRegions();
-		this.region = this.store.get("region", "us") as string;
-		this.getPodcasts();
 		this.layout = this.store.get("layout", "grid") as string;
 		this.favService.favouriteTitles.subscribe(value => {
 			this.favs = value;
 		});
+
+		//Listen for changes in URL parameters
+		this.route.paramMap.subscribe(params => {
+			this.region = params.get("region") || this.store.get("region", "us") as string;
+			this.category = params.get("category") || "26";
+			this.getPodcasts();
+		})
+	}
+
+	getPodcastsNavigation = () => {
+		this.router.navigate(["/toplists", { region: this.region, category: this.category }]);
 	}
 
 	getPodcasts = () => {
