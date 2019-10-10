@@ -1,14 +1,12 @@
 kbd {
-  padding:3px;
-  border:1px solid #000;
+	padding:5px;
+	border: 1px solid var(--third-bg-color);
   font-size:12px;
-  background-color:#111;
-  color:#aaa;
-  box-shadow:0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #222 inset;
+  background-color: var(--primary-bg-color);
+  color:var(--primary-text-color);
   border-radius:3px;
   display:inline-block;
   margin:0px;
-  text-shadow:0 1px 0 #000;
   line-height:1.4;
   white-space:nowrap;
 }
