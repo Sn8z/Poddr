@@ -4,10 +4,10 @@
 		<h1 class="primary-title">Today</h1>
 	</div>
 	<div>
-		<select class="shadow" [(ngModel)]="category" (change)="getPodcasts()">
+		<select class="shadow" [(ngModel)]="category" (change)="getPodcastsNavigation()">
 			<option *ngFor="let c of categories" [value]="c.id">{{ c.genre }}</option>
 		</select>
-		<select class="shadow" [(ngModel)]="region" (change)="getPodcasts()">
+		<select class="shadow" [(ngModel)]="region" (change)="getPodcastsNavigation()">
 			<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
 		</select>
 		<button class="btn" (click)="layout = 'grid'"><i class="fas fa-th"

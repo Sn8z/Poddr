@@ -46,20 +46,19 @@ export class PodcastComponent implements OnInit {
 		private favouriteService: FavouritesService,
 		private offlineService: OfflineService,
 		private descriptionPipe: Description,
-		private zone: NgZone) {
+		private zone: NgZone) { }
 
-		//Listen for parameter changes
-		this.route.params.subscribe(value => {
-			this.id = this.route.snapshot.params['id'];
+	ngOnInit() {
+		//Listen for changes in URL parameters
+		this.route.paramMap.subscribe(params => {
+			this.id = params.get("id");
 			if (this.regPattern.test(this.id)) {
 				this.getRSS(this.id);
 			} else {
 				this.parseRSS(this.id);
 			}
-		});
-	}
+		})
 
-	ngOnInit() {
 		this.prevPlayed.playedEpisodes.subscribe(value => {
 			this.zone.run(() => {
 				this.playedEpisodes = value;
