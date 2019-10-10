@@ -32,9 +32,20 @@
 				</div>
 			</div>
 			<div id="latest-podcast-info">
-				<h3 class="primary-title truncate">{{ latestEpisode.title }}</h3>
-				<span class="secondary-text time">{{ latestEpisode.duration | secondsToHhMmSs }}</span>
-				<span class="secondary-text time">{{ latestEpisode.published | date }}</span>
+				<div id="latest-podcast-title">
+					<h3 class="primary-title truncate">{{ latestEpisode.title }}</h3>
+					<div id="latest-podcast-actions" class="podcast-btns">
+						<i class="fas fa-info-circle" (click)="showDescription($event, latestEpisode.description)"></i>
+						<i
+							[ngClass]="playedEpisodes.indexOf(latestEpisode.guid) == -1 ? 'far fa-circle':'fas fa-check-circle played-episode'"></i>
+						<i class="fas fa-download" [ngClass]="offlineEpisodes.indexOf(latestEpisode.guid) == -1 ? '':'played-episode'"
+							(click)="download($event, latestEpisode)"></i>
+					</div>
+				</div>
+				<div id="latest-podcast-details">
+					<span class="secondary-text time">{{ latestEpisode.duration | secondsToHhMmSs }}</span>
+					<span class="secondary-text time">{{ latestEpisode.published | date }}</span>
+				</div>
 			</div>
 		</div>
 		<h5 class="secondary-title">About</h5>
