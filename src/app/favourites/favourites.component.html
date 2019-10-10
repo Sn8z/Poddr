@@ -8,10 +8,12 @@
 	</div>
 </div>
 <div class="favourite-actions">
-	<div class="favourite-action-btn" (click)="content = 'favourites'" [ngClass]="{'active': content == 'favourites'}">
+	<div class="favourite-action-btn" tabindex="0" (click)="content = 'favourites'" (keyup.enter)="content = 'favourites'"
+		[ngClass]="{'active': content == 'favourites'}">
 		Favourites
 	</div>
-	<div class="favourite-action-btn" (click)="content = 'offline'" [ngClass]="{'active': content == 'offline'}">
+	<div class="favourite-action-btn" tabindex="0" (click)="content = 'offline'" (keyup.enter)="content = 'offline'"
+		[ngClass]="{'active': content == 'offline'}">
 		Offline Episodes
 	</div>
 </div>
