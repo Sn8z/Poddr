@@ -10,8 +10,8 @@ import { ToastService } from '../services/toast.service';
 	styleUrls: ['./favourites.component.css']
 })
 export class FavouritesComponent implements OnInit {
-	public favourites: Object = {};
-	public offlineEpisodes: Object = {};
+	public favourites: Array<Object> = [];
+	public offlineEpisodes: Array<Object> = [];
 	public content: string = 'favourites';
 
 	constructor(private audio: AudioService, private favService: FavouritesService, private offlineService: OfflineService, private toast: ToastService) { }
