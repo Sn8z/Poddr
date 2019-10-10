@@ -5,7 +5,8 @@
 }
 
 .toast-content-class {
-    color: var(--primary-text-color) !important;
+		color: var(--primary-text-color) !important;
+		padding: 0.5rem !important;
 }
 
 /* Modal styles */
