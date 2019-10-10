@@ -1,5 +1,4 @@
 <div id="banner">
-	<div class="loader" *ngIf="isLoading"></div>
 	<div id="banner-image">
 		<div class="image-container">
 			<img class="image-cover" [src]="image || 'assets/images/album_cover.png'" onload="this.style.opacity = 1">
@@ -19,7 +18,10 @@
 	<i (click)="toggleOrder()" class="sort-btn"
 		[ngClass]="(sortBy == 'asc') ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up'"></i>
 </div>
-<div id="podcast-content">
+<div class="feedback-section" *ngIf="isLoading">
+	<div class="loader"></div>
+</div>
+<div id="podcast-content" *ngIf="!isLoading">
 	<div id="podcast-details">
 		<h5 class="secondary-title">Latest episode</h5>
 		<div id="latest-podcast" (click)="play(latestEpisode)">
