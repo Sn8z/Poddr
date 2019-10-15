@@ -59,7 +59,7 @@
     "@angular/router": "~8.2.10",
     "@fortawesome/fontawesome-free": "^5.11.2",
     "@simonwep/pickr": "^1.4.3",
-    "core-js": "3.2.1",
+    "core-js": "3.3.2",
     "dbus-next": "^0.7.1",
     "electron-log": "^3.0.8",
     "electron-store": "^5.0.0",
