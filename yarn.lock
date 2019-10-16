@@ -913,10 +913,10 @@
     semver "6.3.0"
     semver-intersect "1.4.0"
 
-"@simonwep/pickr@^1.4.3":
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-1.4.3.tgz#980a9300d6d53b287862137457a2d2694764ec97"
-  integrity sha512-6fbVTh8eJ9zUrp1/c7GMHncV15biaBxMgfbA2IcBDMdpxstAdBemD1Ea+kt+SMYeweOHx9DoxZMTpqTgsmW16A==
+"@simonwep/pickr@^1.4.5":
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-1.4.5.tgz#a1e04b87f552c32cf2245996b5f076040699732b"
+  integrity sha512-OWbzHbmxBctkZpMIY9ipsB/MzS1VHYKZuMI+jdThsyKnz1a0Es8IzTnQSclMk50dwgbaE5qmoxZnu+JrYKX1Ow==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
