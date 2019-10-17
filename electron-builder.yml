@@ -8,5 +8,5 @@
       "target": ["AppImage", "snap", "deb"],
       "category": "Audio;Music;Player;AudioVideo;",
     },
-  "snap": { "plugs": ["default", "mpris"] }
+  "snap": { "plugs": ["default", "mpris", "audio-playback"] }
 }
