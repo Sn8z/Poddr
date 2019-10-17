@@ -129,9 +129,28 @@ export class AudioService {
 		this.played.markAsPlayed(this.guid);
 	}
 
-	private onError = (e) => {
-		log.error("Audio service :: " + e.target.error.message);
-		this.toast.toastError("Something went wrong");
+	private onError = (error) => {
+		log.error('Audio service :: Error => ' + error.target.error.code + ' :: ' + error.target.error.message);
+		log.error('Audio service :: Audio source => ' + this.audio.src);
+
+		switch (error.target.error.code) {
+			case error.target.error.MEDIA_ERR_ABORTED:
+				this.toast.toastError('You aborted the playback.');
+				break;
+			case error.target.error.MEDIA_ERR_NETWORK:
+				this.toast.toastError('A network error caused the audio download to fail.');
+				break;
+			case error.target.error.MEDIA_ERR_DECODE:
+				this.toast.toastError('The audio playback was aborted due to an error when decoding media.');
+				break;
+			case error.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+				this.toast.toastError('The audio could not be loaded, either because the server or network failed or because the format is not supported.');
+				break;
+			default:
+				this.toast.toastError('Something went wrong, try again.');
+				break;
+		}
+		
 		this.loading.next(false);
 	}
 
