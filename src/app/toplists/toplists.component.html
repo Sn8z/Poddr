@@ -29,7 +29,7 @@
 				<div class="podcast-frame-btns">
 					<i *ngIf="favs.indexOf(p['im:name']['label']) == -1" class="far fa-heart podcast-frame-btn"
 						(click)="addPodcast(p['id']['attributes']['im:id'])"></i>
-					<i class="fas fa-info-circle podcast-frame-btn" (click)="showDescription(p['summary']['label'])"></i>
+					<i class="fas fa-info-circle podcast-frame-btn" (click)="showDescription(p['im:name']['label'], p['summary']['label'])"></i>
 				</div>
 			</div>
 		</div>

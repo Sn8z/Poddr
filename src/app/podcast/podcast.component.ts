@@ -150,9 +150,9 @@ export class PodcastComponent implements OnInit {
 		this.toast.modal(title, info);
 	}
 
-	showDescription(event, description): void {
+	showDescription(event, title, description): void {
 		event.stopPropagation();
-		this.toast.modal("Episode description", this.descriptionPipe.transform(description));
+		this.toast.modal(title, this.descriptionPipe.transform(description));
 	}
 
 	addFavourite(): void {

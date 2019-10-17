@@ -61,8 +61,8 @@ export class ToplistsComponent implements OnInit {
 		this.favService.addItunesFavourite(id);
 	}
 
-	showDescription(description): void {
-		this.toast.modal("Episode description", this.descriptionPipe.transform(description));
+	showDescription(title, description): void {
+		this.toast.modal(title, this.descriptionPipe.transform(description));
 	}
 
 	isFavourite = (title) => {
