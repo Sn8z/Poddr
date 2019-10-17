@@ -30,13 +30,16 @@
 	cursor: pointer;
 	color: var(--primary-text-color);
 	padding: 0.5rem;
+	border-bottom: 1px solid var(--primary-bg-color);
+	transition: all linear 0.1s;
 }
 
 .favourite-action-btn:hover {
-	background: var(--third-bg-color);
+	color: var(--primary-color);
 }
 
 .favourite-action-btn.active {
+	color: var(--primary-color);
 	border-bottom: 1px solid var(--primary-color);
 }
 
