@@ -120,14 +120,14 @@ export class PodcastComponent implements OnInit {
 		this.audio.play();
 	}
 
-	pause(): void {
-		this.audio.pause();
-	}
-
 	download(event, podcastObject: any): void {
 		event.stopPropagation();
-
 		this.offlineService.download(this.title, this.rss, podcastObject);
+	}
+
+	removeDownload = (event, podcastObject: any) => {
+		event.stopPropagation();
+		this.offlineService.remove(podcastObject.guid);
 	}
 
 	filter(): void {
@@ -146,10 +146,6 @@ export class PodcastComponent implements OnInit {
 		}
 	}
 
-	showInfo(title, info): void {
-		this.toast.modal(title, info);
-	}
-
 	showDescription(event, title, description): void {
 		event.stopPropagation();
 		this.toast.modal(title, this.descriptionPipe.transform(description));
@@ -157,5 +153,13 @@ export class PodcastComponent implements OnInit {
 
 	addFavourite(): void {
 		this.favouriteService.addFavourite(this.rss);
+	}
+
+	markAsPlayed = (guid) => {
+		this.prevPlayed.markAsPlayed(guid);
+	}
+
+	unmarkAsPlayed = (guid) => {
+		this.prevPlayed.unmarkAsPlayed(guid);
 	}
 }

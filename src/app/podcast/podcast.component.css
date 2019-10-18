@@ -109,56 +109,67 @@
 }
 
 .podcast-item {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-bottom: 1px solid var(--primary-color);
-    transition: all 0.1s linear;
+	flex: 0 0 auto;
+	display: flex;
+	flex-direction: row;
+	cursor: pointer;
+	padding: 0.5rem;
+	border-bottom: 1px solid var(--primary-color);
+	transition: all 0.1s linear;
 }
 
-.podcast-item:hover, .podcast-item:focus {
-		background: var(--secondary-bg-color);
-		outline: none;
+.podcast-item:hover {
+	background: var(--secondary-bg-color);
 }
 
-.podcast-title {
-		flex: 1;
-		color: var(--primary-text-color);
+.podcast-item-info:focus .podcast-item-title {
+	text-decoration: underline var(--primary-color);
+	outline: none;
 }
 
-.podcast-info {
-    display: flex;
-    width: 100%;
-    height: auto;
-    flex: 1;
-    justify-content: space-evenly;
+.podcast-item-actions {
+	display: flex;
+	flex: 0 0 auto;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	text-align: right;
+	color: var(--primary-text-color);
+	padding-left: 1rem;
+	padding-right: 1rem;
 }
 
-.podcast-duration, .podcast-date, .podcast-btns {
-    color: var(--secondary-text-color);
-    font-size: 12px;
-    text-align: center;
+.podcast-item-info {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
-.podcast-duration {
-    flex: 1 1 auto;
-    text-align: left;
+.podcast-item-title {
+	flex: 1;
+	color: var(--primary-text-color);
 }
 
-.podcast-date {
-    flex: 1 1 auto;
-    text-align: center;
+.podcast-item-details {
+	display: flex;
+	flex: 1;
+	flex-direction: row;
 }
 
-.podcast-btns {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    text-align: right;
+.podcast-item-duration, .podcast-item-date {
+	color: var(--secondary-text-color);
+	font-size: 12px;
+}
+
+.podcast-item-duration {
+	flex: 1;
+	text-align: left;
+}
+
+.podcast-item-date {
+	flex: 1;
+	text-align: right;
 }
 
 #latest-podcast {
@@ -206,6 +217,7 @@
 	display: flex;
 	flex: 0 1 auto;
 	flex-direction: row;
+	color: var(--primary-text-color);
 }
 
 #latest-podcast-actions>i {

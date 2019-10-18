@@ -38,6 +38,7 @@ export class OfflineService {
 			}
 		});
 		this.store.delete(guid);
+		this.toast.toastError("Removed offline episode.");
 		this.updateOfflineEpisodes();
 	}
 
