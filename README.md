@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="images/poddr-logo.png" alt="Poddr" width="60" height="60">
+    <img src="docs/images/icon.png" alt="Poddr" width="60" height="60">
     <h1>Poddr</h1>
     <img src="https://img.shields.io/github/release/sn8z/poddr.svg?style=flat-square">
     <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg?style=flat-square">
@@ -8,16 +8,18 @@
 </div>
 
 
-
+[Website](https://sn8z.github.io/Poddr/)
  
 Podcast client built with Electron and Angular.
  
 Poddr uses iTunes RSS feeds and Search API to gather information.
 ### Screenshots
 
-![Screenshot](images/poddr.png)
+![Screenshot](docs/images/screenshot_1.png)
 
-![Screenshot](images/poddr_2.png)
+![Screenshot](docs/images/screenshot_2.png)
+
+![Screenshot](docs/images/screenshot_5.png)
 
 ### Downloads
 
@@ -78,6 +80,6 @@ If you want to make a onetime donation there's two different ways, either [PayPa
 <div align="center">
 <img src="logo/PNG&JPG/Asset 3-8.png" width="80">
 
-### A BIG thanks to [Radu Dan](https://www.instagram.com/radudangratian/) for creating the logo for Poddr!
+### A big thanks to [Radu Dan](https://www.instagram.com/radudangratian/) for creating the logo for Poddr!
 </div>
 <hr>
