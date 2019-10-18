@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ToastService } from './toast.service';
 import { HttpClient } from '@angular/common/http';
+import { throwError } from 'rxjs';
+import { retry, timeout, catchError } from 'rxjs/operators'
 import * as app from 'electron';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
@@ -52,7 +54,7 @@ export class OfflineService {
 			fs.mkdirSync(storagePath, { recursive: true });
 		}
 
-		this.http.get(podcastObject.enclosure.url, { responseType: 'arraybuffer' }).subscribe((response) => {
+		this.getPodcast(podcastObject).subscribe((response) => {
 			const fileName = (title.toLowerCase() + "-" + podcastObject.title.toLowerCase() + "." + this.getFileExtension(podcastObject.enclosure.type)).replace(/\W/g, '_');
 			fs.writeFile(storagePath + fileName, Buffer.from(response), (error) => {
 				if (error) {
@@ -67,6 +69,18 @@ export class OfflineService {
 				}
 			});
 		});
+	}
+
+	getPodcast = (podcastObject) => {
+		return this.http.get(podcastObject.enclosure.url, { responseType: 'arraybuffer' }).pipe(
+			timeout(10000),
+			retry(3),
+			catchError((error) => {
+				log.error('Offline service :: ' + error);
+				this.toast.toastError('Something went wrong when trying to download an episode.');
+				return throwError(null);
+			})
+		);
 	}
 
 	private getFileExtension = (type) => {

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ToastService } from './toast.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { retry, timeout, catchError } from 'rxjs/operators'
 import * as log from 'electron-log';
 
 @Injectable({
@@ -13,7 +14,15 @@ export class PodcastService {
 
 	getToplist(region: String, category: String, amount: Number): Observable<any> {
 		log.info("Podcast service :: Fetching top " + amount + " podcasts in " + region + " (" + category + ")");
-		return this.http.get("https://itunes.apple.com/" + region + "/rss/topaudiopodcasts/limit=" + amount + "/genre=" + category + "/json");
+		return this.http.get("https://itunes.apple.com/" + region + "/rss/topaudiopodcasts/limit=" + amount + "/genre=" + category + "/json").pipe(
+			timeout(10000),
+			retry(3),
+			catchError((error) => {
+				log.error('Podcast service :: ' + error);
+				this.toast.toastError('Something went wrong when trying to get the toplist from iTunes.');
+				return throwError(null);
+			})
+		);
 	}
 
 	search(query: String = ""): Observable<any> {
@@ -21,22 +30,41 @@ export class PodcastService {
 		let sQuery = query.replace(/[\u00e4\u00c4\u00c5\u00e5]/g, "a");
 		sQuery = sQuery.replace(/[\u00d6\u00f6]/g, "o");
 		log.info("Podcast service :: Searching using query => " + sQuery);
-		return this.http.get("https://itunes.apple.com/search?term=" + sQuery + "&entity=podcast&attributes=titleTerm,artistTerm&limit=200");
+		return this.http.get("https://itunes.apple.com/search?term=" + sQuery + "&entity=podcast&attributes=titleTerm,artistTerm&limit=200").pipe(
+			timeout(10000),
+			retry(3),
+			catchError((error) => {
+				log.error('Podcast service :: ' + error);
+				this.toast.toastError('Something went wrong when trying to search the iTunes library.');
+				return throwError(null);
+			})
+		);
 	}
 
 	getRssFeed(id: String): Observable<any> {
 		log.info("Podcast service :: Getting RSS feed using ID => " + id);
-		return this.http.get("https://itunes.apple.com/lookup?id=" + id);
+		return this.http.get("https://itunes.apple.com/lookup?id=" + id).pipe(
+			timeout(10000),
+			retry(3),
+			catchError((error) => {
+				log.error('Podcast service :: ' + error);
+				this.toast.toastError('Something went wrong when trying to get the RSS feed from iTunes.');
+				return throwError(null);
+			})
+		);
 	}
 
 	getPodcastFeed(rss: String): Observable<any> {
 		log.info("Podcast service :: Getting Podcastfeed using RSS => " + rss);
-		return this.http.get("" + rss, { responseType: 'text' });
-	}
-
-	getEpisodeBlob(url: String): Observable<Blob> {
-		log.info("Podcast Service :: Getting podcast at: " + url);
-		return this.http.get("" + url, { responseType: 'blob' });
+		return this.http.get("" + rss, { responseType: 'text' }).pipe(
+			timeout(10000),
+			retry(3),
+			catchError((error) => {
+				log.error('Podcast service :: ' + error);
+				this.toast.toastError('Something went wrong when trying to fetch the RSS feed.');
+				return throwError(null);
+			})
+		);
 	}
 
 	getRegions(): Array<any> {
