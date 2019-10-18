@@ -69,6 +69,11 @@
 	padding: 0.75rem;
 }
 
+#filter::placeholder {
+	color: var(--secondary-text-color);
+	opacity: 0.5;
+}
+
 .sort-btn {
 	margin: 1rem;
 	color: var(--secondary-text-color);

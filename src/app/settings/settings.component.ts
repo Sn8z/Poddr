@@ -54,6 +54,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 				opacity: true,
 				hue: true,
 				interaction: {
+					input: true,
 					save: true
 				}
 			}

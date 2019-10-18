@@ -22,6 +22,12 @@
     padding-left: 1rem;
 }
 
+#search::placeholder {
+	color: var(--secondary-text-color);
+	opacity: 0.5;
+}
+
+
 #search:focus {
     border-bottom: 1px solid var(--primary-color);
     outline: 0;

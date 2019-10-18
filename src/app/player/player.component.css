@@ -92,7 +92,7 @@
   height: 15px;
   line-height: 15px;
   font-size: 15px;
-  color: var(--secondary-text-color);
+  color: var(--primary-text-color);
 }
 
 #volume-slider {
