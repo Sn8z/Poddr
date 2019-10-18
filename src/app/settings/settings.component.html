@@ -34,47 +34,56 @@
 					<div class="hotkey-action primary-text">Toggle Play/Pause</div>
 				</div>
 				<div class="hotkeys-item">
-					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>e</kbd></div>
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>e</kbd>
+					</div>
 					<div class="hotkey-action primary-text">Toggle sidebar</div>
 				</div>
 
 				<div class="hotkeys-item">
-					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>down arrow</kbd></div>
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>down
+							arrow</kbd></div>
 					<div class="hotkey-action primary-text">Volume Down</div>
 				</div>
 
 				<div class="hotkeys-item">
-					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>up arrow</kbd></div>
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>up
+							arrow</kbd></div>
 					<div class="hotkey-action primary-text">Volume Up</div>
 				</div>
 
 				<div class="hotkeys-item">
-					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>left arrow</kbd></div>
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>left
+							arrow</kbd></div>
 					<div class="hotkey-action primary-text">Rewind</div>
 				</div>
 
 				<div class="hotkeys-item">
-					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>right arrow</kbd></div>
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>right
+							arrow</kbd></div>
 					<div class="hotkey-action primary-text">Forward</div>
 				</div>
 
 				<div class="hotkeys-item">
-					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>1</kbd></div>
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>1</kbd>
+					</div>
 					<div class="hotkey-action primary-text">Jump to Toplists</div>
 				</div>
 
 				<div class="hotkeys-item">
-					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>2/f/l</kbd></div>
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>2/f/l</kbd>
+					</div>
 					<div class="hotkey-action primary-text">Jump to Search</div>
 				</div>
 
 				<div class="hotkeys-item">
-					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>3</kbd></div>
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>3</kbd>
+					</div>
 					<div class="hotkey-action primary-text">Jump to Favourites</div>
 				</div>
 
 				<div class="hotkeys-item">
-					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>4</kbd></div>
+					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>4</kbd>
+					</div>
 					<div class="hotkey-action primary-text">Jump to Settings</div>
 				</div>
 			</div>
@@ -83,24 +92,29 @@
 		<details>
 			<summary>Support</summary>
 			<div class="settings-section">
-				<p class="primary-text">If you're having any issue or want to give some feedback then open an issue in the repository.</p>
-				<button class="btn-border" (click)="openURL('https://github.com/Sn8z/Poddr/issues')"><i class="fab fa-github"></i> GitHub</button>
+				<p class="primary-text">If you're having any issue or want to give some feedback then open an issue in the
+					repository.</p>
+				<button class="btn-border" (click)="openURL('https://github.com/Sn8z/Poddr/issues')"><i
+						class="fab fa-github"></i> GitHub</button>
 			</div>
 		</details>
 		<details>
 			<summary>Donate</summary>
 			<div id="donate-section">
-				<button class="btn-border" (click)="openURL('https://paypal.me/pools/c/8hmwPy1X5c')"><i class="fab fa-paypal"></i> PayPal</button>
-				<button class="btn-border" (click)="openURL('https://www.patreon.com/join/poddr')"><i class="fab fa-patreon"></i> Patreon</button>
-				<button class="btn-border" (click)="openURL('https://ko-fi.com/sneitz')"><i class="fas fa-coffee"></i> Ko-Fi</button>
+				<button class="btn-border" (click)="openURL('https://paypal.me/pools/c/8hmwPy1X5c')"><i
+						class="fab fa-paypal"></i> PayPal</button>
+				<button class="btn-border" (click)="openURL('https://www.patreon.com/join/poddr')"><i
+						class="fab fa-patreon"></i> Patreon</button>
+				<button class="btn-border" (click)="openURL('https://ko-fi.com/sneitz')"><i class="fas fa-coffee"></i>
+					Ko-Fi</button>
 			</div>
 		</details>
 		<details>
-			<summary>Debug info</summary>
+			<summary>Debug</summary>
 			<div class="settings-section">
-				<span class="primary-text">App version: {{ appVersion }}</span>
-				<span class="primary-text">Electron version: {{ electronVersion }}</span>
-				<span class="primary-text">Storage path: {{ appStorage }}</span>
+				<span class="primary-text">Poddr version: <span class="secondary-text">{{ appVersion }}</span></span>
+				<span class="primary-text">Storage path: <span class="secondary-text">{{ appStorage }}</span></span>
+				<span class="primary-text">Log path: <span class="secondary-text">{{ logStorage }}</span></span>
 				<div id="debug-section">
 					<button class="btn-border" (click)="restart()">Restart</button>
 					<button class="btn-border" (click)="openDevTools()">Show developer tools</button>

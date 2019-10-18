@@ -25,7 +25,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	public appVersion: string = app.remote.app.getVersion();
 	public appStorage: string = app.remote.app.getPath('userData');
-	public electronVersion: string = process.versions.electron;
+	public logStorage: string = log.transports.file.findLogPath();
 
 	constructor(private podcastService: PodcastService) { }
 
@@ -33,10 +33,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		this.regions = this.podcastService.getRegions();
 		this.region = this.store.get("region", "us");
 		this.layout = this.store.get("layout", "grid");
-		this.themes = Object.keys(themesJSON.themes);
 		this.theme = this.store.get("theme", "Dark");
+		this.themes = Object.keys(themesJSON.themes);
+
 		this.initPickr();
+
 		log.info("Settings component :: Initialized settings.");
+		log.info("Settings component :: " + JSON.stringify(process.versions));
 	}
 
 	ngOnDestroy() {
