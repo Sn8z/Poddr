@@ -10,6 +10,7 @@
 @import "./assets/styles/button.css";
 @import "./assets/styles/image.css";
 @import "./assets/styles/hover-menu.css";
+@import "./assets/styles/custom-pickr.css";
 @import '../node_modules/@simonwep/pickr/dist/themes/classic.min.css';
 @import "../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
 @import "../node_modules/typeface-open-sans/index.css";
