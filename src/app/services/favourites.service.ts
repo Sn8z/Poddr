@@ -38,6 +38,7 @@ export class FavouritesService {
 			parsePodcast(response, (error, data) => {
 				if (error) {
 					log.error("Favourite service :: " + error);
+					this.toast.toastError("Something went wrong when parsing RSS feed.");
 				} else {
 					this.store.set(rss.replace(/\./g, '\\.'), {
 						rss: rss,

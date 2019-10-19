@@ -30,7 +30,9 @@ export class FavouritesComponent implements OnInit {
 	}
 
 	add = () => {
-		this.toast.inputRSSModal().then(x => this.favService.addFavourite(x.value));
+		this.toast.inputRSSModal().then((res) => {
+			if (res.value) this.favService.addFavourite(res.value);
+		});
 	}
 
 	playOffline = (episode) => {
