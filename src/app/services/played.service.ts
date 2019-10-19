@@ -7,7 +7,7 @@ import * as log from 'electron-log';
   providedIn: 'root'
 })
 export class PlayedService {
-  private store: Store<any> = new Store({ name: "previouslyPlayed" });
+  private store: Store<any> = new Store({ name: "previouslyPlayed", accessPropertiesByDotNotation: false });
 
   playedEpisodes: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
@@ -20,7 +20,7 @@ export class PlayedService {
   }
 
   markAsPlayed = (guid: string) => {
-    this.store.set(guid.replace(/\./g, '\\.'), Date.now());
+    this.store.set(guid, Date.now());
     this.updatePlayedEpisodes();
     log.info("PrevPlayed service :: Added " + guid + " to previously played episodes.");
   }
