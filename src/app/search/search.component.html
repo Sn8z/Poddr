@@ -19,7 +19,8 @@
 		</div>
 		<div class="podcast-list-item-actions">
 			<i *ngIf="favs.indexOf(r.collectionName) == -1" class="far fa-heart primary-text"
-				(click)="addToFavourites(r.feedUrl)"></i>
+				(click)="addToFavourites(r.feedUrl)" data-tooltip="Add to favourites"
+				tooltip-position="top"></i>
 		</div>
 	</div>
 </div>

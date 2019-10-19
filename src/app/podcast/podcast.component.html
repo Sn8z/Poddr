@@ -10,13 +10,14 @@
 	</div>
 	<div id="banner-actions">
 		<i *ngIf="favs.indexOf(title) == -1 && !isLoading" class="far fa-heart primary-text" id="fav-btn"
-			(click)="addFavourite()"></i>
+			(click)="addFavourite()" data-tooltip="Add to favourites" tooltip-position="left"></i>
 	</div>
 </div>
 <div id="filter-actions">
 	<input id="filter" type="text" placeholder="Filter" [(ngModel)]="query" (change)="filter()">
 	<i (click)="toggleOrder()" class="sort-btn"
-		[ngClass]="(sortBy == 'asc') ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up'"></i>
+		[ngClass]="(sortBy == 'asc') ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up'" data-tooltip="Toggle sorting"
+		tooltip-position="left"></i>
 </div>
 <div class="feedback-section" *ngIf="isLoading">
 	<div class="loader"></div>
@@ -54,10 +55,12 @@
 		<p id="banner-info-details">{{ description | description }}</p>
 		<div id="podcast-links">
 			<i *ngIf="!isLoading" class="fas fa-globe-europe podcast-link-btn"
-				(click)="showDescription($event, 'Website', website)"></i>
-			<i *ngIf="!isLoading" class="fas fa-rss podcast-link-btn" (click)="showDescription($event, 'RSS', rss)"></i>
-			<i *ngIf="!isLoading" class="far fa-envelope podcast-link-btn"
-				(click)="showDescription($event, 'Email', email)"></i>
+				(click)="showDescription($event, 'Website', website)" data-tooltip="Show website URL"
+				tooltip-position="top"></i>
+			<i *ngIf="!isLoading" class="fas fa-rss podcast-link-btn" (click)="showDescription($event, 'RSS', rss)"
+				data-tooltip="Show RSS feed" tooltip-position="top"></i>
+			<i *ngIf="!isLoading" class="far fa-envelope podcast-link-btn" (click)="showDescription($event, 'Email', email)"
+				data-tooltip="Show email" tooltip-position="top"></i>
 		</div>
 	</div>
 	<div id="podcast-items">

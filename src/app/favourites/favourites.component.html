@@ -4,7 +4,8 @@
 		<h1 class="primary-title">Favourites</h1>
 	</div>
 	<div>
-		<button class="btn-border" (click)="add()"><i class="fas fa-plus"></i></button>
+		<button class="btn-border" (click)="add()" data-tooltip="Add RSS feed" tooltip-position="left"><i
+				class="fas fa-plus"></i></button>
 	</div>
 </div>
 <div class="favourite-actions">
@@ -29,7 +30,8 @@
 			<div class="podcast-frame-info">
 				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', f.rss]" tabindex="-1">{{ f.title }}</div>
 				<div class="podcast-frame-btns">
-					<i class="fas fa-times podcast-frame-btn podcast-frame-remove-btn" (click)="remove(f.rss)"></i>
+					<i class="fas fa-times podcast-frame-btn podcast-frame-remove-btn" (click)="remove(f.rss)"
+						data-tooltip="Remove favourite" tooltip-position="left"></i>
 				</div>
 			</div>
 		</div>
@@ -43,7 +45,8 @@
 		<div class="offline-episode-title">{{ o.episodeTitle }} <span class="secondary-text">{{ " - " + o.author }}</span>
 		</div>
 		<div class="offline-episode-actions">
-			<i class="fas fa-times podcast-frame-remove-btn" (click)="removeOffline(o.guid)"></i>
+			<i class="fas fa-times podcast-frame-remove-btn" (click)="removeOffline(o.guid)" data-tooltip="Remove episode"
+				tooltip-position="left"></i>
 		</div>
 	</div>
 </div>

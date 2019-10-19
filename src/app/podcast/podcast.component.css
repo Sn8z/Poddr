@@ -240,10 +240,9 @@
 	color: var(--primary-text-color);
 	width: 25px;
   height: 25px;
-  line-height: 25px;
   font-size: 25px;
 	cursor: pointer;
-	transition: 0.4s;
+	transition: 0.3s;
 }
 
 .podcast-link-btn:hover {
