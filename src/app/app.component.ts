@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
 		this.http.get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json").subscribe((response) => {
 			if (response['version'] != electron.remote.app.getVersion()) {
 				log.info("App setup :: Found update " + response['version'] + "!");
-				this.toast.toast(response['version'] + " is now available!", 10000);
+				this.toast.toastURL(response['version'] + " is now available!", "https://github.com/Sn8z/Poddr/releases", 15000);
 			} else {
 				log.info("App setup :: No updates found.");
 			}

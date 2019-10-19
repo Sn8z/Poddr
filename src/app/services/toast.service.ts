@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import Swal from 'sweetalert2';
+import * as app from 'electron';
 import * as log from 'electron-log';
 
 @Injectable({
@@ -21,6 +22,27 @@ export class ToastService {
 			customClass: {
 				content: 'toast-content-class',
 				popup: 'toast-popup-class'
+			}
+		})
+	}
+
+	toastURL(msg: string = "", url: string = "", timer: number = 5000): void {
+		log.info("Toast service :: Showing toast => " + msg);
+		Swal.fire({
+			toast: true,
+			text: msg,
+			position: 'top-end',
+			showConfirmButton: false,
+			timer: timer,
+			animation: true,
+			customClass: {
+				content: 'toast-content-class',
+				popup: 'toast-popup-update-class'
+			},
+			onOpen: (toast) => {
+				toast.addEventListener('click', () => {
+					app.shell.openExternal(url);
+				})
 			}
 		})
 	}
