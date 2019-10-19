@@ -1,7 +1,8 @@
 .grid {
     display: flex;
     flex: 1;
-    overflow: auto;
+		overflow-x: hidden;
+		overflow-y: auto;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -9,9 +10,9 @@
 
 .grid-item {
     flex-basis: 25%;
-    width: 25%;
-    height: auto;
-    overflow: hidden;
+		max-width: 25%;
+		height: auto;
+		overflow: visible;
     box-sizing: border-box;
     padding: 1.25rem;
 }
@@ -75,24 +76,28 @@
 
 @media (min-width: 1601px) {
     .grid-item {
-        flex-basis: 20%;
+				flex-basis: 20%;
+				max-width: 20%;
     }
 }
 
 @media (min-width: 1025px) and (max-width: 1600px) {
     .grid-item {
-        flex-basis: 25%;
+				flex-basis: 25%;
+				max-width: 25%;
     }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
     .grid-item {
-        flex-basis: 33%;
+				flex-basis: 33%;
+				max-width: 33%;
     }
 }
 
 @media (max-width: 767px) {
     .grid-item {
-        flex-basis: 50%;
+				flex-basis: 50%;
+				max-width: 50%;
     }
 }
