@@ -19,7 +19,8 @@
 }
 
 #banner-info {
-	flex: 1 0 auto;
+	flex: 1;
+	overflow: hidden;
   margin-left: 0.75rem;
 }
 

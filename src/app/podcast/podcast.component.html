@@ -5,8 +5,8 @@
 		</div>
 	</div>
 	<div id="banner-info">
-		<h5 id="banner-info-author">{{ author }}</h5>
-		<h1 id="banner-info-title" class="primary-title">{{ title }}</h1>
+		<h5 id="banner-info-author" class="truncate">{{ author }}</h5>
+		<h1 id="banner-info-title" class="primary-title truncate">{{ title }}</h1>
 	</div>
 	<div id="banner-actions">
 		<i *ngIf="favs.indexOf(title) == -1 && !isLoading" class="far fa-heart primary-text" id="fav-btn"
