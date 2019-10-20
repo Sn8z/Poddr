@@ -5,6 +5,12 @@
     flex-direction: column;
 }
 
+.filter-dropdown {
+	flex: 0 0 auto;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
 .active-btn {
 	color: var(--primary-color);
 }

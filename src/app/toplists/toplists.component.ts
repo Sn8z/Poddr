@@ -43,7 +43,7 @@ export class ToplistsComponent implements OnInit {
 		this.route.paramMap.subscribe(params => {
 			this.region = params.get("region") || this.store.get("region", "us") as string;
 			this.category = params.get("category") || "26";
-			this.getPodcasts();
+			if (this.region && this.category) this.getPodcasts();
 		})
 	}
 

@@ -1,14 +1,14 @@
-<div id="banner">
-	<div id="banner-image">
+<div class="banner">
+	<div class="banner-image">
 		<div class="image-container">
 			<img class="image-cover" [src]="image || 'assets/images/album_cover.png'" onload="this.style.opacity = 1">
 		</div>
 	</div>
-	<div id="banner-info">
-		<h5 id="banner-info-author" class="truncate">{{ author }}</h5>
-		<h1 id="banner-info-title" class="primary-title truncate">{{ title }}</h1>
+	<div class="banner-info">
+		<h5 class="secondary-title truncate">{{ author }}</h5>
+		<h1 class="primary-title truncate">{{ title }}</h1>
 	</div>
-	<div id="banner-actions">
+	<div class="banner-actions">
 		<i *ngIf="favs.indexOf(title) == -1 && !isLoading" class="far fa-heart primary-text" id="fav-btn"
 			(click)="addFavourite()" data-tooltip="Add to favourites" tooltip-position="left"></i>
 	</div>

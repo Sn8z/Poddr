@@ -1,19 +1,19 @@
 <div class="banner">
-	<div>
-		<h5 class="secondary-title">Top {{ amount }}</h5>
-		<h1 class="primary-title">Today</h1>
+	<div class="banner-info">
+		<h5 class="secondary-title truncate">Top {{ amount }}</h5>
+		<h1 class="primary-title truncate">Today</h1>
 	</div>
-	<div>
-		<select class="shadow" [(ngModel)]="category" (change)="getPodcastsNavigation()">
-			<option *ngFor="let c of categories" [value]="c.id">{{ c.genre }}</option>
-		</select>
-		<select class="shadow" [(ngModel)]="region" (change)="getPodcastsNavigation()">
-			<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
-		</select>
-		<button class="btn" (click)="layout = 'grid'"><i class="fas fa-th"
-				[ngClass]="{'active-btn': layout == 'grid'}"></i></button>
-		<button class="btn" (click)="layout = 'list'"><i class="fas fa-list"
-				[ngClass]="{'active-btn': layout == 'list'}"></i></button>
+	<div class="banner-actions">
+		<ng-select class="custom filter-dropdown" [clearable]="false" [items]="categories" bindLabel="genre" bindValue="id"
+			[(ngModel)]="category" (change)="getPodcastsNavigation()"></ng-select>
+		<ng-select class="custom filter-dropdown" [clearable]="false" [items]="regions" bindLabel="attributes.name"
+			bindValue="id" [(ngModel)]="region" (change)="getPodcastsNavigation()"></ng-select>
+		<div>
+			<button class="btn" (click)="layout = 'grid'"><i class="fas fa-th"
+					[ngClass]="{'active-btn': layout == 'grid'}"></i></button>
+			<button class="btn" (click)="layout = 'list'"><i class="fas fa-list"
+					[ngClass]="{'active-btn': layout == 'list'}"></i></button>
+		</div>
 	</div>
 </div>
 <div class="grid" *ngIf="layout == 'grid'">

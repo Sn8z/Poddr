@@ -1,7 +1,8 @@
 // Angular modules
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 // Pipes
@@ -39,6 +40,7 @@ import { PodcastComponent } from './podcast/podcast.component';
   imports: [
 		BrowserModule,
 		FormsModule,
+		NgSelectModule,
 		HttpClientModule,
 		AppRoutingModule
   ],

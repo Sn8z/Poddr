@@ -12,6 +12,8 @@
 @import "./assets/styles/hover-menu.css";
 @import "./assets/styles/custom-pickr.css";
 @import "./assets/styles/tooltip.css";
+@import "./assets/styles/custom-select.css";
+@import "../node_modules/@ng-select/ng-select/themes/default.theme.css";
 @import '../node_modules/@simonwep/pickr/dist/themes/classic.min.css';
 @import "../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
 @import "../node_modules/typeface-open-sans/index.css";
@@ -63,16 +65,6 @@ body.using-mouse :focus {
   font-family: 'Open Sans', sans-serif;
 }
 
-.banner {
-  display: flex;
-  flex: 0 0 125px;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem;
-  background-color: var(--primary-bg-color);
-}
-
 .feedback-section {
 	display: flex;
 	flex: 1;
@@ -102,4 +94,34 @@ body.using-mouse :focus {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Banner */
+.banner {
+	display: flex;
+	flex: 0 0 125px;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	background-color: var(--primary-bg-color);
+}
+
+.banner-image {
+	flex: 0 0 150px;
+}
+
+.banner-info {
+	flex: 1;
+	overflow: hidden;
+	padding-left: 0.75rem;
+}
+
+.banner-actions {
+	display: flex;
+	flex-direction: row;
+	flex: 0 0 auto;
+	min-width: 100px;
+	justify-content: center;
+	text-align: center;
+	padding-right: 0.75rem;
 }

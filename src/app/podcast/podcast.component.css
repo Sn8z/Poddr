@@ -5,51 +5,8 @@
     flex-direction: column;
 }
 
-#banner {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: row;
-    background-color: var(--primary-bg-color);
-}
-
-#banner-image {
-	flex: 0 0 150px;
-}
-
-#banner-info {
-	flex: 1;
-	overflow: hidden;
-  margin-left: 0.75rem;
-}
-
-#banner-actions {
-	flex: 0 0 100px;
-	justify-content: center;
-	text-align: center;
-}
-
 #fav-btn {
 	cursor: pointer;
-}
-
-#banner-info-author {
-    color: var(--secondary-text-color);
-    margin: 0;
-}
-
-#banner-info-title {
-    padding: 0;
-    margin: 0.25rem 0 0.25rem 0;
-}
-
-#banner-info-details {
-    font-size: 12px;
-    color: var(--primary-text-color);
-    margin: 0.75rem 0 0.75rem 0;
-    padding: 0.75rem;
-    border-left: 3px solid var(--primary-color);
 }
 
 #filter-actions {
@@ -84,6 +41,24 @@
 
 .sort-btn:hover {
 	color: var(--primary-text-color);
+}
+
+#banner-info-author {
+	color: var(--secondary-text-color);
+	margin: 0;
+}
+
+#banner-info-title {
+	padding: 0;
+	margin: 0.25rem 0 0.25rem 0;
+}
+
+#banner-info-details {
+	font-size: 12px;
+	color: var(--primary-text-color);
+	margin: 0.75rem 0 0.75rem 0;
+	padding: 0.75rem;
+	border-left: 3px solid var(--primary-color);
 }
 
 #podcast-content {
@@ -240,6 +215,7 @@
 	color: var(--primary-text-color);
 	width: 25px;
   height: 25px;
+  line-height: 25px;
   font-size: 25px;
 	cursor: pointer;
 	transition: 0.3s;
