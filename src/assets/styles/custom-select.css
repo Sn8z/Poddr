@@ -12,7 +12,6 @@
 .ng-select.custom.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
 	color: var(--primary-text-color);
 	background: var(--third-bg-color);
-	outline: 0;
 }
 
 /* value text */

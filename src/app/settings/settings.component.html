@@ -1,24 +1,21 @@
 <div class="banner">
 	<div class="banner-info">
-		<h5 class="secondary-title">Poddr</h5>
-		<h1 class="primary-title">Settings</h1>
+		<h5 class="secondary-title truncate">Poddr</h5>
+		<h1 class="primary-title truncate">Settings</h1>
 	</div>
 </div>
 <div id="settings-content">
 	<div id="settings-left">
 		<p class="primary-text">Default region</p>
-		<select class="shadow" [(ngModel)]="region" (change)="setRegion()">
-			<option *ngFor="let r of regions" [value]="r.id">{{ r.attributes.name }}</option>
-		</select>
+		<ng-select class="custom" [clearable]="false" [items]="regions" bindLabel="attributes.name" bindValue="id"
+			[(ngModel)]="region" (change)="setRegion()"></ng-select>
 		<p class="primary-text">Default layout</p>
-		<select class="shadow" [(ngModel)]="layout" (change)="setLayout()">
-			<option value="grid">Grid</option>
-			<option value="list">List</option>
-		</select>
+		<ng-select class="custom" [clearable]="false" [items]="layouts" bindLabel="label" bindValue="value"
+			[(ngModel)]="layout" (change)="setLayout()">
+		</ng-select>
 		<p class="primary-text">Theme</p>
-		<select class="shadow" [(ngModel)]="theme" (change)="setTheme()">
-			<option *ngFor="let t of themes" [value]="t">{{ t }}</option>
-		</select>
+		<ng-select class="custom" [clearable]="false" [items]="themes" [(ngModel)]="theme" (change)="setTheme()">
+		</ng-select>
 		<div id="theme-section">
 			<p class="primary-text">Color</p>
 			<div class="clr-pickr"></div>
@@ -27,7 +24,6 @@
 	<div id="settings-right">
 		<details open>
 			<summary>Hotkeys</summary>
-
 			<div class="settings-section">
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>Space</kbd></div>
@@ -38,56 +34,47 @@
 					</div>
 					<div class="hotkey-action primary-text">Toggle sidebar</div>
 				</div>
-
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>down
 							arrow</kbd></div>
 					<div class="hotkey-action primary-text">Volume Down</div>
 				</div>
-
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>up
 							arrow</kbd></div>
 					<div class="hotkey-action primary-text">Volume Up</div>
 				</div>
-
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>left
 							arrow</kbd></div>
 					<div class="hotkey-action primary-text">Rewind</div>
 				</div>
-
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>right
 							arrow</kbd></div>
 					<div class="hotkey-action primary-text">Forward</div>
 				</div>
-
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>1</kbd>
 					</div>
 					<div class="hotkey-action primary-text">Jump to Toplists</div>
 				</div>
-
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>2/f/l</kbd>
 					</div>
 					<div class="hotkey-action primary-text">Jump to Search</div>
 				</div>
-
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>3</kbd>
 					</div>
 					<div class="hotkey-action primary-text">Jump to Favourites</div>
 				</div>
-
 				<div class="hotkeys-item">
 					<div class="hotkey-combination"><kbd>{{ modKey }}</kbd> <span class="primary-text"> + </span> <kbd>4</kbd>
 					</div>
 					<div class="hotkey-action primary-text">Jump to Settings</div>
 				</div>
 			</div>
-
 		</details>
 		<details>
 			<summary>Support</summary>

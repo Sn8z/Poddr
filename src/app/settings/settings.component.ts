@@ -18,6 +18,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	public regions: string[] = [];
 	public region: string = "";
+	public layouts: Object[] = [{ label: "Grid", value: "grid" }, { label: "List", value: "list" }];
 	public layout: string = "";
 	public themes: string[] = [];
 	public theme: string = "";
