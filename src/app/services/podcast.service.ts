@@ -18,9 +18,9 @@ export class PodcastService {
 			timeout(10000),
 			retry(3),
 			catchError((error) => {
-				log.error('Podcast service :: ' + error);
+				log.error('Podcast service :: ' + JSON.stringify(error));
 				this.toast.toastError('Something went wrong when trying to get the toplist from iTunes.');
-				return throwError(null);
+				return throwError(error);
 			})
 		);
 	}
@@ -34,9 +34,9 @@ export class PodcastService {
 			timeout(10000),
 			retry(3),
 			catchError((error) => {
-				log.error('Podcast service :: ' + error);
+				log.error('Podcast service :: ' + JSON.stringify(error));
 				this.toast.toastError('Something went wrong when trying to search the iTunes library.');
-				return throwError(null);
+				return throwError(error);
 			})
 		);
 	}
@@ -47,9 +47,9 @@ export class PodcastService {
 			timeout(10000),
 			retry(3),
 			catchError((error) => {
-				log.error('Podcast service :: ' + error);
+				log.error('Podcast service :: ' + JSON.stringify(error));
 				this.toast.toastError('Something went wrong when trying to get the RSS feed from iTunes.');
-				return throwError(null);
+				return throwError(error);
 			})
 		);
 	}
@@ -60,9 +60,9 @@ export class PodcastService {
 			timeout(10000),
 			retry(3),
 			catchError((error) => {
-				log.error('Podcast service :: ' + error);
+				log.error('Podcast service :: ' + JSON.stringify(error));
 				this.toast.toastError('Something went wrong when trying to fetch the RSS feed.');
-				return throwError(null);
+				return throwError(error);
 			})
 		);
 	}

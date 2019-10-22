@@ -77,9 +77,9 @@ export class OfflineService {
 			timeout(10000),
 			retry(3),
 			catchError((error) => {
-				log.error('Offline service :: ' + error);
+				log.error('Offline service :: ' + JSON.stringify(error));
 				this.toast.toastError('Something went wrong when trying to download an episode.');
-				return throwError(null);
+				return throwError(error);
 			})
 		);
 	}
