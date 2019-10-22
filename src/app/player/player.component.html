@@ -11,8 +11,8 @@
 		<p id="now-playing-time" class="time truncate">{{ time | secondsToHhMmSs }} / {{ duration | secondsToHhMmSs }}</p>
 	</div>
 	<div class="loader-small" *ngIf="isLoading"></div>
-	<i *ngIf="favs.indexOf(podcast) == -1" class="far fa-heart player-btn" (click)="addPodcast()" data-tooltip="Add to favourites" tooltip-position="top"></i>
-	<i class="fas fa-info-circle player-btn" (click)="showDescription()" data-tooltip="Show description" tooltip-position="top"></i>
+	<i *ngIf="favs.indexOf(podcast) == -1 && rss" class="far fa-heart player-btn" (click)="addPodcast()" data-tooltip="Add to favourites" tooltip-position="top"></i>
+	<i *ngIf="description" class="fas fa-info-circle player-btn" (click)="showDescription()" data-tooltip="Show description" tooltip-position="top"></i>
 	<input type="range" id="volume-slider" min="0" max="1" step="0.001" [(ngModel)]="volume" (input)="updateVolume()"
 		tabindex="-1">
 </div>
