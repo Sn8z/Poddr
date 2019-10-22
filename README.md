@@ -13,7 +13,7 @@
 Podcast client built with Electron and Angular.
  
 Poddr uses iTunes RSS feeds and Search API to gather information.
-### Screenshots
+## Screenshots
 
 ![Screenshot](docs/images/screenshot_1.png)
 
@@ -21,7 +21,7 @@ Poddr uses iTunes RSS feeds and Search API to gather information.
 
 ![Screenshot](docs/images/screenshot_5.png)
 
-### Downloads
+## Downloads
 
 [GitHub Releases](https://github.com/Sn8z/Poddr/releases)
 
@@ -53,6 +53,9 @@ Quotes from [AppImage projectpage](https://appimage.org)
 A normal .dmg file, install as you would normally do with any Mac software.
 
 <hr>
+
+## Build
+To build Poddr from source check out [BUILDING](BUILDING.md).
 
 ## Sponsors
 Becoming a Main sponsor will grant you a place here. Read more in the section below if you want to learn how you can contribute to Poddr.
