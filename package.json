@@ -27,7 +27,7 @@
   "devDependencies": {
     "@angular-builders/custom-webpack": "^8.2.0",
     "@angular-devkit/build-angular": "~0.803.10",
-    "@angular/cli": "~8.3.10",
+    "@angular/cli": "~8.3.13",
     "@angular/compiler-cli": "~8.2.11",
     "@angular/language-service": "~8.2.11",
     "@types/jasmine": "~3.4.4",
