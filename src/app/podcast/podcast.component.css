@@ -225,13 +225,9 @@
 	color: var(--primary-color);
 }
 
-@media (max-width: 960px) {
-	#podcast-content {
-    flex-direction: column;
-	}
+@media (max-width: 650px) {
 	#podcast-details {
-    flex: 0 0 auto;
-    overflow-y: auto;
+		display: none;
 	}
 }
 
