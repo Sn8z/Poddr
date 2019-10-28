@@ -980,10 +980,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
-"@sn8z/pop-pop.css@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@sn8z/pop-pop.css/-/pop-pop.css-1.0.0.tgz#4ef9396eccdccfd05f74f5927d7c05b5c78d4a7b"
-  integrity sha512-6jTauIqiZds99pWblvth8fZYmZeuqQnyTmgTUb1bdVcJkjXvnhUe4OtoCqVdTQv8p4uVuy46yIKuL7RiLer9EA==
+"@sn8z/pop-pop.css@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@sn8z/pop-pop.css/-/pop-pop.css-1.0.1.tgz#7d9b84e99566ed2db393d4fb857ffa3dcea4f6e1"
+  integrity sha512-UatCtt+qaGFkr0m2pdIUFT5xFnOEAMQZc8o/IAfgij7l57rcjUH0rpKTRABMSmO/Q0NZOYckufCa/6z9Ms7TCQ==
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
