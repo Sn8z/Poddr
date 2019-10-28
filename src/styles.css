@@ -101,7 +101,7 @@ body.using-mouse :focus {
 /* Banner */
 .banner {
 	display: flex;
-	flex: 0 0 125px;
+	flex: 0 0 150px;
 	justify-content: space-between;
 	align-items: center;
 	flex-direction: row;
