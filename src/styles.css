@@ -10,8 +10,8 @@
 @import "./assets/styles/image.css";
 @import "./assets/styles/hover-menu.css";
 @import "./assets/styles/custom-pickr.css";
-@import "./assets/styles/tooltip.css";
 @import "./assets/styles/custom-select.css";
+@import "../node_modules/@sn8z/pop-pop.css/dist/pop-pop.min.css";
 @import "../node_modules/@ng-select/ng-select/themes/default.theme.css";
 @import '../node_modules/@simonwep/pickr/dist/themes/classic.min.css';
 @import "../node_modules/typeface-open-sans/index.css";
@@ -24,7 +24,11 @@
   --third-bg-color: #222222;
   --primary-text-color: #efefef;
   --secondary-text-color: #ababab;
-  --titlebar-height: 35px;
+	--titlebar-height: 35px;
+	
+	--pop-bg-color: var(--secondary-bg-color);
+	--pop-text-color: var(--primary-text-color);
+	--pop-transition-delay: 1s;
 }
 
 * {

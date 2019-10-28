@@ -10,13 +10,13 @@
 	</div>
 	<div class="banner-actions">
 		<fa-icon *ngIf="favs.indexOf(title) == -1 && !isLoading" [icon]="faHeart" class="primary-text" id="fav-btn"
-			(click)="addFavourite()" data-tooltip="Add to favourites" tooltip-position="left"></fa-icon>
+			(click)="addFavourite()" aria-label="Add to favourites" data-pop data-pop-arrow></fa-icon>
 	</div>
 </div>
 <div id="filter-actions">
 	<input id="filter" type="text" placeholder="Filter" [(ngModel)]="query" (change)="filter()">
 	<fa-icon (click)="toggleOrder()" class="sort-btn" [icon]="(sortBy == 'asc') ? faSortDown : faSortUp"
-		data-tooltip="Toggle sorting" tooltip-position="left"></fa-icon>
+		aria-label="Toggle sorting" data-pop data-pop-arrow></fa-icon>
 </div>
 <div class="feedback-section" *ngIf="isLoading">
 	<div class="loader"></div>
@@ -55,12 +55,12 @@
 		<p id="banner-info-details">{{ description | description }}</p>
 		<div id="podcast-links">
 			<fa-icon *ngIf="!isLoading" [icon]="faGlobeEurope" class="podcast-link-btn"
-				(click)="showDescription($event, 'Website', website)" data-tooltip="Show website URL" tooltip-position="top">
+				(click)="showDescription($event, 'Website', website)" aria-label="Show website URL" data-pop data-pop-arrow>
 			</fa-icon>
 			<fa-icon *ngIf="!isLoading" [icon]="faRss" class="podcast-link-btn" (click)="showDescription($event, 'RSS', rss)"
-				data-tooltip="Show RSS feed" tooltip-position="top"></fa-icon>
+				aria-label="Show RSS feed" data-pop data-pop-arrow></fa-icon>
 			<fa-icon *ngIf="!isLoading" [icon]="faEnvelope" class="podcast-link-btn"
-				(click)="showDescription($event, 'Email', email)" data-tooltip="Show email" tooltip-position="top"></fa-icon>
+				(click)="showDescription($event, 'Email', email)" aria-label="Show email" data-pop data-pop-arrow></fa-icon>
 		</div>
 	</div>
 	<div id="podcast-items">
