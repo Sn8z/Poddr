@@ -4,6 +4,8 @@ import { PodcastService } from '../services/podcast.service';
 import { FavouritesService } from '../services/favourites.service';
 import { ToastService } from '../services/toast.service';
 import { Description } from '../pipes/description.pipe';
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faInfoCircle, faTh, faList } from '@fortawesome/free-solid-svg-icons';
 import * as Store from 'electron-store';
 
 @Component({
@@ -22,6 +24,11 @@ export class ToplistsComponent implements OnInit {
 	public region: String;
 	public favs: string[];
 	public layout: string = "grid";
+
+	public faHeart = faHeart;
+	public faInfoCircle = faInfoCircle;
+	public faTh = faTh;
+	public faList = faList;
 
 	constructor(private route: ActivatedRoute,
 		private router: Router,

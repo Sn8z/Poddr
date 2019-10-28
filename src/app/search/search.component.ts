@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
 import { FavouritesService } from '../services/favourites.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
 	selector: 'app-search',
@@ -14,6 +15,8 @@ export class SearchComponent implements OnInit {
 	public favs: string[] = [];
 	public isLoading: Boolean = false;
 	public isEmpty: Boolean = false;
+
+	public faHeart = faHeart;
 
 	constructor(private route: ActivatedRoute, private router: Router, private podcasts: PodcastService, private favService: FavouritesService) { }
 

@@ -8,12 +8,17 @@
 }
 
 #menu {
-	padding: 0.5rem;
+	display: flex;
+	flex-direction: column;
 	margin: 0;
 }
 
 .menu-item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 	cursor: pointer;
+	padding: 8px;
 }
 
 .menu-item.active {
@@ -33,10 +38,11 @@
 
 .menu-item-icon {
 	color: var(--primary-color);
-	margin: 1rem;
-	font-size: 15px;
-	width: 15px;
-	height: 15px;
+	margin: 8px;
+	font-size: 20px;
+	line-height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 #podcast-cover {
@@ -48,14 +54,15 @@
 
 @media (max-width: 960px) {
 	.menu-item {
-		text-align: center;
+		justify-content: center;
 	}
 	.menu-item-text {
 		display: none;
 	}
 	.menu-item-icon {
-		font-size: 20px;
-		width: 20px;
-		height: 20px;
+		font-size: 25px;
+		line-height: 25px;
+		width: 25px;
+		height: 25px;
 	}
 }

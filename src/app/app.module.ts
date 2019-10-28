@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Pipes
 import { ItunesImage } from './pipes/itunes-image.pipe';
@@ -42,7 +43,8 @@ import { PodcastComponent } from './podcast/podcast.component';
 		FormsModule,
 		NgSelectModule,
 		HttpClientModule,
-		AppRoutingModule
+		AppRoutingModule,
+		FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

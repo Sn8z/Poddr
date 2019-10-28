@@ -7,6 +7,17 @@ import { ToastService } from '../services/toast.service';
 import { Description } from '../pipes/description.pipe';
 import { FavouritesService } from '../services/favourites.service';
 import { OfflineService } from '../services/offline.service';
+import { faHeart, faCircle, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import {
+	faSortAmountDown,
+	faSortAmountUp,
+	faInfoCircle,
+	faCheckCircle,
+	faDownload,
+	faGlobeEurope,
+	faRss,
+	faEllipsisV
+} from '@fortawesome/free-solid-svg-icons';
 import * as parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
 
@@ -19,6 +30,18 @@ import * as log from 'electron-log';
 export class PodcastComponent implements OnInit {
 	private id: string;
 	private regPattern: RegExp = /^[0-9]+$/;
+
+	public faHeart = faHeart;
+	public faCircle = faCircle;
+	public faEnvelope = faEnvelope;
+	public faSortUp = faSortAmountUp;
+	public faSortDown = faSortAmountDown;
+	public faInfoCircle = faInfoCircle;
+	public faCheckCircle = faCheckCircle;
+	public faDownload = faDownload;
+	public faGlobeEurope = faGlobeEurope;
+	public faRss = faRss;
+	public faEllipsisV = faEllipsisV;
 
 	public isLoading: Boolean = true;
 	public rss: String;

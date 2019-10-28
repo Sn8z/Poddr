@@ -196,7 +196,7 @@
 	color: var(--primary-text-color);
 }
 
-#latest-podcast-actions>i {
+#latest-podcast-actions > fa-icon {
 	padding: 0.25rem;
 }
 

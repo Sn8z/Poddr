@@ -11,20 +11,26 @@
 }
 
 .titlebar-btns {
-  -webkit-app-region: no-drag;
-  height: 100%;
+	-webkit-app-region: no-drag;
+	display: flex;
+	flex-direction: row;
+	flex: 0 0 auto;
+	height: 100%;
+	align-items: center;
 }
 
 #min-btn, #max-btn, #close-btn {
   cursor: pointer;
-  color: var(--primary-text-color);
-  padding: 10px;
+	color: var(--primary-text-color);
+	padding-left: 8px;
+	padding-right: 8px;
+	transition: all linear 0.1s;
 }
 
 #min-btn:hover, #max-btn:hover {
-  background-color: var(--third-bg-color);
+  color: var(--secondary-text-color);
 }
 
 #close-btn:hover {
-  background-color: rgb(115, 30, 30);
+  color: rgb(115, 30, 30);
 }

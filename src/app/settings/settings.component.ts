@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
+import { faGithub, faPatreon, faPaypal } from '@fortawesome/free-brands-svg-icons';
+import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import Pickr from '@simonwep/pickr';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
@@ -15,6 +17,11 @@ const themesJSON = require('../../assets/themes/themes.json');
 export class SettingsComponent implements OnInit, OnDestroy {
 	private store: Store<any> = new Store();
 	private pickr: Pickr;
+
+	public faGithub = faGithub;
+	public faPatreon = faPatreon;
+	public faPaypal = faPaypal;
+	public faCoffee = faCoffee;
 
 	public regions: string[] = [];
 	public region: string = "";
