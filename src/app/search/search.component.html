@@ -9,7 +9,8 @@
 	<div class="podcast-list-item shadow" *ngFor="let r of results">
 		<a class="podcast-list-item-image" [routerLink]="['/podcast', r.feedUrl]">
 			<div class="image-container">
-				<img class="image-cover" [src]="r.artworkUrl600 || 'assets/images/album_cover.png'" onload="this.style.opacity = 1">
+				<img class="image-cover" [src]="r.artworkUrl600 || 'assets/images/album_cover.png'"
+					onload="this.style.opacity = 1">
 			</div>
 		</a>
 		<div class="podcast-list-item-info" [routerLink]="['/podcast', r.feedUrl]" tabindex="-1">
@@ -18,9 +19,8 @@
 			<p class="secondary-text truncate">{{ r.primaryGenreName }}</p>
 		</div>
 		<div class="podcast-list-item-actions">
-			<i *ngIf="favs.indexOf(r.collectionName) == -1" class="far fa-heart primary-text"
-				(click)="addToFavourites(r.feedUrl)" data-tooltip="Add to favourites"
-				tooltip-position="top"></i>
+			<fa-icon *ngIf="favs.indexOf(r.collectionName) == -1" [icon]="faHeart" class="primary-text"
+				(click)="addToFavourites(r.feedUrl)" data-tooltip="Add to favourites" tooltip-position="top"></fa-icon>
 		</div>
 	</div>
 </div>

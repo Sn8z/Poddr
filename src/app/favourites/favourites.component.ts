@@ -3,6 +3,7 @@ import { AudioService } from '../services/audio.service';
 import { FavouritesService } from '../services/favourites.service';
 import { OfflineService } from '../services/offline.service';
 import { ToastService } from '../services/toast.service';
+import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
 	selector: 'app-favourites',
@@ -13,6 +14,9 @@ export class FavouritesComponent implements OnInit {
 	public favourites: Array<Object> = [];
 	public offlineEpisodes: Array<Object> = [];
 	public content: string = 'favourites';
+
+	public faPlus = faPlus;
+	public faTimes = faTimes;
 
 	constructor(private audio: AudioService, private favService: FavouritesService, private offlineService: OfflineService, private toast: ToastService) { }
 

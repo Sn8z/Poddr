@@ -9,10 +9,12 @@
 		<ng-select class="custom filter-dropdown" [clearable]="false" [items]="regions" bindLabel="attributes.name"
 			bindValue="id" [(ngModel)]="region" (change)="getPodcastsNavigation()"></ng-select>
 		<div>
-			<button class="btn" (click)="layout = 'grid'"><i class="fas fa-th"
-					[ngClass]="{'active-btn': layout == 'grid'}"></i></button>
-			<button class="btn" (click)="layout = 'list'"><i class="fas fa-list"
-					[ngClass]="{'active-btn': layout == 'list'}"></i></button>
+			<button class="btn" (click)="layout = 'grid'">
+				<fa-icon [icon]="faTh" [ngClass]="{'active-btn': layout == 'grid'}"></fa-icon>
+			</button>
+			<button class="btn" (click)="layout = 'list'">
+				<fa-icon [icon]="faList" [ngClass]="{'active-btn': layout == 'list'}"></fa-icon>
+			</button>
 		</div>
 	</div>
 </div>
@@ -28,12 +30,12 @@
 					tabindex="-1">
 					{{ p['im:name']['label'] }}</div>
 				<div class="podcast-frame-btns">
-					<i *ngIf="favs.indexOf(p['im:name']['label']) == -1" class="far fa-heart podcast-frame-btn"
+					<fa-icon *ngIf="favs.indexOf(p['im:name']['label']) == -1" [icon]="faHeart" class="podcast-frame-btn"
 						(click)="addPodcast(p['id']['attributes']['im:id'])" data-tooltip="Add to favourites"
-						tooltip-position="top"></i>
-					<i class="fas fa-info-circle podcast-frame-btn"
+						tooltip-position="top"></fa-icon>
+					<fa-icon [icon]="faInfoCircle" class="podcast-frame-btn"
 						(click)="showDescription(p['im:name']['label'], p['summary']['label'])" data-tooltip="Show description"
-						tooltip-position="top"></i>
+						tooltip-position="top"></fa-icon>
 				</div>
 			</div>
 		</div>
@@ -52,11 +54,12 @@
 			<h1 class="primary-title truncate">{{ p['im:name']['label'] }}</h1>
 		</div>
 		<div class="list-item-actions">
-			<i *ngIf="favs.indexOf(p['im:name']['label']) == -1" class="far fa-heart  podcast-frame-btn"
-				(click)="addPodcast(p['id']['attributes']['im:id'])" data-tooltip="Add to favourites"
-				tooltip-position="top"></i>
-			<i class="fas fa-info-circle podcast-frame-btn" (click)="showDescription(p['summary']['label'])"
-				data-tooltip="Show description" tooltip-position="top"></i>
+			<fa-icon *ngIf="favs.indexOf(p['im:name']['label']) == -1" [icon]="faHeart" class="podcast-frame-btn"
+				(click)="addPodcast(p['id']['attributes']['im:id'])" data-tooltip="Add to favourites" tooltip-position="top">
+			</fa-icon>
+			<fa-icon [icon]="faInfoCircle" class="podcast-frame-btn"
+				(click)="showDescription(p['im:name']['label'], p['summary']['label'])" data-tooltip="Show description"
+				tooltip-position="top"></fa-icon>
 		</div>
 	</div>
 </div>

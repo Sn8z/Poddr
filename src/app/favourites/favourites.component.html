@@ -4,8 +4,9 @@
 		<h1 class="primary-title truncate">Favourites</h1>
 	</div>
 	<div class="banner-actions">
-		<button class="btn-border" (click)="add()" data-tooltip="Add RSS feed" tooltip-position="left"><i
-				class="fas fa-plus"></i></button>
+		<button class="btn-border" (click)="add()" data-tooltip="Add RSS feed" tooltip-position="left">
+			<fa-icon [icon]="faPlus"></fa-icon>
+		</button>
 	</div>
 </div>
 <div class="favourite-actions">
@@ -30,8 +31,8 @@
 			<div class="podcast-frame-info">
 				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', f.rss]" tabindex="-1">{{ f.title }}</div>
 				<div class="podcast-frame-btns">
-					<i class="fas fa-times podcast-frame-btn podcast-frame-remove-btn" (click)="remove(f.rss)"
-						data-tooltip="Remove favourite" tooltip-position="top"></i>
+					<fa-icon [icon]="faTimes" class="podcast-frame-btn podcast-frame-remove-btn" (click)="remove(f.rss)"
+						data-tooltip="Remove favourite" tooltip-position="top"></fa-icon>
 				</div>
 			</div>
 		</div>
@@ -45,8 +46,8 @@
 		<div class="offline-episode-title">{{ o.episodeTitle }} <span class="secondary-text">{{ " - " + o.author }}</span>
 		</div>
 		<div class="offline-episode-actions">
-			<i class="fas fa-times podcast-frame-remove-btn" (click)="removeOffline(o.guid)" data-tooltip="Remove episode"
-				tooltip-position="left"></i>
+			<fa-icon [icon]="faTimes" class="podcast-frame-remove-btn" (click)="removeOffline(o.guid)"
+				data-tooltip="Remove episode" tooltip-position="left"></fa-icon>
 		</div>
 	</div>
 </div>

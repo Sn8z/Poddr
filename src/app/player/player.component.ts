@@ -3,6 +3,8 @@ import { AudioService } from '../services/audio.service';
 import { ToastService } from '../services/toast.service';
 import { Description } from '../pipes/description.pipe';
 import { FavouritesService } from '../services/favourites.service';
+import { faPlayCircle, faPauseCircle, faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faBackward, faForward, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
 	selector: 'app-player',
@@ -11,18 +13,25 @@ import { FavouritesService } from '../services/favourites.service';
 	providers: [Description]
 })
 export class PlayerComponent implements OnInit {
-	volume: number;
-	percentPlayed: number;
-	isLoading: boolean = false;
-	isPlaying: boolean = false;
-	isMuted: boolean = false;
-	duration: number = 0;
-	time: number = 0;
-	podcast: string;
-	episode: string;
-	description: string;
-	rss: string;
-	favs: string[];
+	public faPlayCircle = faPlayCircle;
+	public faPauseCircle = faPauseCircle;
+	public faHeart = faHeart;
+	public faBackward = faBackward;
+	public faForward = faForward;
+	public faInfoCircle = faInfoCircle;
+
+	public volume: number;
+	public percentPlayed: number;
+	public isLoading: boolean = false;
+	public isPlaying: boolean = false;
+	public isMuted: boolean = false;
+	public duration: number = 0;
+	public time: number = 0;
+	public podcast: string;
+	public episode: string;
+	public description: string;
+	public rss: string;
+	public favs: string[];
 
 	constructor(private audio: AudioService,
 		private toast: ToastService,
