@@ -73,6 +73,7 @@ export class OfflineService {
 	}
 
 	getPodcast = (podcastObject) => {
+		log.info("Offline service :: downloading from => " + podcastObject.enclosure.url);
 		return this.http.get(podcastObject.enclosure.url, { responseType: 'arraybuffer' }).pipe(
 			timeout(10000),
 			retry(3),
