@@ -31,11 +31,11 @@
 					{{ p['im:name']['label'] }}</div>
 				<div class="podcast-frame-btns">
 					<fa-icon *ngIf="favs.indexOf(p['im:name']['label']) == -1" [icon]="faHeart" class="podcast-frame-btn"
-						(click)="addPodcast(p['id']['attributes']['im:id'])" data-tooltip="Add to favourites"
-						tooltip-position="top"></fa-icon>
+						(click)="addPodcast(p['id']['attributes']['im:id'])" aria-label="Add to favourites" data-pop data-pop-arrow>
+					</fa-icon>
 					<fa-icon [icon]="faInfoCircle" class="podcast-frame-btn"
-						(click)="showDescription(p['im:name']['label'], p['summary']['label'])" data-tooltip="Show description"
-						tooltip-position="top"></fa-icon>
+						(click)="showDescription(p['im:name']['label'], p['summary']['label'])" aria-label="Show description"
+						data-pop data-pop-arrow></fa-icon>
 				</div>
 			</div>
 		</div>
@@ -55,11 +55,11 @@
 		</div>
 		<div class="list-item-actions">
 			<fa-icon *ngIf="favs.indexOf(p['im:name']['label']) == -1" [icon]="faHeart" class="podcast-frame-btn"
-				(click)="addPodcast(p['id']['attributes']['im:id'])" data-tooltip="Add to favourites" tooltip-position="top">
+				(click)="addPodcast(p['id']['attributes']['im:id'])" aria-label="Add to favourites" data-pop data-pop-arrow>
 			</fa-icon>
 			<fa-icon [icon]="faInfoCircle" class="podcast-frame-btn"
-				(click)="showDescription(p['im:name']['label'], p['summary']['label'])" data-tooltip="Show description"
-				tooltip-position="top"></fa-icon>
+				(click)="showDescription(p['im:name']['label'], p['summary']['label'])" aria-label="Show description"
+				data-pop data-pop-arrow></fa-icon>
 		</div>
 	</div>
 </div>

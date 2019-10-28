@@ -20,7 +20,7 @@
 		</div>
 		<div class="podcast-list-item-actions">
 			<fa-icon *ngIf="favs.indexOf(r.collectionName) == -1" [icon]="faHeart" class="primary-text"
-				(click)="addToFavourites(r.feedUrl)" data-tooltip="Add to favourites" tooltip-position="top"></fa-icon>
+				(click)="addToFavourites(r.feedUrl)" aria-label="Add to favourites" data-pop data-pop-arrow></fa-icon>
 		</div>
 	</div>
 </div>
