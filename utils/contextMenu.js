@@ -1,4 +1,4 @@
-const electron = require("electron");
+const electron = require('electron');
 
 module.exports = function () {
 	const application = {
