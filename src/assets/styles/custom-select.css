@@ -6,12 +6,24 @@
 	border-radius: 5px;
 	border: 0;
 	min-width: 160px;
+	transition: all linear 0.1s;
 }
 
 .ng-select.custom .ng-select-container:hover,
 .ng-select.custom.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
 	color: var(--primary-text-color);
 	background: var(--third-bg-color);
+	box-shadow: 0px 0px 5px var(--primary-bg-color);
+}
+
+.ng-select.custom.ng-select-opened > .ng-select-container, .ng-select.custom.ng-select-opened:hover > .ng-select-container {
+	background: var(--third-bg-color);
+	box-shadow: 0px 0px 5px var(--primary-bg-color);
+}
+
+/* focus */
+.ng-select.custom.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+	border: none;
 }
 
 /* value text */
@@ -24,10 +36,6 @@
 	color: var(--primary-text-color);
 }
 
-.ng-select.custom.ng-select-opened > .ng-select-container {
-	background: var(--third-bg-color);
-}
-
 .ng-select.custom .ng-select-container .ng-value-container .ng-input > input {
 	cursor: pointer;
 	color: var(--secondary-text-color);
@@ -37,6 +45,7 @@
 .ng-select.custom .ng-dropdown-panel {
 	background: var(--secondary-bg-color);
 	border: 0;
+	box-shadow: 0px 1px 5px var(--primary-bg-color);
 }
 
 /* dropdown panel options */
@@ -44,6 +53,7 @@
 	background: var(--second-bg-color);
 	color: var(--secondary-text-color);
 	text-align: left;
+	transition: all linear 0.1s;
 }
 
 .ng-select.custom .ng-dropdown-panel .ng-dropdown-panel-items .ng-option:hover,
@@ -73,10 +83,4 @@
 
 .ng-select.custom.ng-select-opened > .ng-select-container:hover .ng-arrow {
 	border-color: transparent transparent var(--primary-text-color);
-}
-
-/* focus */
-.ng-select.custom.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
-	border: none;
-  box-shadow: none;
 }
