@@ -11,7 +11,10 @@ module.exports = mainWindow => {
 		name: "poddr",
 		identity: "Poddr",
 		canRaise: true,
-		supportedInterfaces: ["player"]
+		supportedInterfaces: ["player"],
+		supportedUriSchemes: ["file", "http", "https"],
+		SupportedMimeTypes: ["audio/mpeg", "audio/ogg", "audio/x-m4a", "audio/wav", "audio/webm", "audio/flac"],
+		HasTrackList: false
 	});
 
 	mprisPlayer.rate = 1 + 1e-15;
