@@ -1,7 +1,1 @@
-# This file is currently used by autoprefixer to adjust CSS to support the below specified browsers
-# For additional information regarding the format and rule options, please see:
-# https://github.com/browserslist/browserslist#queries
-#
-# For IE 9-11 support, please remove 'not' from the last line of the file and adjust as needed
-
-Chrome >= 67
+Electron 5.0.11
