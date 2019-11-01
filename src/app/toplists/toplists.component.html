@@ -9,10 +9,10 @@
 		<ng-select class="custom filter-dropdown" [clearable]="false" [items]="regions" bindLabel="attributes.name"
 			bindValue="id" [(ngModel)]="region" (change)="getPodcastsNavigation()"></ng-select>
 		<div>
-			<button class="btn" (click)="layout = 'grid'">
+			<button class="btn" (click)="layout = 'grid'" aria-label="Show gridview" data-pop="left" data-pop-arrow>
 				<fa-icon [icon]="faTh" [ngClass]="{'active-btn': layout == 'grid'}"></fa-icon>
 			</button>
-			<button class="btn" (click)="layout = 'list'">
+			<button class="btn" (click)="layout = 'list'" aria-label="Show listview" data-pop="left" data-pop-arrow>
 				<fa-icon [icon]="faList" [ngClass]="{'active-btn': layout == 'list'}"></fa-icon>
 			</button>
 		</div>

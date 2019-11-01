@@ -10,13 +10,13 @@
 	</div>
 	<div class="banner-actions">
 		<fa-icon *ngIf="favs.indexOf(title) == -1 && !isLoading" [icon]="faHeart" class="primary-text" id="fav-btn"
-			(click)="addFavourite()" aria-label="Add to favourites" data-pop data-pop-arrow></fa-icon>
+			(click)="addFavourite()" aria-label="Add to favourites" data-pop="left" data-pop-arrow></fa-icon>
 	</div>
 </div>
 <div id="filter-actions">
 	<input id="filter" type="text" placeholder="Filter" [(ngModel)]="query" (change)="filter()">
 	<fa-icon (click)="toggleOrder()" class="sort-btn" [icon]="(sortBy == 'asc') ? faSortDown : faSortUp"
-		aria-label="Toggle sorting" data-pop data-pop-arrow></fa-icon>
+		aria-label="Toggle sorting" data-pop="left" data-pop-arrow></fa-icon>
 </div>
 <div class="feedback-section" *ngIf="isLoading">
 	<div class="loader"></div>
@@ -36,13 +36,13 @@
 					<h3 class="primary-title truncate">{{ latestEpisode.title }}</h3>
 					<div id="latest-podcast-actions">
 						<fa-icon [icon]="faInfoCircle"
-							(click)="showDescription($event, latestEpisode.title, latestEpisode.description)"></fa-icon>
+							(click)="showDescription($event, latestEpisode.title, latestEpisode.description)" aria-label="Show description" data-pop data-pop-arrow></fa-icon>
 						<fa-icon [icon]="playedEpisodes.indexOf(latestEpisode.guid) == -1 ? faCircle : faCheckCircle"
-							[ngClass]="playedEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'">
+							[ngClass]="playedEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'" aria-label="Played status" data-pop data-pop-arrow>
 						</fa-icon>
 						<fa-icon [icon]="faDownload"
 							[ngClass]="offlineEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'"
-							(click)="download($event, latestEpisode)"></fa-icon>
+							(click)="download($event, latestEpisode)" aria-label="Download" data-pop data-pop-arrow></fa-icon>
 					</div>
 				</div>
 				<div id="latest-podcast-details">

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
 import { FavouritesService } from '../services/favourites.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
 	selector: 'app-search',
