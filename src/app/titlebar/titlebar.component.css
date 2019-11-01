@@ -3,7 +3,7 @@
   -webkit-app-region: drag;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 100%;
@@ -17,6 +17,18 @@
 	flex: 0 0 auto;
 	height: 100%;
 	align-items: center;
+}
+
+#back-btn, #forward-btn {
+  cursor: pointer;
+	color: var(--secondary-text-color);
+	padding-left: 13px;
+	padding-right: 13px;
+	transition: all linear 0.1s;
+}
+
+#back-btn:hover, #forward-btn:hover {
+	color: var(--primary-text-color);
 }
 
 #min-btn, #max-btn, #close-btn {

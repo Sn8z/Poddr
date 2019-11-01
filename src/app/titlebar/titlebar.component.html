@@ -1,4 +1,8 @@
 <div class="titlebar-btns">
+	<fa-icon id="back-btn" [icon]="faChevronLeft" (click)="goBack()"></fa-icon>
+	<fa-icon id="forward-btn" [icon]="faChevronRight" (click)="goForward()"></fa-icon>
+</div>
+<div class="titlebar-btns">
 	<fa-icon id="min-btn" [icon]="faWindowMinimize" (click)="minimize()"></fa-icon>
 	<fa-icon id="max-btn" [icon]="faSquare" (click)="maximize()"></fa-icon>
 	<fa-icon id="close-btn" [icon]="faTimes" (click)="close()"></fa-icon>
