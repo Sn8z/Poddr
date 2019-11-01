@@ -15,7 +15,7 @@
 @import "../node_modules/@ng-select/ng-select/themes/default.theme.css";
 @import '../node_modules/@simonwep/pickr/dist/themes/classic.min.css';
 @import "../node_modules/typeface-open-sans/index.css";
-@import "../node_modules/typeface-rubik/index.css";
+@import "../node_modules/typeface-nunito-sans/index.css";
 
 :root {
   --primary-color: #ff6600;
@@ -32,7 +32,7 @@
 }
 
 * {
-  font-family: "Rubik", sans-serif;
+	font-family: "Nunito Sans", sans-serif;
   box-sizing: border-box;
 }
 
