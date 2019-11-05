@@ -910,10 +910,10 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.2.25"
 
-"@ng-select/ng-select@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-3.3.0.tgz#b350c1e0b0218cfe3178573beee2093d8a033e3c"
-  integrity sha512-3ATrHSJ23izUXikJS0xmqAHR1bl9iLNdOiTxCekzi/DEq+qOdF6na1bE6BN/8zznKAos01DFCKi7/DHmsAwbyA==
+"@ng-select/ng-select@^3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-3.5.0.tgz#d892cff2a0b66bbf65d6bd5a865ac2dadca05d56"
+  integrity sha512-VT+c+SQ6HZcEqQcCqdmQsnxQu2szacE0GqQGSRcLFrtaBaMHU+noW5+C/CM9aJSrNenmOCBDJEcI6YhXtXwl7A==
   dependencies:
     tslib "^1.9.0"
 

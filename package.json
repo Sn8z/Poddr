@@ -62,7 +62,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.11.2",
     "@fortawesome/free-regular-svg-icons": "^5.11.2",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
-    "@ng-select/ng-select": "^3.3.0",
+    "@ng-select/ng-select": "^3.5.0",
     "@simonwep/pickr": "^1.4.6",
     "@sn8z/pop-pop.css": "^1.0.1",
     "dbus-next": "^0.7.1",
