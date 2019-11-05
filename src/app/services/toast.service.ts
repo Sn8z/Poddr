@@ -125,6 +125,22 @@ export class ToastService {
 		});
 	}
 
+	// Confirmation
+	async confirmModal() {
+		const response = await Swal.fire({
+			title: 'Are you sure?',
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Yes, remove it!',
+			customClass: {
+				content: 'modal-content-class',
+				popup: 'modal-popup-class',
+				title: 'modal-title-class'
+			}
+		});
+		if (response) return response;
+	}
+
 	//Inputs
 	async inputRSSModal() {
 		log.info("Toast service :: Showing input modal.");

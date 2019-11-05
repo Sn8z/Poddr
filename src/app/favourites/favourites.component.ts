@@ -30,7 +30,9 @@ export class FavouritesComponent implements OnInit {
 	}
 
 	remove = (rss) => {
-		this.favService.removeFavourite(rss);
+		this.toast.confirmModal().then((res) => {
+			if (res.value) this.favService.removeFavourite(rss);
+		});
 	}
 
 	add = () => {
@@ -45,7 +47,8 @@ export class FavouritesComponent implements OnInit {
 	}
 
 	removeOffline = (guid) => {
-		this.offlineService.remove(guid);
+		this.toast.confirmModal().then((res) => {
+			if (res.value) this.offlineService.remove(guid);
+		});
 	}
-
 }
