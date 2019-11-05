@@ -10,6 +10,7 @@ export class ToastService {
 
 	constructor() { }
 
+	// Toasts
 	toast(msg: string = "", timer: number = 5000): void {
 		log.info("Toast service :: Showing toast => " + msg);
 		Swal.fire({
@@ -51,7 +52,7 @@ export class ToastService {
 		log.info("Toast service :: Showing success toast => " + msg);
 		Swal.fire({
 			toast: true,
-			type: 'success',
+			icon: 'success',
 			text: msg,
 			position: 'top-end',
 			showConfirmButton: false,
@@ -68,7 +69,7 @@ export class ToastService {
 		log.info("Toast service :: Showing error toast => " + msg);
 		Swal.fire({
 			toast: true,
-			type: 'error',
+			icon: 'error',
 			text: msg,
 			position: 'top-end',
 			showConfirmButton: false,
@@ -82,7 +83,6 @@ export class ToastService {
 	}
 
 	//Modals
-
 	modal(title: string = "", msg: string = ""): void {
 		log.info("Toast service :: Showing modal.");
 		Swal.fire({
@@ -100,7 +100,7 @@ export class ToastService {
 	successModal(msg: string = ""): void {
 		log.info("Toast service :: Showing success modal.");
 		Swal.fire({
-			type: 'success',
+			icon: 'success',
 			text: msg,
 			showConfirmButton: false,
 			customClass: {
@@ -114,7 +114,7 @@ export class ToastService {
 	errorModal(error: string = "Something went wrong."): void {
 		log.info("Toast service :: Showing error modal.");
 		Swal.fire({
-			type: 'error',
+			icon: 'error',
 			text: error,
 			showConfirmButton: false,
 			customClass: {
@@ -129,7 +129,7 @@ export class ToastService {
 	async confirmModal() {
 		const response = await Swal.fire({
 			title: 'Are you sure?',
-			type: 'warning',
+			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonText: 'Yes, remove it!',
 			customClass: {
