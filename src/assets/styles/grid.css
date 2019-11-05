@@ -1,8 +1,8 @@
 .grid {
     display: flex;
     flex: 1;
-		overflow-x: hidden;
-		overflow-y: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -10,9 +10,9 @@
 
 .grid-item {
     flex-basis: 25%;
-		max-width: 25%;
-		height: auto;
-		overflow: visible;
+    max-width: 25%;
+    height: auto;
+    overflow: visible;
     box-sizing: border-box;
     padding: 1.25rem;
 }
@@ -65,39 +65,60 @@
     padding: 0.25rem;
     font-size: 12px;
     color: var(--secondary-text-color);
-		transition: all 0.1s linear;
+    transition: all 0.1s linear;
 }
 
 .podcast-frame-btn:hover {
-	color: var(--primary-text-color);
+    color: var(--primary-text-color);
 }
 
 /* Media queries for responsive grid */
 
-@media (min-width: 1601px) {
+@media (min-width: 3401px) {
     .grid-item {
-				flex-basis: 20%;
-				max-width: 20%;
+        flex-basis: 12.5%;
+        max-width: 12.5%;
+    }
+}
+
+@media (min-width: 2801px) and (max-width: 3400px) {
+    .grid-item {
+        flex-basis: 14.28571%;
+        max-width: 14.28571%;
+    }
+}
+
+@media (min-width: 2201px) and (max-width: 2800px) {
+    .grid-item {
+        flex-basis: 16.66667%;
+        max-width: 16.66667%;
+    }
+}
+
+@media (min-width: 1601px) and (max-width: 2200px) {
+    .grid-item {
+        flex-basis: 20%;
+        max-width: 20%;
     }
 }
 
 @media (min-width: 1025px) and (max-width: 1600px) {
     .grid-item {
-				flex-basis: 25%;
-				max-width: 25%;
+        flex-basis: 25%;
+        max-width: 25%;
     }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
     .grid-item {
-				flex-basis: 33%;
-				max-width: 33%;
+        flex-basis: 33.33333%;
+        max-width: 33.33333%;
     }
 }
 
 @media (max-width: 767px) {
     .grid-item {
-				flex-basis: 50%;
-				max-width: 50%;
+        flex-basis: 50%;
+        max-width: 50%;
     }
 }
