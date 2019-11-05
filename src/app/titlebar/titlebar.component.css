@@ -32,17 +32,22 @@
 }
 
 #min-btn, #max-btn, #close-btn {
+	display: flex;
   cursor: pointer;
-	color: var(--primary-text-color);
-	padding-left: 8px;
-	padding-right: 8px;
+	color: var(--secondary-text-color);
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 100%;
+	align-items: center;
 	transition: all linear 0.1s;
 }
 
 #min-btn:hover, #max-btn:hover {
-  color: var(--secondary-text-color);
+	color: var(--primary-text-color);
+	background: var(--third-bg-color);
 }
 
 #close-btn:hover {
-  color: rgb(115, 30, 30);
+	color: #efefef;
+  background: #9a2222;
 }
