@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="docs/images/icon.png" alt="Poddr" width="60" height="60">
+    <img src="docs/images/icon.png" alt="Poddr" width="75" height="75">
     <h1>Poddr</h1>
     <img src="https://img.shields.io/github/release/sn8z/poddr.svg?style=flat-square">
     <img src="https://img.shields.io/github/downloads/sn8z/poddr/total.svg?style=flat-square">
@@ -7,19 +7,18 @@
     <img src="https://img.shields.io/badge/platforms-Windows%20%2F%20Linux%20%2F%20Mac-brightgreen.svg?style=flat-square">
 </div>
 
-
-[Website](https://sn8z.github.io/Poddr/)
+[Poddr website](https://sn8z.github.io/Poddr/)
  
 Podcast client built with Electron and Angular.
  
 Poddr uses iTunes RSS feeds and Search API to gather information.
 ## Screenshots
 
-![Screenshot](docs/images/screenshot_1.png)
+![Screenshot](docs/images/pod_1.png)
 
-![Screenshot](docs/images/screenshot_2.png)
+![Screenshot](docs/images/pod_2.png)
 
-![Screenshot](docs/images/screenshot_5.png)
+![Screenshot](docs/images/pod_3.png)
 
 ## Downloads
 
