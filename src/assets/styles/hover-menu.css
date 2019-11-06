@@ -21,7 +21,8 @@
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
 	right: 0;
-  display: none;
+	display: none;
+	text-align: left;
   position: absolute;
   background-color: var(--secondary-bg-color);
 	min-width: 160px;

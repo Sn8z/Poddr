@@ -16,7 +16,8 @@ import {
 	faDownload,
 	faGlobeEurope,
 	faRss,
-	faEllipsisV
+	faEllipsisV,
+	faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import * as parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
@@ -42,6 +43,7 @@ export class PodcastComponent implements OnInit {
 	public faGlobeEurope = faGlobeEurope;
 	public faRss = faRss;
 	public faEllipsisV = faEllipsisV;
+	public faTimes = faTimes;
 
 	public isLoading: Boolean = true;
 	public rss: String;

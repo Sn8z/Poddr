@@ -36,9 +36,11 @@
 					<h3 class="primary-title truncate">{{ latestEpisode.title }}</h3>
 					<div id="latest-podcast-actions">
 						<fa-icon [icon]="faInfoCircle"
-							(click)="showDescription($event, latestEpisode.title, latestEpisode.description)" aria-label="Show description" data-pop data-pop-arrow></fa-icon>
+							(click)="showDescription($event, latestEpisode.title, latestEpisode.description)"
+							aria-label="Show description" data-pop data-pop-arrow></fa-icon>
 						<fa-icon [icon]="playedEpisodes.indexOf(latestEpisode.guid) == -1 ? faCircle : faCheckCircle"
-							[ngClass]="playedEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'" aria-label="Played status" data-pop data-pop-arrow>
+							[ngClass]="playedEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'"
+							aria-label="Played status" data-pop data-pop-arrow>
 						</fa-icon>
 						<fa-icon [icon]="faDownload"
 							[ngClass]="offlineEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'"
@@ -86,19 +88,19 @@
 					</button>
 					<div class="dropdown-content">
 						<a class="dropdown-item" (click)="showDescription($event, e.title, e.description)">
-							Show description
+							<fa-icon [icon]="faInfoCircle"></fa-icon> Show description
 						</a>
 						<a *ngIf="playedEpisodes.indexOf(e.guid) === -1" class="dropdown-item" (click)="markAsPlayed(e.guid)">
-							Mark as played
+							<fa-icon [icon]="faCheckCircle"></fa-icon> Mark as played
 						</a>
 						<a *ngIf="playedEpisodes.indexOf(e.guid) != -1" class="dropdown-item" (click)="unmarkAsPlayed(e.guid)">
-							Mark as unplayed
+							<fa-icon [icon]="faCircle"></fa-icon> Mark as unplayed
 						</a>
 						<a *ngIf="offlineEpisodes.indexOf(e.guid) === -1" class="dropdown-item" (click)="download($event, e)">
-							Download
+							<fa-icon [icon]="faDownload"></fa-icon> Download
 						</a>
 						<a *ngIf="offlineEpisodes.indexOf(e.guid) != -1" class="dropdown-item" (click)="removeDownload($event, e)">
-							Remove download
+							<fa-icon [icon]="faTimes"></fa-icon> Remove download
 						</a>
 					</div>
 				</div>
