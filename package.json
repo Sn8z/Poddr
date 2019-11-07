@@ -66,7 +66,7 @@
     "@simonwep/pickr": "^1.4.6",
     "@sn8z/pop-pop.css": "^1.0.2",
     "dbus-next": "^0.7.1",
-    "electron-log": "^3.0.8",
+    "electron-log": "^3.0.9",
     "electron-store": "^5.0.0",
     "electron-window-state": "^5.0.3",
     "mousetrap": "^1.6.3",
