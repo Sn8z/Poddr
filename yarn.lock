@@ -8285,10 +8285,10 @@ supports-color@^6.1.0:
   dependencies:
     has-flag "^3.0.0"
 
-sweetalert2@^9.0.2:
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-9.0.2.tgz#b0c34434304dd2ea2252750755587a0c832f9d59"
-  integrity sha512-FobmQMXXp8/zu/ET4mXIMhfK3+4m6r9xFlJ0L0Trtrgbpx0IX55E1CwUIHWwNFdINuFpo/EPZirp/Kx4m3L+kw==
+sweetalert2@^9.1.5:
+  version "9.1.5"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-9.1.5.tgz#8dd6f63916348f7242c1985c5f51a724ca44c9d5"
+  integrity sha512-lxOu3+sZeYbUiz/O1B2CJnraD2cF8DgdRh/NLW7ZZAt1Ultzny3qRx1fMKWrWvEjTe0wkELMrVlk/nBw23Vn3Q==
 
 symbol-observable@1.2.0:
   version "1.2.0"
