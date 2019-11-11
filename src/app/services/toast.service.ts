@@ -33,8 +33,10 @@ export class ToastService {
 			toast: true,
 			text: msg,
 			position: 'top-end',
+			icon: 'warning',
 			showConfirmButton: false,
 			timer: timer,
+			timerProgressBar: true,
 			animation: true,
 			customClass: {
 				content: 'toast-content-class',
