@@ -1,0 +1,17 @@
+details {
+	background: var(--secondary-bg-color);
+}
+
+details summary {
+	font-size: 17px;
+	background: var(--primary-bg-color);
+	color: var(--primary-text-color);
+	padding: 20px;
+	outline: none;
+	cursor: pointer;
+	border-bottom: 1px solid var(--secondary-bg-color);
+}
+
+details[open] summary {
+	background: var(--primary-color);
+}

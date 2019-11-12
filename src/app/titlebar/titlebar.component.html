@@ -1,0 +1,15 @@
+<div class="titlebar-btns">
+	<fa-icon id="back-btn" [icon]="faChevronLeft" (click)="goBack()"></fa-icon>
+	<fa-icon id="forward-btn" [icon]="faChevronRight" (click)="goForward()"></fa-icon>
+</div>
+<div class="titlebar-btns">
+	<div id="min-btn" (click)="minimize()">
+		<fa-icon [icon]="faWindowMinimize"></fa-icon>
+	</div>
+	<div id="max-btn" (click)="maximize()">
+		<fa-icon [icon]="faSquare"></fa-icon>
+	</div>
+	<div id="close-btn" (click)="close()">
+		<fa-icon [icon]="faTimes"></fa-icon>
+	</div>
+</div>

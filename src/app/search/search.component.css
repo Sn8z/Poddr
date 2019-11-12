@@ -1,0 +1,77 @@
+:host {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#search-banner {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+#search {
+    width: 100%;
+    height: 75px;
+    font-size: 45px;
+    color: var(--primary-text-color);
+    background-color: var(--primary-bg-color);
+    border: 0;
+    padding-left: 1rem;
+}
+
+#search::placeholder {
+	color: var(--secondary-text-color);
+	opacity: 0.5;
+}
+
+
+#search:focus {
+    border-bottom: 1px solid var(--primary-color);
+    outline: 0;
+}
+
+.podcast-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.podcast-list-item {
+    flex: 0 0 auto;
+    background: var(--secondary-bg-color);
+    margin: 0.75rem 1.5rem 0.75rem 1.5rem;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+		transition: all 0.1s linear;
+		text-decoration: none;
+}
+
+.podcast-list-item:hover {
+    background: var(--primary-bg-color);
+}
+
+.podcast-list-item-image {
+	flex: 0 0 150px;
+}
+
+.podcast-list-item-info {
+    flex: 1;
+		padding: 0.75rem;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+}
+
+.podcast-list-item-actions {
+	display: flex;
+	flex: 0 0 auto;
+	flex-direction: row;
+	align-items: center;
+	padding: 2rem;
+}

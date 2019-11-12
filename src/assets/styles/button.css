@@ -1,0 +1,25 @@
+.btn-border {
+	color: var(--primary-text-color);
+	border: 2px solid var(--primary-color);
+	background-color: transparent;
+	transition-duration: 0.4s;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.btn-border:hover {
+	background-color: var(--primary-color);
+}
+
+.btn {
+	color: var(--primary-text-color);
+	border: none;
+	background-color: transparent;
+	transition-duration: 0.4s;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.btn:hover {
+	color: var(--primary-color);
+}

@@ -1,0 +1,86 @@
+/* select container */
+.ng-select.custom .ng-select-container {
+	color: var(--secondary-text-color);
+	background: var(--secondary-bg-color);
+	cursor: pointer;
+	border-radius: 5px;
+	border: 0;
+	min-width: 160px;
+	transition: all linear 0.1s;
+}
+
+.ng-select.custom .ng-select-container:hover,
+.ng-select.custom.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+	color: var(--primary-text-color);
+	background: var(--third-bg-color);
+	box-shadow: 0px 0px 5px var(--primary-bg-color);
+}
+
+.ng-select.custom.ng-select-opened > .ng-select-container, .ng-select.custom.ng-select-opened:hover > .ng-select-container {
+	background: var(--third-bg-color);
+	box-shadow: 0px 0px 5px var(--primary-bg-color);
+}
+
+/* focus */
+.ng-select.custom.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+	border: none;
+}
+
+/* value text */
+.ng-select.custom .ng-select-container .ng-value-container {
+	color: var(--primary-text-color);
+}
+
+/* value text label */
+.ng-select.custom .ng-select-container .ng-value-container .ng-value {
+	color: var(--primary-text-color);
+}
+
+.ng-select.custom .ng-select-container .ng-value-container .ng-input > input {
+	cursor: pointer;
+	color: var(--secondary-text-color);
+}
+
+/* dropdown panel */
+.ng-select.custom .ng-dropdown-panel {
+	background: var(--secondary-bg-color);
+	border: 0;
+	box-shadow: 0px 1px 5px var(--primary-bg-color);
+}
+
+/* dropdown panel options */
+.ng-select.custom .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+	background: var(--second-bg-color);
+	color: var(--secondary-text-color);
+	text-align: left;
+	transition: all linear 0.1s;
+}
+
+.ng-select.custom .ng-dropdown-panel .ng-dropdown-panel-items .ng-option:hover,
+.ng-select.custom .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+	background: var(--third-bg-color);
+	color: var(--primary-text-color);
+}
+
+.ng-select.custom .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected,
+.ng-select.custom .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked {
+	background: var(--primary-color);
+	color: var(--primary-text-color);
+}
+
+/* arrow */
+.ng-select.custom .ng-arrow-wrapper .ng-arrow {
+	border-color: var(--secondary-text-color) transparent transparent;
+}
+
+.ng-select.custom:hover .ng-arrow-wrapper .ng-arrow {
+	border-color: var(--primary-text-color) transparent transparent;
+}
+
+.ng-select.custom.ng-select-opened > .ng-select-container .ng-arrow {
+	border-color: transparent transparent var(--secondary-text-color);
+}
+
+.ng-select.custom.ng-select-opened > .ng-select-container:hover .ng-arrow {
+	border-color: transparent transparent var(--primary-text-color);
+}

@@ -1,0 +1,46 @@
+{
+	"themes": {
+		"Dark": {
+			"primaryBackground": "#111111",
+			"secondaryBackground": "#151515",
+			"thirdBackground": "#222222",
+			"primaryTextColor": "#efefef",
+			"secondaryTextColor": "#ababab"
+		},
+		"Light": {
+			"primaryBackground": "#d1d1d1",
+			"secondaryBackground": "#d8d8d8",
+			"thirdBackground": "#efefef",
+			"primaryTextColor": "#252525",
+			"secondaryTextColor": "#353535"
+		},
+		"Carbon": {
+			"primaryBackground": "#312e30",
+			"secondaryBackground": "#3b3b3b",
+			"thirdBackground": "#565656",
+			"primaryTextColor": "#efefef",
+			"secondaryTextColor": "#959595"
+		},
+		"Blueness": {
+			"primaryBackground": "#17223b",
+			"secondaryBackground": "#263859",
+			"thirdBackground": "#6b778d",
+			"primaryTextColor": "#ffffff",
+			"secondaryTextColor": "#bebebe"
+		},
+		"Marine": {
+			"primaryBackground": "#003545",
+			"secondaryBackground": "#00454a",
+			"thirdBackground": "#3c6562",
+			"primaryTextColor": "#ffffff",
+			"secondaryTextColor": "#bebebe"
+		},
+		"Pinkish": {
+			"primaryBackground": "#fc7fb2",
+			"secondaryBackground": "#ffd5d5",
+			"thirdBackground": "#fff1e9",
+			"primaryTextColor": "#252525",
+			"secondaryTextColor": "#353535"
+		}
+	}
+}

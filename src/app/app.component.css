@@ -1,0 +1,49 @@
+:host {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+#titlebar {
+  flex: 0 0 35px;
+  background: var(--primary-bg-color);
+}
+
+#content {
+  flex: 1 1 auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+
+#sidenav {
+  flex: 0 0 200px;
+  background-color: var(--secondary-bg-color);
+}
+
+#content-container {
+  flex: 1 1 auto;
+  display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+#content-router {
+  flex: 1 1 auto;
+  overflow: hidden;
+  background-color: var(--third-bg-color);
+}
+
+#player {
+  flex: 0 0 100px;
+}
+
+/* media queries for left navigation menu */
+
+@media (max-width: 960px) {
+  #sidenav {
+    flex: 0 0 100px;
+  }
+}
