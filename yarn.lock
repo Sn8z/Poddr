@@ -7,12 +7,13 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.0.3.tgz#bc5b5532ecafd923a61f2fb097e3b108c0106a3f"
   integrity sha512-GLyWIFBbGvpKPGo55JyRZAo4lVbnBiD52cKlw/0Vt+wnmKvWJkpZvsjVoaIolyBXDeAQKSicRtqFNPem9w0WYA==
 
-"@angular-builders/custom-webpack@^8.3.0":
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/@angular-builders/custom-webpack/-/custom-webpack-8.3.0.tgz#84b4335bf8e91e94ac1751b7d263d94b15e2a174"
-  integrity sha512-gkXuZ7h1cm7U4q/PxgkMAn6fjQpPihydZR1nmEQmbU1oIPWVRwfrrNlauzCRjMj4GRpVZgs7mPE+GAVdPZYatg==
+"@angular-builders/custom-webpack@^8.4.0":
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/@angular-builders/custom-webpack/-/custom-webpack-8.4.0.tgz#7fb00b3caa12b0464849fba7da02015d8197025f"
+  integrity sha512-I/U0zOwVAzBO1RRcF4zmX7enOruvfnHjXvxv5YQ4SkQaNtMo34xuX/8g+HQ4mMvY1/aH3sfBh8k8qzXqp4xD+A==
   dependencies:
     lodash "^4.17.10"
+    ts-node "^8.5.2"
     webpack-merge "^4.2.1"
 
 "@angular-devkit/architect@0.803.19":
@@ -8498,7 +8499,7 @@ truncate-utf8-bytes@^1.0.0:
   dependencies:
     utf8-byte-length "^1.0.1"
 
-ts-node@~8.5.2:
+ts-node@^8.5.2, ts-node@~8.5.2:
   version "8.5.2"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.5.2.tgz#434f6c893bafe501a30b32ac94ee36809ba2adce"
   integrity sha512-W1DK/a6BGoV/D4x/SXXm6TSQx6q3blECUzd5TN+j56YEMX3yPVMpHsICLedUw3DvGF3aTQ8hfdR9AKMaHjIi+A==
