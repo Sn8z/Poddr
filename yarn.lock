@@ -8287,10 +8287,10 @@ supports-color@^6.1.0:
   dependencies:
     has-flag "^3.0.0"
 
-sweetalert2@^9.3.11:
-  version "9.3.11"
-  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-9.3.11.tgz#d42e6325ba5ab211545e4ce050d7a569666f8674"
-  integrity sha512-HTsCJqB94+MtkImlA2Mq3Cos8tIfuGuUO0UXjDDK9UQxZJoTIRIlXFPpGgCpoxrQIdWT6GqdLuHxtR6F+M+8og==
+sweetalert2@^9.3.17:
+  version "9.3.17"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-9.3.17.tgz#874c18d8c4d3ebb13b11a3e00e50b82506bd422f"
+  integrity sha512-FmIKj+xzQ2fxkwVo9CA2UOjViRJXjn3I0wZSnEU4vOqdKJjo0nOdb7Su8qRckPpiEaas/qhPUcnl5ch+fEm9Bw==
 
 symbol-observable@1.2.0:
   version "1.2.0"
