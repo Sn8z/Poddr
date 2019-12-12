@@ -79,9 +79,16 @@ For those of you who wants to make a monthly donation but don't have GitHub ther
 If you want to make a onetime donation there's two different ways, either [PayPal](https://paypal.me/sn8z) or [Ko-Fi](https://ko-fi.com/O5O2ETUW).
 
 <hr>
-<div align="center">
-<img src="logo/PNG&JPG/Asset 3-8.png" width="80">
 
-### A big thanks to [Radu Dan](https://www.instagram.com/radudangratian/) for creating the logo for Poddr!
-</div>
+### Credits
+
+#### A big thanks to [Radu Dan](https://www.instagram.com/radudangratian/) for creating the logo for Poddr!
+<hr>
+
+### Contact
+There are a few different ways you can contact me if you want help or just want to give feedback.
+
+* Open an [issue](https://github.com/Sn8z/Poddr/issues) in this repository
+* Fill in a [Google form](https://forms.gle/8PvuEBEBttqC8P546) (this doesn't need an account)
+* Send me an email at marcus.sneitz@gmail.com
 <hr>
