@@ -80,6 +80,7 @@ export class AudioService {
 		this.audio.addEventListener('timeupdate', this.onTimeUpdate);
 		this.audio.addEventListener('volumechange', this.onVolumeChange);
 		this.audio.addEventListener('seeking', this.onSeeking);
+		this.audio.addEventListener('waiting', this.onWaiting);
 		this.audio.addEventListener('canplaythrough', this.onCanPlayThrough);
 		this.audio.addEventListener('ended', this.onEnded);
 		this.audio.addEventListener('error', this.onError);
@@ -114,6 +115,11 @@ export class AudioService {
 
 	private onSeeking = () => {
 		log.info("Audio service :: Seeking.");
+		this.loading.next(true);
+	}
+
+	private onWaiting = () => {
+		log.info("Audio service :: Waiting for more data.");
 		this.loading.next(true);
 	}
 
