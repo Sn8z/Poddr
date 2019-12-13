@@ -31,6 +31,8 @@ export class PlayerComponent implements OnInit {
 	public episode: string;
 	public description: string;
 	public rss: string;
+	public playbackRates: number[] = [2.00, 1.75, 1.50, 1.25, 1.00, 0.75, 0.50, 0.25];
+	public playbackRate: number;
 	public favs: string[];
 
 	constructor(private audio: AudioService,
@@ -50,6 +52,7 @@ export class PlayerComponent implements OnInit {
 		this.audio.podcast.subscribe(value => { this.podcast = value });
 		this.audio.description.subscribe(value => { this.description = value });
 		this.audio.rss.subscribe(value => { this.rss = value });
+		this.audio.playbackRate.subscribe(value => { this.playbackRate = value});
 		this.favService.favouriteTitles.subscribe(value => { this.favs = value });
 	}
 
@@ -71,6 +74,10 @@ export class PlayerComponent implements OnInit {
 
 	updateVolume(): void {
 		this.audio.setVolume(this.volume);
+	}
+
+	setPlaybackRate(rate: number): void {
+		this.audio.setPlaybackRate(rate);
 	}
 
 	showDescription(): void {

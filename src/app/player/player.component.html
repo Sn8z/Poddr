@@ -14,6 +14,14 @@
 		<p id="now-playing-time" class="time truncate">{{ time | secondsToHhMmSs }} / {{ duration | secondsToHhMmSs }}</p>
 	</div>
 	<div class="loader-small" *ngIf="isLoading"></div>
+	<div class="dropdown">
+		<button tabindex="-1" class="dropbtn">
+			{{ playbackRate }}x
+		</button>
+		<div class="dropdown-content playbackrate-dd">
+			<a class="dropdown-item" *ngFor="let r of playbackRates" (click)="setPlaybackRate(r)">{{ r }}x</a>
+		</div>
+	</div>
 	<fa-icon *ngIf="favs.indexOf(podcast) == -1 && rss" [icon]="faHeart" class="player-btn" (click)="addPodcast()"
 		aria-label="Add to favourites" data-pop data-pop-arrow></fa-icon>
 	<fa-icon *ngIf="description" [icon]="faInfoCircle" class="player-btn" (click)="showDescription()"

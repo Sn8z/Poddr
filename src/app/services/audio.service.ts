@@ -28,6 +28,7 @@ export class AudioService {
 	public duration: BehaviorSubject<number> = new BehaviorSubject(0);
 	public percentPlayed: BehaviorSubject<number> = new BehaviorSubject(0);
 	public volume: BehaviorSubject<number> = new BehaviorSubject(0);
+	public playbackRate: BehaviorSubject<number> = new BehaviorSubject(1.0);
 
 	constructor(private toast: ToastService, private played: PlayedService) {
 		this.initIpcListeners();
@@ -42,6 +43,7 @@ export class AudioService {
 		ipc.on("app:close", () => {
 			this.store.set("volume", this.audio.volume);
 			this.store.set("time", this.audio.currentTime);
+			this.store.set("playbackRate", this.audio.playbackRate);
 			ipc.send("app:closed");
 		});
 	}
@@ -55,6 +57,10 @@ export class AudioService {
 
 		//Load stored time
 		this.audio.currentTime = this.store.get("time", 0) as number;
+
+		//Load stored playbackRate
+		this.setPlaybackRate(this.store.get("playbackRate", 1.0) as number);
+		this.playbackRate.next(this.audio.playbackRate);
 
 		//Load stored playerstate
 		let playerState: any = this.store.get("playerState");
@@ -79,6 +85,7 @@ export class AudioService {
 		this.audio.addEventListener('loadstart', this.onLoadStart);
 		this.audio.addEventListener('timeupdate', this.onTimeUpdate);
 		this.audio.addEventListener('volumechange', this.onVolumeChange);
+		this.audio.addEventListener('ratechange', this.onPlaybackRateChange);
 		this.audio.addEventListener('seeking', this.onSeeking);
 		this.audio.addEventListener('waiting', this.onWaiting);
 		this.audio.addEventListener('canplaythrough', this.onCanPlayThrough);
@@ -111,6 +118,11 @@ export class AudioService {
 	private onVolumeChange = () => {
 		this.volume.next(this.audio.volume);
 		this.muted.next(this.audio.volume === 0 || this.audio.muted);
+	}
+
+	private onPlaybackRateChange = () => {
+		log.info("Audio service :: PlaybackRate changed to " + this.audio.playbackRate);
+		this.playbackRate.next(this.audio.playbackRate);
 	}
 
 	private onSeeking = () => {
@@ -156,7 +168,7 @@ export class AudioService {
 				this.toast.toastError('Something went wrong, try again.');
 				break;
 		}
-		
+
 		this.loading.next(false);
 	}
 
@@ -238,11 +250,18 @@ export class AudioService {
 		}
 	}
 
-	getRSS = (): string => {
+	setPlaybackRate(rate: number): void {
+		if (rate >= 0.25 && rate <= 2.00) {
+			this.audio.playbackRate = rate;
+			this.audio.defaultPlaybackRate = rate;
+		}
+	}
+
+	getRSS(): string {
 		return this.rss.value;
 	}
 
-	getAudio = (): HTMLAudioElement => {
+	getAudio(): HTMLAudioElement {
 		return this.audio;
 	}
 }
