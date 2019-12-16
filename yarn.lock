@@ -2936,10 +2936,10 @@ dbus-next@^0.5.1:
   optionalDependencies:
     abstract-socket "^2.0.0"
 
-dbus-next@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.7.1.tgz#9d89d0415c8691177a456efe0ea98196fb1e7f7e"
-  integrity sha512-3za7fLvf2b3hje+2mnG28EQwUhLMcvsEQ94EXYEFkbKJVpuo5uVQH7bp2NG4Zi5kJWmOceF/z1PZYbHa8Cgx/Q==
+dbus-next@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.8.1.tgz#19ca46691f293fd77405fceaeaec5b64090f0fe0"
+  integrity sha512-/sgwpcnCkLQuMOTF9I95x6qvJZCbTK2RAbHwh7C60VMroSU7rphydj3ujpqiSy5yq04aKc3meZIHpCOrZ2791g==
   dependencies:
     "@nornagon/put" "0.0.8"
     event-stream "3.3.4"
