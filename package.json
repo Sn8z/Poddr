@@ -65,7 +65,7 @@
     "@ng-select/ng-select": "^3.7.0",
     "@simonwep/pickr": "^1.4.7",
     "@sn8z/pop-pop.css": "^1.0.2",
-    "dbus-next": "^0.7.1",
+    "dbus-next": "^0.8.1",
     "electron-log": "^3.0.9",
     "electron-store": "^5.1.0",
     "electron-window-state": "^5.0.3",
