@@ -26,7 +26,7 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "@angular-builders/custom-webpack": "^8.4.1",
-    "@angular-devkit/build-angular": "~0.803.21",
+    "@angular-devkit/build-angular": "~0.803.22",
     "@angular/cli": "^8.3.21",
     "@angular/compiler-cli": "~8.2.12",
     "@angular/language-service": "^8.2.14",
