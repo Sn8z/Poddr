@@ -1,8 +1,6 @@
 .grid {
     display: flex;
     flex: 1;
-    overflow-x: hidden;
-    overflow-y: auto;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;

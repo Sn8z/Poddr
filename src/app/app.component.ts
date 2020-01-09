@@ -5,6 +5,8 @@ import { ToastService } from './services/toast.service';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
 import * as electron from 'electron';
+import { Router, NavigationStart, NavigationEnd, RouterEvent } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 const themesJSON = require('../assets/themes/themes.json');
 
@@ -14,14 +16,37 @@ const themesJSON = require('../assets/themes/themes.json');
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+	private positions: Object = {};
 	private store: Store<any> = new Store();
 
-	constructor(private hotkeys: HotkeysService, private http: HttpClient, private toast: ToastService) { }
+	constructor(private hotkeys: HotkeysService, private http: HttpClient, private toast: ToastService, private router: Router) { }
 
 	ngOnInit() {
+		this.initScrollStateSaver();
 		this.initFocusHandler();
 		this.initTheme();
 		this.initUpdateCheck();
+	}
+
+	initScrollStateSaver = () => {
+		const contentRouter = document.getElementById('content-router');
+		this.router.events.pipe(
+			filter((event: RouterEvent) => event instanceof NavigationStart || event instanceof NavigationEnd)).subscribe((event: RouterEvent) => {
+				if (event instanceof NavigationStart) {
+					this.positions[event.id] = {
+						trigger: event.navigationTrigger || '',
+						position: contentRouter.scrollTop || 0,
+						restoreID: event.restoredState ? event.restoredState.navigationId + 1 || '' : ''
+					}
+				} else if (event instanceof NavigationEnd) {
+					if (this.positions[event.id].trigger === 'imperative') {
+						contentRouter.scrollTop = 0;
+					} else if (this.positions[event.id].trigger === 'popstate') {
+						const scrollPos = this.positions[this.positions[event.id].restoreID].position || 0;
+						setTimeout(() => contentRouter.scrollTop = scrollPos, 100);
+					}
+				}
+			});
 	}
 
 	initFocusHandler = () => {
