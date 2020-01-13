@@ -98,8 +98,10 @@ body.using-mouse :focus {
   text-overflow: ellipsis;
 }
 
-/* Banner */
 .banner {
+	position: sticky;
+	top: 0;
+	z-index: 10;
 	display: flex;
 	flex: 0 0 150px;
 	justify-content: space-between;
