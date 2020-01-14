@@ -1,6 +1,4 @@
-<div class="banner shadow-bottom">
-	<input id="search" type="text" [(ngModel)]="query" (keyup.enter)="searchNavigation()" placeholder="Search">
-</div>
+<input id="search" type="text" [(ngModel)]="query" (keyup.enter)="searchNavigation()" placeholder="Search">
 <div class="feedback-section" *ngIf="isLoading || isEmpty">
 	<div class="loader" *ngIf="isLoading"></div>
 	<h2 class="primary-text" *ngIf="isEmpty">No results</h2>

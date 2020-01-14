@@ -6,7 +6,8 @@ import * as Store from 'electron-store';
 import * as log from 'electron-log';
 import * as electron from 'electron';
 import { Router, NavigationStart, NavigationEnd, RouterEvent } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { filter, auditTime } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
 
 const themesJSON = require('../assets/themes/themes.json');
 
@@ -23,6 +24,7 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 		this.initScrollStateSaver();
+		this.initScrollDetection();
 		this.initFocusHandler();
 		this.initTheme();
 		this.initUpdateCheck();
@@ -47,6 +49,18 @@ export class AppComponent implements OnInit {
 					}
 				}
 			});
+	}
+
+	initScrollDetection = () => {
+		const contentRouter = document.getElementById('content-router');
+		fromEvent(contentRouter, 'scroll').pipe(auditTime(250)).subscribe(() => {
+			const banner = document.querySelector('.banner');
+			if (contentRouter.scrollTop > 100 && banner) {
+				banner.classList.add('shrink');
+			} else if (banner) {
+				banner.classList.remove('shrink');
+			}
+		});
 	}
 
 	initFocusHandler = () => {

@@ -1,3 +1,22 @@
+.btn-underline {
+	color: var(--primary-text-color);
+	border: none;
+	background-color: transparent;
+	transition-duration: 0.4s;
+	padding: 10px;
+	cursor: pointer;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.btn-underline.active {
+	border-bottom: 2px solid var(--primary-color);
+}
+
+.btn-underline:hover {
+	color: var(--primary-color);
+}
+
 .btn-border {
 	color: var(--primary-text-color);
 	border: 2px solid var(--primary-color);

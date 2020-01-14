@@ -12,7 +12,11 @@
     color: var(--primary-text-color);
     background-color: var(--primary-bg-color);
     border: 0;
-    padding-left: 1rem;
+		padding-left: 1rem;
+		box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.3);
+		position: sticky;
+		top: 0;
+		z-index: 10;
 }
 
 #search::placeholder {

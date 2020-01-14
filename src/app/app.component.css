@@ -32,7 +32,7 @@
 
 #content-router {
   flex: 1 1 auto;
-  overflow-y: scroll;
+  overflow-y: auto;
   background-color: var(--third-bg-color);
 }
 
