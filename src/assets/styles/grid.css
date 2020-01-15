@@ -27,6 +27,10 @@
     cursor: pointer;
 }
 
+.podcast-frame:hover {
+	transform: translateY(-2px);
+}
+
 .podcast-frame-image {
     height: auto;
     width: 100%;
