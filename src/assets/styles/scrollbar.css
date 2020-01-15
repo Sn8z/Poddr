@@ -1,6 +1,5 @@
 ::-webkit-scrollbar {
-  width: 10px;
-	height: 10px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-button {
@@ -9,12 +8,13 @@
 }
 
 ::-webkit-scrollbar-thumb {
-	background: var(--primary-bg-color);
-  border: none;
+	background: var(--third-bg-color);
+	border: 2px solid var(--secondary-bg-color);
+	border-radius: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--secondary-bg-color);
+	background: var(--secondary-bg-color);
 }
 
 ::-webkit-scrollbar-corner {
