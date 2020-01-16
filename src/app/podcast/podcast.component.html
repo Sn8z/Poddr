@@ -33,15 +33,15 @@
 			</div>
 			<div id="latest-podcast-info">
 				<div id="latest-podcast-title">
-					<h3 class="primary-title truncate">{{ latestEpisode.title }}</h3>
+					<h3 class="primary-title truncate">
+						<fa-icon [icon]="playedEpisodes.indexOf(latestEpisode.guid) == -1 ? faCircle : faCheckCircle"
+							[ngClass]="playedEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'"
+							aria-label="Played status" data-pop data-pop-arrow></fa-icon> {{ latestEpisode.title }}
+					</h3>
 					<div id="latest-podcast-actions">
 						<fa-icon [icon]="faInfoCircle"
 							(click)="showDescription($event, latestEpisode.title, latestEpisode.description)"
 							aria-label="Show description" data-pop data-pop-arrow></fa-icon>
-						<fa-icon [icon]="playedEpisodes.indexOf(latestEpisode.guid) == -1 ? faCircle : faCheckCircle"
-							[ngClass]="playedEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'"
-							aria-label="Played status" data-pop data-pop-arrow>
-						</fa-icon>
 						<fa-icon [icon]="faDownload"
 							[ngClass]="offlineEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'"
 							(click)="download($event, latestEpisode)" aria-label="Download" data-pop data-pop-arrow></fa-icon>
