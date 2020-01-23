@@ -8483,10 +8483,10 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-sweetalert2@^9.5.4:
-  version "9.5.4"
-  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-9.5.4.tgz#fcf9306a70ff9dbe2cb867b3bb7e871d854a2979"
-  integrity sha512-9FSmW9mCbRTHyx6Nbtgeb5348pJYNGaBafn3reKe/Zx/gOBgxsRVHj3GQ4VusU/tuqDobKAIHUdUvNdsU3MXPQ==
+sweetalert2@^9.7.0:
+  version "9.7.0"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-9.7.0.tgz#4a3c4c9e360169ebcb70c2d648cc47b8f3d6e314"
+  integrity sha512-oGGj9hzl/HFx5I33VQyuYCIr3O1HBpQWB10MGYgzbc/3YWKaViH26U1eqq1N+5wtNlviscRBu+4vhSC/237THw==
 
 symbol-observable@1.2.0:
   version "1.2.0"
