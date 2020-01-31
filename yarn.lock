@@ -24,6 +24,14 @@
     "@angular-devkit/core" "8.3.21"
     rxjs "6.4.0"
 
+"@angular-devkit/architect@0.803.24":
+  version "0.803.24"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.803.24.tgz#4be038dc9f0e2ab04ecb79b08059ccecc4b3f25e"
+  integrity sha512-ONY/Ppzyvtb0tqgwnzQvlGlexb5nTyy58ljgL1aQLTO3cNTkpl4IQYUCTdvn61gGA+FWPAXMCCbNqOPZMsOZCQ==
+  dependencies:
+    "@angular-devkit/core" "8.3.24"
+    rxjs "6.4.0"
+
 "@angular-devkit/build-angular@~0.803.21":
   version "0.803.21"
   resolved "https://registry.yarnpkg.com/@angular-devkit/build-angular/-/build-angular-0.803.21.tgz#f3d12ea09748b05eb2d835a7de7997599fb6b752"
@@ -117,12 +125,23 @@
     rxjs "6.4.0"
     source-map "0.7.3"
 
-"@angular-devkit/schematics@8.3.21":
-  version "8.3.21"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-8.3.21.tgz#80d515f480180be18a4130ea691f90153bcab3ea"
-  integrity sha512-+wH0362CRr/SijVX4w2baY2ANZ4scQ1k2xO8lT+NMeZQkw3IJQPOfwk1IaqiAs2xuBJZcSDH1Gn80+Jh4Dit7w==
+"@angular-devkit/core@8.3.24":
+  version "8.3.24"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-8.3.24.tgz#94e8e6470443e2752c319cb95cdbeae9e37e19fe"
+  integrity sha512-xpT5yg+ddGDnifryBv2sRSYtq5F3iZIS+lN/K2AhhEa50B7Z+QaCVlEzoV/IfrGd6sLArdnKYwjLHFZ0LElUuw==
   dependencies:
-    "@angular-devkit/core" "8.3.21"
+    ajv "6.10.2"
+    fast-json-stable-stringify "2.0.0"
+    magic-string "0.25.3"
+    rxjs "6.4.0"
+    source-map "0.7.3"
+
+"@angular-devkit/schematics@8.3.24":
+  version "8.3.24"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-8.3.24.tgz#583b1841d032eccf31cc86dbd15c5ac15a50cf95"
+  integrity sha512-HrwDCgw7i3GrNns0Ce5zStWkxBqlcLuDkMcLY6981jpvVzgXMIQ+YqDrJ2kD46xHh979ev7hhw1d6jwPXh85Xw==
+  dependencies:
+    "@angular-devkit/core" "8.3.24"
     rxjs "6.4.0"
 
 "@angular/animations@~8.2.12":
@@ -132,16 +151,16 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/cli@^8.3.21":
-  version "8.3.21"
-  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-8.3.21.tgz#cbb05b86b7f34ecd81d52ccad922359e66a16a15"
-  integrity sha512-ZZpA7mMfIobFT06rBNxm8vucAh8W2s0huJZ4iL0BPujnhIr71PL+gDwssySWDEz2q6i4CkH9QRH76DHhtL6VSQ==
+"@angular/cli@^8.3.24":
+  version "8.3.24"
+  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-8.3.24.tgz#786357000450b1b1404549660b1284f364e388f7"
+  integrity sha512-cUB6H+BAISMdaFsstcyvC+17hOV3ET4MaVgcmgT2cL7A4vMBRBxJ0cW4r3D9c6e7m4wipyJzOUESYoIHu0cp4A==
   dependencies:
-    "@angular-devkit/architect" "0.803.21"
-    "@angular-devkit/core" "8.3.21"
-    "@angular-devkit/schematics" "8.3.21"
-    "@schematics/angular" "8.3.21"
-    "@schematics/update" "0.803.21"
+    "@angular-devkit/architect" "0.803.24"
+    "@angular-devkit/core" "8.3.24"
+    "@angular-devkit/schematics" "8.3.24"
+    "@schematics/angular" "8.3.24"
+    "@schematics/update" "0.803.24"
     "@yarnpkg/lockfile" "1.1.0"
     ansi-colors "4.1.1"
     debug "^4.1.1"
@@ -1018,21 +1037,21 @@
   resolved "https://registry.yarnpkg.com/@nornagon/put/-/put-0.0.8.tgz#9d497ec46c9364acc3f8b59aa3cf8ee4134ae337"
   integrity sha512-ugvXJjwF5ldtUpa7D95kruNJ41yFQDEKyF5CW4TgKJnh+W/zmlBzXXeKTyqIgwMFrkePN2JqOBqcF0M0oOunow==
 
-"@schematics/angular@8.3.21":
-  version "8.3.21"
-  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-8.3.21.tgz#4902e0b6e8be47006859009bf96a026e3d39dd27"
-  integrity sha512-KahQ+dHvTsGOZwY6IdzqJZLDEn0G89rrK3OY+7okZujoaLM+LXhxlPoznW1udnZJVTa3VNxYGx11fkgLtRJRqA==
+"@schematics/angular@8.3.24":
+  version "8.3.24"
+  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-8.3.24.tgz#4d8bfbeed2849bed611e682f418bfcadb0c62277"
+  integrity sha512-0nf/LgMHAvhjWS97Pl3JGMqS9/4PI+C0+vJoAo6D7ax8Fb+wuY5uD6Pb7ZqaZALlEnqTgE+FBQ1K8VBVbuwKbA==
   dependencies:
-    "@angular-devkit/core" "8.3.21"
-    "@angular-devkit/schematics" "8.3.21"
+    "@angular-devkit/core" "8.3.24"
+    "@angular-devkit/schematics" "8.3.24"
 
-"@schematics/update@0.803.21":
-  version "0.803.21"
-  resolved "https://registry.yarnpkg.com/@schematics/update/-/update-0.803.21.tgz#572c955bb132348bca03a128491ae264b0068a0a"
-  integrity sha512-D3BRvEBF2cJEgogvFaNOfqtTFHHv/ctSRfOeAYWjUxILtb+2DpuZ9h5QYDFhN9MPgz/vRaOqFORa3sEZCRkX4g==
+"@schematics/update@0.803.24":
+  version "0.803.24"
+  resolved "https://registry.yarnpkg.com/@schematics/update/-/update-0.803.24.tgz#f1076b6b1e4aa997f2bbe6db392089bb467787a6"
+  integrity sha512-NvCKn3QfpRjx1EzL56q9IC9fRtDXZP4bMGs/2tj+wtdBNHgm6ZJMJ9qc4mGeztKGbDFLmnX3Xz0XawAl+KeYzQ==
   dependencies:
-    "@angular-devkit/core" "8.3.21"
-    "@angular-devkit/schematics" "8.3.21"
+    "@angular-devkit/core" "8.3.24"
+    "@angular-devkit/schematics" "8.3.24"
     "@yarnpkg/lockfile" "1.1.0"
     ini "1.3.5"
     pacote "9.5.5"
