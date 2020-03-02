@@ -8,11 +8,12 @@
       "sourceRoot": "src",
       "projectType": "application",
       "prefix": "app",
-      "schematics": {},
+			"schematics": {},
       "architect": {
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
-          "options": {
+					"deleteOutputPath": true,
+					"options": {
             "customWebpackConfig": {
               "path": "./extra-webpack.config.js"
             },
