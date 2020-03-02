@@ -1061,12 +1061,12 @@
     semver "6.3.0"
     semver-intersect "1.4.0"
 
-"@simonwep/pickr@^1.4.8":
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-1.4.8.tgz#876cc3791d70916e4f00e2c99aef69ae210f9c41"
-  integrity sha512-fFBFUd0rhEnaxle/LXYpMkVtgBokCAT5mFVfBx5P4P7qeXNuvaAQQiq6j+17AKvph3KXyku8vMUpvlYGZTWMHg==
+"@simonwep/pickr@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@simonwep/pickr/-/pickr-1.5.1.tgz#884a82e4628f7460b7cbd73c6f9ae2f1980639c5"
+  integrity sha512-BMYt5RsW7YLNrUF7Jdz1UM0E04ROD0iv/Z/c8APFb74VH0Zs3HeLiLacPgPqLx23VesL8aS6Jin/JiTmnkWujw==
   dependencies:
-    core-js "^3.5.0"
+    core-js "^3.6.4"
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
@@ -2875,10 +2875,10 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.10.tgz#8a5b8391f8cc7013da703411ce5b585706300d7f"
   integrity sha512-I39t74+4t+zau64EN1fE5v2W31Adtc/REhzWN+gWRRXg6WH5qAsZm62DHpQ1+Yhe4047T55jvzz7MUqF/dBBlA==
 
-core-js@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.5.0.tgz#66df8e49be4bd775e6f952a9d083b756ad41c1ed"
-  integrity sha512-Ifh3kj78gzQ7NAoJXeTu+XwzDld0QRIwjBLRqAMhuLhP3d2Av5wmgE9ycfnvK6NAEjTkQ1sDPeoEZAWO3Hx1Uw==
+core-js@^3.6.4:
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.4.tgz#440a83536b458114b9cb2ac1580ba377dc470647"
+  integrity sha512-4paDGScNgZP2IXXilaffL9X7968RuvwlkK3xWtZRVqgd8SYNiVKRJvkFd1aqqEuPfN7E68ZHEp9hDj6lHj4Hyw==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
