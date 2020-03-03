@@ -1168,10 +1168,10 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.2.tgz#26520bf09abe4a5644cd5414e37125a8954241dd"
   integrity sha512-tsAQNx32a8CoFhjhijUIhI4kccIAgmGhy8LZMZgGfmXcpMbPRUqn5LWmgRttILi6yeGmBJd2xsPkFMs0PzgPCw==
 
-"@ng-select/ng-select@^3.7.1":
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-3.7.1.tgz#cf357a6a65588605bd1288a8ee804d254c254514"
-  integrity sha512-wV1BpJCuxVU8aCf8t/nMrDp63oFgS2z7TB9BETm3Lul9AhI93JAM809VWkERGbQ9GQQvr7YDkPXvkGISqoUGgg==
+"@ng-select/ng-select@^3.7.2":
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-3.7.2.tgz#0cb8b64c778a9a22c4c14b1c68b2b50b76c840d1"
+  integrity sha512-hbus2lRIJVPYm8g/z1b8T/iGpYaRQZpzGvfYzdeteguhQOly8pkC8gsSRCLVBv5wyJzDAuOKsKmHKdzakdRisA==
   dependencies:
     tslib "^1.9.0"
 
