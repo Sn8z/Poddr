@@ -3087,10 +3087,10 @@ dbus-next@^0.5.1:
   optionalDependencies:
     abstract-socket "^2.0.0"
 
-dbus-next@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.8.1.tgz#19ca46691f293fd77405fceaeaec5b64090f0fe0"
-  integrity sha512-/sgwpcnCkLQuMOTF9I95x6qvJZCbTK2RAbHwh7C60VMroSU7rphydj3ujpqiSy5yq04aKc3meZIHpCOrZ2791g==
+dbus-next@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/dbus-next/-/dbus-next-0.8.2.tgz#b53beec47812e643d4c24a96f7ce223c32aa2edb"
+  integrity sha512-E2wkbhZzzsgmY+jxIdeuhA1nVT697I5koRIRJTk3doTeukwtzqSFG89RC5XK8OsLG/eHDZ8PVNptUuEPkhdPbA==
   dependencies:
     "@nornagon/put" "0.0.8"
     event-stream "3.3.4"
