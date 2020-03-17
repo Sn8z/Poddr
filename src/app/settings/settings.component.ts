@@ -38,7 +38,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	public appVersion: string = app.remote.app.getVersion();
 	public appStorage: string = app.remote.app.getPath('userData');
-	public logStorage: string = log.transports.file.findLogPath();
+	public logStorage: string = log.transports.file.getFile().path;
 	public downloadFolder: string = app.remote.app.getPath('downloads') + '/Poddr/';
 
 	constructor(private podcastService: PodcastService, private favService: FavouritesService, private toast: ToastService) { }
