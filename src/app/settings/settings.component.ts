@@ -1,12 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
+import { FavouritesService } from '../services/favourites.service';
+import { ToastService } from '../services/toast.service';
 import { faGithub, faPatreon, faPaypal } from '@fortawesome/free-brands-svg-icons';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import { faCoffee, faFileExport, faFileImport } from '@fortawesome/free-solid-svg-icons';
+import { readFile, writeFile } from 'fs';
 import Pickr from '@simonwep/pickr';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
 import * as app from 'electron';
-
+const { dialog } = require('electron').remote;
 const themesJSON = require('../../assets/themes/themes.json');
 
 @Component({
@@ -22,6 +25,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	public faPatreon = faPatreon;
 	public faPaypal = faPaypal;
 	public faCoffee = faCoffee;
+	public faFileExport = faFileExport;
+	public faFileImport = faFileImport;
 
 	public regions: string[] = [];
 	public region: string = "";
@@ -36,7 +41,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	public logStorage: string = log.transports.file.findLogPath();
 	public downloadFolder: string = app.remote.app.getPath('downloads') + '/Poddr/';
 
-	constructor(private podcastService: PodcastService) { }
+	constructor(private podcastService: PodcastService, private favService: FavouritesService, private toast: ToastService) { }
 
 	ngOnInit() {
 		this.regions = this.podcastService.getRegions();
@@ -115,6 +120,93 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	importOPML = () => {
+		log.info('Settings component :: Opening OPML selection');
+		const options = {
+			buttonLabel: "Import OPML file",
+			filters: [
+				{ name: 'OPML', extensions: ['opml', 'xml'] }
+			],
+			properties: ['showHiddenFiles', 'openFile']
+		}
+		const filepath = dialog.showOpenDialog(options);
+		if (filepath) {
+			log.info('Settings component :: Reading OPML file ' + filepath);
+			this.readOPML(filepath[0]);
+		} else {
+			log.error('Settings component :: No valid OPML file was selected');
+		}
+	}
+
+	private readOPML = (filepath) => {
+		readFile(filepath, 'utf8', (error, data) => {
+			if (error) {
+				log.error('Settings component :: Something went wrong when trying to open ' + filepath);
+				log.error(error);
+			} else {
+				const parser = new DOMParser();
+				const opmlDoc = parser.parseFromString(data, "text/xml");
+				if (opmlDoc.documentElement.nodeName == 'parsererror') {
+					log.error('Settings component :: An error occured while parsing ' + filepath);
+					this.toast.toastError('An error occured while parsing ' + filepath);
+				} else {
+					log.info('Settings component :: Starting import of OPML favourites');
+					Array.from(opmlDoc.getElementsByTagName('outline')).forEach((opmlFav) => {
+						log.info(opmlFav.getAttribute('xmlUrl'));
+						this.favService.addFavourite(opmlFav.getAttribute('xmlUrl'), true);
+					});
+					log.info('Settings component :: Done importing favourites from OPML file');
+				}
+			}
+		});
+	}
+
+	exportOPML = () => {
+		log.info('Settings component :: Creating and saving OPML file');
+		const options = {
+			buttonLabel: "Save OPML file",
+			filters: [
+				{ name: 'OPML', extensions: ['opml', 'xml'] }
+			],
+			properties: ['showHiddenFiles']
+		}
+		const filepath = dialog.showSaveDialog(options);
+		if (filepath) {
+			log.info('Settings component :: Saving file as' + filepath);
+			const domParser = new DOMParser();
+			const xmlString = "<opml version='2.0'></opml>";
+			const xmlDoc = domParser.parseFromString(xmlString, "text/xml");
+			const root = xmlDoc.getElementsByTagName('opml')[0];
+			const headNode = xmlDoc.createElement("head");
+			const titleNode = xmlDoc.createElement("title");
+			titleNode.innerHTML = "Poddr Favourites";
+			headNode.appendChild(titleNode);
+			const bodyNode = xmlDoc.createElement("body");
+			root.appendChild(headNode);
+			root.appendChild(bodyNode);
+
+			this.favService.favourites.getValue().forEach((fav) => {
+				const newNode = xmlDoc.createElement("outline");
+				newNode.setAttribute("text", fav['title']);
+				newNode.setAttribute("type", 'rss');
+				newNode.setAttribute("xmlUrl", fav['rss']);
+				bodyNode.appendChild(newNode);
+			});
+
+			const serializer = new XMLSerializer();
+			writeFile(filepath, serializer.serializeToString(xmlDoc), (error) => {
+				if (error) {
+					log.error(error);
+				} else {
+					log.info("Settings component :: Done creating OPML file at " + filepath);
+					this.toast.toastSuccess("Done exporting OPML file!");
+				}
+			});
+		} else {
+			log.error('Settings component :: No filepath specified');
+		}
+	}
+
 	restart = () => {
 		log.info("Settings component :: Restarting Poddr.");
 		app.remote.app.relaunch();
@@ -125,5 +217,4 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		log.info("Settings component :: Opening DevTools.");
 		app.remote.getCurrentWindow().webContents.openDevTools();
 	}
-
 }

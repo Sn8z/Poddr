@@ -33,12 +33,12 @@ export class FavouritesService {
 		});
 	}
 
-	addFavourite = (rss) => {
+	addFavourite = (rss, silent: Boolean = false) => {
 		this.podcastService.getPodcastFeed(rss).subscribe((response) => {
 			parsePodcast(response, (error, data) => {
 				if (error) {
 					log.error("Favourite service :: " + error);
-					this.toast.toastError("Something went wrong when parsing RSS feed.");
+					if (!silent) this.toast.toastError("Something went wrong when parsing RSS feed.");
 				} else {
 					this.store.set(rss.replace(/\./g, '\\.'), {
 						rss: rss,
@@ -46,7 +46,7 @@ export class FavouritesService {
 						img: data.image,
 						dateAdded: Date.now()
 					});
-					this.toast.toastSuccess("Added " + data.title + " to favourites!");
+					if (!silent) this.toast.toastSuccess("Added " + data.title + " to favourites!");
 					this.updateFavourites();
 					log.info("Favourite service :: Added " + data.title + " to favourites.");
 				}

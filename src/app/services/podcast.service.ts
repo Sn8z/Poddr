@@ -61,7 +61,7 @@ export class PodcastService {
 			retry(3),
 			catchError((error) => {
 				log.error('Podcast service :: ' + JSON.stringify(error));
-				this.toast.toastError('Something went wrong when trying to fetch the RSS feed.');
+				this.toast.toastError('Something went wrong when trying to fetch ' + rss);
 				return throwError(error);
 			})
 		);
