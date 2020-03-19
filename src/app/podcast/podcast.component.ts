@@ -102,20 +102,20 @@ export class PodcastComponent implements OnInit {
 	}
 
 	//Extra step needed if we only have the iTunes ID
-	private getRSS(id: String): void {
+	private getRSS = (id: String): void => {
 		this.podcastService.getRssFeed(id).subscribe((data) => {
 			this.parseRSS(data['results'][0]['feedUrl']);
 		});
 	}
 
-	private parseRSS(rss: String): void {
+	private parseRSS = (rss: String): void => {
 		this.rss = rss;
 		this.podcastService.getPodcastFeed(rss).subscribe((response) => {
 			parsePodcast(response, (error, data) => {
 				if (error) {
-					console.log(error);
+					log.error('Podcast component :: Parsing RSS feed failed for ' + rss);
+					log.error(error);
 					this.isLoading = false;
-					//Error toast
 				} else {
 					this.title = data.title;
 					this.author = data.author;
@@ -133,7 +133,7 @@ export class PodcastComponent implements OnInit {
 		});
 	}
 
-	play(podcastObject: any): void {
+	play = (podcastObject: any): void => {
 		let podcast = {
 			src: podcastObject.enclosure.url,
 			episodeTitle: podcastObject.title,
@@ -145,23 +145,23 @@ export class PodcastComponent implements OnInit {
 		this.audio.play();
 	}
 
-	download(event, podcastObject: any): void {
+	download = (event, podcastObject: any): void => {
 		event.stopPropagation();
 		this.offlineService.download(this.title, this.rss, podcastObject);
 	}
 
-	removeDownload = (event, podcastObject: any) => {
+	removeDownload = (event, podcastObject: any): void => {
 		event.stopPropagation();
 		this.offlineService.remove(podcastObject.guid);
 	}
 
-	filter(): void {
-		log.info("Filtering based on: " + this.query);
+	filter = (): void => {
+		log.info("Podcast component :: Filtering based on: " + this.query);
 		this.episodes = this.allEpisodes.filter(e => e.description.toLowerCase().includes(this.query.toLowerCase()) || e.title.toLowerCase().includes(this.query.toLowerCase()));
 	}
 
-	toggleOrder(): void {
-		log.info("Toggle " + this.sortBy);
+	toggleOrder = (): void => {
+		log.info("Podcast component :: Toggle " + this.sortBy);
 		if (this.sortBy == "asc") {
 			this.episodes.sort((x, y) => x.published - y.published);
 			this.sortBy = "desc";
@@ -171,20 +171,20 @@ export class PodcastComponent implements OnInit {
 		}
 	}
 
-	showDescription(event, title, description): void {
+	showDescription = (event, title, description): void => {
 		event.stopPropagation();
 		this.toast.modal(title, this.descriptionPipe.transform(description));
 	}
 
-	addFavourite(): void {
+	addFavourite = (): void => {
 		this.favouriteService.addFavourite(this.rss);
 	}
 
-	markAsPlayed = (guid) => {
+	markAsPlayed = (guid): void => {
 		this.prevPlayed.markAsPlayed(guid);
 	}
 
-	unmarkAsPlayed = (guid) => {
+	unmarkAsPlayed = (guid): void => {
 		this.prevPlayed.unmarkAsPlayed(guid);
 	}
 }
