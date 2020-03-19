@@ -29,24 +29,24 @@ export class FavouritesComponent implements OnInit {
 		});
 	}
 
-	remove = (rss) => {
+	remove = (rss): void => {
 		this.toast.confirmModal().then((res) => {
 			if (res.value) this.favService.removeFavourite(rss);
 		});
 	}
 
-	add = () => {
+	add = (): void => {
 		this.toast.inputRSSModal().then((res) => {
 			if (res.value) this.favService.addFavourite(res.value);
 		});
 	}
 
-	playOffline = (episode) => {
+	playOffline = (episode): void => {
 		this.audio.loadAudio(episode, episode.author, episode.rss, "");
 		this.audio.play();
 	}
 
-	removeOffline = (guid) => {
+	removeOffline = (guid): void => {
 		this.toast.confirmModal().then((res) => {
 			if (res.value) this.offlineService.remove(guid);
 		});

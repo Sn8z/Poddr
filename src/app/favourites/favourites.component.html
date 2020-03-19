@@ -5,7 +5,6 @@
 	</div>
 	<div class="banner-actions">
 		<button class="btn-underline" [ngClass]="{'active': content == 'favourites'}" (click)="content = 'favourites'">PODCASTS</button>
-		<button class="btn-underline" [ngClass]="{'active': content == 'episodes'}" (click)="content = 'episodes'">EPISODES</button>
 		<button class="btn-underline" [ngClass]="{'active': content == 'offline'}" (click)="content = 'offline'">OFFLINE</button>
 		<button class="btn-border" (click)="add()" aria-label="Add RSS feed" data-pop="left" data-pop-arrow>
 			<fa-icon [icon]="faPlus"></fa-icon>
@@ -30,9 +29,6 @@
 			</div>
 		</div>
 	</div>
-</div>
-<div *ngIf="content === 'episodes'">
-	EPISODES
 </div>
 <div class="offline-episodes" *ngIf="content === 'offline'">
 	<div class="feedback-section" *ngIf="offlineEpisodes.length === 0">
