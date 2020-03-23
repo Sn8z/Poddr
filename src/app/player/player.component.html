@@ -13,6 +13,13 @@
 		<a id="now-playing-episode" [routerLink]="['/podcast', rss]" class="truncate">{{ episode }}</a>
 		<p id="now-playing-time" class="time truncate">{{ time | secondsToHhMmSs }} / {{ duration | secondsToHhMmSs }}</p>
 	</div>
+	<div class="equalizer" [ngClass]="{'animate' : isPlaying}">
+		<div class="equalizer-bar"></div>
+		<div class="equalizer-bar"></div>
+		<div class="equalizer-bar"></div>
+		<div class="equalizer-bar"></div>
+		<div class="equalizer-bar"></div>
+	</div>
 	<div class="loader-small" *ngIf="isLoading"></div>
 	<div class="dropdown">
 		<button tabindex="-1" class="dropbtn">

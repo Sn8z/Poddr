@@ -17,7 +17,8 @@ import {
 	faGlobeEurope,
 	faRss,
 	faEllipsisV,
-	faTimes
+	faTimes,
+	faMusic
 } from '@fortawesome/free-solid-svg-icons';
 import * as parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
@@ -44,7 +45,10 @@ export class PodcastComponent implements OnInit {
 	public faRss = faRss;
 	public faEllipsisV = faEllipsisV;
 	public faTimes = faTimes;
+	public faMusic = faMusic;
 
+	public currentGUID: string = "";
+	public isPlaying: Boolean = false;
 	public isLoading: Boolean = true;
 	public rss: String;
 	public title: string;
@@ -99,6 +103,9 @@ export class PodcastComponent implements OnInit {
 				this.favs = value;
 			});
 		});
+
+		this.audio.playing.subscribe(value => { this.isPlaying = value });
+		this.audio.guid.subscribe(value => { this.currentGUID = value });
 	}
 
 	//Extra step needed if we only have the iTunes ID

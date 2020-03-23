@@ -13,8 +13,8 @@ const ipc = require('electron').ipcRenderer;
 export class AudioService {
 	private store = new Store();
 	private audio: HTMLAudioElement = new Audio();
-	private guid: string = "";
-
+	
+	public guid: BehaviorSubject<string> = new BehaviorSubject("");
 	public rss: BehaviorSubject<string> = new BehaviorSubject("");
 	public loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 	public playing: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -66,7 +66,7 @@ export class AudioService {
 		let playerState: any = this.store.get("playerState");
 		if (playerState) {
 			this.audio.src = playerState.podcastURL;
-			this.guid = playerState.podcastGUID;
+			this.guid.next(playerState.podcastGUID);
 			this.rss.next(playerState.podcastRSS);
 			this.podcast.next(playerState.podcastTitle);
 			this.episode.next(playerState.podcastEpisodeTitle);
@@ -144,7 +144,7 @@ export class AudioService {
 	private onEnded = () => {
 		log.info("Audio service :: Podcast ended.");
 		this.toast.toast("Podcast ended");
-		this.played.markAsPlayed(this.guid);
+		this.played.markAsPlayed(this.guid.value);
 	}
 
 	private onError = (error) => {
@@ -183,7 +183,7 @@ export class AudioService {
 	// public methods
 	loadAudio(podcast, pTitle, pRSS, pCover): void {
 		this.audio.src = podcast.src;
-		this.guid = podcast.guid;
+		this.guid.next(podcast.guid);
 		this.rss.next(pRSS);
 		this.podcast.next(pTitle);
 		this.episode.next(podcast.episodeTitle);
@@ -206,7 +206,7 @@ export class AudioService {
 			episodeCover: this.episodeCover.value,
 			podcastRSS: this.rss.value,
 			podcastDescription: this.description.value,
-			podcastGUID: this.guid
+			podcastGUID: this.guid.value
 		});
 
 		this.updateMedia();

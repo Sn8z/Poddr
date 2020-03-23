@@ -69,13 +69,16 @@
 		<div class="feedback-section" *ngIf="episodes.length === 0">
 			<h2 class="primary-text">No episodes</h2>
 		</div>
-		<div class="podcast-item" *ngFor="let e of episodes">
+		<div class="podcast-item" [ngClass]="{'playing' : e.guid === currentGUID}" *ngFor="let e of episodes">
 			<div class="podcast-item-actions">
 				<fa-icon [icon]="playedEpisodes.indexOf(e.guid) === -1 ? faCircle : faCheckCircle "
 					[ngClass]="playedEpisodes.indexOf(e.guid)===-1 ? '' :'played-episode'"></fa-icon>
 			</div>
 			<div tabindex="0" class="podcast-item-info" (click)="play(e)" (keyup.enter)="play(e)">
-				<div class="podcast-item-title">{{ e.title }}</div>
+				<div class="podcast-item-title" [ngClass]="{'playing' : e.guid === currentGUID}">
+					<fa-icon [icon]="faMusic" *ngIf="e.guid === currentGUID"></fa-icon>
+					{{ e.title }}
+				</div>
 				<div class="podcast-item-details">
 					<div class="podcast-item-duration time">{{ e.duration | secondsToHhMmSs }}</div>
 					<div class="podcast-item-date time">{{ e.published | date }}</div>

@@ -1,0 +1,70 @@
+.equalizer {
+	height: 20px;
+	width: auto;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+}
+
+.equalizer-bar {
+	height: 2px;
+	width: 2px;
+	background-color: var(--primary-color);
+	margin-left: 1px;
+	margin-right: 1px;
+	border-radius: 1px;
+  will-change: transform;
+}
+
+.equalizer.animate .equalizer-bar:nth-child(1) {
+	animation: dancing-bar 2.5s 1s ease-out alternate infinite;
+}
+.equalizer.animate .equalizer-bar:nth-child(2) {
+	animation: dancing-bar 2.5s 1.5s ease-out alternate infinite;
+}
+.equalizer.animate .equalizer-bar:nth-child(3) {
+	animation: dancing-bar 2.5s 0.25s ease-out alternate infinite;
+}
+.equalizer.animate .equalizer-bar:nth-child(4) {
+	animation: dancing-bar 2.5s 0.75s ease-out alternate infinite;
+}
+.equalizer.animate .equalizer-bar:nth-child(5) {
+	animation: dancing-bar 2.5s 1s ease-out alternate infinite;
+}
+
+@keyframes dancing-bar {
+	0% {
+		transform: scaleY(3);
+	}
+	10% {
+		transform: scaleY(5);
+	}
+	20% {
+		transform: scaleY(4);
+	}
+	30% {
+		transform: scaleY(8);
+	}
+	40% {
+		transform: scaleY(7);
+	}
+	50% {
+		transform: scaleY(10);
+	}
+	60% {
+		transform: scaleY(4);
+	}
+	70% {
+		transform: scaleY(6);
+	}
+	80% {
+		transform: scaleY(2);
+	}
+	90% {
+		transform: scaleY(4);
+	}
+	100% {
+		transform: scaleY(3);
+	}
+}
