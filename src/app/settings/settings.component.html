@@ -16,8 +16,9 @@
 		<p class="primary-text">Theme</p>
 		<ng-select class="custom" [clearable]="false" [items]="themes" [(ngModel)]="theme" (change)="setTheme()">
 		</ng-select>
+
+		<p class="primary-text">OPML</p>
 		<div id="opml-section">
-			<p class="primary-text">OPML</p>
 			<button class="btn-border" (click)="importOPML()">
 				<fa-icon [icon]="faFileImport"></fa-icon> Import
 			</button>
