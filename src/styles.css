@@ -11,7 +11,6 @@
 @import "./assets/styles/hover-menu.css";
 @import "./assets/styles/custom-pickr.css";
 @import "./assets/styles/custom-select.css";
-@import "./assets/styles/equalizer.css";
 @import "../node_modules/@sn8z/pop-pop.css/dist/pop-pop.min.css";
 @import "../node_modules/@ng-select/ng-select/themes/default.theme.css";
 @import '../node_modules/@simonwep/pickr/dist/themes/classic.min.css';
