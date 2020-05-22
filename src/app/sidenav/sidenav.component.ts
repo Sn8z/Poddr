@@ -9,7 +9,8 @@ import { faHeart } from '@fortawesome/free-regular-svg-icons';
   styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit {
-	public image: string = "";
+  public image: string = "";
+  public rss: string;
 	
 	public faFire = faFire;
 	public faSearch = faSearch;
@@ -22,6 +23,7 @@ export class SidenavComponent implements OnInit {
     this.audio.episodeCover.subscribe(value => {
       this.image = value;
     });
+    this.audio.rss.subscribe(value => { this.rss = value });
   }
 
 }
