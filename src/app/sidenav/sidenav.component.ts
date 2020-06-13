@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AudioService } from '../services/audio.service';
-import { faFire, faSearch, faTools } from '@fortawesome/free-solid-svg-icons';
+import { faFire, faBolt faSearch, faTools } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
@@ -11,8 +11,9 @@ import { faHeart } from '@fortawesome/free-regular-svg-icons';
 export class SidenavComponent implements OnInit {
   public image: string = "";
   public rss: string;
-	
+
 	public faFire = faFire;
+  public faBolt = faBolt;
 	public faSearch = faSearch;
 	public faTools = faTools;
 	public faHeart = faHeart;

@@ -18,6 +18,7 @@ import { TitlebarComponent } from './titlebar/titlebar.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { PlayerComponent } from './player/player.component';
 import { ToplistsComponent } from './toplists/toplists.component';
+import { LatestComponent } from './latest/latest.component';
 import { FavouritesComponent } from './favourites/favourites.component';
 import { SearchComponent } from './search/search.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -33,6 +34,7 @@ import { PodcastComponent } from './podcast/podcast.component';
     SidenavComponent,
     PlayerComponent,
     ToplistsComponent,
+    LatestComponent,
     FavouritesComponent,
     SearchComponent,
     SettingsComponent,

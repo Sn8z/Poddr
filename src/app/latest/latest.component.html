@@ -1,0 +1,60 @@
+<div class="banner">
+  <div class="banner-info">
+    <h5 class="secondary-title truncate">Your</h5>
+    <h1 class="primary-title truncate">Latest Episodes</h1>
+  </div>
+  <div class="banner-actions">
+    <div>
+      <button class="btn" (click)="layout = 'grid'" aria-label="Show gridview" data-pop="left" data-pop-arrow>
+        <fa-icon [icon]="faTh" [ngClass]="{'active-btn': layout == 'grid'}"></fa-icon>
+      </button>
+      <button class="btn" (click)="layout = 'list'" aria-label="Show listview" data-pop="left" data-pop-arrow>
+        <fa-icon [icon]="faList" [ngClass]="{'active-btn': layout == 'list'}"></fa-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="grid" *ngIf="layout == 'grid'">
+  <div class="feedback-section" *ngIf="latest.length === 0">
+    <h2 class="primary-text">No favourites added</h2>
+  </div>
+  <div class="grid-item" *ngFor="let l of latest">
+    <div class="podcast-frame shadow">
+      <a class="image-container" [routerLink]="['/podcast', l.rss]">
+        <img class="image-cover" [src]="l.image || l.podcastImage || 'assets/images/album_cover.png'"
+          onload="this.style.opacity = 1">
+      </a>
+      <div class="podcast-frame-info">
+        <div class="podcast-frame-title truncate" [routerLink]="['/podcast', l.rss]" tabindex="-1">
+          {{ l.title }}</div>
+        <div class="podcast-frame-btns">
+          <fa-icon [icon]="faInfoCircle" class="podcast-frame-btn"
+            (click)="showDescription(l.title, l.description)" aria-label="Show description"
+            data-pop data-pop-arrow></fa-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="list" *ngIf="layout == 'list'">
+  <div class="feedback-section" *ngIf="latest.length === 0">
+    <h2 class="primary-text">No favourites added</h2>
+  </div>
+  <div class="list-item shadow" *ngFor="let l of latest">
+    <a class="list-item-image" [routerLink]="['/podcast', l.rss]">
+      <div class="image-container">
+        <img class="image-cover" [src]="l.image || l.podcastImage || 'assets/images/album_cover.png'"
+          onload="this.style.opacity = 1">
+      </div>
+    </a>
+    <div class="list-item-info" [routerLink]="['/podcast', l.rss]" tabindex="-1">
+      <h5 class="secondary-title truncate">{{ l.podcastTitle }}</h5>
+      <h1 class="primary-title truncate">{{ l.title }}</h1>
+    </div>
+    <div class="list-item-actions">
+      <fa-icon [icon]="faInfoCircle" class="podcast-frame-btn"
+        (click)="showDescription(l.title, l.description)" aria-label="Show description"
+        data-pop data-pop-arrow></fa-icon>
+    </div>
+  </div>
+</div>
