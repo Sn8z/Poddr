@@ -122,19 +122,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	importOPML = () => {
 		log.info('Settings component :: Opening OPML selection');
-		const filepath = dialog.showOpenDialog({
+		dialog.showOpenDialog({
 			buttonLabel: "Import OPML file",
 			filters: [
 				{ name: 'OPML', extensions: ['opml', 'xml'] }
 			],
 			properties: ['showHiddenFiles', 'openFile']
-		});
-		if (filepath) {
-			log.info('Settings component :: Reading OPML file ' + filepath);
-			this.readOPML(filepath[0]);
-		} else {
+		}).then(response => {
+			log.info('Settings component :: Reading OPML file ' + response.filePaths[0]);
+			this.readOPML(response.filePaths[0]);
+		}).catch(error => {
 			log.error('Settings component :: No valid OPML file was selected');
-		}
+			log.error(error);
+		})
 	}
 
 	private readOPML = (filepath) => {
@@ -162,16 +162,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	exportOPML = () => {
 		log.info('Settings component :: Creating and saving OPML file');
-		const options = {
+		dialog.showSaveDialog({
 			buttonLabel: "Save OPML file",
 			filters: [
 				{ name: 'OPML', extensions: ['opml', 'xml'] }
 			],
 			properties: ['showHiddenFiles']
-		}
-		const filepath = dialog.showSaveDialog(options);
-		if (filepath) {
-			log.info('Settings component :: Saving file as' + filepath);
+		}).then(response => {
+			log.info('Settings component :: Saving file as' + response.filePath);
 			const domParser = new DOMParser();
 			const xmlString = "<opml version='2.0'></opml>";
 			const xmlDoc = domParser.parseFromString(xmlString, "text/xml");
@@ -183,7 +181,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			const bodyNode = xmlDoc.createElement("body");
 			root.appendChild(headNode);
 			root.appendChild(bodyNode);
-
 			this.favService.favourites.getValue().forEach((fav) => {
 				const newNode = xmlDoc.createElement("outline");
 				newNode.setAttribute("text", fav['title']);
@@ -191,19 +188,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
 				newNode.setAttribute("xmlUrl", fav['rss']);
 				bodyNode.appendChild(newNode);
 			});
-
 			const serializer = new XMLSerializer();
-			writeFile(filepath, serializer.serializeToString(xmlDoc), (error) => {
+			writeFile(response.filePath, serializer.serializeToString(xmlDoc), (error) => {
 				if (error) {
+					log.error('Settings component :: An error occured while trying to create OPML file');
 					log.error(error);
 				} else {
-					log.info("Settings component :: Done creating OPML file at " + filepath);
+					log.info("Settings component :: Done creating OPML file at " + response.filePath);
 					this.toast.toastSuccess("Done exporting OPML file!");
 				}
 			});
-		} else {
+		}).catch(error => {
 			log.error('Settings component :: No filepath specified');
-		}
+			log.error(error);
+		})
 	}
 
 	restart = () => {
