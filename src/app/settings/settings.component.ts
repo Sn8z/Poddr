@@ -122,14 +122,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	importOPML = () => {
 		log.info('Settings component :: Opening OPML selection');
-		const options = {
+		const filepath = dialog.showOpenDialog({
 			buttonLabel: "Import OPML file",
 			filters: [
 				{ name: 'OPML', extensions: ['opml', 'xml'] }
 			],
 			properties: ['showHiddenFiles', 'openFile']
-		}
-		const filepath = dialog.showOpenDialog(options);
+		});
 		if (filepath) {
 			log.info('Settings component :: Reading OPML file ' + filepath);
 			this.readOPML(filepath[0]);
