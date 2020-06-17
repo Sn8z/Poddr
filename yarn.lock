@@ -7,16 +7,19 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.0.3.tgz#bc5b5532ecafd923a61f2fb097e3b108c0106a3f"
   integrity sha512-GLyWIFBbGvpKPGo55JyRZAo4lVbnBiD52cKlw/0Vt+wnmKvWJkpZvsjVoaIolyBXDeAQKSicRtqFNPem9w0WYA==
 
-"@angular-builders/custom-webpack@^8.4.1":
-  version "8.4.1"
-  resolved "https://registry.yarnpkg.com/@angular-builders/custom-webpack/-/custom-webpack-8.4.1.tgz#f16583afe78e104d408c263dcb0d4345ce0be570"
-  integrity sha512-FbBt4mFbAxETdYLb6tTX869pIpm8nMiCpT34jROejuqLtsljymdqXhSCEWogWlel8ULAYus6BNdzZyRLyAkfqQ==
+"@angular-builders/custom-webpack@^9.1.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@angular-builders/custom-webpack/-/custom-webpack-9.1.0.tgz#d16c57035a13e386ba3becac993683075120efb2"
+  integrity sha512-Dek6KxNUFBELKqNRO4Im5JIP0/rZF4HmvgA8X+RyqOd9cyDxk16A441WlqTqy3UKX8lcbf6C9RcR5D2dI1ZATQ==
   dependencies:
+    "@angular-devkit/architect" ">=0.900.0 < 0.1000.0"
+    "@angular-devkit/build-angular" ">=0.900.0 < 0.1000.0"
+    "@angular-devkit/core" "^9.0.0"
     lodash "^4.17.10"
     ts-node "^8.5.2"
     webpack-merge "^4.2.1"
 
-"@angular-devkit/architect@0.901.8":
+"@angular-devkit/architect@0.901.8", "@angular-devkit/architect@>=0.900.0 < 0.1000.0":
   version "0.901.8"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.901.8.tgz#d2f5f4c16fba3ed61ee27c7fc72118421ea2b45d"
   integrity sha512-tK9ZQlubH6n+q+c2J9Wvfcxg3RFuRiTfJriNoodo6GHvtF2KLdPY67w3Gen0Sp172A5Q8Y927NseddNI8RZ/0A==
@@ -24,7 +27,7 @@
     "@angular-devkit/core" "9.1.8"
     rxjs "6.5.4"
 
-"@angular-devkit/build-angular@~0.901.8":
+"@angular-devkit/build-angular@>=0.900.0 < 0.1000.0", "@angular-devkit/build-angular@~0.901.8":
   version "0.901.8"
   resolved "https://registry.yarnpkg.com/@angular-devkit/build-angular/-/build-angular-0.901.8.tgz#6450be4743dacf564af143c85d2a03b7bdd81551"
   integrity sha512-W2RTjtPPJRbke6K7Qt9eZOPRGfFBFsYzskxsuxXwkW2RPopj6k1wUWh9Be8CtAMAUlhyPvlzviOtv3F7leYr3w==
@@ -111,7 +114,7 @@
     "@angular-devkit/core" "9.1.8"
     rxjs "6.5.4"
 
-"@angular-devkit/core@9.1.8":
+"@angular-devkit/core@9.1.8", "@angular-devkit/core@^9.0.0":
   version "9.1.8"
   resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-9.1.8.tgz#7c517a14e3ddfd180858972d9f1836aa90a1248e"
   integrity sha512-4k1pZwje2oh5c/ULg7pnCBzTstx3l3uF7O5tQq/KXomDDsam97IhLm6cKUqQpaoyC1NUsBV6xJARJ0PyUP5TPQ==
