@@ -67,7 +67,7 @@
     "@sn8z/pop-pop.css": "^1.0.2",
     "dbus-next": "^0.8.2",
     "electron-log": "^4.1.0",
-    "electron-store": "^5.1.1",
+    "electron-store": "^5.2.0",
     "electron-window-state": "^5.0.3",
     "mousetrap": "^1.6.3",
     "mpris-service": "2.1.0",
