@@ -166,8 +166,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 			buttonLabel: "Save OPML file",
 			filters: [
 				{ name: 'OPML', extensions: ['opml', 'xml'] }
-			],
-			properties: ['showHiddenFiles']
+			]
 		}).then(response => {
 			log.info('Settings component :: Saving file as' + response.filePath);
 			const domParser = new DOMParser();

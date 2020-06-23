@@ -13,6 +13,7 @@ import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 export class FavouritesComponent implements OnInit {
 	public favourites: Array<Object> = [];
 	public offlineEpisodes: Array<Object> = [];
+	public latestEpisodes: Array<Object> = [];
 	public content: string = 'favourites';
 
 	public faPlus = faPlus;
@@ -27,6 +28,15 @@ export class FavouritesComponent implements OnInit {
 		this.offlineService.offlineEpisodes.subscribe(value => {
 			this.offlineEpisodes = value;
 		});
+		this.favService.latestEpisodes.subscribe(value => {
+			this.latestEpisodes = value.sort((a, b) => {
+				const aDate = new Date(a['date']);
+				const bDate = new Date(b['date']);
+				return aDate > bDate ? -1 : bDate > aDate ? 1 : 0;
+			}).slice(0, 100);
+			console.log(this.latestEpisodes);
+		});
+
 	}
 
 	remove = (rss): void => {
@@ -39,6 +49,11 @@ export class FavouritesComponent implements OnInit {
 		this.toast.inputRSSModal().then((res) => {
 			if (res.value) this.favService.addFavourite(res.value);
 		});
+	}
+
+	playEpisode = (episode) => {
+		this.audio.loadAudio(episode, episode.podcast, episode.rss, episode.cover);
+		this.audio.play();
 	}
 
 	playOffline = (episode): void => {

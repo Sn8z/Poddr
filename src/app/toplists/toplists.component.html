@@ -4,8 +4,8 @@
 		<h1 class="primary-title truncate">Today</h1>
 	</div>
 	<div class="banner-actions">
-		<ng-select class="custom filter-dropdown" [clearable]="false" [items]="categories" bindLabel="genre" bindValue="id"
-			[(ngModel)]="category" (change)="getPodcastsNavigation()"></ng-select>
+		<ng-select class="custom filter-dropdown" [clearable]="false" [items]="categories" bindLabel="genre"
+			bindValue="id" [(ngModel)]="category" (change)="getPodcastsNavigation()"></ng-select>
 		<ng-select class="custom filter-dropdown" [clearable]="false" [items]="regions" bindLabel="attributes.name"
 			bindValue="id" [(ngModel)]="region" (change)="getPodcastsNavigation()"></ng-select>
 		<div>
@@ -22,7 +22,8 @@
 	<div class="grid-item" *ngFor="let p of podcasts">
 		<div class="podcast-frame shadow">
 			<a class="image-container" [routerLink]="['/podcast', p['id']['attributes']['im:id']]">
-				<img class="image-cover" [src]="(p['im:image'][1]['label'] | itunesImage) || 'assets/images/album_cover.png'"
+				<img class="image-cover"
+					[src]="(p['im:image'][1]['label'] | itunesImage) || 'assets/images/album_cover.png'"
 					onload="this.style.opacity = 1">
 			</a>
 			<div class="podcast-frame-info">
@@ -30,32 +31,37 @@
 					tabindex="-1">
 					{{ p['im:name']['label'] }}</div>
 				<div class="podcast-frame-btns">
-					<fa-icon *ngIf="favs.indexOf(p['im:name']['label']) == -1" [icon]="faHeart" class="podcast-frame-btn"
-						(click)="addPodcast(p['id']['attributes']['im:id'])" aria-label="Add to favourites" data-pop data-pop-arrow>
+					<fa-icon *ngIf="favs.indexOf(p['im:name']['label']) == -1" [icon]="faHeart"
+						class="podcast-frame-btn" (click)="addPodcast(p['id']['attributes']['im:id'])"
+						aria-label="Add to favourites" data-pop data-pop-arrow>
 					</fa-icon>
 					<fa-icon [icon]="faInfoCircle" class="podcast-frame-btn"
-						(click)="showDescription(p['im:name']['label'], p['summary']['label'])" aria-label="Show description"
-						data-pop data-pop-arrow></fa-icon>
+						(click)="showDescription(p['im:name']['label'], p['summary']['label'])"
+						aria-label="Show description" data-pop data-pop-arrow></fa-icon>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="list" *ngIf="layout == 'list'">
-	<div class="list-item shadow" *ngFor="let p of podcasts">
-		<a class="list-item-image" [routerLink]="['/podcast', p['id']['attributes']['im:id']]">
+<div class="podcast-list" *ngIf="layout == 'list'">
+	<div class="podcast-list-item shadow" *ngFor="let p of podcasts">
+		<a class="podcast-list-item-image" [routerLink]="['/podcast', p['id']['attributes']['im:id']]">
 			<div class="image-container">
-				<img class="image-cover" [src]="(p['im:image'][1]['label'] | itunesImage) || 'assets/images/album_cover.png'"
+				<img class="image-cover"
+					[src]="(p['im:image'][1]['label'] | itunesImage) || 'assets/images/album_cover.png'"
 					onload="this.style.opacity = 1">
 			</div>
 		</a>
-		<div class="list-item-info" [routerLink]="['/podcast', p['id']['attributes']['im:id']]" tabindex="-1">
+		<div class="podcast-list-item-info" [routerLink]="['/podcast', p['id']['attributes']['im:id']]"
+			tabindex="-1">
 			<h5 class="secondary-title truncate">{{ p['im:artist']['label'] }}</h5>
 			<h1 class="primary-title truncate">{{ p['im:name']['label'] }}</h1>
+			<p class="secondary-text truncate">Test</p>
 		</div>
-		<div class="list-item-actions">
+		<div class="podcast-list-item-actions">
 			<fa-icon *ngIf="favs.indexOf(p['im:name']['label']) == -1" [icon]="faHeart" class="podcast-frame-btn"
-				(click)="addPodcast(p['id']['attributes']['im:id'])" aria-label="Add to favourites" data-pop data-pop-arrow>
+				(click)="addPodcast(p['id']['attributes']['im:id'])" aria-label="Add to favourites" data-pop
+				data-pop-arrow>
 			</fa-icon>
 			<fa-icon [icon]="faInfoCircle" class="podcast-frame-btn"
 				(click)="showDescription(p['im:name']['label'], p['summary']['label'])" aria-label="Show description"

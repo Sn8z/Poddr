@@ -1,5 +1,6 @@
 @import "./assets/styles/scrollbar.css";
 @import "./assets/styles/grid.css";
+@import "./assets/styles/list.css";
 @import "./assets/styles/range-input.css";
 @import "./assets/styles/shadow.css";
 @import "./assets/styles/loader.css";
@@ -16,16 +17,14 @@
 @import '../node_modules/@simonwep/pickr/dist/themes/classic.min.css';
 @import "../node_modules/typeface-open-sans/index.css";
 @import "../node_modules/typeface-nunito-sans/index.css";
-
 :root {
-  --primary-color: #ff6600;
-  --primary-bg-color: #111111;
-  --secondary-bg-color: #151515;
-  --third-bg-color: #222222;
-  --primary-text-color: #efefef;
-  --secondary-text-color: #ababab;
+	--primary-color: #ff6600;
+	--primary-bg-color: #111111;
+	--secondary-bg-color: #151515;
+	--third-bg-color: #222222;
+	--primary-text-color: #efefef;
+	--secondary-text-color: #ababab;
 	--titlebar-height: 35px;
-	
 	--pop-bg-color: var(--secondary-bg-color);
 	--pop-text-color: var(--primary-text-color);
 	--pop-transition-delay: 1s;
@@ -33,69 +32,69 @@
 
 * {
 	font-family: "Nunito Sans", sans-serif;
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 :focus {
-  outline-width: 2px;
-  outline-style: solid;
-  outline-color: var(--primary-color);
+	outline-width: 2px;
+	outline-style: solid;
+	outline-color: var(--primary-color);
 }
 
 html, body {
-  height: 100vh;
-  max-height: 100vh;
-  width: 100vw;
-  max-width: 100vw;
-  background-color: var(--primary-bg-color);
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
+	height: 100vh;
+	max-height: 100vh;
+	width: 100vw;
+	max-width: 100vw;
+	background-color: var(--primary-bg-color);
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
 }
 
 body {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
 }
 
 body.using-mouse :focus {
-  outline: none;
+	outline: none;
 }
 
 .time {
-  font-family: 'Open Sans', sans-serif;
+	font-family: 'Open Sans', sans-serif;
 }
 
 .feedback-section {
 	display: flex;
 	flex: 1;
 	justify-content: center;
-	padding: 1.5rem;	
+	padding: 1.5rem;
 }
 
 .primary-title {
-  color: var(--primary-text-color);
-  margin: 0;
+	color: var(--primary-text-color);
+	margin: 0;
 }
 
 .secondary-title {
-  color: var(--secondary-text-color);
-  margin: 0;
+	color: var(--secondary-text-color);
+	margin: 0;
 }
 
 .primary-text {
-  color: var(--primary-text-color);
+	color: var(--primary-text-color);
 }
 
 .secondary-text {
-  color: var(--secondary-text-color);
+	color: var(--secondary-text-color);
 }
 
 .truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .banner {
@@ -113,7 +112,7 @@ body.using-mouse :focus {
 }
 
 .banner.shrink {
-	flex: 0 0 70px;	
+	flex: 0 0 70px;
 	margin-bottom: 50px;
 }
 

@@ -13,9 +13,12 @@ import * as log from 'electron-log';
 export class FavouritesService {
 	private store: Store<any> = new Store({ name: "favourites" });
 
-	favourites: BehaviorSubject<Object[]> = new BehaviorSubject<Object[]>([]);
-	favouriteKeys: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
-	favouriteTitles: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+	public favourites: BehaviorSubject<Object[]> = new BehaviorSubject<Object[]>([]);
+	public favouriteKeys: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+	public favouriteTitles: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+	public latestEpisodes: BehaviorSubject<Object[]> = new BehaviorSubject<Object[]>([]);
+
+	public dParser: DOMParser = new DOMParser();
 
 	constructor(private podcastService: PodcastService, private toast: ToastService) {
 		this.updateFavourites();
@@ -25,6 +28,7 @@ export class FavouritesService {
 		this.favourites.next(Object.values(this.store.store) as Object[]);
 		this.favouriteKeys.next(Object.keys(this.store.store) as string[]);
 		this.favouriteTitles.next(Object.values(this.store.store).map((x: any) => { return x.title; }) as string[]);
+		this.getLatestFavouriteEpisodes();
 	}
 
 	addItunesFavourite = (id) => {
@@ -59,5 +63,54 @@ export class FavouritesService {
 		this.toast.toastError("Unfollowed podcast");
 		this.updateFavourites();
 		log.info("Favourite service :: Removed " + rss + " from favourites.");
+	}
+
+	getLatestFavouriteEpisodes = () => {
+		this.favourites.value.forEach((x: any) => {
+			this.podcastService.getPodcastFeed(x.rss).subscribe(rss => {
+				const currentPodcastEpisodes = [];
+				parsePodcast(rss, (error, data) => {
+					if (error) {
+						log.error("Favourite service :: " + error);
+					} else {
+						data.episodes.forEach(y => {
+							const episode = {
+								title: y.title,
+								podcast: data.title,
+								src: y.enclosure.url,
+								cover: y.image || data.image,
+								guid: y.guid,
+								rss: x.rss,
+								date: y.published
+							}
+							currentPodcastEpisodes.push(episode);
+						})
+					}
+				})
+
+				const currentValue = this.latestEpisodes.value;
+				const updatedValue = [...currentValue, ...currentPodcastEpisodes];
+				this.latestEpisodes.next(updatedValue);
+
+
+				/*
+				const feed = this.dParser.parseFromString(rss, "text/xml");
+				const episodes = Array.from(feed.querySelectorAll('item'));
+				episodes.forEach(m => {
+					log.info(m.querySelector('title').innerHTML);
+					const episode = {
+						title: m.querySelector('title').innerHTML,
+						podcast: feed.querySelector('title').innerHTML,
+						src: m.querySelector('enclosure').getAttribute('url') || "",
+						cover: m.querySelector("itunes\\:image").getAttribute('href') || "",
+						guid: m.querySelector('guid').innerHTML,
+						rss: x,
+						date: m.querySelector('pubDate').innerHTML
+					}
+					currentPodcastEpisodes.push(episode);
+				})
+				*/
+			})
+		})
 	}
 }
