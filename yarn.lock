@@ -1301,12 +1301,12 @@
     merge-source-map "^1.1.0"
     schema-utils "^2.6.4"
 
-"@ng-select/ng-select@^3.7.3":
-  version "3.7.3"
-  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-3.7.3.tgz#317fbf94211fb2044f6ab233795cf1cbab4b44a3"
-  integrity sha512-Duw5t0b9Jup/tVEoDHLm+UhGv5RnwQ7pQorCAQc4LZR35oOZFjec8FrEGGtgVAGtwaQAYyd7PSMk3nEsWPg6AQ==
+"@ng-select/ng-select@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-4.0.1.tgz#2e83d4f477b119b6c94ffd0bf1373ca9748ff7ec"
+  integrity sha512-f5NzrKRvswOvxa8BzBgAUOpzl0B8SrlVQHQLB2zPymuZlzC2dWUi9mUhgu6s2igwdClmrZ8bysNBBNpgqHskyA==
   dependencies:
-    tslib "^1.9.0"
+    tslib "^1.10.0"
 
 "@ngtools/webpack@9.1.8":
   version "9.1.8"
