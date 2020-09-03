@@ -73,7 +73,7 @@
     "mpris-service": "2.1.0",
     "node-podcast-parser": "^2.0.0",
     "rxjs": "~6.5.5",
-    "sweetalert2": "^9.10.6",
+    "sweetalert2": "^9.17.2",
     "tslib": "^1.10.0",
     "typeface-nunito-sans": "^0.0.72",
     "typeface-open-sans": "^0.0.75",
