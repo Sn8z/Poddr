@@ -101,7 +101,7 @@ app.once("ready", function () {
 		mainWindow.webContents.openDevTools({ mode: "detach" });
 	}
 
-	require("./utils/contextMenu")();
+	require("./utils/contextMenu")(mainWindow);
 
 	if (process.platform == "linux") {
 		require("./utils/mpris")(mainWindow);

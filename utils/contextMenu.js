@@ -1,64 +1,59 @@
+const { Menu } = require('electron');
 const electron = require('electron');
 
-module.exports = function () {
+module.exports = function (mainWindow) {
+
 	const application = {
 		label: 'Application',
 		submenu: [
 			{
 				label: 'About Application',
-				role: 'about',
+				role: 'about'
 			},
 			{
-				type: 'separator',
+				type: 'separator'
 			},
 			{
 				label: 'Quit',
 				accelerator: 'Command+Q',
 				click: () => {
 					electron.app.quit();
-				},
-			},
-		],
+				}
+			}
+		]
 	};
 
 	const edit = {
 		label: 'Edit',
 		submenu: [
 			{
-				label: 'Undo',
-				accelerator: 'CmdOrCtrl+Z',
-				role: 'undo',
-			},
-			{
-				label: 'Redo',
-				accelerator: 'Shift+CmdOrCtrl+Z',
-				role: 'redo',
-			},
-			{
-				type: 'separator',
-			},
-			{
 				label: 'Cut',
 				accelerator: 'CmdOrCtrl+X',
-				role: 'cut',
+				role: 'cut'
 			},
 			{
 				label: 'Copy',
 				accelerator: 'CmdOrCtrl+C',
-				role: 'copy',
+				role: 'copy'
 			},
 			{
 				label: 'Paste',
 				accelerator: 'CmdOrCtrl+V',
-				role: 'paste',
+				role: 'paste'
 			},
 			{
 				label: 'Select All',
 				accelerator: 'CmdOrCtrl+A',
-				role: 'selectAll',
-			},
-		],
+				role: 'selectAll'
+			}
+		]
 	};
 	const template = [application, edit];
-	electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate(template));
+	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+
+	const ctxMenu = Menu.buildFromTemplate(edit.submenu);
+
+	mainWindow.webContents.on('context-menu', (event, params) => {
+		ctxMenu.popup();
+	});
 };
