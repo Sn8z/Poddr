@@ -102,6 +102,7 @@ app.once("ready", function () {
 	}
 
 	require("./utils/contextMenu")(mainWindow);
+	require("./utils/tray")(mainWindow);
 
 	if (process.platform == "linux") {
 		require("./utils/mpris")(mainWindow);
