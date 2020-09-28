@@ -44,7 +44,7 @@ export class PlayerComponent implements OnInit {
 		this.audio.loading.subscribe(value => { this.isLoading = value; });
 		this.audio.playing.subscribe(value => { this.isPlaying = value });
 		this.audio.muted.subscribe(value => { this.isMuted = value });
-		this.audio.volume.subscribe(value => { this.volume = value; });
+		this.audio.volume.subscribe(value => { this.volume = Math.sqrt(value); });
 		this.audio.percentPlayed.subscribe(value => { this.percentPlayed = value; });
 		this.audio.time.subscribe(value => { this.time = value });
 		this.audio.duration.subscribe(value => { this.duration = value });
@@ -73,7 +73,7 @@ export class PlayerComponent implements OnInit {
 	}
 
 	updateVolume(): void {
-		this.audio.setVolume(this.volume);
+		this.audio.setVolume(Math.pow(this.volume, 2));
 	}
 
 	setPlaybackRate(rate: number): void {
