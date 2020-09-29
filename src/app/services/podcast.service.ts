@@ -54,14 +54,14 @@ export class PodcastService {
 		);
 	}
 
-	getPodcastFeed(rss: String): Observable<any> {
+	getPodcastFeed(rss: String, silent: Boolean = false): Observable<any> {
 		log.info("Podcast service :: Getting Podcastfeed using RSS => " + rss);
 		return this.http.get("" + rss, { responseType: 'text' }).pipe(
 			timeout(10000),
 			retry(3),
 			catchError((error) => {
 				log.error('Podcast service :: ' + JSON.stringify(error));
-				this.toast.toastError('Something went wrong when trying to fetch ' + rss);
+				if (!silent) this.toast.toastError('Something went wrong when trying to fetch ' + rss);
 				return throwError(error);
 			})
 		);

@@ -67,7 +67,7 @@ export class FavouritesService {
 
 	getLatestFavouriteEpisodes = () => {
 		this.favourites.value.forEach((x: any) => {
-			this.podcastService.getPodcastFeed(x.rss).subscribe(rss => {
+			this.podcastService.getPodcastFeed(x.rss, true).subscribe(rss => {
 				const currentPodcastEpisodes = [];
 				parsePodcast(rss, (error, data) => {
 					if (error) {
@@ -87,29 +87,9 @@ export class FavouritesService {
 						})
 					}
 				})
-
 				const currentValue = this.latestEpisodes.value;
 				const updatedValue = [...currentValue, ...currentPodcastEpisodes];
 				this.latestEpisodes.next(updatedValue);
-
-
-				/*
-				const feed = this.dParser.parseFromString(rss, "text/xml");
-				const episodes = Array.from(feed.querySelectorAll('item'));
-				episodes.forEach(m => {
-					log.info(m.querySelector('title').innerHTML);
-					const episode = {
-						title: m.querySelector('title').innerHTML,
-						podcast: feed.querySelector('title').innerHTML,
-						src: m.querySelector('enclosure').getAttribute('url') || "",
-						cover: m.querySelector("itunes\\:image").getAttribute('href') || "",
-						guid: m.querySelector('guid').innerHTML,
-						rss: x,
-						date: m.querySelector('pubDate').innerHTML
-					}
-					currentPodcastEpisodes.push(episode);
-				})
-				*/
 			})
 		})
 	}
