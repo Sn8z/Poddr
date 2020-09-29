@@ -52,6 +52,7 @@ export class FavouritesComponent implements OnInit {
 	}
 
 	playEpisode = (episode) => {
+		episode.episodeTitle = episode.title;
 		this.audio.loadAudio(episode, episode.podcast, episode.rss, episode.cover);
 		this.audio.play();
 	}

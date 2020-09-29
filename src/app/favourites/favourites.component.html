@@ -37,17 +37,17 @@
 	</div>
 </div>
 <div class="podcast-list" *ngIf="content === 'latest'">
-	<div class="podcast-list-item shadow" *ngFor="let latest of latestEpisodes">
-		<a class="podcast-list-item-image" (click)="playEpisode(latest)">
+	<div class="podcast-list-item shadow" *ngFor="let l of latestEpisodes">
+		<a class="podcast-list-item-image" (click)="playEpisode(l)">
 			<div class="image-container">
-				<img class="image-cover" [src]="latest.cover || 'assets/images/album_cover.png'"
+				<img class="image-cover" [src]="l.cover || 'assets/images/album_cover.png'"
 					onload="this.style.opacity = 1">
 			</div>
 		</a>
-		<div class="podcast-list-item-info" tabindex="-1" (click)="playEpisode(latest)">
-			<h5 class="secondary-title truncate" [routerLink]="['/podcast', latest.rss]">{{ latest.podcast }}</h5>
-			<h1 class="primary-title truncate">{{ latest.title }}</h1>
-			<p class="secondary-text truncate">{{ latest.date | date }}</p>
+		<div class="podcast-list-item-info" tabindex="-1" (click)="playEpisode(l)">
+			<h5 class="secondary-title truncate" [routerLink]="['/podcast', l.rss]">{{ l.podcast }}</h5>
+			<h1 class="primary-title truncate">{{ l.title }}</h1>
+			<p class="secondary-text truncate">{{ l.date | date }}</p>
 		</div>
 		<div class="podcast-list-item-actions"></div>
 	</div>
