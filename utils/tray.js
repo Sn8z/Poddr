@@ -15,16 +15,18 @@ module.exports = (mainWindow) => {
 				mainWindow.show();
 				mainWindow.focus();
 			}
+		},
+		{
+			type: 'separator'
 		}, {
-			label: 'test2', click: () => {
-				log.info("Main Process :: Tray => Clicked test2");
+			label: 'Play / Pause', click: () => {
+				log.info("Main Process :: Tray => Toggle Play / Pause");
+				mainWindow.webContents.send('player:toggle-play');
 			}
 		}, {
-			label: 'test3', click: () => {
-				log.info("Main Process :: Tray => Clicked test3");
-			}
+			type: 'separator'
 		}, {
-			label: 'Exit', click: () => {
+			label: 'Quit Poddr', click: () => {
 				log.info("Main Process :: Tray => Exiting app");
 				app.quit();
 			}
