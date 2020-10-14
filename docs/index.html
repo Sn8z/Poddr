@@ -1,287 +1,251 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 
 <head>
-	<!-- Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-83028441-2"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-
-		function gtag() {
-			dataLayer.push(arguments);
-		}
-		gtag('js', new Date());
-
-		gtag('config', 'UA-83028441-2');
-	</script>
-
+	<title>Poddr - Podcasts for the desktop</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
 	<meta name="description" content="Poddr is a free podcast player for Windows, Mac and Linux." />
-	<title>Poddr - Podcasts for the desktop</title>
-
-	<link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-		integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" type="text/css"
-		rel="stylesheet" media="screen,projection" />
-	<link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+	<link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+	<link rel="stylesheet"
+		href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+	<link rel="stylesheet" href="styles/style.css">
+	<link rel="stylesheet" href="styles/button.css">
+	<link rel="stylesheet" href="styles/scrollbars.css">
 	<link rel="icon" href="favicon.ico">
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-83028441-2"></script>
+	<script src="scripts/script.js"></script>
+	<script defer src="scripts/navigation.js"></script>
+	<title>Poddr</title>
 </head>
 
-<body>
-
+<body id="page">
 	<header>
-		<div class="navbar-fixed">
-			<nav class="grey darken-3" role="navigation">
-				<div class="nav-wrapper container">
-					<a href="#top" class="brand-logo">
-						<img src="images/icon.png">
-						<span>Poddr</span>
-					</a>
-					<ul class="right hide-on-med-and-down">
-						<li><a href="#features">Features</a></li>
-						<li><a href="#downloads">Downloads</a></li>
-						<li><a href="#screenshots">Screenshots</a></li>
-						<li><a href="#contribute">Contribute</a></li>
-						<li><a class="tooltipped" data-position="bottom" data-tooltip="View on GitHub"
-								href="https://github.com/Sn8z/Poddr" target="_blank"><i class="fab fa-github grey-text"></i></a></li>
-
-					</ul>
-					<a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="fas fa-bars"></i></a>
-				</div>
-			</nav>
+		<section id="header-left">
+			<section id="header-logo">
+				<a onclick="navigateTo('#top')">
+					<img class="logo" src="images/icon.png">
+				</a>
+				<a onclick="navigateTo('#top')">
+					<h1 id="header-title">Poddr</h1>
+				</a>
+			</section>
+			<section id="header-socials">
+				<a href="https://github.com/Sn8z/Poddr" target="_blank" class="icon-button"><i class="lab la-github"></i></a>
+				<a href="https://twitter.com/sn8z" class="icon-button" target="_blank"><i class="lab la-twitter"></i></a>
+				<a href="https://www.patreon.com/poddr" class="icon-button" target="_blank"><i class="lab la-patreon"></i></a>
+			</section>
+		</section>
+		<nav>
+			<a onclick="navigateTo('#features')"><i class="lar la-list-alt"></i> Features</a>
+			<a onclick="navigateTo('#downloads')"><i class="las la-cloud-download-alt"></i> Downloads</a>
+			<a onclick="navigateTo('#foss')"><i class="las la-code-branch"></i> Open Source</a>
+			<a onclick="navigateTo('#donate')"><i class="las la-donate"></i> Donate</a>
+			<a onclick="navigateTo('#contact')"><i class="lar la-envelope"></i> Contact</a>
+		</nav>
+		<div id="hamburger" onclick="toggleNav()">
+			<div></div>
+			<div></div>
+			<div></div>
 		</div>
-		<ul id="nav-mobile" class="sidenav grey darken-3">
-			<li>
-				<h5 class="center white-text">Menu</h5>
-			</li>
-			<div class="divider orange"></div>
-			<li><a class="white-text" href="#features"><i class="fas fa-list-ul orange-text"></i> Features</a></li>
-			<li><a class="white-text" href="#downloads"><i class="fas fa-download orange-text"></i> Downloads</a></li>
-			<li><a class="white-text" href="#screenshots"><i class="fas fa-desktop orange-text"></i> Screenshots</a></li>
-			<li><a class="white-text" href="#contribute"><i class="fas fa-code-branch orange-text"></i> Contribute</a></li>
-			<li><a class="white-text" href="https://github.com/Sn8z/Poddr" target="_blank"><i
-						class="fab fa-github orange-text"></i> View on GitHub</a></li>
-
-		</ul>
 	</header>
 	<main>
 		<a class="anchor" id="top"></a>
-		<div class="row grey darken-4 hello">
-			<div class="col s12 m6 l6 valign-wrapper" style="height:90%;">
-				<div class="container center">
-					<h1 class="header center white-text">Podcasts for the desktop</h1>
-					<div class="row center">
-						<h5 class="header light white-text">
-							Poddr is a free podcast player for Windows, Mac and Linux.
-						</h5>
-					</div>
-					<img src="images/icon.png" width="75px" height="75px" />
-				</div>
-			</div>
-			<div class="col s12 m6 l6 valign-wrapper hide-on-small-only" style="height:90%;padding-right: 100px;">
-				<img class="responsive-img screenshot" src="images/pod_1_no_shadow.png" />
-			</div>
-			<div class="row center" style="height:10%;">
-				<a href="#features" style="font-size:30px;"><i class="fas fa-angle-down white-text"></i></a>
-			</div>
-		</div>
+		<section id="landing-section">
+			<section id="landing-info">
+				<h1>Podcasts for the desktop</h1>
+				<p>Poddr is a free podcast player for Windows, Mac and Linux.</p>
+				<button class="download-button" onclick="navigateTo('#downloads')"><i class="las la-cloud-download-alt"></i>
+					Download</button>
+			</section>
+			<section id="landing-image">
+				<img src="images/poddr.png">
+			</section>
+		</section>
+		<section class="content">
+			<a class="anchor" id="features"></a>
+			<h2>Features</h2>
+			<article class="feature-article">
+				<section class="feature-image">
+					<img src="images/ui.png">
+				</section>
+				<section class="feature-text">
+					<h3>Elegant and customizable UI</h3>
+					<p>Poddr focuses on a simple and modern UI that lets the user modify the appearance to their own liking. There
+						are plenty of themes and the option of setting your own accent color to match your setup.</p>
+				</section>
+			</article>
+			<article class="feature-article">
+				<section class="feature-text">
+					<h3>Local library with your favourites</h3>
+					<p>Follow your favourite podcast RSS feeds and store your library locally without any need for an online
+						account or signup.</p>
+				</section>
+				<section class="feature-image">
+					<img src="images/heart.png">
+				</section>
+			</article>
+			<article class="feature-article">
+				<section class="feature-image">
+					<img src="images/ei.png">
+				</section>
+				<section class="feature-text">
+					<h3>Export & Import OPML</h3>
+					<p>Poddr has builtin support for importing and exporting OPML feeds which means you can easily move your
+						podcast library between Poddr and other podcatchers.</p>
+				</section>
+			</article>
+			<article class="feature-article">
+				<section class="feature-text">
+					<h3>Offline playback</h3>
+					<p>Planning a roadtrip where you know there'll be a limited connection to the internet? Then download your
+						favourite episodes in advance and enjoy them without an active connection.</p>
+				</section>
+				<section class="feature-image">
+					<img src="images/eq.png">
+				</section>
+			</article>
+			<article class="feature-article">
+				<section class="feature-image">
+					<img src="images/shelf.png">
+				</section>
+				<section class="feature-text">
+					<h3>iTunes Library</h3>
+					<p>Poddr uses iTunes API for toplists and search funtionality which lets you explore the largest database of
+						podcasts in the world, and if you can't find your podcast you can instead manually add its RSS feed.</p>
+				</section>
+			</article>
+			<article class="feature-article">
+				<section class="feature-text">
+					<h3>Desktop Integration</h3>
+					<p>Poddr is built to integrate with most desktop environments on the market. This means that mediakeys and
+						other system integrations works out of the box.</p>
+				</section>
+				<section class="feature-image">
+					<img src="images/desktop.png">
+				</section>
+			</article>
 
-		<a class="anchor" id="features"></a>
-		<div class="container">
-			<div class="section">
-				<div class="row center">
-					<h3 class="header light">
-						Features
-					</h3>
-				</div>
+			<div role="separator" class="separator-lg"></div>
 
-				<div class="divider"></div>
+			<a class="anchor" id="downloads"></a>
+			<h2>Downloads</h2>
+			<section id="downloads-section">
+				<article id="windows">
+					<h3>Windows</h3>
+					<a id="exe-download" href="#">.exe</a>
+				</article>
+				<article id="linux">
+					<h3>Linux</h3>
+					<a id="appimage-download" href="#">.AppImage</a>
+					<a id="deb-download" href="#">.deb</a>
+					<a href="https://snapcraft.io/poddr" target="_blank">snap</a>
+				</article>
+				<article id="mac">
+					<h3>Mac OS</h3>
+					<a id="dmg-download" href="#">.dmg</a>
+				</article>
+			</section>
+			<p>All downloads can also be found at the <a href="https://github.com/Sn8z/Poddr/releases" target="_blank"
+					class="external_link">GitHub releases</a> page!</p>
 
-				<div class="row container">
-					<h5 class="header light"><i class="fas fa-podcast orange-text"></i> Worlds largest library</h5>
-					<p class="light">
-						Poddr uses iTunes API to gather information. Since iTunes has the largest podcast library in the world this
-						means you will most likely find something of interest no matter if you want music, politics or comedy. If
-						your favourite podcast feed is missing you can manually add it with ease to your favourites.
-					</p>
-				</div>
+			<div role="separator" class="separator-lg"></div>
 
-				<div class="divider"></div>
+			<a class="anchor" id="foss"></a>
+			<h2>Open Source</h2>
+			<p>Poddr is free open source software (FOSS) and that means that the full codebase is available online for
+				everyone to read, learn from and contribute to.</p>
+			<p>Contributions can come in different shapes. Everything from donations, bug fixes, bug reports, code features to
+				casual feedback is very valuable.</p>
+			<p>I believe that open source is a vital part of the computer software industry and that through collaboration
+				software becomes better and more secure.</p>
+			<p>If someone doesn't trust the distributed files that Poddr provides through all the different channels they
+				always have the option to compile the project on their own.</p>
 
-				<div class="row container">
-					<h5 class="header light"><i class="far fa-keyboard orange-text"></i> Desktop integration</h5>
-					<p class="light">
-						Poddr is built to integrate with most desktop environments on the market. This means that mediakeys and
-						other system integrations works out of the box.
-					</p>
-				</div>
+			<div role="separator" class="separator-lg"></div>
 
-				<div class="divider"></div>
+			<a class="anchor" id="donate"></a>
+			<h2>Donate</h2>
+			<p>If you use and enjoy Poddr please consider making a monetary donation. Poddr is 100% free and there's no ads or
+				tracking of any kind and there never will be. Donations will be used to improve Poddr and will give me the
+				opportunity to spend more time developing the project.</p>
+			<p>In the beginning Poddr was a personal project but have since then grown and become larger and more complex with
+				time. A side effect of this is that more people wants to be heard and more feedback and requests comes in,
+				donations will make it possible for me to continue fulfill other peoples wishes.</p>
+			<p>There are a couple of different options you can choose from when making a donation, check below for the
+				alternatives.</p>
+			<h3>Monthly</h3>
+			<p>There are two different ways you can support me monthly and those are either becoming a <a
+					href="https://www.patreon.com/poddr" target="_blank" class="external_link">Patreon</a> or a <a
+					href="https://github.com/sponsors/Sn8z" target="_blank" class="external_link">GitHub</a>
+				Sponsor.</p>
+			<p>Both options are equal to me and people who choose this way will get perks and access to exclusive Discord
+				channels.</p>
+			<h3>One-time donations</h3>
+			<p>If you prefer to make a one-time donation you can do so through <a href="https://www.paypal.com/paypalme/sn8z"
+					target="_blank" class="external_link">PayPal</a> or <a href="https://ko-fi.com/sneitz" target="_blank"
+					class="external_link">Ko-Fi</a>!</p>
+			<h3>Sponsorship</h3>
+			<p>Do you or your company enjoy Poddr and want your logo to be included in the <a
+					href="https://github.com/Sn8z/Poddr" target="_blank" class="external_link">GitHub</a> repository and here on
+				the
+				website? Then contact me and let's discuss what you've in mind.</p>
 
-				<div class="row container">
-					<h5 class="header light"><i class="fas fa-tools orange-text"></i> Elegant and customizable UI</h5>
-					<p class="light">
-						Poddr focuses on a dark and simple UI that is easy to navigate around. The user can also set their own
-						accent color and theme to match their own preference.
-					</p>
-				</div>
+			<div role="separator" class="separator-lg"></div>
 
-				<div class="divider"></div>
+			<a class="anchor" id="contact"></a>
 
-				<div class="row container">
-					<h5 class="header light"><i class="fas fa-download orange-text"></i> Offline playback</h5>
-					<p class="light">
-						If you're gonna be on the run you can download and play episodes offline.
-					</p>
-				</div>
-			</div>
-		</div>
-
-		<a class="anchor" id="downloads"></a>
-		<div class="section grey darken-3">
-			<div class="row container center white z-depth-4" style="padding-bottom:25px;padding-top:5px;">
-				<h3 class="header light">
-					Downloads
-				</h3>
-				<div class="divider"></div>
-				<div class="col s12 m4 l4">
-					<p><i class="fab fa-windows blue-text"></i> Windows</p>
-					<a class="waves-effect waves-light orange darken-3 btn" style="width:75%;"
-						href="https://github.com/Sn8z/Poddr/releases/download/2.0.0/Poddr.Setup.2.0.0.exe"><i
-							class="fas fa-cloud-download-alt"></i> .exe</a>
-					<div class="divider hide-on-med-and-up" style="margin:10px;"></div>
-				</div>
-				<div class="col s12 m4 l4">
-					<p><i class="fab fa-apple grey-text"></i> Mac</p>
-					<a class="waves-effect waves-light orange darken-3 btn" style="width:75%;"
-						href="https://github.com/Sn8z/Poddr/releases/download/2.0.0/Poddr-2.0.0.dmg"><i
-							class="fas fa-cloud-download-alt"></i> .dmg</a>
-					<div class="divider hide-on-med-and-up" style="margin:10px;"></div>
-				</div>
-				<div class="col s12 m4 l4">
-					<p><i class="fab fa-linux black-text"></i> Linux</p>
-					<a class="waves-effect waves-light orange darken-3 btn" style="width:75%;"
-						href="https://github.com/Sn8z/Poddr/releases/download/2.0.0/Poddr-2.0.0.AppImage"><i
-							class="fas fa-cloud-download-alt"></i> .AppImage</a>
-					<br><br>
-					<a class="waves-effect waves-light orange darken-3 btn" style="width:75%;"
-						href="https://github.com/Sn8z/Poddr/releases/download/2.0.0/poddr_2.0.0_amd64.deb"><i
-							class="fas fa-cloud-download-alt"></i> .deb</a>
-					<br><br>
-					<a class="waves-effect waves-light orange darken-3 btn" style="width:75%;" href="https://snapcraft.io/poddr"
-						target="_blank"><i class="fas fa-cloud-download-alt"></i> Snap</a>
-					<div class="divider hide-on-med-and-up" style="margin:10px;"></div>
-				</div>
-			</div>
-		</div>
-
-		<a class="anchor" id="screenshots"></a>
-		<div class="row container">
-			<h3 class="header center light">
-				Screenshots
-			</h3>
-		</div>
-		<div class="row container">
-			<div class="col s12 m4 l4" style="padding:10px;">
-				<img class="responsive-img materialboxed" data-caption="Toplists for the whole world." src="images/pod_1.png" />
-			</div>
-			<div class="col s12 m4 l4" style="padding:10px;">
-				<img class="responsive-img materialboxed" data-caption="Liten to your favourite podcast."
-					src="images/pod_2.png" />
-			</div>
-			<div class="col s12 m4 l4" style="padding:10px;">
-				<img class="responsive-img materialboxed" data-caption="Style it the way YOU want." src="images/pod_3.png" />
-			</div>
-			<div class="col s12 m4 l4" style="padding:10px;">
-				<img class="responsive-img materialboxed" data-caption="Add your own RSS feed." src="images/pod_4.png" />
-			</div>
-			<div class="col s12 m4 l4" style="padding:10px;">
-				<img class="responsive-img materialboxed" data-caption="Search the iTunes catalog for new stuff to listen to."
-					src="images/pod_5.png" />
-			</div>
-		</div>
-
-		<a class="anchor" id="contribute"></a>
-		<div class="section grey darken-3">
-			<div class="row container white z-depth-4" style="padding:5px;">
-				<h3 class="header center light">
-					Contribute
-				</h3>
-				<p style="padding:10px;">Poddr is free software with no ads which means that I make no profit from this piece of
-					software. Poddr started as a personal project but have grown bigger and more complex with time.</p>
-				<p style="padding:10px;">I very much appreciate all types of contributions, no matter if it's a bug report or
-					money to buy myself a coffee, I value them all highly!</p>
-				<div class="col sm12 m6 l6">
-					<h5 class="header center light">
-						Open source <i class="fas fa-code-branch orange-text"></i>
-					</h5>
-					<p>
-						Poddr is open source which means you can contribute with your ideas in the form of code or issues in the
-						repository on GitHub! Examples of contributions are:
-					</p>
-					<ul class="center">
-						<li><b>Bug reports</b></li>
-						<li><b>Feature requests</b></li>
-						<li><b>Ideas for improvement</b></li>
-						<li><b>Code</b></li>
-					</ul>
-					<p>
-						I would very much like to hear about what you like or don't like with Poddr. Open an issue in the repository
-						or contact me by one of the methods found below.
-					</p>
-				</div>
-				<div class="col sm12 m6 l6">
-					<h5 class="header center light">
-						Donations <i class="fas fa-mug-hot orange-text"></i>
-					</h5>
-					<p>
-						If you don't have the knowledge or time to get involved on GitHub there's also the possibility to make
-						monetary donations to help the development of Poddr.
-					</p>
-					<p>You can become a <a href="https://github.com/sponsors/Sn8z" target="_blank">GitHub Sponsor</a>.</p>
-					<p>There's also a <a href="https://www.patreon.com/join/poddr" target="_blank">Patreon</a> page where you can
-						sponsor me.</p>
-					<p>For one-time donations there are both <a href="https://www.paypal.me/sn8z" target="_blank">PayPal</a> and
-						<a href="https://ko-fi.com/sneitz" target="_blank">Ko-Fi</a>.</p>
-				</div>
-			</div>
-		</div>
+			<h2>Contact</h2>
+			<h3>Discord</h3>
+			<p>There's a <a href="https://discord.gg/hjjMjkD" target="_blank" class="external_link">Discord server</a> for
+				Poddr where you can ask for
+				help, give feedback or start discussions about Poddr.</p>
+			<h3>Missing a feature?</h3>
+			<p>Is there something you think Poddr can do better or add to its list of features? Then check out our issues at
+				<a href="https://github.com/Sn8z/Poddr" target="_blank" class="external_link">GitHub</a> and add yours if it's
+				missing.</p>
+			<p>If you don't own a GitHub account you can also send me an email at <span
+					class="email">marcus.sneitz@gmail.com</span> with a explanatory
+				subject and detailed content.</p>
+			<h3>Found a bug?</h3>
+			<p>Bugs are difficult to avoid but if you find one please let me know! In the same way you would suggest new
+				features you simply open a new issue on <a href="https://github.com/Sn8z/Poddr" target="_blank"
+					class="external_link">GitHub</a>. Make sure
+				yours is a new bug and try to be as detailed as
+				possible in your report, it helps a lot!</p>
+			<p>If you don't own a GitHub account you can also send me an email at <span
+					class="email">marcus.sneitz@gmail.com</span> with a explanatory
+				subject and detailed content.</p>
+			<h3>Want to chat with me?</h3>
+			<p>If you want to come in contact with me to talk about Poddr or something else unrelated you can preferably do so
+				through email, <a href="https://twitter.com/sn8z" target="_blank" class="external_link">Twitter</a> or the <a
+					href="https://discord.gg/hjjMjkD" target="_blank" class="external_link">Discord server</a>.</p>
+			<p></p>
+		</section>
 	</main>
-
-	<footer class="page-footer grey darken-4">
-		<div class="container">
-			<div class="row">
-				<div class="col s12 m4 l4 center">
-					<a class="grey-text text-lighten-3" href="https://github.com/Sn8z" target="_blank">
-						<i class="fab fa-github"></i> Sn8z
-					</a>
-				</div>
-				<div class="col s12 m4 l4 center">
-					<a class="grey-text text-lighten-3" href="https://twitter.com/Sn8z" target="_blank">
-						<i class="fab fa-twitter"></i> Sn8z
-					</a>
-				</div>
-				<div class="col s12 m4 l4 center">
-					<a class="grey-text text-lighten-3" href="https://www.linkedin.com/in/marcus-sneitz-85b087130/"
-						target="_blank">
-						<i class="fab fa-linkedin"></i> Marcus Sneitz
-					</a>
-				</div>
-			</div>
-		</div>
-		<div class="footer-copyright orange darken-3">
-			<div class="container center">
-				Poddr is built with <i class="fas fa-heart"></i>
-			</div>
-		</div>
+	<footer>
+		<section id="footer-left">
+			<img class="logo" src="images/icon.png">
+			<h3>Poddr</h3>
+		</section>
+		<section id="footer-center">
+			<h2>Contact</h2>
+			<a href="https://github.com/Sn8z/Poddr" target="_blank"><i class="lab la-github"></i> GitHub</a>
+			<a href="https://twitter.com/sn8z" target="_blank"><i class="lab la-twitter"></i> Twitter</a>
+			<a href="https://discord.gg/hjjMjkD" target="_blank"><i class="lab la-discord"></i> Discord</a>
+			<a href="mailto:marcus.sneitz@gmail.com"><i class="lar la-envelope"></i> marcus.sneitz@gmail.com</a>
+			<a href="https://www.linkedin.com/in/marcus-sneitz-85b087130/" target="_blank"><i class="lab la-linkedin"></i>
+				LinkedIn</a>
+		</section>
+		<section id="footer-right">
+			<h2>Donate</h2>
+			<a href="https://www.patreon.com/poddr" target="_blank"><i class="lab la-patreon"></i> Patreon</a>
+			<a href="https://github.com/sponsors/Sn8z" target="_blank"><i class="lab la-github"></i> GitHub Sponsor</a>
+			<a href="https://www.paypal.com/paypalme/sn8z" target="_blank"><i class="lab la-paypal"></i> PayPal</a>
+			<a href="https://ko-fi.com/sneitz" target="_blank"><i class="las la-coffee"></i> Ko-Fi</a>
+		</section>
+		<div role="separator" class="separator" id="footer-separator"></div>
 	</footer>
-
-	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-	<script src="js/init.js"></script>
-
 </body>
 
 </html>
