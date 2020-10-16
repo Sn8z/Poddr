@@ -109,6 +109,7 @@ app.once("ready", function () {
 		require("./utils/dbus")(mainWindow);
 	} else {
 		require("./utils/mediakeys")(mainWindow);
+		require("./utils/thumbarButtons")(mainWindow);
 	}
 
 	//Listen for window changes
