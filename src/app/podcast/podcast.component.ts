@@ -50,14 +50,14 @@ export class PodcastComponent implements OnInit {
 	public currentGUID: string = "";
 	public isPlaying: Boolean = false;
 	public isLoading: Boolean = true;
-	public rss: String;
+	public rss: string;
 	public title: string;
-	public author: String;
-	public description: String;
-	public image: String;
-	public updated: String;
-	public website: String;
-	public email: String;
+	public author: string;
+	public description: string;
+	public image: string;
+	public updated: string;
+	public website: string;
+	public email: string;
 	public episodes: any[];
 	public allEpisodes: any[];
 	public sortBy: string = "asc";
@@ -115,7 +115,7 @@ export class PodcastComponent implements OnInit {
 		});
 	}
 
-	private parseRSS = (rss: String): void => {
+	private parseRSS = (rss: string): void => {
 		this.rss = rss;
 		this.podcastService.getPodcastFeed(rss).subscribe((response) => {
 			parsePodcast(response, (error, data) => {

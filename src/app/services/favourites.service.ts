@@ -6,7 +6,6 @@ import * as Store from 'electron-store';
 import * as parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
 
-
 @Injectable({
 	providedIn: 'root'
 })
@@ -18,26 +17,24 @@ export class FavouritesService {
 	public favouriteTitles: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 	public latestEpisodes: BehaviorSubject<Object[]> = new BehaviorSubject<Object[]>([]);
 
-	public dParser: DOMParser = new DOMParser();
-
 	constructor(private podcastService: PodcastService, private toast: ToastService) {
 		this.updateFavourites();
-	}
-
-	private updateFavourites = () => {
-		this.favourites.next(Object.values(this.store.store) as Object[]);
-		this.favouriteKeys.next(Object.keys(this.store.store) as string[]);
-		this.favouriteTitles.next(Object.values(this.store.store).map((x: any) => { return x.title; }) as string[]);
 		this.getLatestFavouriteEpisodes();
 	}
 
-	addItunesFavourite = (id) => {
+	private updateFavourites = (): void => {
+		this.favourites.next(Object.values(this.store.store) as Object[]);
+		this.favouriteKeys.next(Object.keys(this.store.store) as string[]);
+		this.favouriteTitles.next(Object.values(this.store.store).map((x: any) => { return x.title; }) as string[]);
+	}
+
+	addItunesFavourite = (id: string): void => {
 		this.podcastService.getRssFeed(id).subscribe((data) => {
 			this.addFavourite(data['results'][0]['feedUrl']);
 		});
 	}
 
-	addFavourite = (rss, silent: Boolean = false) => {
+	addFavourite = (rss: string, silent: Boolean = false) => {
 		this.podcastService.getPodcastFeed(rss).subscribe((response) => {
 			parsePodcast(response, (error, data) => {
 				if (error) {
@@ -51,46 +48,93 @@ export class FavouritesService {
 						dateAdded: Date.now()
 					});
 					if (!silent) this.toast.toastSuccess("Added " + data.title + " to favourites!");
-					this.updateFavourites();
 					log.info("Favourite service :: Added " + data.title + " to favourites.");
+					this.addEpisodesToLatest(rss);
+					this.updateFavourites();
 				}
 			})
 		});
 	}
 
-	removeFavourite = (rss) => {
+	addEpisodesToLatest = (rss: string): void => {
+		fetch(rss).then((response) => {
+			return response.text();
+		}).then((data) => {
+			parsePodcast(data, (error, data) => {
+				if (error) {
+					log.error(error);
+				} else {
+					let podcastEpisodes = [];
+					data.episodes.forEach(y => {
+						const episode = {
+							title: y.title || 'Podcast',
+							podcast: data.title || 'Podcast Title',
+							src: y.enclosure ? y.enclosure.url || '' : '',
+							cover: y.image || data.image,
+							guid: y.guid || '',
+							rss: rss || '',
+							date: y.published || ''
+						}
+						podcastEpisodes.push(episode);
+					})
+					this.latestEpisodes.next([...this.latestEpisodes.value, ...podcastEpisodes]);
+				}
+			});
+		}).catch((error) => {
+			log.error(error);
+		});
+	}
+
+	removeFavourite = (rss: string): void => {
 		this.store.delete(rss.replace(/\./g, '\\.'));
 		this.toast.toastError("Unfollowed podcast");
+		this.removeEpisodesFromLatest(rss);
 		this.updateFavourites();
 		log.info("Favourite service :: Removed " + rss + " from favourites.");
 	}
 
-	getLatestFavouriteEpisodes = () => {
-		this.favourites.value.forEach((x: any) => {
-			this.podcastService.getPodcastFeed(x.rss, true).subscribe(rss => {
-				const currentPodcastEpisodes = [];
-				parsePodcast(rss, (error, data) => {
-					if (error) {
-						log.error("Favourite service :: " + error);
-					} else {
-						data.episodes.forEach(y => {
-							const episode = {
-								title: y.title,
-								podcast: data.title,
-								src: y.enclosure.url,
-								cover: y.image || data.image,
-								guid: y.guid,
-								rss: x.rss,
-								date: y.published
-							}
-							currentPodcastEpisodes.push(episode);
-						})
-					}
-				})
-				const currentValue = this.latestEpisodes.value;
-				const updatedValue = [...currentValue, ...currentPodcastEpisodes];
-				this.latestEpisodes.next(updatedValue);
-			})
-		})
+	removeEpisodesFromLatest = (rss: string): void => {
+		let updateValue = this.latestEpisodes.value.filter((episode: any) => {
+			return episode.rss !== rss;
+		});
+		this.latestEpisodes.next(updateValue);
+	}
+
+	getLatestFavouriteEpisodes = (): void => {
+		let updatedValue = [];
+		const promises = [];
+		this.favourites.value.forEach((fav: any) => {
+			const promise = fetch(fav.rss)
+				.then((response) => {
+					return response.text();
+				}).then((data) => {
+					const currentPodcastEpisodes = [];
+					parsePodcast(data, (error, data) => {
+						if (error) {
+							log.error("Favourite service :: " + error);
+						} else {
+							data.episodes.forEach(y => {
+								const episode = {
+									title: y.title || 'Podcast',
+									podcast: data.title || 'Podcast Title',
+									src: y.enclosure ? y.enclosure.url || '' : '',
+									cover: y.image || data.image,
+									guid: y.guid || '',
+									rss: fav.rss || '',
+									date: y.published || ''
+								}
+								currentPodcastEpisodes.push(episode);
+							})
+						}
+					})
+					updatedValue = [...updatedValue, ...currentPodcastEpisodes];
+				}).catch((error) => {
+					log.error(error);
+				});
+			promises.push(promise);
+		});
+		Promise.all(promises).then(() => {
+			this.latestEpisodes.next(updatedValue);
+		});
 	}
 }
