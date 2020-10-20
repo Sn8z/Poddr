@@ -34,9 +34,7 @@ export class FavouritesComponent implements OnInit {
 				const bDate = new Date(b['date']);
 				return aDate > bDate ? -1 : bDate > aDate ? 1 : 0;
 			}).slice(0, 100);
-			console.log(this.latestEpisodes);
 		});
-
 	}
 
 	remove = (rss): void => {
