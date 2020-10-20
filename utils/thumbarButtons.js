@@ -46,7 +46,6 @@ module.exports = (mainWindow) => {
 		mainWindow.setThumbarButtons([
 			tButtons.prev,
 			tButtons.play,
-			tButtons.pause,
 			tButtons.next
 		]);
 	});
