@@ -135,6 +135,8 @@ export class FavouritesService {
 		});
 		Promise.all(promises).then(() => {
 			this.latestEpisodes.next(updatedValue);
+		}).catch((error) => {
+			log.error("Favourite service :: " + error);
 		});
 	}
 }
