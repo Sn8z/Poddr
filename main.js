@@ -66,6 +66,7 @@ app.once("ready", function () {
 		show: false,
 		simpleFullscreen: true,
 		webPreferences: {
+			enableRemoteModule: true,
 			nodeIntegration: true
 		},
 		backgroundColor: "#111",
