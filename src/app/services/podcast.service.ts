@@ -3,7 +3,8 @@ import { ToastService } from './toast.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, timeout, catchError } from 'rxjs/operators'
-import * as log from 'electron-log';
+import log from 'electron-log';
+
 
 @Injectable({
 	providedIn: 'root'

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PodcastService } from '../services/podcast.service';
 import { FavouritesService } from '../services/favourites.service';
@@ -7,6 +7,7 @@ import { Description } from '../pipes/description.pipe';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faInfoCircle, faTh, faList } from '@fortawesome/free-solid-svg-icons';
 import * as Store from 'electron-store';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-toplists',
@@ -14,7 +15,10 @@ import * as Store from 'electron-store';
 	styleUrls: ['./toplists.component.css'],
 	providers: [Description]
 })
-export class ToplistsComponent implements OnInit {
+export class ToplistsComponent implements OnInit, OnDestroy {
+	private favSubscription: Subscription;
+	private routeSubscription: Subscription;
+
 	private store = new Store();
 	public podcasts = [];
 	public amount: number;
@@ -42,16 +46,21 @@ export class ToplistsComponent implements OnInit {
 		this.categories = this.podcastService.getCategories();
 		this.regions = this.podcastService.getRegions();
 		this.layout = this.store.get("layout", "grid") as string;
-		this.favService.favouriteTitles.subscribe(value => {
+		this.favSubscription = this.favService.favouriteTitles.subscribe(value => {
 			this.favs = value;
 		});
 
 		//Listen for changes in URL parameters
-		this.route.paramMap.subscribe(params => {
+		this.routeSubscription = this.route.paramMap.subscribe(params => {
 			this.region = params.get("region") || this.store.get("region", "us") as string;
 			this.category = params.get("category") || "26";
 			if (this.region && this.category) this.getPodcasts();
 		})
+	}
+
+	ngOnDestroy() {
+		if (this.favSubscription) this.favSubscription.unsubscribe();
+		if (this.routeSubscription) this.routeSubscription.unsubscribe();
 	}
 
 	getPodcastsNavigation = () => {

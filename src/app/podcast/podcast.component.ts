@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AudioService } from '../services/audio.service';
 import { PodcastService } from '../services/podcast.service';
@@ -22,6 +22,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import * as parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-podcast',
@@ -29,7 +30,16 @@ import * as log from 'electron-log';
 	styleUrls: ['./podcast.component.css'],
 	providers: [Description]
 })
-export class PodcastComponent implements OnInit {
+export class PodcastComponent implements OnInit, OnDestroy {
+	private routeSubscription: Subscription;
+	private prevPlayedSubscription: Subscription;
+	private offlineSubscription: Subscription;
+	private favSubscription: Subscription;
+	private audioPlayingSubscription: Subscription;
+	private audioGuidSubscription: Subscription;
+	private podcastRssFeedSubscription: Subscription
+	private podcastFeedSubscription: Subscription
+
 	private id: string;
 	private regPattern: RegExp = /^[0-9]+$/;
 
@@ -79,7 +89,7 @@ export class PodcastComponent implements OnInit {
 
 	ngOnInit() {
 		//Listen for changes in URL parameters
-		this.route.paramMap.subscribe(params => {
+		this.routeSubscription = this.route.paramMap.subscribe(params => {
 			this.id = params.get("id");
 			if (this.regPattern.test(this.id)) {
 				this.getRSS(this.id);
@@ -88,36 +98,47 @@ export class PodcastComponent implements OnInit {
 			}
 		})
 
-		this.prevPlayed.playedEpisodes.subscribe(value => {
+		this.prevPlayedSubscription = this.prevPlayed.playedEpisodes.subscribe(value => {
 			this.zone.run(() => {
 				this.playedEpisodes = value;
 			});
 		});
-		this.offlineService.offlineKeys.subscribe(value => {
+		this.offlineSubscription = this.offlineService.offlineKeys.subscribe(value => {
 			this.zone.run(() => {
 				this.offlineEpisodes = value;
 			});
 		});
-		this.favouriteService.favouriteTitles.subscribe(value => {
+		this.favSubscription = this.favouriteService.favouriteTitles.subscribe(value => {
 			this.zone.run(() => {
 				this.favs = value;
 			});
 		});
 
-		this.audio.playing.subscribe(value => { this.isPlaying = value });
-		this.audio.guid.subscribe(value => { this.currentGUID = value });
+		this.audioPlayingSubscription = this.audio.playing.subscribe(value => { this.isPlaying = value });
+		this.audioGuidSubscription = this.audio.guid.subscribe(value => { this.currentGUID = value });
+	}
+
+	ngOnDestroy() {
+		if (this.routeSubscription) this.routeSubscription.unsubscribe();
+		if (this.prevPlayedSubscription) this.prevPlayedSubscription.unsubscribe();
+		if (this.offlineSubscription) this.offlineSubscription.unsubscribe();
+		if (this.favSubscription) this.favSubscription.unsubscribe();
+		if (this.audioPlayingSubscription) this.audioPlayingSubscription.unsubscribe();
+		if (this.audioGuidSubscription) this.audioGuidSubscription.unsubscribe();
+		if (this.podcastRssFeedSubscription) this.podcastRssFeedSubscription.unsubscribe();
+		if (this.podcastFeedSubscription) this.podcastFeedSubscription.unsubscribe();
 	}
 
 	//Extra step needed if we only have the iTunes ID
-	private getRSS = (id: String): void => {
-		this.podcastService.getRssFeed(id).subscribe((data) => {
+	private getRSS = (id: string): void => {
+		this.podcastRssFeedSubscription = this.podcastService.getRssFeed(id).subscribe((data) => {
 			this.parseRSS(data['results'][0]['feedUrl']);
 		});
 	}
 
 	private parseRSS = (rss: string): void => {
 		this.rss = rss;
-		this.podcastService.getPodcastFeed(rss).subscribe((response) => {
+		this.podcastFeedSubscription = this.podcastService.getPodcastFeed(rss).subscribe((response) => {
 			parsePodcast(response, (error, data) => {
 				if (error) {
 					log.error('Podcast component :: Parsing RSS feed failed for ' + rss);

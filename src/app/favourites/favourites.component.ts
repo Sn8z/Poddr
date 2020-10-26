@@ -1,16 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AudioService } from '../services/audio.service';
 import { FavouritesService } from '../services/favourites.service';
 import { OfflineService } from '../services/offline.service';
 import { ToastService } from '../services/toast.service';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-favourites',
 	templateUrl: './favourites.component.html',
 	styleUrls: ['./favourites.component.css']
 })
-export class FavouritesComponent implements OnInit {
+export class FavouritesComponent implements OnInit, OnDestroy {
+	private offlineSubscription: Subscription;
+	private favSubscription: Subscription;
+	private favEpisodesSubscription: Subscription;
+
 	public favourites: Array<Object> = [];
 	public offlineEpisodes: Array<Object> = [];
 	public latestEpisodes: Array<Object> = [];
@@ -22,19 +27,25 @@ export class FavouritesComponent implements OnInit {
 	constructor(private audio: AudioService, private favService: FavouritesService, private offlineService: OfflineService, private toast: ToastService) { }
 
 	ngOnInit() {
-		this.favService.favourites.subscribe(value => {
+		this.favSubscription = this.favService.favourites.subscribe(value => {
 			this.favourites = value;
 		});
-		this.offlineService.offlineEpisodes.subscribe(value => {
+		this.offlineSubscription = this.offlineService.offlineEpisodes.subscribe(value => {
 			this.offlineEpisodes = value;
 		});
-		this.favService.latestEpisodes.subscribe(value => {
+		this.favEpisodesSubscription = this.favService.latestEpisodes.subscribe(value => {
 			this.latestEpisodes = value.sort((a, b) => {
 				const aDate = new Date(a['date']);
 				const bDate = new Date(b['date']);
 				return aDate > bDate ? -1 : bDate > aDate ? 1 : 0;
 			}).slice(0, 100);
 		});
+	}
+
+	ngOnDestroy() {
+		if (this.favSubscription) this.favSubscription.unsubscribe();
+		if (this.offlineSubscription) this.offlineSubscription.unsubscribe();
+		if (this.favEpisodesSubscription) this.favEpisodesSubscription.unsubscribe();
 	}
 
 	remove = (rss): void => {
