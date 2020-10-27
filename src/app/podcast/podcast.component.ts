@@ -7,7 +7,8 @@ import { ToastService } from '../services/toast.service';
 import { Description } from '../pipes/description.pipe';
 import { FavouritesService } from '../services/favourites.service';
 import { OfflineService } from '../services/offline.service';
-import { faHeart, faCircle, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { clipboard, shell } from 'electron';
+import { faHeart, faCircle, faEnvelope, faCopy } from '@fortawesome/free-regular-svg-icons';
 import {
 	faSortAmountDown,
 	faSortAmountUp,
@@ -18,7 +19,8 @@ import {
 	faRss,
 	faEllipsisV,
 	faTimes,
-	faMusic
+	faMusic,
+	faExternalLinkAlt
 } from '@fortawesome/free-solid-svg-icons';
 import * as parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
@@ -37,8 +39,8 @@ export class PodcastComponent implements OnInit, OnDestroy {
 	private favSubscription: Subscription;
 	private audioPlayingSubscription: Subscription;
 	private audioGuidSubscription: Subscription;
-	private podcastRssFeedSubscription: Subscription
-	private podcastFeedSubscription: Subscription
+	private podcastRssFeedSubscription: Subscription;
+	private podcastFeedSubscription: Subscription;
 
 	private id: string;
 	private regPattern: RegExp = /^[0-9]+$/;
@@ -56,26 +58,29 @@ export class PodcastComponent implements OnInit, OnDestroy {
 	public faEllipsisV = faEllipsisV;
 	public faTimes = faTimes;
 	public faMusic = faMusic;
+	public faExternalLinkAlt = faExternalLinkAlt;
+	public faCopy = faCopy;
 
 	public currentGUID: string = "";
 	public isPlaying: Boolean = false;
 	public isLoading: Boolean = true;
-	public rss: string;
-	public title: string;
-	public author: string;
-	public description: string;
-	public image: string;
-	public updated: string;
-	public website: string;
-	public email: string;
-	public episodes: any[];
-	public allEpisodes: any[];
+	public isError: Boolean = false;
+	public rss: string = '';
+	public title: string = '';
+	public author: string = '';
+	public description: string = '';
+	public image: string = '';
+	public updated: string = '';
+	public website: string = '';
+	public email: string = '';
+	public episodes: any[] = [];
+	public allEpisodes: any[] = [];
 	public sortBy: string = "asc";
-	public latestEpisode: any;
-	public playedEpisodes: string[];
-	public offlineEpisodes: string[];
+	public latestEpisode: any = {};
+	public playedEpisodes: string[] = [];
+	public offlineEpisodes: string[] = [];
 	public query: string = "";
-	public favs: string[];
+	public favs: string[] = [];
 
 	constructor(private route: ActivatedRoute,
 		private audio: AudioService,
@@ -133,6 +138,12 @@ export class PodcastComponent implements OnInit, OnDestroy {
 	private getRSS = (id: string): void => {
 		this.podcastRssFeedSubscription = this.podcastService.getRssFeed(id).subscribe((data) => {
 			this.parseRSS(data['results'][0]['feedUrl']);
+		}, (error) => {
+			log.error('Podcast component :: ' + error);
+			this.isLoading = false;
+			this.isError = true;
+			this.title = "An error occured";
+			this.toast.errorModal(error);
 		});
 	}
 
@@ -144,6 +155,9 @@ export class PodcastComponent implements OnInit, OnDestroy {
 					log.error('Podcast component :: Parsing RSS feed failed for ' + rss);
 					log.error(error);
 					this.isLoading = false;
+					this.isError = true;
+					this.title = "An error occured";
+					this.toast.errorModal("Parsing of " + rss + " failed");
 				} else {
 					this.title = data.title;
 					this.author = data.author;
@@ -158,6 +172,12 @@ export class PodcastComponent implements OnInit, OnDestroy {
 					this.isLoading = false;
 				}
 			});
+		}, (error) => {
+			log.error('Podcast component :: ' + error);
+			this.isLoading = false;
+			this.isError = true;
+			this.title = "An error occured";
+			this.toast.errorModal(error);
 		});
 	}
 
@@ -197,6 +217,15 @@ export class PodcastComponent implements OnInit, OnDestroy {
 			this.episodes.sort((x, y) => y.published - x.published);
 			this.sortBy = "asc";
 		}
+	}
+
+	openURL = (url: string): void => {
+		shell.openExternal(url);
+	}
+
+	copyToClipboard = (text: string): void => {
+		clipboard.writeText(text);
+		this.toast.toast('Copied email to clipboard!');
 	}
 
 	showDescription = (event, title, description): void => {

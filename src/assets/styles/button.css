@@ -42,3 +42,30 @@
 .btn:hover {
 	color: var(--primary-color);
 }
+
+.btn-link {
+	color: var(--primary-text-color);
+	border: none;
+	background-color: transparent;
+	transition: all 0.3s ease;
+	cursor: pointer;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	text-decoration: underline;
+	margin: 1em 0;
+	width: min-content;
+}
+
+.btn-link fa-icon {
+	color: var(--primary-color);
+	width: 20px;
+  height: 20px;
+  line-height: 20px;
+	font-size: 20px;
+	margin-right: 0.5em;
+}
+
+.btn-link:hover, .btn-link:focus {
+	color: var(--primary-color);
+}
