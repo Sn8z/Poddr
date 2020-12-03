@@ -9124,10 +9124,10 @@ svgo@^1.0.0:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-sweetalert2@^10.8.1:
-  version "10.8.1"
-  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-10.8.1.tgz#4266bd84bcc19170bc8e1bd179f207c67f910ea4"
-  integrity sha512-CRTy1fODxSqX6sGYMP4/9TT1QXlsjElRA4xoJVoCWa8L39l8jBwh/DWOFPb5Re1+EMTqOexDrT38jP0GI/DLZQ==
+sweetalert2@^10.11.0:
+  version "10.11.0"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-10.11.0.tgz#050a8e9c7dea45715fc6804c82006f0276dacaab"
+  integrity sha512-VToVRTT8aILCckN1f9YlcAT11k0TS+7M5SW2pvawuOJRCK5nY/WAPVqO9qL+u2yAfA7FOgk5+DO2M8f9xeVFsA==
 
 symbol-observable@1.2.0:
   version "1.2.0"
