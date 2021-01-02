@@ -89,5 +89,9 @@ export class HotkeysService {
       this.router.navigateByUrl("/settings");
     });
 
+    Mousetrap.bindGlobal("mod+e", (e) => {
+      e.preventDefault();
+      document.getElementById('sidenav').classList.toggle('hidden');
+    });
   }
 }

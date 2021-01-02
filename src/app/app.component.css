@@ -23,6 +23,10 @@
   background-color: var(--secondary-bg-color);
 }
 
+#sidenav.hidden {
+  display: none;
+}
+
 #content-container {
   flex: 1 1 auto;
   display: flex;
