@@ -5,7 +5,43 @@ module.exports = function (mainWindow) {
 
 	const application = {
 		label: 'Application',
-		submenu: [
+		submenu: process.platform === 'darwin' ?
+		[
+			{
+				label: 'About Application',
+				role: 'about',
+			},
+			{
+				type: 'separator'
+			},
+			{
+				role: 'services'
+			},
+			{
+				type: 'separator'
+			},
+			{
+				role: 'hide'
+			},
+			{
+				role: 'hideothers'
+			},
+			{
+				role: 'unhide'
+			},
+			{
+				type: 'separator',
+			},
+			{
+				label: 'Quit',
+				accelerator: 'Command+Q',
+				click: () => {
+					electron.app.quit();
+				},
+			}
+		]
+		:
+		[
 			{
 				label: 'About Application',
 				role: 'about'
