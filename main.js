@@ -67,7 +67,8 @@ app.once("ready", function () {
 		simpleFullscreen: true,
 		webPreferences: {
 			enableRemoteModule: true,
-			nodeIntegration: true
+			nodeIntegration: true,
+			devTools: options.debug
 		},
 		backgroundColor: "#111",
 		icon: nativeImage.createFromPath(icon)
