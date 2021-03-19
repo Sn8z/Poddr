@@ -1213,10 +1213,10 @@
     merge-source-map "^1.1.0"
     schema-utils "^2.7.0"
 
-"@ng-select/ng-select@^5.0.8":
-  version "5.0.8"
-  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-5.0.8.tgz#68299204199d8ad2004976f2afeb54e367677f31"
-  integrity sha512-Q7W0NjmTnO2+yUoMfOqOaZyMTCcIRKZUzCaeSW/ucyWk2OwgMwlBLKc+IpzfTWdnInjVtkR0LzC5w1tdrTdLVg==
+"@ng-select/ng-select@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-5.1.0.tgz#ef9f850e9aa58a03b9fce340e74ee1383a311e95"
+  integrity sha512-VcdZtr68PVsboUEFXfGF844qyYKPIrDNTGiLbQTEw593axCXO9GEL9YPD5QSangg+41w8F7/7ymkrrLpxfyRpw==
   dependencies:
     tslib "^2.0.0"
 
