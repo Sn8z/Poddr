@@ -30,7 +30,7 @@
 		"build": "ng build --prod=true --buildOptimizer=true",
 		"electron": "./node_modules/.bin/electron .",
 		"start": "ng build --prod=true --buildOptimizer=true && ./node_modules/.bin/electron .",
-		"start:debug": "ng build && ./node_modules/.bin/electron .",
+		"start:debug": "ng build && ./node_modules/.bin/electron . --debug",
 		"dist": "ng build --prod=true --buildOptimizer=true && electron-builder",
 		"dist:mac": "ng build --prod=true --buildOptimizer=true && electron-builder --mac",
 		"dist:win": "ng build --prod=true --buildOptimizer=true && electron-builder --win",

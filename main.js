@@ -68,6 +68,7 @@ app.once("ready", function () {
 		webPreferences: {
 			enableRemoteModule: true,
 			nodeIntegration: true,
+			contextIsolation: false,
 			devTools: options.debug
 		},
 		backgroundColor: "#111",
