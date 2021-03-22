@@ -5,6 +5,7 @@ const nativeImage = electron.nativeImage;
 const ipc = electron.ipcMain;
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
+const store = require("electron-store");
 
 //Global reference to window object;
 var mainWindow = null;
@@ -16,6 +17,9 @@ app.setPath("userData", app.getPath("userData").replace("Poddr", "poddr"));
 const log = require("electron-log");
 log.transports.file.init();
 log.info("Main Process :: Storing logs at: " + log.transports.file.file);
+
+//Set up electron store
+store.initRenderer();
 
 //Allow actions before user have interacted with the document
 app.commandLine.appendSwitch("--autoplay-policy", "no-user-gesture-required");
