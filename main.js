@@ -15,8 +15,7 @@ app.setPath("userData", app.getPath("userData").replace("Poddr", "poddr"));
 
 //Set up logging
 const log = require("electron-log");
-log.transports.file.init();
-log.info("Main Process :: Storing logs at: " + log.transports.file.file);
+log.info("Main Process :: Storing logs at: " + log.transports.file.getFile().path);
 
 //Set up electron store
 store.initRenderer();
@@ -37,6 +36,8 @@ for (const arg of argv) {
 	} else if (arg === "--debug" || arg === "-d") {
 		log.info("Main Process :: Setting debug to true.");
 		options.debug = true;
+		process.traceDeprecation = true;
+		process.traceProcessWarnings = true;
 	} else {
 		log.info("Main Process :: " + arg + " is not a valid flag.");
 	}
