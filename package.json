@@ -1,91 +1,91 @@
 {
-	"name": "poddr",
-	"productName": "Poddr",
-	"version": "2.1.0",
-	"description": "Podcast client",
-	"main": "main.js",
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/Sn8z/Poddr.git"
-	},
-	"private": true,
-	"ava": {
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register",
-			"zone.js"
-		],
-		"files": [
-			"tests/*.spec.ts",
-			"src/app/*/*.spec.ts"
-		],
-		"verbose": true,
-		"concurrency": 1,
-		"workerThreads": false
-	},
-	"scripts": {
-		"ng": "ng",
-		"build": "ng build --prod=true --buildOptimizer=true",
-		"electron": "./node_modules/.bin/electron .",
-		"start": "ng build --prod=true --buildOptimizer=true && ./node_modules/.bin/electron .",
-		"start:debug": "ng build && ./node_modules/.bin/electron . --debug",
-		"dist": "ng build --prod=true --buildOptimizer=true && electron-builder",
-		"dist:mac": "ng build --prod=true --buildOptimizer=true && electron-builder --mac",
-		"dist:win": "ng build --prod=true --buildOptimizer=true && electron-builder --win",
-		"dist:linux": "ng build --prod=true --buildOptimizer=true && electron-builder --linux",
-		"postinstall": "ngcc && electron-builder install-app-deps",
-		"lint": "ng lint",
-		"test": "ava"
-	},
-	"author": "Marcus Sneitz <marcus.sneitz@gmail.com>",
-	"license": "GPL-3.0",
-	"devDependencies": {
-		"@angular-builders/custom-webpack": "^11.1.1",
-		"@angular-devkit/build-angular": "~0.1002.0",
-		"@angular/cli": "11.2.5",
-		"@angular/compiler-cli": "10.2.0",
-		"@angular/language-service": "^11.2.6",
-		"@types/node": "14.14.35",
-		"codelyzer": "^6.0.1",
-		"electron": "12.0.1",
-		"electron-builder": "^22.10.5",
-		"ts-node": "~9.0.0",
-		"tslint": "~6.1.0",
-		"typescript": "4.0.7",
-		"ava": "^3.15.0",
-		"spectron": "^12.0.0"
-	},
-	"dependencies": {
-		"@angular/animations": "10.2.0",
-		"@angular/common": "10.2.0",
-		"@angular/compiler": "10.2.0",
-		"@angular/core": "10.2.0",
-		"@angular/forms": "10.2.0",
-		"@angular/platform-browser": "10.2.0",
-		"@angular/platform-browser-dynamic": "10.2.0",
-		"@angular/router": "10.2.0",
-		"@fortawesome/angular-fontawesome": "0.7.0",
-		"@fortawesome/fontawesome-svg-core": "^1.2.35",
-		"@fortawesome/free-brands-svg-icons": "^5.15.3",
-		"@fortawesome/free-regular-svg-icons": "^5.13.0",
-		"@fortawesome/free-solid-svg-icons": "^5.12.1",
-		"@ng-select/ng-select": "^5.1.0",
-		"@simonwep/pickr": "^1.5.1",
-		"@sn8z/pop-pop.css": "^1.0.2",
-		"dbus-next": "^0.9.2",
-		"electron-log": "^4.3.2",
-		"electron-store": "^7.0.2",
-		"electron-window-state": "^5.0.3",
-		"mousetrap": "^1.6.3",
-		"mpris-service": "2.1.0",
-		"node-podcast-parser": "^2.0.0",
-		"rxjs": "~6.6.3",
-		"sweetalert2": "^10.15.6",
-		"tslib": "^2.1.0",
-		"typeface-nunito-sans": "^1.1.13",
-		"typeface-open-sans": "^1.1.13",
-		"zone.js": "~0.11.4"
-	}
+  "name": "poddr",
+  "productName": "Poddr",
+  "version": "2.1.0",
+  "description": "Podcast client",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Sn8z/Poddr.git"
+  },
+  "private": true,
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register",
+      "zone.js"
+    ],
+    "files": [
+      "tests/*.spec.ts",
+      "src/app/*/*.spec.ts"
+    ],
+    "verbose": true,
+    "concurrency": 1,
+    "workerThreads": false
+  },
+  "scripts": {
+    "ng": "ng",
+    "build": "ng build --prod=true --buildOptimizer=true",
+    "electron": "./node_modules/.bin/electron .",
+    "start": "ng build --prod=true --buildOptimizer=true && ./node_modules/.bin/electron .",
+    "start:debug": "ng build && ./node_modules/.bin/electron . --debug",
+    "dist": "ng build --prod=true --buildOptimizer=true && electron-builder",
+    "dist:mac": "ng build --prod=true --buildOptimizer=true && electron-builder --mac",
+    "dist:win": "ng build --prod=true --buildOptimizer=true && electron-builder --win",
+    "dist:linux": "ng build --prod=true --buildOptimizer=true && electron-builder --linux",
+    "postinstall": "ngcc && electron-builder install-app-deps",
+    "lint": "ng lint",
+    "test": "ava"
+  },
+  "author": "Marcus Sneitz <marcus.sneitz@gmail.com>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@angular-builders/custom-webpack": "^11.1.1",
+    "@angular-devkit/build-angular": "~0.1002.0",
+    "@angular/cli": "11.2.5",
+    "@angular/compiler-cli": "11.2.6",
+    "@angular/language-service": "^11.2.6",
+    "@types/node": "14.14.35",
+    "codelyzer": "^6.0.1",
+    "electron": "12.0.1",
+    "electron-builder": "^22.10.5",
+    "ts-node": "~9.0.0",
+    "tslint": "~6.1.0",
+    "typescript": "4.0.7",
+    "ava": "^3.15.0",
+    "spectron": "^12.0.0"
+  },
+  "dependencies": {
+    "@angular/animations": "11.2.6",
+    "@angular/common": "11.2.6",
+    "@angular/compiler": "11.2.6",
+    "@angular/core": "11.2.6",
+    "@angular/forms": "11.2.6",
+    "@angular/platform-browser": "11.2.6",
+    "@angular/platform-browser-dynamic": "11.2.6",
+    "@angular/router": "11.2.6",
+    "@fortawesome/angular-fontawesome": "0.7.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-brands-svg-icons": "^5.15.3",
+    "@fortawesome/free-regular-svg-icons": "^5.13.0",
+    "@fortawesome/free-solid-svg-icons": "^5.12.1",
+    "@ng-select/ng-select": "^5.1.0",
+    "@simonwep/pickr": "^1.5.1",
+    "@sn8z/pop-pop.css": "^1.0.2",
+    "dbus-next": "^0.9.2",
+    "electron-log": "^4.3.2",
+    "electron-store": "^7.0.2",
+    "electron-window-state": "^5.0.3",
+    "mousetrap": "^1.6.3",
+    "mpris-service": "2.1.0",
+    "node-podcast-parser": "^2.0.0",
+    "rxjs": "~6.6.3",
+    "sweetalert2": "^10.15.6",
+    "tslib": "^2.1.0",
+    "typeface-nunito-sans": "^1.1.13",
+    "typeface-open-sans": "^1.1.13",
+    "zone.js": "~0.11.4"
+  }
 }
