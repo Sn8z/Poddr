@@ -101,42 +101,15 @@ export class FavouritesService {
 	}
 
 	getLatestFavouriteEpisodes = (): void => {
-		let updatedValue = [];
-		const promises = [];
-		this.favourites.value.forEach((fav: any) => {
-			const promise = fetch(fav.rss)
-				.then((response) => {
-					return response.text();
-				}).then((data) => {
-					const currentPodcastEpisodes = [];
-					parsePodcast(data, (error, data) => {
-						if (error) {
-							log.error("Favourite service :: " + error);
-						} else {
-							data.episodes.forEach(y => {
-								const episode = {
-									title: y.title || 'Podcast',
-									podcast: data.title || 'Podcast Title',
-									src: y.enclosure ? y.enclosure.url || '' : '',
-									cover: y.image || data.image,
-									guid: y.guid || '',
-									rss: fav.rss || '',
-									date: y.published || ''
-								}
-								currentPodcastEpisodes.push(episode);
-							})
-						}
-					})
-					updatedValue = [...updatedValue, ...currentPodcastEpisodes];
-				}).catch((error) => {
-					log.error(error);
-				});
-			promises.push(promise);
-		});
-		Promise.all(promises).then(() => {
-			this.latestEpisodes.next(updatedValue);
-		}).catch((error) => {
-			log.error("Favourite service :: " + error);
-		});
+		if (typeof Worker !== 'undefined') {
+			const worker = new Worker('../workers/latest.worker', { type: 'module' });
+			worker.onmessage = ({ data }) => {
+				this.latestEpisodes.next(data);
+				log.info("Favourite service :: Done fetching latest episodes.");
+			};
+			worker.postMessage(this.favourites.value);
+		} else {
+			log.error("Favourite service :: Worker not available.");
+		}
 	}
 }

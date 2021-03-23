@@ -73,8 +73,10 @@ app.once("ready", function () {
 		webPreferences: {
 			enableRemoteModule: true,
 			nodeIntegration: true,
+			nodeIntegrationInWorker: true,
 			contextIsolation: false,
-			devTools: options.debug
+			devTools: options.debug,
+			sandbox: false
 		},
 		backgroundColor: "#111",
 		icon: nativeImage.createFromPath(icon)
