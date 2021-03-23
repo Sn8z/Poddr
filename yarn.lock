@@ -2067,12 +2067,12 @@
     dir-compare "^2.4.0"
     fs-extra "^9.0.1"
 
-"@fortawesome/angular-fontawesome@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/angular-fontawesome/-/angular-fontawesome-0.7.0.tgz#af9ac19e035960e9c05615ae86aac3b737ad7b13"
-  integrity sha512-U+eHYbKuVYrrm9SnIfl+z+6KTiI4Pu+S2OKh34JIi7C1jHhDcrVeDZISP/cpswHY7LWWDOPYeKE+yuWFlL4aVw==
+"@fortawesome/angular-fontawesome@0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/angular-fontawesome/-/angular-fontawesome-0.8.2.tgz#fe0401c66dd237fd78d3f29d540ef7302bb40e5a"
+  integrity sha512-K/AiykA4YbHKE6XKEtZ0ZvVRQocUHyk+79HYWIfhGy3teHpzxsUqB/UjDaxivgBd6dF6ihlzgEbgrDMHlGNwGg==
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
 "@fortawesome/fontawesome-common-types@^0.2.32", "@fortawesome/fontawesome-common-types@^0.2.35":
   version "0.2.35"
