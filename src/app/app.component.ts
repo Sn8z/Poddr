@@ -7,6 +7,8 @@ import * as log from 'electron-log';
 import * as electron from 'electron';
 import { Router, NavigationStart, NavigationEnd, RouterEvent } from '@angular/router';
 import { filter } from 'rxjs/operators';
+const ipc = require('electron').ipcRenderer;
+const semverGt = require('semver/functions/gt');
 
 const themesJSON = require('../assets/themes/themes.json');
 
@@ -78,13 +80,15 @@ export class AppComponent implements OnInit {
 
 	initUpdateCheck = () => {
 		log.info("App setup :: Checking for updates...");
-		this.http.get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json").subscribe((response) => {
-			if (response['version'] != electron.remote.app.getVersion()) {
-				log.info("App setup :: Found update " + response['version'] + "!");
-				this.toast.toastURL(response['version'] + " is now available!", "https://github.com/Sn8z/Poddr/releases", 15000);
-			} else {
-				log.info("App setup :: No updates found.");
-			}
+		ipc.invoke('app-version').then((appVersion) => {
+			this.http.get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json").subscribe((response) => {
+				if (semverGt(response['version'], appVersion)) {
+					log.info("App setup :: Found update " + response['version'] + "!");
+					this.toast.toastURL(response['version'] + " is now available!", "https://github.com/Sn8z/Poddr/releases", 15000);
+				} else {
+					log.info("App setup :: No updates found. You are running Poddr " + appVersion);
+				}
+			});
 		});
 	}
 }

@@ -122,6 +122,11 @@ app.once("ready", function () {
 		require("./utils/thumbarButtons")(mainWindow);
 	}
 
+	// Return current version to renderer
+	ipc.handle('app-version', () => {
+		return app.getVersion();
+	});
+
 	//Listen for window changes
 	ipc.on("window-update", (event, arg) => {
 		switch (arg) {
