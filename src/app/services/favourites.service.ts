@@ -19,6 +19,7 @@ export class FavouritesService {
 
 	constructor(private podcastService: PodcastService, private toast: ToastService) {
 		this.updateFavourites();
+		this.checkFavourites();
 		this.getLatestFavouriteEpisodes();
 	}
 
@@ -45,7 +46,8 @@ export class FavouritesService {
 						rss: rss,
 						title: data.title,
 						img: data.image,
-						dateAdded: Date.now()
+						dateAdded: Date.now(),
+						categories: this.mergeAndFixCategories(data.categories)
 					});
 					if (!silent) this.toast.toastSuccess("Added " + data.title + " to favourites!");
 					log.info("Favourite service :: Added " + data.title + " to favourites.");
@@ -111,5 +113,37 @@ export class FavouritesService {
 		} else {
 			log.error("Favourite service :: Worker not available.");
 		}
+	}
+
+	//TODO: refactor api & function calls
+	checkFavourites = (): void => {
+		this.favourites.value.forEach((fav) => {
+			fetch(fav['rss']).then((response) => {
+				return response.text();
+			}).then((data) => {
+				parsePodcast(data, (error, data) => {
+					if (error) {
+						log.error("Favourite service :: " + fav['title'] + " - " + error.message);
+					} else {
+						let currentValue = this.store.get(fav['rss'].replace(/\./g, '\\.'));
+						this.store.set(fav['rss'].replace(/\./g, '\\.'), {
+							rss: currentValue.rss,
+							title: data.title,
+							img: data.image,
+							dateAdded: currentValue.dateAdded,
+							categories: this.mergeAndFixCategories(data.categories, currentValue.categories)
+						});
+						log.info("Favourite service :: Updated " + data.title + ".");
+					}
+				});
+			}).catch((error) => {
+				log.error("Favourite service :: " + fav['title'] + " - " + error);
+			});
+		});
+	}
+
+	mergeAndFixCategories = (currentCategories: Array<string>, newCategories: Array<string> = []): Array<string> => {
+		let cat = currentCategories.concat(newCategories).map((c) => c.split('>')).flat();
+		return Array.from(new Set(cat));
 	}
 }
