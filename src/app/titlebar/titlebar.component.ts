@@ -18,7 +18,13 @@ export class TitlebarComponent implements OnInit {
 
 	constructor(private location: Location) { }
 
-	ngOnInit() { }
+	ngOnInit() {
+		if (process.platform === 'darwin') {
+			const titleBar = (document.getElementsByTagName('app-titlebar') as HTMLCollectionOf<HTMLElement>)[0];
+			titleBar.style.flexDirection = 'row-reverse';
+			(titleBar.lastChild as HTMLElement).style.flexDirection = 'row-reverse';
+		}
+	}
 
 	public goBack() {
 		this.location.back();
