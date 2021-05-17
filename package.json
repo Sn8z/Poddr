@@ -83,7 +83,7 @@
     "node-podcast-parser": "^2.0.0",
     "rxjs": "~6.6.6",
     "semver": "^7.3.5",
-    "sweetalert2": "^10.15.6",
+    "sweetalert2": "^11.0.5",
     "tslib": "^2.1.0",
     "typeface-nunito-sans": "^1.1.13",
     "typeface-open-sans": "^1.1.13",
