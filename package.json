@@ -87,7 +87,7 @@
     "mousetrap": "^1.6.3",
     "mpris-service": "2.1.2",
     "node-podcast-parser": "^2.0.0",
-    "rxjs": "~6.6.6",
+    "rxjs": "~7.5.2",
     "semver": "^7.3.5",
     "sweetalert2": "^11.1.0",
     "tslib": "^2.1.0",
