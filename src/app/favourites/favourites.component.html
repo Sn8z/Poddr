@@ -52,3 +52,17 @@
 		<div class="podcast-list-item-actions"></div>
 	</div>
 </div>
+<div class="offline-episodes" *ngIf="content === 'offline'">
+	<div class="feedback-section" *ngIf="offlineEpisodes.length === 0">
+		<h2 class="primary-text">No downloaded episodes</h2>
+	</div>
+	<div class="offline-episode" *ngFor="let o of offlineEpisodes">
+		<div class="offline-episode-title" (click)="playOffline(o)">
+			{{ o.episodeTitle }} <span class="secondary-text">{{ " - " + o.author }}</span>
+		</div>
+		<div class="offline-episode-actions">
+			<fa-icon [icon]="faTimes" class="podcast-frame-remove-btn" (click)="removeOffline(o.guid)"
+				aria-label="Remove episode" data-pop="left" data-pop-arrow></fa-icon>
+		</div>
+	</div>
+</div>

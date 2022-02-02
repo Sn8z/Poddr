@@ -4,7 +4,6 @@ import { HotkeysService } from './services/hotkeys.service';
 import { ToastService } from './services/toast.service';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
-import * as electron from 'electron';
 import { Router, NavigationStart, NavigationEnd, RouterEvent } from '@angular/router';
 import { filter } from 'rxjs/operators';
 const ipc = require('electron').ipcRenderer;
@@ -17,6 +16,7 @@ const themesJSON = require('../assets/themes/themes.json');
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnInit {
 	private positions: Object = {};
 	private store: Store<any> = new Store();
@@ -80,7 +80,7 @@ export class AppComponent implements OnInit {
 
 	initUpdateCheck = () => {
 		log.info("App setup :: Checking for updates...");
-		ipc.invoke('app-version').then((appVersion) => {
+		ipc.invoke('appVersion').then((appVersion) => {
 			this.http.get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json").subscribe((response) => {
 				if (semverGt(response['version'], appVersion)) {
 					log.info("App setup :: Found update " + response['version'] + "!");

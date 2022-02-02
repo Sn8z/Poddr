@@ -4,7 +4,7 @@ import { ToastService } from './toast.service';
 import { HttpClient } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { retry, timeout, catchError } from 'rxjs/operators'
-import * as app from 'electron';
+import { ipcRenderer } from 'electron';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
 import * as fs from 'fs';
@@ -14,12 +14,16 @@ import * as fs from 'fs';
 })
 export class OfflineService {
 	private store: Store<any> = new Store({ name: "offline", accessPropertiesByDotNotation: false });
+	private storagePath: string = "";
 
 	public offlineEpisodes: BehaviorSubject<Object[]> = new BehaviorSubject<Object[]>([]);
 	public offlineKeys: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
 	constructor(private http: HttpClient, private toast: ToastService) {
-		this.updateOfflineEpisodes();
+		ipcRenderer.invoke('downloadStorage').then((result) => {
+			this.storagePath = result;
+			this.updateOfflineEpisodes();
+		});
 	}
 
 	private updateOfflineEpisodes = () => {
@@ -45,26 +49,24 @@ export class OfflineService {
 	download = (title, rss, podcastObject) => {
 		this.toast.toast("Downloading " + podcastObject.title);
 
-		const storagePath = app.remote.app.getPath('downloads') + '/Poddr/';
-
 		log.info("Offline service :: Checking if download folder exists...");
-		if (fs.existsSync(storagePath)) {
+		if (fs.existsSync(this.storagePath)) {
 			log.info("Offline service :: Download folder exists.");
 		} else {
-			log.info("Offline service :: Creating download folder at: " + storagePath);
-			fs.mkdirSync(storagePath, { recursive: true });
+			log.info("Offline service :: Creating download folder at: " + this.storagePath);
+			fs.mkdirSync(this.storagePath, { recursive: true });
 		}
 
 		this.getPodcast(podcastObject).subscribe((response) => {
 			const fileName = (title.toLowerCase() + "-" + podcastObject.title.toLowerCase() + "." + this.getFileExtension(podcastObject.enclosure.type)).replace(/\W/g, '_');
-			fs.writeFile(storagePath + fileName, Buffer.from(response), (error) => {
+			fs.writeFile(this.storagePath + fileName, Buffer.from(response), (error) => {
 				if (error) {
 					log.error("Offline service :: An error ocurred creating the file > ERROR MSG: " + error.message);
 					this.toast.toastError("Something went wrong with the download.");
 				} else {
-					const podcast = { episodeTitle: podcastObject.title, author: title, rss: rss, guid: podcastObject.guid, src: storagePath + fileName };
+					const podcast = { episodeTitle: podcastObject.title, author: title, rss: rss, guid: podcastObject.guid, src: this.storagePath + fileName };
 					this.store.set(podcastObject.guid, podcast);
-					log.info("Offline service :: Saved file at: " + storagePath + fileName);
+					log.info("Offline service :: Saved file at: " + this.storagePath + fileName);
 					this.toast.toastSuccess("Completed " + podcastObject.title);
 					this.updateOfflineEpisodes();
 				}

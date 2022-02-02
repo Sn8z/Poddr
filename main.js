@@ -15,6 +15,7 @@ app.setPath("userData", app.getPath("userData").replace("Poddr", "poddr"));
 
 //Set up logging
 const log = require("electron-log");
+const { dialog } = require("electron");
 log.info("Main Process :: Storing logs at: " + log.transports.file.getFile().path);
 
 //Set up electron store
@@ -71,7 +72,6 @@ app.once("ready", function () {
 		show: false,
 		simpleFullscreen: true,
 		webPreferences: {
-			enableRemoteModule: true,
 			nodeIntegration: true,
 			nodeIntegrationInWorker: true,
 			contextIsolation: false,
@@ -122,9 +122,53 @@ app.once("ready", function () {
 		require("./utils/thumbarButtons")(mainWindow);
 	}
 
-	// Return current version to renderer
-	ipc.handle('app-version', () => {
-		return app.getVersion();
+	//IPC functions that returns information to the renderer
+	ipc.handle('appVersion', async () => {
+		return await app.getVersion();
+	});
+
+	ipc.handle('appStorage', async () => {
+		return await app.getPath('userData');
+	});
+
+	ipc.handle('logStorage', async () => {
+		return await log.transports.file.getFile().path;
+	});
+
+	ipc.handle('downloadStorage', async () => {
+		return await app.getPath('downloads') + '/Poddr/';
+	});
+
+	//Opening a open dialog
+	ipc.handle('openDialog', async () => {
+		return await dialog.showOpenDialog({
+			buttonLabel: "Import OPML file",
+			filters: [
+				{ name: 'OPML', extensions: ['opml', 'xml'] }
+			],
+			properties: ['showHiddenFiles', 'openFile']
+		});
+	});
+
+	//Opening a save dialog
+	ipc.handle('saveDialog', async () => {
+		return await dialog.showSaveDialog({
+			buttonLabel: "Save OPML file",
+			filters: [
+				{ name: 'OPML', extensions: ['opml', 'xml'] }
+			]
+		});
+	});
+
+	//Closes and relaunches the app
+	ipc.on('relaunch', () => {
+		app.relaunch();
+		app.exit(0);
+	});
+
+	//Opens DevTools
+	ipc.on('toggleDevTools', () => {
+		mainWindow.openDevTools();
 	});
 
 	//Listen for window changes

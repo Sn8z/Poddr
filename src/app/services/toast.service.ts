@@ -19,9 +19,7 @@ export class ToastService {
 			position: 'top-end',
 			showConfirmButton: false,
 			timer: timer,
-			animation: true,
 			customClass: {
-				content: 'toast-content-class',
 				popup: 'toast-popup-class'
 			}
 		})
@@ -37,12 +35,10 @@ export class ToastService {
 			showConfirmButton: false,
 			timer: timer,
 			timerProgressBar: true,
-			animation: true,
 			customClass: {
-				content: 'toast-content-class',
 				popup: 'toast-popup-update-class'
 			},
-			onOpen: (toast) => {
+			didOpen: (toast) => {
 				toast.addEventListener('click', () => {
 					app.shell.openExternal(url);
 				})
@@ -59,9 +55,7 @@ export class ToastService {
 			position: 'top-end',
 			showConfirmButton: false,
 			timer: 5000,
-			animation: true,
 			customClass: {
-				content: 'toast-content-class',
 				popup: 'toast-popup-class'
 			}
 		})
@@ -76,9 +70,7 @@ export class ToastService {
 			position: 'top-end',
 			showConfirmButton: false,
 			timer: 5000,
-			animation: true,
 			customClass: {
-				content: 'toast-content-class',
 				popup: 'toast-popup-class'
 			}
 		})
@@ -92,7 +84,6 @@ export class ToastService {
 			text: msg,
 			showConfirmButton: false,
 			customClass: {
-				content: 'modal-content-class',
 				popup: 'modal-popup-class',
 				title: 'modal-title-class'
 			}
@@ -106,7 +97,6 @@ export class ToastService {
 			text: msg,
 			showConfirmButton: false,
 			customClass: {
-				content: 'modal-content-class',
 				popup: 'modal-popup-class',
 				title: 'modal-title-class'
 			}
@@ -120,7 +110,6 @@ export class ToastService {
 			text: error,
 			showConfirmButton: false,
 			customClass: {
-				content: 'modal-content-class',
 				popup: 'modal-popup-class',
 				title: 'modal-title-class'
 			}
@@ -135,7 +124,6 @@ export class ToastService {
 			showCancelButton: true,
 			confirmButtonText: 'Yes, remove it!',
 			customClass: {
-				content: 'modal-content-class',
 				popup: 'modal-popup-class',
 				title: 'modal-title-class'
 			}

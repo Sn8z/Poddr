@@ -9,7 +9,9 @@ import Pickr from '@simonwep/pickr';
 import * as Store from 'electron-store';
 import * as log from 'electron-log';
 import * as app from 'electron';
-const { dialog } = require('electron').remote;
+
+import { ipcRenderer } from 'electron';
+
 const themesJSON = require('../../assets/themes/themes.json');
 
 @Component({
@@ -36,10 +38,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
 	public theme: string = "";
 	public modKey: string = process.platform == "darwin" ? "Cmd" : "Ctrl";
 
-	public appVersion: string = app.remote.app.getVersion();
-	public appStorage: string = app.remote.app.getPath('userData');
-	public logStorage: string = log.transports.file.getFile().path;
-	public downloadFolder: string = app.remote.app.getPath('downloads') + '/Poddr/';
+	public appVersion: string = "";
+	public appStorage: string = "";
+	public logStorage: string = "";
+	public downloadFolder: string = "";
 
 	constructor(private podcastService: PodcastService, private favService: FavouritesService, private toast: ToastService) { }
 
@@ -51,6 +53,22 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		this.themes = Object.keys(themesJSON.themes);
 
 		this.initPickr();
+
+		ipcRenderer.invoke('appVersion').then((result) => { 
+			this.appVersion = result;
+		});
+
+		ipcRenderer.invoke('appStorage').then((result) => {
+			this.appStorage = result;
+		});
+
+		ipcRenderer.invoke('logStorage').then((result) => {
+			this.logStorage = result;
+		});
+
+		ipcRenderer.invoke('downloadStorage').then((result) => {
+			this.downloadFolder = result;
+		});
 
 		log.info("Settings component :: Initialized settings.");
 		log.info("Settings component :: " + JSON.stringify(process.versions));
@@ -122,19 +140,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	importOPML = () => {
 		log.info('Settings component :: Opening OPML selection');
-		dialog.showOpenDialog({
-			buttonLabel: "Import OPML file",
-			filters: [
-				{ name: 'OPML', extensions: ['opml', 'xml'] }
-			],
-			properties: ['showHiddenFiles', 'openFile']
-		}).then(response => {
+		ipcRenderer.invoke('openDialog').then((response) => { 
 			log.info('Settings component :: Reading OPML file ' + response.filePaths[0]);
 			this.readOPML(response.filePaths[0]);
 		}).catch(error => {
 			log.error('Settings component :: No valid OPML file was selected');
 			log.error(error);
-		})
+		});
 	}
 
 	private readOPML = (filepath) => {
@@ -162,12 +174,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 	exportOPML = () => {
 		log.info('Settings component :: Creating and saving OPML file');
-		dialog.showSaveDialog({
-			buttonLabel: "Save OPML file",
-			filters: [
-				{ name: 'OPML', extensions: ['opml', 'xml'] }
-			]
-		}).then(response => {
+
+		ipcRenderer.invoke('saveDialog').then((response) => { 
 			log.info('Settings component :: Saving file as' + response.filePath);
 			const domParser = new DOMParser();
 			const xmlString = "<opml version='2.0'></opml>";
@@ -200,17 +208,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		}).catch(error => {
 			log.error('Settings component :: No filepath specified');
 			log.error(error);
-		})
+		});
 	}
 
 	restart = () => {
 		log.info("Settings component :: Restarting Poddr.");
-		app.remote.app.relaunch();
-		app.remote.app.exit(0);
+		ipcRenderer.send('relaunch');
 	}
 
 	openDevTools = () => {
 		log.info("Settings component :: Opening DevTools.");
-		app.remote.getCurrentWindow().webContents.openDevTools();
+		ipcRenderer.send('toggleDevTools');
 	}
 }
