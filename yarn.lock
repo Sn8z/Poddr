@@ -4540,10 +4540,10 @@ electron-chromedriver@^12.0.0:
     "@electron/get" "^1.12.4"
     extract-zip "^2.0.0"
 
-electron-log@^4.3.2:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-4.3.2.tgz#213334c69f0498fac677a7a73eae4a61fb69949e"
-  integrity sha512-PJPWE8JDzQ137UlxX9K917nI8GTcwgiJpE2PMPXZo+I6C4AaZU+JWQ3lW5NjQ1Lg8Qk8qbze+Ly0yAiqhbmpeA==
+electron-log@^4.4.5:
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-4.4.5.tgz#5fcfd0c2dc5fbda915ee0a9d802705dc57930786"
+  integrity sha512-Cfa2CKnwBhlUfIl/qr2GF5SCqfoA9yPBqTJ6/wPs+PEn36M2+EZ3RpGSaOhYQ1BZpolL1CWyeu3gMG8epLl3Ng==
 
 electron-publish@22.10.5:
   version "22.10.5"
