@@ -79,7 +79,7 @@
     "electron-store": "^7.0.2",
     "electron-window-state": "^5.0.3",
     "mousetrap": "^1.6.3",
-    "mpris-service": "2.1.0",
+    "mpris-service": "2.1.2",
     "node-podcast-parser": "^2.0.0",
     "rxjs": "~6.6.6",
     "semver": "^7.3.5",
