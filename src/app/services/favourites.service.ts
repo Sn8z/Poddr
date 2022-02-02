@@ -104,7 +104,7 @@ export class FavouritesService {
 
 	getLatestFavouriteEpisodes = (): void => {
 		if (typeof Worker !== 'undefined') {
-			const worker = new Worker('../workers/latest.worker', { type: 'module' });
+			const worker = new Worker(new URL('../workers/latest.worker', import.meta.url), { type: 'module' });
 			worker.onmessage = ({ data }) => {
 				this.latestEpisodes.next(data);
 				log.info("Favourite service :: Done fetching latest episodes.");
