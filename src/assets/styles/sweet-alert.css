@@ -1,57 +1,53 @@
-/* Toast styles */
+/* Toast styling */
+
 .toast-popup-class {
 	background: var(--third-bg-color) !important;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7) !important;
+	color: var(--primary-text-color) !important;
+	border-radius: 0.5rem !important;
+}
+
+.toast-content-class {
+	padding: 0.5rem !important;
 }
 
 .toast-popup-update-class {
 	background: var(--third-bg-color) !important;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7) !important;
+	color: var(--primary-text-color) !important;
+	border-radius: 0.5rem !important;
 	cursor: pointer !important;
 }
 
-.toast-content-class {
-		color: var(--primary-text-color) !important;
-		padding: 0.5rem !important;
-}
+/* Modal Styling */
 
-/* Modal styles */
 .modal-popup-class {
     background: var(--third-bg-color) !important;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7) !important;
-}
-
-.modal-content-class {
     color: var(--primary-text-color) !important;
     white-space: pre-line !important;
 }
 
-.modal-content-class>#swal2-content {
+.modal-title-class {
+	color: var(--secondary-text-color) !important;
+}
+
+.modal-container-class {
+    white-space: pre-line !important;
     text-align: left !important;
 }
 
-.modal-title-class {
-    color: var(--secondary-text-color) !important;
-}
+/* Swal Styling */
 
-/* Popup styles */
-.swal2-popup {
-	background: var(--third-bg-color) !important;
-}
-
-.swal2-title {
-	color: var(--primary-text-color) !important;
-}
-
-.swal2-input {
-	color: var(--primary-text-color) !important;
-}
-
-.swal2-styled.swal2-confirm {
+.swal-confirm-btn {
 	background: var(--primary-color) !important;
 }
 
-.swal2-validation-message {
-	background: transparent !important;
+.swal-input {
 	color: var(--primary-text-color) !important;
+}
+
+.swal-validation {
+	background: transparent !important;
+	color: var(--secondary-text-color) !important;
 }

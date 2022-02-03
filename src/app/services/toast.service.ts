@@ -1,144 +1,116 @@
 import { Injectable } from "@angular/core";
+import { shell } from 'electron';
 import Swal from 'sweetalert2';
-import * as app from 'electron';
 import * as log from 'electron-log';
 
 @Injectable({
 	providedIn: "root"
 })
 export class ToastService {
+	private toastTemplate: any = Swal.mixin({
+		toast: true,
+		timer: 5000,
+		timerProgressBar: true,
+		position: 'top-end',
+		showConfirmButton: false,
+		customClass: {
+			popup: 'toast-popup-class'
+		}
+	});
+
+	private modalTemplate: any = Swal.mixin({
+		showConfirmButton: false,
+		customClass: {
+			popup: 'modal-popup-class',
+			title: 'modal-title-class',
+			htmlContainer: 'modal-container-class',
+			confirmButton: 'swal-confirm-btn',
+			validationMessage: 'swal-validation',
+			input: 'swal-input'
+		}
+	});
 
 	constructor() { }
 
 	// Toasts
-	toast(msg: string = "", timer: number = 5000): void {
+	public toast = (msg: string = "", timer: number = 5000): void => {
 		log.info("Toast service :: Showing toast => " + msg);
-		Swal.fire({
-			toast: true,
-			text: msg,
-			position: 'top-end',
-			showConfirmButton: false,
-			timer: timer,
-			customClass: {
-				popup: 'toast-popup-class'
-			}
-		})
+		this.toastTemplate.fire({
+			title: msg,
+			timer: timer
+		});
 	}
 
-	toastURL(msg: string = "", url: string = "", timer: number = 5000): void {
+	public toastURL = (msg: string = "", url: string = "", timer: number = 5000): void => {
 		log.info("Toast service :: Showing toast => " + msg);
-		Swal.fire({
-			toast: true,
-			text: msg,
-			position: 'top-end',
+		this.toastTemplate.fire({
 			icon: 'warning',
-			showConfirmButton: false,
+			title: msg,
 			timer: timer,
-			timerProgressBar: true,
 			customClass: {
 				popup: 'toast-popup-update-class'
 			},
 			didOpen: (toast) => {
 				toast.addEventListener('click', () => {
-					app.shell.openExternal(url);
+					shell.openExternal(url);
 				})
 			}
-		})
+		});
 	}
 
-	toastSuccess(msg: string = ""): void {
+	public toastSuccess = (msg: string = ""): void => {
 		log.info("Toast service :: Showing success toast => " + msg);
-		Swal.fire({
-			toast: true,
+		this.toastTemplate.fire({
 			icon: 'success',
-			text: msg,
-			position: 'top-end',
-			showConfirmButton: false,
-			timer: 5000,
-			customClass: {
-				popup: 'toast-popup-class'
-			}
-		})
+			title: msg
+		});
 	}
 
-	toastError(msg: string = ""): void {
+	public toastError = (msg: string = ""): void => {
 		log.info("Toast service :: Showing error toast => " + msg);
-		Swal.fire({
-			toast: true,
+		this.toastTemplate.fire({
 			icon: 'error',
-			text: msg,
-			position: 'top-end',
-			showConfirmButton: false,
-			timer: 5000,
-			customClass: {
-				popup: 'toast-popup-class'
-			}
-		})
+			title: msg
+		});
 	}
 
 	//Modals
-	modal(title: string = "", msg: string = ""): void {
+	public modal = (title: string = "", msg: string = ""): void => {
 		log.info("Toast service :: Showing modal.");
-		Swal.fire({
+		this.modalTemplate.fire({
 			title: title,
-			text: msg,
-			showConfirmButton: false,
-			customClass: {
-				popup: 'modal-popup-class',
-				title: 'modal-title-class'
-			}
+			text: msg
 		});
 	}
 
-	successModal(msg: string = ""): void {
-		log.info("Toast service :: Showing success modal.");
-		Swal.fire({
-			icon: 'success',
-			text: msg,
-			showConfirmButton: false,
-			customClass: {
-				popup: 'modal-popup-class',
-				title: 'modal-title-class'
-			}
-		});
-	}
-
-	errorModal(error: string = "Something went wrong."): void {
+	public errorModal = (error: string = "Something went wrong."): void => {
 		log.info("Toast service :: Showing error modal.");
-		Swal.fire({
+		this.modalTemplate.fire({
 			icon: 'error',
-			text: error,
-			showConfirmButton: false,
-			customClass: {
-				popup: 'modal-popup-class',
-				title: 'modal-title-class'
-			}
+			text: error
 		});
 	}
 
 	// Confirmation
-	async confirmModal() {
-		const response = await Swal.fire({
+	public confirmModal = async (): Promise<any> => {
+		log.info("Toast service :: Showing confirmation modal.");
+		return await this.modalTemplate.fire({
 			title: 'Are you sure?',
 			icon: 'warning',
+			showConfirmButton: true,
 			showCancelButton: true,
-			confirmButtonText: 'Yes, remove it!',
-			customClass: {
-				popup: 'modal-popup-class',
-				title: 'modal-title-class'
-			}
+			confirmButtonText: 'Yes, remove it!'
 		});
-		if (response) return response;
 	}
 
 	//Inputs
-	async inputRSSModal() {
+	public inputRSSModal = async (): Promise<any> => {
 		log.info("Toast service :: Showing input modal.");
-		const url = await Swal.fire({
+		return await this.modalTemplate.fire({
 			title: 'Enter RSS feed',
 			input: 'url',
-			inputPlaceholder: 'RSS feed...'
-		})
-		if (url) return url;
+			inputPlaceholder: 'RSS feed...',
+			showConfirmButton: true
+		});
 	}
 }
