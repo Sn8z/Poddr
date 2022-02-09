@@ -56,7 +56,7 @@
     "@typescript-eslint/parser": "4.33.0",
     "ava": "4.0.1",
     "electron": "^16.0.7",
-    "electron-builder": "^22.10.5",
+    "electron-builder": "^22.14.13",
     "eslint": "^7.26.0",
     "spectron": "^14.0.0",
     "ts-node": "10.4.0",
