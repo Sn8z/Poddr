@@ -6,8 +6,8 @@ import * as Store from 'electron-store';
 import * as log from 'electron-log';
 import { Router, NavigationStart, NavigationEnd, RouterEvent } from '@angular/router';
 import { filter } from 'rxjs/operators';
-const ipc = require('electron').ipcRenderer;
-const semverGt = require('semver/functions/gt');
+import { ipcRenderer } from 'electron';
+import { gt } from 'semver';
 
 const themesJSON = require('../assets/themes/themes.json');
 
@@ -80,9 +80,9 @@ export class AppComponent implements OnInit {
 
 	initUpdateCheck = () => {
 		log.info("App setup :: Checking for updates...");
-		ipc.invoke('appVersion').then((appVersion) => {
+		ipcRenderer.invoke('appVersion').then((appVersion) => {
 			this.http.get("https://raw.githubusercontent.com/Sn8z/Poddr/master/package.json").subscribe((response) => {
-				if (semverGt(response['version'], appVersion)) {
+				if (gt(response['version'], appVersion)) {
 					log.info("App setup :: Found update " + response['version'] + "!");
 					this.toast.toastURL(response['version'] + " is now available!", "https://github.com/Sn8z/Poddr/releases", 15000);
 				} else {
