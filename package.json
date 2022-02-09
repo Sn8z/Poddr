@@ -45,7 +45,7 @@
     "@angular-builders/custom-webpack": "12.1.3",
     "@angular-eslint/builder": "12.7.0",
     "@angular-eslint/eslint-plugin": "12.7.0",
-    "@angular-eslint/eslint-plugin-template": "12.7.0",
+    "@angular-eslint/eslint-plugin-template": "13.0.1",
     "@angular-eslint/schematics": "12.7.0",
     "@angular-eslint/template-parser": "12.7.0",
     "@angular/cli": "12.2.16",
