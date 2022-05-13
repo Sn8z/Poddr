@@ -50,7 +50,7 @@
     "@angular-eslint/template-parser": "12.7.0",
     "@angular/cli": "12.2.16",
     "@angular/compiler-cli": "12.2.16",
-    "@angular/language-service": "^12.2.16",
+    "@angular/language-service": "^13.3.8",
     "@types/node": "17.0.14",
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
