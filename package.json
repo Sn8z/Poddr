@@ -74,7 +74,7 @@
     "@angular/router": "13.3.9",
     "@fortawesome/angular-fontawesome": "0.10.2",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
-    "@fortawesome/free-brands-svg-icons": "^5.15.3",
+    "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^5.15.3",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@ng-select/ng-select": "8.1.1",
