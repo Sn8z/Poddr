@@ -76,7 +76,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-brands-svg-icons": "^5.15.3",
     "@fortawesome/free-regular-svg-icons": "^5.15.3",
-    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@ng-select/ng-select": "8.1.1",
     "@simonwep/pickr": "^1.8.0",
     "@sn8z/pop-pop.css": "^1.0.2",
