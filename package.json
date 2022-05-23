@@ -58,7 +58,7 @@
     "electron": "^16.0.7",
     "electron-builder": "^22.10.5",
     "eslint": "^7.26.0",
-    "spectron": "^14.0.0",
+    "spectron": "^19.0.0",
     "ts-node": "10.8.0",
     "typescript": "^4.6.4",
     "worker-plugin": "^5.0.1"
