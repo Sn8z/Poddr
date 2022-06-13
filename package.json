@@ -82,7 +82,7 @@
     "@sn8z/pop-pop.css": "^1.0.2",
     "dbus-next": "^0.10.2",
     "electron-log": "4.4.7",
-    "electron-store": "^8.0.1",
+    "electron-store": "^8.0.2",
     "electron-window-state": "^5.0.3",
     "mousetrap": "^1.6.3",
     "mpris-service": "2.1.2",
