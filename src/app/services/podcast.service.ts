@@ -14,8 +14,9 @@ export class PodcastService {
 	constructor(private toast: ToastService, private http: HttpClient) { }
 
 	getToplist(region: String, category: String, amount: Number): Observable<any> {
-		log.info("Podcast service :: Fetching top " + amount + " podcasts in " + region + " (" + category + ")");
-		return this.http.get("https://itunes.apple.com/" + region + "/rss/topaudiopodcasts/limit=" + amount + "/genre=" + category + "/json").pipe(
+		let chartUrl = "https://itunes.apple.com/" + region +"/rss/toppodcasts/limit=" + amount + "/explicit=true/genre=" + category +"/json"
+		log.info("Podcast service :: Fetching " + chartUrl);
+		return this.http.get(chartUrl).pipe(
 			timeout(10000),
 			retry(3),
 			catchError((error) => {
