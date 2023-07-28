@@ -1663,10 +1663,10 @@
     lodash "^4.17.15"
     tmp-promise "^3.0.2"
 
-"@ng-select/ng-select@8.1.1":
-  version "8.1.1"
-  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-8.1.1.tgz#1697d554970b99fc238255709655fb4dd45d1ab1"
-  integrity sha512-CP9Pve3L1aGqej38T9utdd6Waobbybwe9QIEObwicBI5fiIMAXwKT6lFT3fDLTUK/79y5nebiGtwTBfMm71Psg==
+"@ng-select/ng-select@11":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-11.0.0.tgz#0b83d5527b5a2b1441ddac435c2429fb273e2dd7"
+  integrity sha512-zuqZ/9LVV4nxiOFWo0hWncTqDV2QcUcUqZyMa4kKZxJALRmPumo4+BXca1h1KY6SHYFJeINIriK93LApeMSwQQ==
   dependencies:
     tslib "^2.3.1"
 
