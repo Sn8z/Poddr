@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
 	initScrollStateSaver = () => {
 		const contentRouter = document.getElementById('content-router');
 		this.router.events.pipe(
-			filter((event: RouterEvent) => event instanceof NavigationStart || event instanceof NavigationEnd)).subscribe((event: RouterEvent) => {
+			filter((event) => event instanceof NavigationStart || event instanceof NavigationEnd)).subscribe((event) => {
 				if (event instanceof NavigationStart) {
 					this.positions[event.id] = {
 						trigger: event.navigationTrigger || '',

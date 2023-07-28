@@ -27,7 +27,7 @@
   },
   "scripts": {
     "ng": "ng",
-    "build": "ng build --buildOptimizer=true --configuration production",
+    "build": "ng build --configuration production",
     "electron": "./node_modules/.bin/electron .",
     "start": "yarn build && ./node_modules/.bin/electron .",
     "start:debug": "yarn build && ./node_modules/.bin/electron . --debug",
@@ -42,7 +42,7 @@
   "author": "Marcus Sneitz <marcus.sneitz@gmail.com>",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@angular-builders/custom-webpack": "^13.1.0",
+    "@angular-builders/custom-webpack": "16.0.0",
     "@angular-eslint/builder": "16.1.0",
     "@angular-eslint/eslint-plugin": "16.1.0",
     "@angular-eslint/eslint-plugin-template": "16.1.0",
@@ -60,7 +60,7 @@
     "eslint": "^8.39.0",
     "spectron": "^14.0.0",
     "ts-node": "10.8.0",
-    "typescript": "^4.9.5",
+    "typescript": "^5.1.6",
     "worker-plugin": "^5.0.1"
   },
   "dependencies": {
