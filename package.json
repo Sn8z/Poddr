@@ -55,7 +55,7 @@
     "@typescript-eslint/eslint-plugin": "^5.59.2",
     "@typescript-eslint/parser": "^5.59.2",
     "ava": "4.0.1",
-    "electron": "^16.0.7",
+    "electron": "^25.3.2",
     "electron-builder": "^22.10.5",
     "eslint": "^8.39.0",
     "spectron": "^14.0.0",
