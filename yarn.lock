@@ -1717,10 +1717,10 @@
     lodash "^4.17.15"
     tmp-promise "^3.0.2"
 
-"@ng-select/ng-select@11.0.0":
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-11.0.0.tgz#0b83d5527b5a2b1441ddac435c2429fb273e2dd7"
-  integrity sha512-zuqZ/9LVV4nxiOFWo0hWncTqDV2QcUcUqZyMa4kKZxJALRmPumo4+BXca1h1KY6SHYFJeINIriK93LApeMSwQQ==
+"@ng-select/ng-select@11.1.1":
+  version "11.1.1"
+  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-11.1.1.tgz#49fc89420bfc4022543833de5212214a1e00a0dd"
+  integrity sha512-Z5wV/u2HgaKl7CQSG3Sy1oF+BPQolmVV6jBuPqHa2+OWg0Nn2e9eXYdcZT8Q3BahfP5j5rHNIBrkkESg/m4YiQ==
   dependencies:
     tslib "^2.3.1"
 
