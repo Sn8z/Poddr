@@ -2271,21 +2271,20 @@
   dependencies:
     "@types/node" "*"
 
-"@typescript-eslint/eslint-plugin@^6.2.0":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-6.2.0.tgz#57047c400be0632d4797ac081af8d399db3ebc3b"
-  integrity sha512-rClGrMuyS/3j0ETa1Ui7s6GkLhfZGKZL3ZrChLeAiACBE/tRc1wq8SNZESUuluxhLj9FkUefRs2l6bCIArWBiQ==
+"@typescript-eslint/eslint-plugin@^6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-6.4.0.tgz#53428b616f7d80fe879f45a08f11cc0f0b62cf13"
+  integrity sha512-62o2Hmc7Gs3p8SLfbXcipjWAa6qk2wZGChXG2JbBtYpwSRmti/9KHLqfbLs9uDigOexG+3PaQ9G2g3201FWLKg==
   dependencies:
     "@eslint-community/regexpp" "^4.5.1"
-    "@typescript-eslint/scope-manager" "6.2.0"
-    "@typescript-eslint/type-utils" "6.2.0"
-    "@typescript-eslint/utils" "6.2.0"
-    "@typescript-eslint/visitor-keys" "6.2.0"
+    "@typescript-eslint/scope-manager" "6.4.0"
+    "@typescript-eslint/type-utils" "6.4.0"
+    "@typescript-eslint/utils" "6.4.0"
+    "@typescript-eslint/visitor-keys" "6.4.0"
     debug "^4.3.4"
     graphemer "^1.4.0"
     ignore "^5.2.4"
     natural-compare "^1.4.0"
-    natural-compare-lite "^1.4.0"
     semver "^7.5.4"
     ts-api-utils "^1.0.1"
 
@@ -2316,6 +2315,14 @@
     "@typescript-eslint/types" "6.2.0"
     "@typescript-eslint/visitor-keys" "6.2.0"
 
+"@typescript-eslint/scope-manager@6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-6.4.0.tgz#3048e4262ba3eafa4e2e69b08912d9037ec646ae"
+  integrity sha512-TUS7vaKkPWDVvl7GDNHFQMsMruD+zhkd3SdVW0d7b+7Zo+bd/hXJQ8nsiUZMi1jloWo6c9qt3B7Sqo+flC1nig==
+  dependencies:
+    "@typescript-eslint/types" "6.4.0"
+    "@typescript-eslint/visitor-keys" "6.4.0"
+
 "@typescript-eslint/type-utils@5.62.0":
   version "5.62.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/type-utils/-/type-utils-5.62.0.tgz#286f0389c41681376cdad96b309cedd17d70346a"
@@ -2326,13 +2333,13 @@
     debug "^4.3.4"
     tsutils "^3.21.0"
 
-"@typescript-eslint/type-utils@6.2.0":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/type-utils/-/type-utils-6.2.0.tgz#02b27a3eeb41aa5460d6275d12cce5dd72e1c9fc"
-  integrity sha512-DnGZuNU2JN3AYwddYIqrVkYW0uUQdv0AY+kz2M25euVNlujcN2u+rJgfJsBFlUEzBB6OQkUqSZPyuTLf2bP5mw==
+"@typescript-eslint/type-utils@6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/type-utils/-/type-utils-6.4.0.tgz#c8ac92716ed6a9d5443aa3e342910355b0796ba0"
+  integrity sha512-TvqrUFFyGY0cX3WgDHcdl2/mMCWCDv/0thTtx/ODMY1QhEiyFtv/OlLaNIiYLwRpAxAtOLOY9SUf1H3Q3dlwAg==
   dependencies:
-    "@typescript-eslint/typescript-estree" "6.2.0"
-    "@typescript-eslint/utils" "6.2.0"
+    "@typescript-eslint/typescript-estree" "6.4.0"
+    "@typescript-eslint/utils" "6.4.0"
     debug "^4.3.4"
     ts-api-utils "^1.0.1"
 
@@ -2345,6 +2352,11 @@
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-6.2.0.tgz#b341a4e6d5f609267306b07afc6f62bcf92b1495"
   integrity sha512-1nRRaDlp/XYJQLvkQJG5F3uBTno5SHPT7XVcJ5n1/k2WfNI28nJsvLakxwZRNY5spuatEKO7d5nZWsQpkqXwBA==
+
+"@typescript-eslint/types@6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-6.4.0.tgz#5b109a59a805f0d8d375895e42d9e5f0037f66ee"
+  integrity sha512-+FV9kVFrS7w78YtzkIsNSoYsnOtrYVnKWSTVXoL1761CsCRv5wpDOINgsXpxD67YCLZtVQekDDyaxfjVWUJmmg==
 
 "@typescript-eslint/typescript-estree@5.62.0":
   version "5.62.0"
@@ -2372,6 +2384,19 @@
     semver "^7.5.4"
     ts-api-utils "^1.0.1"
 
+"@typescript-eslint/typescript-estree@6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-6.4.0.tgz#3c58d20632db93fec3d6ab902acbedf593d37276"
+  integrity sha512-iDPJArf/K2sxvjOR6skeUCNgHR/tCQXBsa+ee1/clRKr3olZjZ/dSkXPZjG6YkPtnW6p5D1egeEPMCW6Gn4yLA==
+  dependencies:
+    "@typescript-eslint/types" "6.4.0"
+    "@typescript-eslint/visitor-keys" "6.4.0"
+    debug "^4.3.4"
+    globby "^11.1.0"
+    is-glob "^4.0.3"
+    semver "^7.5.4"
+    ts-api-utils "^1.0.1"
+
 "@typescript-eslint/utils@5.62.0":
   version "5.62.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/utils/-/utils-5.62.0.tgz#141e809c71636e4a75daa39faed2fb5f4b10df86"
@@ -2386,17 +2411,17 @@
     eslint-scope "^5.1.1"
     semver "^7.3.7"
 
-"@typescript-eslint/utils@6.2.0":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/utils/-/utils-6.2.0.tgz#606a20e5c13883c2d2bd0538ddc4b96b8d410979"
-  integrity sha512-RCFrC1lXiX1qEZN8LmLrxYRhOkElEsPKTVSNout8DMzf8PeWoQG7Rxz2SadpJa3VSh5oYKGwt7j7X/VRg+Y3OQ==
+"@typescript-eslint/utils@6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/utils/-/utils-6.4.0.tgz#23e996b693603c5924b1fbb733cc73196256baa5"
+  integrity sha512-BvvwryBQpECPGo8PwF/y/q+yacg8Hn/2XS+DqL/oRsOPK+RPt29h5Ui5dqOKHDlbXrAeHUTnyG3wZA0KTDxRZw==
   dependencies:
     "@eslint-community/eslint-utils" "^4.4.0"
     "@types/json-schema" "^7.0.12"
     "@types/semver" "^7.5.0"
-    "@typescript-eslint/scope-manager" "6.2.0"
-    "@typescript-eslint/types" "6.2.0"
-    "@typescript-eslint/typescript-estree" "6.2.0"
+    "@typescript-eslint/scope-manager" "6.4.0"
+    "@typescript-eslint/types" "6.4.0"
+    "@typescript-eslint/typescript-estree" "6.4.0"
     semver "^7.5.4"
 
 "@typescript-eslint/visitor-keys@5.62.0":
@@ -2413,6 +2438,14 @@
   integrity sha512-QbaYUQVKKo9bgCzpjz45llCfwakyoxHetIy8CAvYCtd16Zu1KrpzNHofwF8kGkpPOxZB2o6kz+0nqH8ZkIzuoQ==
   dependencies:
     "@typescript-eslint/types" "6.2.0"
+    eslint-visitor-keys "^3.4.1"
+
+"@typescript-eslint/visitor-keys@6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-6.4.0.tgz#96a426cdb1add28274abd7a34aefe27f8b7d51ef"
+  integrity sha512-yJSfyT+uJm+JRDWYRYdCm2i+pmvXJSMtPR9Cq5/XQs4QIgNoLcoRtDdzsLbLsFM/c6um6ohQkg/MLxWvoIndJA==
+  dependencies:
+    "@typescript-eslint/types" "6.4.0"
     eslint-visitor-keys "^3.4.1"
 
 "@vitejs/plugin-basic-ssl@1.0.1":
@@ -7117,11 +7150,6 @@ nanopop@^2.1.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/nanopop/-/nanopop-2.3.0.tgz#a5f672fba27d45d6ecbd0b59789c040072915123"
   integrity sha512-fzN+T2K7/Ah25XU02MJkPZ5q4Tj5FpjmIYq4rvoHX4yb16HzFdCO6JxFFn5Y/oBhQ8no8fUZavnyIv9/+xkBBw==
-
-natural-compare-lite@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/natural-compare-lite/-/natural-compare-lite-1.4.0.tgz#17b09581988979fddafe0201e931ba933c96cbb4"
-  integrity sha512-Tj+HTDSJJKaZnfiuw+iaF9skdPpTo2GtEly5JHnWV/hfv2Qj/9RKsGISQtLh2ox3l5EAGw487hnBee0sIJ6v2g==
 
 natural-compare@^1.4.0:
   version "1.4.0"
