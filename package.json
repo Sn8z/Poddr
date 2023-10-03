@@ -52,7 +52,7 @@
     "@angular/compiler-cli": "16.1.7",
     "@angular/language-service": "^16.1.7",
     "@types/node": "20.4.5",
-    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.2.0",
     "ava": "4.0.1",
     "electron": "^25.3.2",
