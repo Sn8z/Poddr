@@ -4507,10 +4507,10 @@ electron-window-state@^5.0.3:
     jsonfile "^4.0.0"
     mkdirp "^0.5.1"
 
-electron@^25.3.2:
-  version "25.3.2"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-25.3.2.tgz#4ca096ea85abf05cbbc42e60da9e2c3a7b87dd80"
-  integrity sha512-xiktJvXraaE/ARf2OVHFyTze1TksSbsbJgOaBtdIiBvUduez6ipATEPIec8Msz1n6eQ+xqYb6YF8tDuIZtJSPw==
+electron@^27.0.1:
+  version "27.0.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-27.0.1.tgz#809bbe5363f414224789cfa1f3d7237906f71b9e"
+  integrity sha512-AjDGgpf2thNxVXoNqEG+0GCUK4upAEa2B+IoM5Yk9YrOLd6uUOEMfGI9rhPtj+jC14iKOvBdefY2uAzcDC0qng==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^18.11.18"
