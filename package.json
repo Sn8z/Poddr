@@ -35,7 +35,7 @@
     "dist:mac": "yarn build && electron-builder --mac",
     "dist:win": "yarn build && electron-builder --win",
     "dist:linux": "yarn build && electron-builder --linux",
-    "postinstall": "ngcc && electron-builder install-app-deps",
+    "postinstall": "electron-builder install-app-deps",
     "lint": "ng lint",
     "test": "ava"
   },
