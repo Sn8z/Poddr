@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Pipes
@@ -23,30 +23,23 @@ import { SearchComponent } from './search/search.component';
 import { SettingsComponent } from './settings/settings.component';
 import { PodcastComponent } from './podcast/podcast.component';
 
-@NgModule({
-  declarations: [
-		AppComponent,
-    ItunesImage,
-    Description,
-    SecondsToHhMmSs,
-    TitlebarComponent,
-    SidenavComponent,
-    PlayerComponent,
-    ToplistsComponent,
-    FavouritesComponent,
-    SearchComponent,
-    SettingsComponent,
-    PodcastComponent
-  ],
-  imports: [
-		BrowserModule,
-		FormsModule,
-		NgSelectModule,
-		HttpClientModule,
-		AppRoutingModule,
-		FontAwesomeModule
-	],
-  providers: [],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        ItunesImage,
+        Description,
+        SecondsToHhMmSs,
+        TitlebarComponent,
+        SidenavComponent,
+        PlayerComponent,
+        ToplistsComponent,
+        FavouritesComponent,
+        SearchComponent,
+        SettingsComponent,
+        PodcastComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        FormsModule,
+        NgSelectModule,
+        AppRoutingModule,
+        FontAwesomeModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
