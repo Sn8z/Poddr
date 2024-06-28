@@ -46,9 +46,9 @@ Quotes from [AppImage projectpage](https://appimage.org)
 
 [Download](https://github.com/Sn8z/Poddr/releases) and make the file [executable](https://discourse.appimage.org/t/how-to-make-an-appimage-executable/80)
 
-#### Mac
+~~#### Mac~~ (Temporarily removed)
 
-A normal .dmg file, install as you would normally do with any Mac software.
+~~A normal .dmg file, install as you would normally do with any Mac software.~~
 
 <hr>
 
