@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { PodcastService } from './podcast.service';
 import { ToastService } from './toast.service';
-import * as Store from 'electron-store';
+import Store from 'electron-store';
 import * as parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
 

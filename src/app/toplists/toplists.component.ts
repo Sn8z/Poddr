@@ -6,7 +6,7 @@ import { ToastService } from '../services/toast.service';
 import { Description } from '../pipes/description.pipe';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faInfoCircle, faTh, faList } from '@fortawesome/free-solid-svg-icons';
-import * as Store from 'electron-store';
+import Store from 'electron-store';
 import { Subscription } from 'rxjs';
 
 @Component({

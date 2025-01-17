@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HotkeysService } from './services/hotkeys.service';
 import { ToastService } from './services/toast.service';
-import * as Store from 'electron-store';
+import Store from 'electron-store';
 import * as log from 'electron-log';
 import { Router, NavigationStart, NavigationEnd, RouterEvent } from '@angular/router';
 import { filter } from 'rxjs/operators';

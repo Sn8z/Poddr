@@ -2389,7 +2389,7 @@
     "@napi-rs/nice-win32-ia32-msvc" "1.0.1"
     "@napi-rs/nice-win32-x64-msvc" "1.0.1"
 
-"@ng-select/ng-select@14":
+"@ng-select/ng-select@^14.2.0":
   version "14.2.0"
   resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-14.2.0.tgz#f2abaf5a0c6874b73cc2a932391aac6cd7141ea2"
   integrity sha512-Dq3PgOb0EBL31TV1Byr6RnQW/Vd5cdaaCEFbII2tIwiIT1r15oMdeSEZqzutuslBqgyggnponYAaBEgQBVorAg==
@@ -9532,7 +9532,6 @@ worker-plugin@^5.0.1:
     loader-utils "^1.1.0"
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
-  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==

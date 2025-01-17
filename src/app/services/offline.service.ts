@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { retry, timeout, catchError } from 'rxjs/operators'
 import { ipcRenderer } from 'electron';
-import * as Store from 'electron-store';
+import Store from 'electron-store';
 import * as log from 'electron-log';
 import * as fs from 'fs';
 

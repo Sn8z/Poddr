@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import * as Store from 'electron-store';
+import Store from 'electron-store';
 import * as log from 'electron-log';
 
 @Injectable({

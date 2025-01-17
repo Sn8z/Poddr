@@ -6,7 +6,7 @@ import { faGithub, faPatreon, faPaypal } from '@fortawesome/free-brands-svg-icon
 import { faCoffee, faFileExport, faFileImport } from '@fortawesome/free-solid-svg-icons';
 import { readFile, writeFile } from 'fs';
 import Pickr from '@simonwep/pickr';
-import * as Store from 'electron-store';
+import Store from 'electron-store';
 import * as log from 'electron-log';
 import * as app from 'electron';
 

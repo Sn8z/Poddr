@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ToastService } from './toast.service';
 import { PlayedService } from './played.service';
 import * as log from 'electron-log';
-import * as Store from 'electron-store';
+import Store from 'electron-store';
 
 const ipc = require('electron').ipcRenderer;
 
