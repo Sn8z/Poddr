@@ -9,7 +9,7 @@
     "declaration": false,
     "skipLibCheck": true,
     "moduleResolution": "Node",
-    "module": "ESNext",
+    "module": "ES2022",
     "target": "ES2022",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

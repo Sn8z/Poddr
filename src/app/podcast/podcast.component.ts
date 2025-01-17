@@ -22,7 +22,7 @@ import {
 	faMusic,
 	faExternalLinkAlt
 } from '@fortawesome/free-solid-svg-icons';
-import * as parsePodcast from 'node-podcast-parser';
+import parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
 import { Subscription } from 'rxjs';
 

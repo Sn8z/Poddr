@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { PodcastService } from './podcast.service';
 import { ToastService } from './toast.service';
 import Store from 'electron-store';
-import * as parsePodcast from 'node-podcast-parser';
+import parsePodcast from "node-podcast-parser";
 import * as log from 'electron-log';
 
 @Injectable({

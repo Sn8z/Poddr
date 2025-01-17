@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 
 import * as log from 'electron-log';
-import * as parsePodcast from 'node-podcast-parser';
+import parsePodcast from "node-podcast-parser";
 
 addEventListener('message', ({ data }) => {
 	let updatedValue = [];
