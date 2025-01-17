@@ -48,7 +48,8 @@
     "@angular-eslint/eslint-plugin-template": "18.0.1",
     "@angular-eslint/schematics": "18.0.1",
     "@angular-eslint/template-parser": "18.0.1",
-    "@angular/cli": "17.3.8",
+    "@angular/build": "^18.2.12",
+    "@angular/cli": "18.2.12",
     "@angular/compiler-cli": "18.0.5",
     "@angular/language-service": "^18.0.5",
     "@types/node": "20.4.5",
@@ -57,8 +58,8 @@
     "electron": "^25.3.2",
     "electron-builder": "^24.6.3",
     "eslint": "^8.57.0",
-		"typescript": "5.4.5",
     "ts-node": "10.9.1",
+    "typescript": "5.4.5",
     "worker-plugin": "^5.0.1"
   },
   "dependencies": {
