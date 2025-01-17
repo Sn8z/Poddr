@@ -1,20 +1,19 @@
 {
-	"compileOnSave": false,
+  "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "declaration": false,
     "skipLibCheck": true,
-    "moduleResolution": "node",
-    "module": "ES2022",
+    "moduleResolution": "Node",
+    "module": "ESNext",
+    "target": "ES2022",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "typeRoots": ["node_modules/@types"]
   }
 }

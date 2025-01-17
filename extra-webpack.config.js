@@ -1,13 +1,12 @@
-const WorkerPlugin = require('worker-plugin');
-const NodeTargetPlugin = require('webpack/lib/node/NodeTargetPlugin');
+import WorkerPlugin from "worker-plugin";
+import NodeTargetPlugin from "webpack/lib/node/NodeTargetPlugin.js";
 
-module.exports = (config, options) => {
+export default (config, options) => {
   config.plugins.forEach((plugin) => {
     if (plugin instanceof WorkerPlugin) {
       plugin.options.plugins.push(new NodeTargetPlugin());
     }
   });
-
-  config.target = 'electron-renderer';
+  config.target = "electron-renderer";
   return config;
 };
