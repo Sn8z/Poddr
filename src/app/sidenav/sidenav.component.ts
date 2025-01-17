@@ -5,9 +5,10 @@ import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { Subscription } from 'rxjs';
 
 @Component({
-	selector: 'app-sidenav',
-	templateUrl: './sidenav.component.html',
-	styleUrls: ['./sidenav.component.css']
+    selector: 'app-sidenav',
+    templateUrl: './sidenav.component.html',
+    styleUrls: ['./sidenav.component.css'],
+    standalone: false
 })
 export class SidenavComponent implements OnInit, OnDestroy {
 	private audioCoverSubscription: Subscription;

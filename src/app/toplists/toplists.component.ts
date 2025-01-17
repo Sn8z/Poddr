@@ -10,10 +10,11 @@ import * as Store from 'electron-store';
 import { Subscription } from 'rxjs';
 
 @Component({
-	selector: 'app-toplists',
-	templateUrl: './toplists.component.html',
-	styleUrls: ['./toplists.component.css'],
-	providers: [Description]
+    selector: 'app-toplists',
+    templateUrl: './toplists.component.html',
+    styleUrls: ['./toplists.component.css'],
+    providers: [Description],
+    standalone: false
 })
 export class ToplistsComponent implements OnInit, OnDestroy {
 	private favSubscription: Subscription;

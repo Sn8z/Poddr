@@ -15,10 +15,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 @Component({
-  selector: "app-player",
-  templateUrl: "./player.component.html",
-  styleUrls: ["./player.component.css"],
-  providers: [Description],
+    selector: "app-player",
+    templateUrl: "./player.component.html",
+    styleUrls: ["./player.component.css"],
+    providers: [Description],
+    standalone: false
 })
 export class PlayerComponent implements OnInit {
   public faPlayCircle = faPlayCircle;

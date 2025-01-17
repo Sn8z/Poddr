@@ -27,10 +27,11 @@ import * as log from 'electron-log';
 import { Subscription } from 'rxjs';
 
 @Component({
-	selector: 'app-podcast',
-	templateUrl: './podcast.component.html',
-	styleUrls: ['./podcast.component.css'],
-	providers: [Description]
+    selector: 'app-podcast',
+    templateUrl: './podcast.component.html',
+    styleUrls: ['./podcast.component.css'],
+    providers: [Description],
+    standalone: false
 })
 export class PodcastComponent implements OnInit, OnDestroy {
 	private routeSubscription: Subscription;

@@ -7,9 +7,10 @@ import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
 @Component({
-	selector: 'app-favourites',
-	templateUrl: './favourites.component.html',
-	styleUrls: ['./favourites.component.css']
+    selector: 'app-favourites',
+    templateUrl: './favourites.component.html',
+    styleUrls: ['./favourites.component.css'],
+    standalone: false
 })
 export class FavouritesComponent implements OnInit, OnDestroy {
 	private offlineSubscription: Subscription;

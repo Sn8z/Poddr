@@ -7,9 +7,10 @@ import { Subscription } from 'rxjs';
 import * as log from 'electron-log';
 
 @Component({
-	selector: 'app-search',
-	templateUrl: './search.component.html',
-	styleUrls: ['./search.component.css']
+    selector: 'app-search',
+    templateUrl: './search.component.html',
+    styleUrls: ['./search.component.css'],
+    standalone: false
 })
 export class SearchComponent implements OnInit, OnDestroy {
 	private favTitleSubscription: Subscription;

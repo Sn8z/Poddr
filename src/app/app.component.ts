@@ -12,9 +12,10 @@ import { gt } from 'semver';
 const themesJSON = require('../assets/themes/themes.json');
 
 @Component({
-	selector: 'app-root',
-	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    standalone: false
 })
 
 export class AppComponent implements OnInit {
