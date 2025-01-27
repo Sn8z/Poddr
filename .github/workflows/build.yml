@@ -1,0 +1,43 @@
+name: Build MacOS Package
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build from'
+        default: 'main'
+        required: true
+        type: string
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.branch }}
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'yarn'
+    
+    - name: Install Yarn
+      run: npm install -g yarn
+    
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+      
+    - name: Build macOS package
+      run: yarn dist:mac
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: poddr-mac
+        path: |
+          dist/*.dmg
+          dist/*.zip
+        if-no-files-found: error
