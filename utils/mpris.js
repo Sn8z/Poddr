@@ -1,73 +1,167 @@
-const electron = require("electron");
-const app = electron.app;
-const ipc = electron.ipcMain;
-const Mpris = require("mpris-service");
-const log = require("electron-log");
+import { app, ipcMain } from "electron";
+import Mpris from "mpris-service";
+import log from "electron-log";
 
-module.exports = mainWindow => {
-	log.info("Main Process :: Loading MPRIS module.");
+class MprisService {
+  constructor(mainWindow) {
+    this.mainWindow = mainWindow;
+    this.mprisPlayer = null;
+    this.initialize();
+  }
 
-	let mprisPlayer = Mpris({
-		name: "poddr",
-		identity: "Poddr",
-		canRaise: true,
-		supportedInterfaces: ["player"],
-		supportedUriSchemes: ["file", "http", "https"],
-		SupportedMimeTypes: ["audio/mpeg", "audio/ogg", "audio/x-m4a", "audio/wav", "audio/webm", "audio/flac"],
-		HasTrackList: false
-	});
+  initialize() {
+    try {
+      log.info("Main Process :: Loading MPRIS module.");
 
-	mprisPlayer.rate = 1 + 1e-15;
-	mprisPlayer.minimumRate = 1 + 1e-15;
-	mprisPlayer.maximumRate = 1 + 1e-15;
-	mprisPlayer.canPlay = true;
-	mprisPlayer.canPause = true;
-	mprisPlayer.canSeek = false;
-	mprisPlayer.canControl = false;
-	mprisPlayer.canGoNext = false;
-	mprisPlayer.canGoPrevious = false;
-	mprisPlayer.canEditTracks = false;
-	mprisPlayer.playbackStatus = "Stopped";
+      this.mprisPlayer = Mpris({
+        name: "poddr",
+        identity: "Poddr",
+        canRaise: true,
+        supportedInterfaces: ["player"],
+        supportedUriSchemes: ["file", "http", "https"],
+        SupportedMimeTypes: [
+          "audio/mpeg",
+          "audio/ogg",
+          "audio/x-m4a",
+          "audio/wav",
+          "audio/webm",
+          "audio/flac",
+        ],
+        HasTrackList: false,
+      });
 
-	mprisPlayer.on("playpause", function () {
-		mainWindow.webContents.send("player:toggle-play");
-		log.info("Main Process :: MPRIS => Play / Pause");
-	});
+      this.setupPlayerDefaults();
+      this.setupEventListeners();
+      this.setupIpcHandlers();
+    } catch (error) {
+      log.error("Main Process :: Failed to initialize MPRIS:", error);
+      throw new Error("Failed to initialize MPRIS service");
+    }
+  }
 
-	mprisPlayer.on("play", function () {
-		mainWindow.webContents.send("player:toggle-play");
-		log.info("Main Process :: MPRIS => Play");
-	});
+  setupPlayerDefaults() {
+    const epsilon = 1e-15;
+    const defaultRate = 1 + epsilon;
 
-	mprisPlayer.on("pause", function () {
-		mainWindow.webContents.send("player:toggle-play");
-		log.info("Main Process :: MPRIS => Pause");
-	});
+    try {
+      this.mprisPlayer.rate = defaultRate;
+      this.mprisPlayer.minimumRate = defaultRate;
+      this.mprisPlayer.maximumRate = defaultRate;
 
-	mprisPlayer.on("quit", function () {
-		app.quit();
-	});
+      this.mprisPlayer.canPlay = true;
+      this.mprisPlayer.canPause = true;
+      this.mprisPlayer.canSeek = false;
+      this.mprisPlayer.canControl = false;
+      this.mprisPlayer.canGoNext = false;
+      this.mprisPlayer.canGoPrevious = false;
+      this.mprisPlayer.canEditTracks = false;
 
-	mprisPlayer.on("raise", function () {
-		mainWindow.show();
-		mainWindow.focus();
-	});
+      this.mprisPlayer.playbackStatus = "Stopped";
+    } catch (error) {
+      log.error("Main Process :: Failed to setup MPRIS defaults:", error);
+      throw new Error("Failed to setup MPRIS player defaults");
+    }
+  }
 
-	ipc.on("media-update", function (event, mediaObject) {
-		log.info("Main Process :: MPRIS => Media update.");
-		mprisPlayer.metadata = {
-			"mpris:artUrl": mediaObject.image || "",
-			"xesam:title": mediaObject.title || "No title",
-			"xesam:album": "Podcast",
-			"xesam:artist": [mediaObject.artist || "No artist"]
-		};
-	});
+  setupEventListeners() {
+    try {
+      this.mprisPlayer.on("playpause", () => {
+        this.mainWindow.webContents.send("player:toggle-play");
+        log.info("Main Process :: MPRIS => Play / Pause");
+      });
 
-	ipc.on("media-play", function () {
-		mprisPlayer.playbackStatus = "Playing";
-	});
+      this.mprisPlayer.on("play", () => {
+        this.mainWindow.webContents.send("player:toggle-play");
+        log.info("Main Process :: MPRIS => Play");
+      });
 
-	ipc.on("media-pause", function () {
-		mprisPlayer.playbackStatus = "Stopped";
-	});
-};
+      this.mprisPlayer.on("pause", () => {
+        this.mainWindow.webContents.send("player:toggle-play");
+        log.info("Main Process :: MPRIS => Pause");
+      });
+
+      this.mprisPlayer.on("quit", () => {
+        app.quit();
+      });
+
+      this.mprisPlayer.on("raise", () => {
+        if (!this.mainWindow.isDestroyed()) {
+          this.mainWindow.show();
+          this.mainWindow.focus();
+        }
+      });
+    } catch (error) {
+      log.error(
+        "Main Process :: Failed to setup MPRIS event listeners:",
+        error
+      );
+      throw new Error("Failed to setup MPRIS event listeners");
+    }
+  }
+
+  setupIpcHandlers() {
+    try {
+      ipcMain.on("media-update", (_, mediaObject) => {
+        log.info("Main Process :: MPRIS => Media update.");
+
+        try {
+          this.mprisPlayer.metadata = {
+            "mpris:artUrl": mediaObject.image || "",
+            "xesam:title": mediaObject.title || "No title",
+            "xesam:album": "Podcast",
+            "xesam:artist": [mediaObject.artist || "No artist"],
+          };
+        } catch (error) {
+          log.error("Main Process :: Failed to update MPRIS metadata:", error);
+        }
+      });
+
+      ipcMain.on("media-play", () => {
+        try {
+          this.mprisPlayer.playbackStatus = "Playing";
+        } catch (error) {
+          log.error(
+            "Main Process :: Failed to update MPRIS play status:",
+            error
+          );
+        }
+      });
+
+      ipcMain.on("media-pause", () => {
+        try {
+          this.mprisPlayer.playbackStatus = "Stopped";
+        } catch (error) {
+          log.error(
+            "Main Process :: Failed to update MPRIS pause status:",
+            error
+          );
+        }
+      });
+    } catch (error) {
+      log.error("Main Process :: Failed to setup MPRIS IPC handlers:", error);
+      throw new Error("Failed to setup MPRIS IPC handlers");
+    }
+  }
+
+  destroy() {
+    try {
+      if (this.mprisPlayer) {
+        ipcMain.removeAllListeners("media-update");
+        ipcMain.removeAllListeners("media-play");
+        ipcMain.removeAllListeners("media-pause");
+
+        this.mprisPlayer.removeAllListeners();
+        this.mprisPlayer = null;
+      }
+    } catch (error) {
+      log.error("Main Process :: Failed to cleanup MPRIS service:", error);
+    }
+  }
+}
+
+export default function createMprisService(mainWindow) {
+  if (!mainWindow) {
+    throw new Error("MainWindow is required for MPRIS service");
+  }
+  return new MprisService(mainWindow);
+}
