@@ -21,8 +21,8 @@
       "artifactName": "Poddr-${version}.${ext}"
     },
   "snap": { 
-    "plugs": ["default", "mpris", "audio-playback", "removable-media"],
-    "slots": ["mpris"],
+    "plugs": ["default", "audio-playback", "removable-media"],
+    "slots": [{"mpris": {"name": "chromium"}},],
     "artifactName": "Poddr-${version}.${ext}"
     }
 }
