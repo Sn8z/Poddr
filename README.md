@@ -6,8 +6,6 @@
     <img src="https://img.shields.io/badge/platforms-Windows%20%2F%20Linux%20%2F%20Mac-brightgreen.svg?style=flat-square">
 </div>
 
-[Poddr website](https://sn8z.github.io/Poddr/)
- 
 Podcast client built with Electron and Angular.
  
 Poddr uses iTunes RSS feeds and Search API to gather information.

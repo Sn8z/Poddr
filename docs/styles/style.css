@@ -10,7 +10,10 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: 'Baloo 2', cursive;
+  font-family: "Outfit", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
 html, body {
