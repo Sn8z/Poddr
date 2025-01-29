@@ -1,8 +1,8 @@
 :host {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+	width: 100%;
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 .podcast-frame-remove-btn {
@@ -14,33 +14,6 @@
 
 .podcast-frame-remove-btn:hover {
 	color: #cc3333;
-}
-
-.favourite-actions {
-	display: flex;
-	flex: 0 1 auto;
-	flex-direction: row;
-	background: var(--secondary-bg-color);
-}
-
-.favourite-action-btn {
-	display: flex;
-	flex: 1;
-	justify-content: center;
-	cursor: pointer;
-	color: var(--primary-text-color);
-	padding: 0.5rem;
-	border-bottom: 1px solid var(--primary-bg-color);
-	transition: all linear 0.1s;
-}
-
-.favourite-action-btn:hover {
-	color: var(--primary-color);
-}
-
-.favourite-action-btn.active {
-	color: var(--primary-color);
-	border-bottom: 1px solid var(--primary-color);
 }
 
 .offline-episodes {

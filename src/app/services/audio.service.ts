@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ToastService } from './toast.service';
 import { PlayedService } from './played.service';
 import * as log from 'electron-log';
-import * as Store from 'electron-store';
+import Store from 'electron-store';
 
 const ipc = require('electron').ipcRenderer;
 
@@ -13,8 +13,8 @@ const ipc = require('electron').ipcRenderer;
 export class AudioService {
 	private store = new Store();
 	private audio: HTMLAudioElement = new Audio();
-	private guid: string = "";
-
+	
+	public guid: BehaviorSubject<string> = new BehaviorSubject("");
 	public rss: BehaviorSubject<string> = new BehaviorSubject("");
 	public loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 	public playing: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -28,6 +28,7 @@ export class AudioService {
 	public duration: BehaviorSubject<number> = new BehaviorSubject(0);
 	public percentPlayed: BehaviorSubject<number> = new BehaviorSubject(0);
 	public volume: BehaviorSubject<number> = new BehaviorSubject(0);
+	public playbackRate: BehaviorSubject<number> = new BehaviorSubject(1.0);
 
 	constructor(private toast: ToastService, private played: PlayedService) {
 		this.initIpcListeners();
@@ -42,6 +43,7 @@ export class AudioService {
 		ipc.on("app:close", () => {
 			this.store.set("volume", this.audio.volume);
 			this.store.set("time", this.audio.currentTime);
+			this.store.set("playbackRate", this.audio.playbackRate);
 			ipc.send("app:closed");
 		});
 	}
@@ -56,11 +58,15 @@ export class AudioService {
 		//Load stored time
 		this.audio.currentTime = this.store.get("time", 0) as number;
 
+		//Load stored playbackRate
+		this.setPlaybackRate(this.store.get("playbackRate", 1.0) as number);
+		this.playbackRate.next(this.audio.playbackRate);
+
 		//Load stored playerstate
 		let playerState: any = this.store.get("playerState");
 		if (playerState) {
 			this.audio.src = playerState.podcastURL;
-			this.guid = playerState.podcastGUID;
+			this.guid.next(playerState.podcastGUID);
 			this.rss.next(playerState.podcastRSS);
 			this.podcast.next(playerState.podcastTitle);
 			this.episode.next(playerState.podcastEpisodeTitle);
@@ -79,7 +85,9 @@ export class AudioService {
 		this.audio.addEventListener('loadstart', this.onLoadStart);
 		this.audio.addEventListener('timeupdate', this.onTimeUpdate);
 		this.audio.addEventListener('volumechange', this.onVolumeChange);
+		this.audio.addEventListener('ratechange', this.onPlaybackRateChange);
 		this.audio.addEventListener('seeking', this.onSeeking);
+		this.audio.addEventListener('waiting', this.onWaiting);
 		this.audio.addEventListener('canplaythrough', this.onCanPlayThrough);
 		this.audio.addEventListener('ended', this.onEnded);
 		this.audio.addEventListener('error', this.onError);
@@ -112,8 +120,18 @@ export class AudioService {
 		this.muted.next(this.audio.volume === 0 || this.audio.muted);
 	}
 
+	private onPlaybackRateChange = () => {
+		log.info("Audio service :: PlaybackRate changed to " + this.audio.playbackRate);
+		this.playbackRate.next(this.audio.playbackRate);
+	}
+
 	private onSeeking = () => {
 		log.info("Audio service :: Seeking.");
+		this.loading.next(true);
+	}
+
+	private onWaiting = () => {
+		log.info("Audio service :: Waiting for more data.");
 		this.loading.next(true);
 	}
 
@@ -126,7 +144,7 @@ export class AudioService {
 	private onEnded = () => {
 		log.info("Audio service :: Podcast ended.");
 		this.toast.toast("Podcast ended");
-		this.played.markAsPlayed(this.guid);
+		this.played.markAsPlayed(this.guid.value);
 	}
 
 	private onError = (error) => {
@@ -150,7 +168,7 @@ export class AudioService {
 				this.toast.toastError('Something went wrong, try again.');
 				break;
 		}
-		
+
 		this.loading.next(false);
 	}
 
@@ -165,7 +183,7 @@ export class AudioService {
 	// public methods
 	loadAudio(podcast, pTitle, pRSS, pCover): void {
 		this.audio.src = podcast.src;
-		this.guid = podcast.guid;
+		this.guid.next(podcast.guid);
 		this.rss.next(pRSS);
 		this.podcast.next(pTitle);
 		this.episode.next(podcast.episodeTitle);
@@ -188,7 +206,7 @@ export class AudioService {
 			episodeCover: this.episodeCover.value,
 			podcastRSS: this.rss.value,
 			podcastDescription: this.description.value,
-			podcastGUID: this.guid
+			podcastGUID: this.guid.value
 		});
 
 		this.updateMedia();
@@ -232,11 +250,18 @@ export class AudioService {
 		}
 	}
 
-	getRSS = (): string => {
+	setPlaybackRate(rate: number): void {
+		if (rate >= 0.25 && rate <= 2.00) {
+			this.audio.playbackRate = rate;
+			this.audio.defaultPlaybackRate = rate;
+		}
+	}
+
+	getRSS(): string {
 		return this.rss.value;
 	}
 
-	getAudio = (): HTMLAudioElement => {
+	getAudio(): HTMLAudioElement {
 		return this.audio;
 	}
 }

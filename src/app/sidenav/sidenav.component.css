@@ -50,6 +50,10 @@
 	height: auto;
 }
 
+#podcast-cover:hover, #podcast-cover:focus {
+	cursor: pointer;
+}
+
 /* media queries for left navigation menu */
 
 @media (max-width: 960px) {

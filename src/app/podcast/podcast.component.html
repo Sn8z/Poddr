@@ -9,8 +9,8 @@
 		<h1 class="primary-title truncate">{{ title }}</h1>
 	</div>
 	<div class="banner-actions">
-		<fa-icon *ngIf="favs.indexOf(title) == -1 && !isLoading" [icon]="faHeart" class="primary-text" id="fav-btn"
-			(click)="addFavourite()" aria-label="Add to favourites" data-pop="left" data-pop-arrow></fa-icon>
+		<fa-icon *ngIf="favs.indexOf(title) == -1 && !isLoading && !isError" [icon]="faHeart" class="primary-text"
+			id="fav-btn" (click)="addFavourite()" aria-label="Add to favourites" data-pop="left" data-pop-arrow></fa-icon>
 	</div>
 </div>
 <div id="filter-actions">
@@ -21,7 +21,7 @@
 <div class="feedback-section" *ngIf="isLoading">
 	<div class="loader"></div>
 </div>
-<div id="podcast-content" *ngIf="!isLoading">
+<div id="podcast-content" *ngIf="!isLoading && !isError">
 	<div id="podcast-details">
 		<h5 class="secondary-title">Latest episode</h5>
 		<div id="latest-podcast" (click)="play(latestEpisode)">
@@ -33,15 +33,15 @@
 			</div>
 			<div id="latest-podcast-info">
 				<div id="latest-podcast-title">
-					<h3 class="primary-title truncate">{{ latestEpisode.title }}</h3>
+					<h3 class="primary-title truncate">
+						<fa-icon [icon]="playedEpisodes.indexOf(latestEpisode.guid) == -1 ? faCircle : faCheckCircle"
+							[ngClass]="playedEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'"
+							aria-label="Played status" data-pop data-pop-arrow></fa-icon> {{ latestEpisode.title }}
+					</h3>
 					<div id="latest-podcast-actions">
 						<fa-icon [icon]="faInfoCircle"
 							(click)="showDescription($event, latestEpisode.title, latestEpisode.description)"
 							aria-label="Show description" data-pop data-pop-arrow></fa-icon>
-						<fa-icon [icon]="playedEpisodes.indexOf(latestEpisode.guid) == -1 ? faCircle : faCheckCircle"
-							[ngClass]="playedEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'"
-							aria-label="Played status" data-pop data-pop-arrow>
-						</fa-icon>
 						<fa-icon [icon]="faDownload"
 							[ngClass]="offlineEpisodes.indexOf(latestEpisode.guid) === -1 ? '':'played-episode'"
 							(click)="download($event, latestEpisode)" aria-label="Download" data-pop data-pop-arrow></fa-icon>
@@ -56,26 +56,36 @@
 		<h5 class="secondary-title">About</h5>
 		<p id="banner-info-details">{{ description | description }}</p>
 		<div id="podcast-links">
-			<fa-icon *ngIf="!isLoading" [icon]="faGlobeEurope" class="podcast-link-btn"
-				(click)="showDescription($event, 'Website', website)" aria-label="Show website URL" data-pop data-pop-arrow>
-			</fa-icon>
-			<fa-icon *ngIf="!isLoading" [icon]="faRss" class="podcast-link-btn" (click)="showDescription($event, 'RSS', rss)"
-				aria-label="Show RSS feed" data-pop data-pop-arrow></fa-icon>
-			<fa-icon *ngIf="!isLoading" [icon]="faEnvelope" class="podcast-link-btn"
-				(click)="showDescription($event, 'Email', email)" aria-label="Show email" data-pop data-pop-arrow></fa-icon>
+			<button *ngIf="!isLoading" class="btn-link" (click)="openURL(website)" aria-label="Open website in browser"
+				data-pop data-pop-arrow>
+				<fa-icon [icon]="faGlobeEurope"></fa-icon>{{ website }}<fa-icon [icon]="faExternalLinkAlt" class="small-icon">
+				</fa-icon>
+			</button>
+			<button *ngIf="!isLoading" class="btn-link" (click)="openURL(rss)" aria-label="Open RSS feed in browser" data-pop
+				data-pop-arrow>
+				<fa-icon [icon]="faRss"></fa-icon>{{ rss }}<fa-icon [icon]="faExternalLinkAlt" class="small-icon"></fa-icon>
+			</button>
+			<button *ngIf="!isLoading" class="btn-link" (click)="copyToClipboard(email)" aria-label="Copy email to clipboard"
+				data-pop data-pop-arrow>
+				<fa-icon [icon]="faEnvelope"></fa-icon>{{ email }}<fa-icon [icon]="faCopy" class="small-icon">
+				</fa-icon>
+			</button>
 		</div>
 	</div>
 	<div id="podcast-items">
 		<div class="feedback-section" *ngIf="episodes.length === 0">
 			<h2 class="primary-text">No episodes</h2>
 		</div>
-		<div class="podcast-item" *ngFor="let e of episodes">
+		<div class="podcast-item" [ngClass]="{'playing' : e.guid === currentGUID}" *ngFor="let e of episodes">
 			<div class="podcast-item-actions">
 				<fa-icon [icon]="playedEpisodes.indexOf(e.guid) === -1 ? faCircle : faCheckCircle "
 					[ngClass]="playedEpisodes.indexOf(e.guid)===-1 ? '' :'played-episode'"></fa-icon>
 			</div>
 			<div tabindex="0" class="podcast-item-info" (click)="play(e)" (keyup.enter)="play(e)">
-				<div class="podcast-item-title">{{ e.title }}</div>
+				<div class="podcast-item-title" [ngClass]="{'playing' : e.guid === currentGUID}">
+					<fa-icon [icon]="faMusic" *ngIf="e.guid === currentGUID"></fa-icon>
+					{{ e.title }}
+				</div>
 				<div class="podcast-item-details">
 					<div class="podcast-item-duration time">{{ e.duration | secondsToHhMmSs }}</div>
 					<div class="podcast-item-date time">{{ e.published | date }}</div>
@@ -86,7 +96,7 @@
 					<button tabindex="-1" class="dropbtn">
 						<fa-icon [icon]="faEllipsisV"></fa-icon>
 					</button>
-					<div class="dropdown-content">
+					<div class="dropdown-content podcast-dd">
 						<a class="dropdown-item" (click)="showDescription($event, e.title, e.description)">
 							<fa-icon [icon]="faInfoCircle"></fa-icon> Show description
 						</a>

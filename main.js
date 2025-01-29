@@ -1,133 +1,172 @@
-const electron = require("electron");
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
-const nativeImage = electron.nativeImage;
-const ipc = electron.ipcMain;
+const {
+  app,
+  BrowserWindow,
+  nativeImage,
+  ipcMain,
+  dialog,
+} = require("electron");
 const windowStateKeeper = require("electron-window-state");
 const path = require("path");
-
-//Global reference to window object;
-var mainWindow = null;
-
-//Fix for correctly naming the app...
-app.setPath("userData", app.getPath("userData").replace("Poddr", "poddr"));
-
-//Set up logging
+const store = require("electron-store");
 const log = require("electron-log");
-log.transports.file.init();
-log.info("Main Process :: Storing logs at: " + log.transports.file.file);
 
-//Allow actions before user have interacted with the document
-app.commandLine.appendSwitch("--autoplay-policy", "no-user-gesture-required");
+let mainWindow = null;
 
-//Launch options
 const options = {
-	debug: false
+  debug: process.argv.includes("--debug") || process.argv.includes("-d"),
 };
 
-const argv = process.argv.slice(1);
-log.info("Main Process :: Flags: " + argv);
-for (const arg of argv) {
-	if (arg === ".") {
-		continue;
-	} else if (arg === "--debug" || arg === "-d") {
-		log.info("Main Process :: Setting debug to true.");
-		options.debug = true;
-	} else {
-		log.info("Main Process :: " + arg + " is not a valid flag.");
-	}
+function setupLogging() {
+  log.info(
+    `Main Process :: Storing logs at: ${log.transports.file.getFile().path}`
+  );
+  if (options.debug) {
+    process.traceDeprecation = true;
+    process.traceProcessWarnings = true;
+  }
 }
 
-//Quit when all windows are closed
-app.on("window-all-closed", function () {
-	log.info("Main Process :: Exiting Poddr.");
-	app.quit();
-});
+function createWindow() {
+  const mainWindowState = windowStateKeeper({
+    defaultWidth: 1200,
+    defaultHeight: 900,
+  });
 
-//When app is ready, create window
-app.once("ready", function () {
+  const icon = path.join(__dirname, "/app/poddr/assets/images/logo.png");
 
-	let mainWindowState = windowStateKeeper({
-		defaultWidth: 1200,
-		defaultHeight: 900
-	});
+  mainWindow = new BrowserWindow({
+    title: "Poddr",
+    minWidth: 640,
+    minHeight: 600,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    frame: false,
+    show: false,
+    simpleFullscreen: true,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      sandbox: false,
+      devTools: options.debug,
+    },
+    backgroundColor: "#111",
+    icon: nativeImage.createFromPath(icon),
+  });
 
-	let icon = path.join(__dirname, "/app/poddr/assets/images/logo.png");
+  mainWindowState.manage(mainWindow);
 
-	mainWindow = new BrowserWindow({
-		name: "Poddr",
-		minWidth: 640,
-		minHeight: 600,
-		width: mainWindowState.width,
-		height: mainWindowState.height,
-		x: mainWindowState.x,
-		y: mainWindowState.y,
-		frame: false,
-		show: false,
-		simpleFullscreen: true,
-		webPreferences: {
-			nodeIntegration: true
-		},
-		backgroundColor: "#111",
-		icon: nativeImage.createFromPath(icon)
-	});
+  return mainWindow;
+}
 
-	mainWindowState.manage(mainWindow);
+function setupWindowEvents(window) {
+  window.on("ready-to-show", () => {
+    window.show();
+    window.focus();
+  });
 
-	mainWindow.on("ready-to-show", function () {
-		mainWindow.show();
-		mainWindow.focus();
-	});
+  window.once("close", async (event) => {
+    event.preventDefault();
+    log.info("Main Process :: Closing app.");
+    window.webContents.send("app:close");
+  });
 
-	mainWindow.loadURL("file://" + __dirname + "/app/poddr/index.html");
+  window.on("closed", () => {
+    mainWindow = null;
+  });
 
-	mainWindow.once("close", function (event) {
-		event.preventDefault();
-		log.info("Main Process :: Closing app.");
-		mainWindow.webContents.send("app:close");
-	});
+  if (options.debug) {
+    log.info("Main Process :: Enabling DevTools.");
+    window.webContents.openDevTools({ mode: "detach" });
+  }
+}
 
-	ipc.once("app:closed", function () {
-		app.quit();
-	});
+function setupIpcHandlers(window) {
+  ipcMain.handle("appVersion", () => app.getVersion());
+  ipcMain.handle("appStorage", () => app.getPath("userData"));
+  ipcMain.handle("logStorage", () => log.transports.file.getFile().path);
+  ipcMain.handle("downloadStorage", () =>
+    path.join(app.getPath("downloads"), "Poddr")
+  );
 
-	mainWindow.on("closed", function () {
-		mainWindow = null;
-	});
+  ipcMain.handle("openDialog", () => {
+    return dialog.showOpenDialog({
+      buttonLabel: "Import OPML file",
+      filters: [{ name: "OPML", extensions: ["opml", "xml"] }],
+      properties: ["showHiddenFiles", "openFile"],
+    });
+  });
 
-	//Devtools
-	if (options.debug) {
-		log.info("Main Process :: Enabling DevTools.");
-		mainWindow.webContents.openDevTools({ mode: "detach" });
-	}
+  ipcMain.handle("saveDialog", () => {
+    return dialog.showSaveDialog({
+      buttonLabel: "Save OPML file",
+      filters: [{ name: "OPML", extensions: ["opml", "xml"] }],
+    });
+  });
 
-	require("./utils/contextMenu")();
+  ipcMain.once("app:closed", () => {
+    app.quit();
+  });
 
-	if (process.platform == "linux") {
-		require("./utils/mpris")(mainWindow);
-		require("./utils/dbus")(mainWindow);
-	} else {
-		require("./utils/mediakeys")(mainWindow);
-	}
+  ipcMain.on("window-update", (_, action) => {
+    switch (action) {
+      case "minimize":
+        window.minimize();
+        break;
+      case "maximize":
+        window.isMaximized() ? window.unmaximize() : window.maximize();
+        break;
+      case "close":
+        app.quit();
+        break;
+    }
+  });
 
-	//Listen for window changes
-	ipc.on("window-update", (event, arg) => {
-		switch (arg) {
-			case "minimize":
-				mainWindow.minimize();
-				break;
-			case "maximize":
-				if (mainWindow.isMaximized()) {
-					mainWindow.unmaximize();
-				} else {
-					mainWindow.maximize();
-				}
-				break;
-			case "close":
-				app.quit();
-				break;
-			default:
-				break;
-		}
-	});
-});
+  ipcMain.on("relaunch", () => {
+    app.relaunch();
+    app.exit(0);
+  });
+
+  ipcMain.on("toggleDevTools", () => {
+    window.openDevTools();
+  });
+}
+
+function setupPlatformSpecific(window) {
+  require("./utils/contextMenu")(window);
+  require("./utils/tray")(window);
+
+  if (process.platform === "linux") {
+    require("./utils/mpris")(window);
+    require("./utils/dbus")(window);
+  } else {
+    require("./utils/mediakeys")(window);
+    require("./utils/thumbarButtons")(window);
+  }
+}
+
+function init() {
+  app.setPath("userData", app.getPath("userData").replace("Poddr", "poddr"));
+
+  app.commandLine.appendSwitch("--autoplay-policy", "no-user-gesture-required");
+
+  store.initRenderer();
+
+  setupLogging();
+
+  app.on("window-all-closed", () => {
+    log.info("Main Process :: Exiting Poddr.");
+    app.quit();
+  });
+
+  app.once("ready", () => {
+    const window = createWindow();
+    setupWindowEvents(window);
+    setupIpcHandlers(window);
+    setupPlatformSpecific(window);
+    window.loadFile(path.join(__dirname, "/app/poddr/index.html"));
+  });
+}
+
+init();

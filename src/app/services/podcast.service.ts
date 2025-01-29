@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ToastService } from './toast.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, empty } from 'rxjs';
 import { retry, timeout, catchError } from 'rxjs/operators'
-import * as log from 'electron-log';
+import log from 'electron-log';
+
 
 @Injectable({
 	providedIn: 'root'
@@ -13,14 +14,15 @@ export class PodcastService {
 	constructor(private toast: ToastService, private http: HttpClient) { }
 
 	getToplist(region: String, category: String, amount: Number): Observable<any> {
-		log.info("Podcast service :: Fetching top " + amount + " podcasts in " + region + " (" + category + ")");
-		return this.http.get("https://itunes.apple.com/" + region + "/rss/topaudiopodcasts/limit=" + amount + "/genre=" + category + "/json").pipe(
+		let chartUrl = "https://itunes.apple.com/" + region +"/rss/toppodcasts/limit=" + amount + "/explicit=true/genre=" + category +"/json"
+		log.info("Podcast service :: Fetching " + chartUrl);
+		return this.http.get(chartUrl).pipe(
 			timeout(10000),
 			retry(3),
 			catchError((error) => {
 				log.error('Podcast service :: ' + JSON.stringify(error));
 				this.toast.toastError('Something went wrong when trying to get the toplist from iTunes.');
-				return throwError(error);
+				return throwError('Something went wrong when trying to get the toplist from iTunes.');
 			})
 		);
 	}
@@ -36,7 +38,7 @@ export class PodcastService {
 			catchError((error) => {
 				log.error('Podcast service :: ' + JSON.stringify(error));
 				this.toast.toastError('Something went wrong when trying to search the iTunes library.');
-				return throwError(error);
+				return throwError('Something went wrong when trying to search the iTunes library.');
 			})
 		);
 	}
@@ -49,20 +51,20 @@ export class PodcastService {
 			catchError((error) => {
 				log.error('Podcast service :: ' + JSON.stringify(error));
 				this.toast.toastError('Something went wrong when trying to get the RSS feed from iTunes.');
-				return throwError(error);
+				return throwError('Something went wrong when trying to get the RSS feed from iTunes.');
 			})
 		);
 	}
 
-	getPodcastFeed(rss: String): Observable<any> {
+	getPodcastFeed(rss: String, silent: Boolean = false): Observable<any> {
 		log.info("Podcast service :: Getting Podcastfeed using RSS => " + rss);
 		return this.http.get("" + rss, { responseType: 'text' }).pipe(
 			timeout(10000),
 			retry(3),
 			catchError((error) => {
 				log.error('Podcast service :: ' + JSON.stringify(error));
-				this.toast.toastError('Something went wrong when trying to fetch the RSS feed.');
-				return throwError(error);
+				if (!silent) this.toast.toastError('Something went wrong when trying to fetch ' + rss);
+				return throwError('Something went wrong when trying to fetch ' + rss);
 			})
 		);
 	}

@@ -1,12 +1,32 @@
 {
   "appId": "com.sn8z.poddr",
-  "files": ["**/*", "!README.md", "!TOP_SUPPORTERS.md", "!SUPPORTERS.md", "!docs/*", "!images/*", "!logo/*", "!src/", "!dist/"],
-  "win": { "target": "nsis", "icon": "build/icon.ico" },
-  "mac": { "target": "dmg", "icon": "build/icon.icns" },
+  "asar": true,
+  "files":
+    ["build/**/*", "app/**/*", "utils/**/*", "node_modules/**/*", "main.js"],
+  "win":
+    {
+      "target": ["nsis", "portable"],
+      "icon": "build/icon.ico",
+      "artifactName": "Poddr-${version}.${ext}",
+    },
+  "portable": { "artifactName": "Poddr-${version}-portable.${ext}" },
+  "mac":
+    {
+      "target": "dmg",
+      "icon": "build/icon.icns",
+      "artifactName": "Poddr-${version}.${ext}",
+    },
   "linux":
     {
       "target": ["AppImage", "snap", "deb"],
       "category": "Audio;Music;Player;AudioVideo;",
+      "artifactName": "Poddr-${version}.${ext}",
     },
-  "snap": { "plugs": ["default", "mpris", "audio-playback"] }
+  "snap":
+    {
+      "confinement": "strict",
+      "plugs": ["default", "removable-media"],
+      "slots": [{ "mpris": { "name": "chromium", "interface": "mpris" } }],
+      "artifactName": "Poddr-${version}.${ext}",
+    },
 }

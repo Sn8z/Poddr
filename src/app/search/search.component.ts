@@ -1,16 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PodcastService } from '../services/podcast.service';
 import { FavouritesService } from '../services/favourites.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { Subscription } from 'rxjs';
+import * as log from 'electron-log';
 
 @Component({
-	selector: 'app-search',
-	templateUrl: './search.component.html',
-	styleUrls: ['./search.component.css']
+    selector: 'app-search',
+    templateUrl: './search.component.html',
+    styleUrls: ['./search.component.css'],
+    standalone: false
 })
-export class SearchComponent implements OnInit {
-	public query: String = "";
+export class SearchComponent implements OnInit, OnDestroy {
+	private favTitleSubscription: Subscription;
+	private routeSubscription: Subscription;
+	private searchSubscription: Subscription;
+
+	public query: string = "";
 	public results: Object[] = [];
 	public favs: string[] = [];
 	public isLoading: Boolean = false;
@@ -23,8 +30,10 @@ export class SearchComponent implements OnInit {
 	ngOnInit() {
 		document.getElementById("search").focus();
 
+		this.favTitleSubscription = this.favService.favouriteTitles.subscribe(value => { this.favs = value });
+
 		//Listen for changes in URL parameters
-		this.route.paramMap.subscribe(params => {
+		this.routeSubscription = this.route.paramMap.subscribe(params => {
 			this.query = params.get("query");
 			if (this.query) {
 				this.search();
@@ -33,26 +42,30 @@ export class SearchComponent implements OnInit {
 				this.isEmpty = false;
 			}
 		})
-
-		this.favService.favouriteTitles.subscribe(value => { this.favs = value });
 	}
 
-	searchNavigation = () => {
+	ngOnDestroy() {
+		if (this.favTitleSubscription) this.favTitleSubscription.unsubscribe();
+		if (this.routeSubscription) this.routeSubscription.unsubscribe();
+		if (this.searchSubscription) this.searchSubscription.unsubscribe();
+	}
+
+	searchNavigation = (): void => {
 		this.router.navigate(['/search', { query: this.query }]);
 	}
 
-	search = () => {
+	search = (): void => {
 		this.isLoading = true;
 		this.isEmpty = false;
 		this.results = [];
-		this.podcasts.search(this.query).subscribe((data) => {
+		this.searchSubscription = this.podcasts.search(this.query).subscribe((data) => {
 			this.results = data.results;
 			this.isLoading = false;
 			if (this.results.length == 0) this.isEmpty = true;
 		});
 	}
 
-	addToFavourites = (rss) => {
+	addToFavourites = (rss: string): void => {
 		this.favService.addFavourite(rss);
 	}
 

@@ -20,15 +20,31 @@
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
-	right: 0;
 	display: none;
-	text-align: left;
   position: absolute;
   background-color: var(--secondary-bg-color);
-	min-width: 160px;
 	width: auto;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
-  z-index: 1;
+	z-index: 10;
+	overflow: hidden;
+}
+
+.dropdown-content.podcast-dd {
+	right: 0;
+	text-align: left;
+	min-width: 160px;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.dropdown-content.playbackrate-dd {
+	bottom: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	min-width: 80px;
+	text-align: center;
+	border-radius: 5px;
 }
 
 /* Links inside the dropdown */
@@ -37,7 +53,8 @@
 	padding: 12px 16px;
 	font-size: 12px;
   text-decoration: none;
-  display: block;
+	display: block;
+	cursor: pointer;
 }
 
 /* Change color of dropdown links on hover */
@@ -49,9 +66,3 @@
 .dropdown:hover .dropdown-content {
   display: block;
 }
-
-/* Change the background color of the dropdown button when the dropdown content is shown 
-.dropdown:hover .dropbtn {
-  background-color: #3e8e41;
-}
-*/

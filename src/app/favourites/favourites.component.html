@@ -3,20 +3,16 @@
 		<h5 class="secondary-title truncate">Your</h5>
 		<h1 class="primary-title truncate">Favourites</h1>
 	</div>
+	<button class="btn-underline" [ngClass]="{'active': content == 'favourites'}"
+		(click)="content = 'favourites'">PODCASTS</button>
+	<button class="btn-underline" [ngClass]="{'active': content == 'latest'}"
+		(click)="content = 'latest'">LATEST</button>
+	<button class="btn-underline" [ngClass]="{'active': content == 'offline'}"
+		(click)="content = 'offline'">OFFLINE</button>
 	<div class="banner-actions">
 		<button class="btn-border" (click)="add()" aria-label="Add RSS feed" data-pop="left" data-pop-arrow>
 			<fa-icon [icon]="faPlus"></fa-icon>
 		</button>
-	</div>
-</div>
-<div class="favourite-actions">
-	<div class="favourite-action-btn" tabindex="0" (click)="content = 'favourites'" (keyup.enter)="content = 'favourites'"
-		[ngClass]="{'active': content == 'favourites'}">
-		Favourites
-	</div>
-	<div class="favourite-action-btn" tabindex="0" (click)="content = 'offline'" (keyup.enter)="content = 'offline'"
-		[ngClass]="{'active': content == 'offline'}">
-		Offline Episodes
 	</div>
 </div>
 <div class="grid" *ngIf="content === 'favourites'">
@@ -26,16 +22,34 @@
 	<div class="grid-item" *ngFor="let f of favourites">
 		<div class="podcast-frame shadow">
 			<a class="image-container" [routerLink]="['/podcast', f.rss]">
-				<img class="image-cover" [src]="f.img || 'assets/images/album_cover.png'" onload="this.style.opacity = 1">
+				<img class="image-cover" [src]="f.img || 'assets/images/album_cover.png'"
+					onload="this.style.opacity = 1">
 			</a>
 			<div class="podcast-frame-info">
-				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', f.rss]" tabindex="-1">{{ f.title }}</div>
+				<div class="podcast-frame-title truncate" [routerLink]="['/podcast', f.rss]" tabindex="-1">{{ f.title }}
+				</div>
 				<div class="podcast-frame-btns">
 					<fa-icon [icon]="faTimes" class="podcast-frame-btn podcast-frame-remove-btn" (click)="remove(f.rss)"
 						aria-label="Remove favourite" data-pop data-pop-arrow></fa-icon>
 				</div>
 			</div>
 		</div>
+	</div>
+</div>
+<div class="podcast-list" *ngIf="content === 'latest'">
+	<div class="podcast-list-item shadow" *ngFor="let l of latestEpisodes">
+		<a class="podcast-list-item-image" (click)="playEpisode(l)">
+			<div class="image-container">
+				<img class="image-cover" [src]="l.cover || 'assets/images/album_cover.png'"
+					onload="this.style.opacity = 1">
+			</div>
+		</a>
+		<div class="podcast-list-item-info" tabindex="-1" (click)="playEpisode(l)">
+			<h5 class="secondary-title truncate" [routerLink]="['/podcast', l.rss]">{{ l.podcast }}</h5>
+			<h1 class="primary-title truncate">{{ l.title }}</h1>
+			<p class="secondary-text truncate">{{ l.date | date }}</p>
+		</div>
+		<div class="podcast-list-item-actions"></div>
 	</div>
 </div>
 <div class="offline-episodes" *ngIf="content === 'offline'">

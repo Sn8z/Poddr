@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AudioService } from '../services/audio.service';
 import { PodcastService } from '../services/podcast.service';
@@ -7,7 +7,8 @@ import { ToastService } from '../services/toast.service';
 import { Description } from '../pipes/description.pipe';
 import { FavouritesService } from '../services/favourites.service';
 import { OfflineService } from '../services/offline.service';
-import { faHeart, faCircle, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { clipboard, shell } from 'electron';
+import { faHeart, faCircle, faEnvelope, faCopy } from '@fortawesome/free-regular-svg-icons';
 import {
 	faSortAmountDown,
 	faSortAmountUp,
@@ -17,18 +18,31 @@ import {
 	faGlobeEurope,
 	faRss,
 	faEllipsisV,
-	faTimes
+	faTimes,
+	faMusic,
+	faExternalLinkAlt
 } from '@fortawesome/free-solid-svg-icons';
-import * as parsePodcast from 'node-podcast-parser';
+import parsePodcast from 'node-podcast-parser';
 import * as log from 'electron-log';
+import { Subscription } from 'rxjs';
 
 @Component({
-	selector: 'app-podcast',
-	templateUrl: './podcast.component.html',
-	styleUrls: ['./podcast.component.css'],
-	providers: [Description]
+    selector: 'app-podcast',
+    templateUrl: './podcast.component.html',
+    styleUrls: ['./podcast.component.css'],
+    providers: [Description],
+    standalone: false
 })
-export class PodcastComponent implements OnInit {
+export class PodcastComponent implements OnInit, OnDestroy {
+	private routeSubscription: Subscription;
+	private prevPlayedSubscription: Subscription;
+	private offlineSubscription: Subscription;
+	private favSubscription: Subscription;
+	private audioPlayingSubscription: Subscription;
+	private audioGuidSubscription: Subscription;
+	private podcastRssFeedSubscription: Subscription;
+	private podcastFeedSubscription: Subscription;
+
 	private id: string;
 	private regPattern: RegExp = /^[0-9]+$/;
 
@@ -44,24 +58,30 @@ export class PodcastComponent implements OnInit {
 	public faRss = faRss;
 	public faEllipsisV = faEllipsisV;
 	public faTimes = faTimes;
+	public faMusic = faMusic;
+	public faExternalLinkAlt = faExternalLinkAlt;
+	public faCopy = faCopy;
 
+	public currentGUID: string = "";
+	public isPlaying: Boolean = false;
 	public isLoading: Boolean = true;
-	public rss: String;
-	public title: string;
-	public author: String;
-	public description: String;
-	public image: String;
-	public updated: String;
-	public website: String;
-	public email: String;
-	public episodes: any[];
-	public allEpisodes: any[];
+	public isError: Boolean = false;
+	public rss: string = '';
+	public title: string = '';
+	public author: string = '';
+	public description: string = '';
+	public image: string = '';
+	public updated: string = '';
+	public website: string = '';
+	public email: string = '';
+	public episodes: any[] = [];
+	public allEpisodes: any[] = [];
 	public sortBy: string = "asc";
-	public latestEpisode: any;
-	public playedEpisodes: string[];
-	public offlineEpisodes: string[];
+	public latestEpisode: any = {};
+	public playedEpisodes: string[] = [];
+	public offlineEpisodes: string[] = [];
 	public query: string = "";
-	public favs: string[];
+	public favs: string[] = [];
 
 	constructor(private route: ActivatedRoute,
 		private audio: AudioService,
@@ -75,7 +95,7 @@ export class PodcastComponent implements OnInit {
 
 	ngOnInit() {
 		//Listen for changes in URL parameters
-		this.route.paramMap.subscribe(params => {
+		this.routeSubscription = this.route.paramMap.subscribe(params => {
 			this.id = params.get("id");
 			if (this.regPattern.test(this.id)) {
 				this.getRSS(this.id);
@@ -84,38 +104,61 @@ export class PodcastComponent implements OnInit {
 			}
 		})
 
-		this.prevPlayed.playedEpisodes.subscribe(value => {
+		this.prevPlayedSubscription = this.prevPlayed.playedEpisodes.subscribe(value => {
 			this.zone.run(() => {
 				this.playedEpisodes = value;
 			});
 		});
-		this.offlineService.offlineKeys.subscribe(value => {
+		this.offlineSubscription = this.offlineService.offlineKeys.subscribe(value => {
 			this.zone.run(() => {
 				this.offlineEpisodes = value;
 			});
 		});
-		this.favouriteService.favouriteTitles.subscribe(value => {
+		this.favSubscription = this.favouriteService.favouriteTitles.subscribe(value => {
 			this.zone.run(() => {
 				this.favs = value;
 			});
 		});
+
+		this.audioPlayingSubscription = this.audio.playing.subscribe(value => { this.isPlaying = value });
+		this.audioGuidSubscription = this.audio.guid.subscribe(value => { this.currentGUID = value });
+	}
+
+	ngOnDestroy() {
+		if (this.routeSubscription) this.routeSubscription.unsubscribe();
+		if (this.prevPlayedSubscription) this.prevPlayedSubscription.unsubscribe();
+		if (this.offlineSubscription) this.offlineSubscription.unsubscribe();
+		if (this.favSubscription) this.favSubscription.unsubscribe();
+		if (this.audioPlayingSubscription) this.audioPlayingSubscription.unsubscribe();
+		if (this.audioGuidSubscription) this.audioGuidSubscription.unsubscribe();
+		if (this.podcastRssFeedSubscription) this.podcastRssFeedSubscription.unsubscribe();
+		if (this.podcastFeedSubscription) this.podcastFeedSubscription.unsubscribe();
 	}
 
 	//Extra step needed if we only have the iTunes ID
-	private getRSS(id: String): void {
-		this.podcastService.getRssFeed(id).subscribe((data) => {
+	private getRSS = (id: string): void => {
+		this.podcastRssFeedSubscription = this.podcastService.getRssFeed(id).subscribe((data) => {
 			this.parseRSS(data['results'][0]['feedUrl']);
+		}, (error) => {
+			log.error('Podcast component :: ' + error);
+			this.isLoading = false;
+			this.isError = true;
+			this.title = "An error occured";
+			this.toast.errorModal(error);
 		});
 	}
 
-	private parseRSS(rss: String): void {
+	private parseRSS = (rss: string): void => {
 		this.rss = rss;
-		this.podcastService.getPodcastFeed(rss).subscribe((response) => {
+		this.podcastFeedSubscription = this.podcastService.getPodcastFeed(rss).subscribe((response) => {
 			parsePodcast(response, (error, data) => {
 				if (error) {
-					console.log(error);
+					log.error('Podcast component :: Parsing RSS feed failed for ' + rss);
+					log.error(error);
 					this.isLoading = false;
-					//Error toast
+					this.isError = true;
+					this.title = "An error occured";
+					this.toast.errorModal("Parsing of " + rss + " failed");
 				} else {
 					this.title = data.title;
 					this.author = data.author;
@@ -130,10 +173,16 @@ export class PodcastComponent implements OnInit {
 					this.isLoading = false;
 				}
 			});
+		}, (error) => {
+			log.error('Podcast component :: ' + error);
+			this.isLoading = false;
+			this.isError = true;
+			this.title = "An error occured";
+			this.toast.errorModal(error);
 		});
 	}
 
-	play(podcastObject: any): void {
+	play = (podcastObject: any): void => {
 		let podcast = {
 			src: podcastObject.enclosure.url,
 			episodeTitle: podcastObject.title,
@@ -145,23 +194,23 @@ export class PodcastComponent implements OnInit {
 		this.audio.play();
 	}
 
-	download(event, podcastObject: any): void {
+	download = (event, podcastObject: any): void => {
 		event.stopPropagation();
 		this.offlineService.download(this.title, this.rss, podcastObject);
 	}
 
-	removeDownload = (event, podcastObject: any) => {
+	removeDownload = (event, podcastObject: any): void => {
 		event.stopPropagation();
 		this.offlineService.remove(podcastObject.guid);
 	}
 
-	filter(): void {
-		log.info("Filtering based on: " + this.query);
+	filter = (): void => {
+		log.info("Podcast component :: Filtering based on: " + this.query);
 		this.episodes = this.allEpisodes.filter(e => e.description.toLowerCase().includes(this.query.toLowerCase()) || e.title.toLowerCase().includes(this.query.toLowerCase()));
 	}
 
-	toggleOrder(): void {
-		log.info("Toggle " + this.sortBy);
+	toggleOrder = (): void => {
+		log.info("Podcast component :: Toggle " + this.sortBy);
 		if (this.sortBy == "asc") {
 			this.episodes.sort((x, y) => x.published - y.published);
 			this.sortBy = "desc";
@@ -171,20 +220,29 @@ export class PodcastComponent implements OnInit {
 		}
 	}
 
-	showDescription(event, title, description): void {
+	openURL = (url: string): void => {
+		shell.openExternal(url);
+	}
+
+	copyToClipboard = (text: string): void => {
+		clipboard.writeText(text);
+		this.toast.toast('Copied email to clipboard!');
+	}
+
+	showDescription = (event, title, description): void => {
 		event.stopPropagation();
 		this.toast.modal(title, this.descriptionPipe.transform(description));
 	}
 
-	addFavourite(): void {
+	addFavourite = (): void => {
 		this.favouriteService.addFavourite(this.rss);
 	}
 
-	markAsPlayed = (guid) => {
+	markAsPlayed = (guid): void => {
 		this.prevPlayed.markAsPlayed(guid);
 	}
 
-	unmarkAsPlayed = (guid) => {
+	unmarkAsPlayed = (guid): void => {
 		this.prevPlayed.unmarkAsPlayed(guid);
 	}
 }

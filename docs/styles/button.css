@@ -1,0 +1,56 @@
+button.basic-button {
+	background-color: var(--orange);
+	color: white;
+	font-size: 1em;
+	width: 150px;
+	min-height: 40px;
+	height: auto;
+	padding: 0.3em;
+	border: none;
+	border-radius: 20px;
+	transition: all 0.3s ease;
+	cursor: pointer;
+}
+
+button.basic-button:hover {
+	transform: scale(1.05);
+}
+
+button.download-button {
+	background-color: #299229;
+	color: white;
+	font-size: 1em;
+	width: 150px;
+	min-height: 40px;
+	height: auto;
+	padding: 0.3em;
+	border: none;
+	border-radius: 20px;
+	transition: all 0.3s ease;
+	cursor: pointer;
+}
+
+button.download-button:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 5px 10px 0px #252525;
+}
+
+a.icon-button {
+	background-color: transparent;
+	color: white;
+	width: auto;
+	height: 2em;
+	border: none;
+	border-radius: 20px;
+	transition: all 0.3s ease;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-decoration: none;
+}
+
+a.icon-button:hover {
+	transform: translateY(-3px);
+	color: var(--orange);
+}

@@ -1,8 +1,6 @@
 .grid {
     display: flex;
     flex: 1;
-    overflow-x: hidden;
-    overflow-y: auto;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -27,6 +25,10 @@
     display: flex;
     transition: all 0.1s linear;
     cursor: pointer;
+}
+
+.podcast-frame:hover {
+	transform: translateY(-2px);
 }
 
 .podcast-frame-image {

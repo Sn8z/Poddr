@@ -5,9 +5,10 @@ import { faTimes, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-
 import { faWindowMinimize, faSquare } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
-	selector: "app-titlebar",
-	templateUrl: "./titlebar.component.html",
-	styleUrls: ["./titlebar.component.css"]
+    selector: "app-titlebar",
+    templateUrl: "./titlebar.component.html",
+    styleUrls: ["./titlebar.component.css"],
+    standalone: false
 })
 export class TitlebarComponent implements OnInit {
 	public faWindowMinimize = faWindowMinimize;

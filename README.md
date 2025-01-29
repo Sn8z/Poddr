@@ -11,13 +11,8 @@
 Podcast client built with Electron and Angular.
  
 Poddr uses iTunes RSS feeds and Search API to gather information.
-## Screenshots
 
-![Screenshot](docs/images/pod_1.png)
-
-![Screenshot](docs/images/pod_2.png)
-
-![Screenshot](docs/images/pod_3.png)
+![Screenshot](docs/images/poddr.png)
 
 ## Downloads
 
@@ -46,9 +41,9 @@ Quotes from [AppImage projectpage](https://appimage.org)
 
 [Download](https://github.com/Sn8z/Poddr/releases) and make the file [executable](https://discourse.appimage.org/t/how-to-make-an-appimage-executable/80)
 
-~~#### Mac~~ (Temporarily removed)
+#### Mac
 
-~~A normal .dmg file, install as you would normally do with any Mac software.~~
+A normal .dmg file, install as you would normally do with any Mac software.
 
 <hr>
 
@@ -70,9 +65,6 @@ There are a number of different ways you can do this.
 I've recently been invited to the [GitHub sponsor program](https://help.github.com/en/articles/about-github-sponsors) which means you can sponsor me directly on GitHub and during my first year GitHub will [match any sponsorship](https://help.github.com/en/articles/about-github-sponsors#about-the-github-sponsors-matching-fund).
 
 Sponsor me [here](https://github.com/users/Sn8z/sponsorship).
-
-* ### [Patreon](https://www.patreon.com/join/poddr)
-For those of you who wants to make a monthly donation but don't have GitHub there's a [Patreon page](https://www.patreon.com/join/poddr) available aswell.
 
 * ### One-time donations
 If you want to make a onetime donation there's two different ways, either [PayPal](https://paypal.me/sn8z) or [Ko-Fi](https://ko-fi.com/O5O2ETUW).
