@@ -1,0 +1,57 @@
+name: poddr
+description: "A new Flutter project."
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.6
+  go_router: ^14.2.1
+  provider: ^6.1.2
+  audio_service: ^0.18.14
+  audio_session: ^0.1.20
+  media_kit: ^1.1.10
+  media_kit_video: ^1.2.4
+  media_kit_libs_video: ^1.0.4
+  podcast_search: ^0.7.1
+  google_fonts: ^6.2.1
+  shared_preferences: ^2.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+  msix: ^3.16.8 # dart run msix:create
+
+dependency_overrides:
+  media_kit: 
+    git:
+      url: https://github.com/media-kit/media-kit
+      path: media_kit
+  media_kit_video: 
+    git:
+      url: https://github.com/media-kit/media-kit
+      path: media_kit_video
+  media_kit_libs_video: 
+    git:
+      url: https://github.com/media-kit/media-kit
+      path: libs/universal/media_kit_libs_video
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+
+msix_config:
+  display_name: Poddr
+  publisher_display_name: Poddr
+  identity_name: com.poddr.poddr
+  msix_version: 1.0.0.0
+  logo_path: assets/images/icon.png
