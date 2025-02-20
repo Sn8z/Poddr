@@ -54,33 +54,33 @@ class _SearchViewContent extends StatelessWidget {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  final item = searchProvider.searchResults.items[index];
+                  final item = searchProvider.searchResults[index];
                   return PoddrListItem(
-                    title: item.collectionName ?? 'Artist',
-                    subtitle: item.feedUrl ?? 'missing feed url',
+                    title: item.title ?? '',
+                    subtitle: item.explicit.toString(),
                     leading: Container(
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: PoddrImage(
-                        imageUri: Uri.parse(item.artworkUrl100 ?? ""),
+                        imageUri: Uri.parse(item.image ?? ''),
                         fit: BoxFit.cover,
                       ),
                     ),
-                    onTap: () => context.push('/podcast?rss=${item.feedUrl}'),
+                    onTap: () => context.push('/podcast?rss=${item.rss}'),
                     actions: [
                       PoddrAddFavBtn(
-                        title: item.collectionName ?? '',
-                        rss: item.feedUrl ?? '',
-                        description: item.artistName ?? '',
-                        author: item.artistName ?? '',
-                        image: item.artworkUrl100 ?? '',
+                        title: item.title ?? '',
+                        rss: item.rss ?? '',
+                        description: item.description ?? '',
+                        author: item.author ?? '',
+                        image: item.image ?? '',
                       ),
                     ],
                   );
                 },
-                childCount: searchProvider.searchResults.items.length,
+                childCount: searchProvider.searchResults.length,
               ),
             ),
         ],

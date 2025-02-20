@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:podcast_search/podcast_search.dart';
+import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/podcast_service.dart';
 
 class PodcastProvider extends ChangeNotifier {
@@ -8,8 +8,8 @@ class PodcastProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  Podcast? _podcast;
-  Podcast? get podcast => _podcast;
+  PodcastFeed? _podcast;
+  PodcastFeed? get podcast => _podcast;
 
   String? _currentRss;
   String? get currentRss => _currentRss;

@@ -7,10 +7,10 @@ import 'package:poddr/components/ui/appbar_options.dart';
 import 'package:poddr/components/ui/image.dart';
 import 'package:poddr/components/ui/list_item.dart';
 import 'package:poddr/components/ui/shimmer.dart';
+import 'package:poddr/components/ui/tag.dart';
 import 'package:poddr/components/ui/text_input.dart';
 import 'package:poddr/providers/media.dart';
 import 'package:poddr/providers/podcast.dart';
-import 'package:poddr/utils/string_converter.dart';
 import 'package:poddr/utils/gaps.dart';
 import 'package:provider/provider.dart';
 
@@ -61,20 +61,9 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  PoddrImage(
-                    imageUri: Uri.parse(podcastProvider.podcast?.image ?? ""),
-                    fit: BoxFit.cover,
-                  ),
                   Container(
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(1),
-                          Colors.transparent,
-                        ],
-                      ),
+                      color: Theme.of(context).colorScheme.primaryContainer,
                     ),
                   ),
                   ClipRRect(
@@ -125,6 +114,20 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                                     ),
                                   ),
                                   gapH16,
+                                  const Row(
+                                    children: [
+                                      PoddrTag(
+                                          title: "Music", color: Colors.red),
+                                      PoddrTag(
+                                          title: "Audiobook",
+                                          color: Colors.green),
+                                      PoddrTag(
+                                          title: "Comedy", color: Colors.blue),
+                                      PoddrTag(
+                                          title: "Drama", color: Colors.purple),
+                                    ],
+                                  ),
+                                  gapH16,
                                   Text(
                                     "${podcastProvider.podcast?.episodes.length ?? 0} Episodes",
                                     style: TextStyle(
@@ -151,7 +154,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
             actions: [
               PoddrAddFavBtn(
                 title: podcastProvider.podcast?.title ?? "",
-                rss: podcastProvider.podcast?.url ?? "",
+                rss: podcastProvider.podcast?.rss ?? "",
                 description: podcastProvider.podcast?.description ?? "",
                 author: podcastProvider.podcast?.title ?? "",
                 image: podcastProvider.podcast?.image ?? "",
@@ -192,14 +195,11 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                           podcastProvider.podcast!.episodes[index].title,
                     ),
                     title: podcastProvider.podcast!.episodes[index].title,
-                    subtitle: convertDateToString(podcastProvider
-                        .podcast!.episodes[index].publicationDate),
+                    subtitle: podcastProvider
+                            .podcast!.episodes[index].publicationDate ??
+                        "date",
                     actions: [
-                      Text(
-                        convertDurationToString(
-                            podcastProvider.podcast!.episodes[index].duration ??
-                                Duration.zero),
-                      ),
+                      const Text("00:00"),
                       IconButton(
                         onPressed: () {},
                         icon: const Icon(Icons.more_vert_rounded),
@@ -209,8 +209,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                       context.read<MediaProvider>().loadMedia(
                             MediaItem(
                               id: podcastProvider
-                                      .podcast!.episodes[index].contentUrl ??
-                                  '',
+                                  .podcast!.episodes[index].audioUrl,
                               album: podcastProvider.podcast!.title,
                               title: podcastProvider
                                   .podcast!.episodes[index].title,
@@ -219,7 +218,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                                 podcastProvider
                                         .podcast!.episodes[index].imageUrl ??
                                     podcastProvider.podcast!.image ??
-                                    '',
+                                    "",
                               ),
                             ),
                           );

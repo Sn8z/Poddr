@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:podcast_search/podcast_search.dart';
+import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/podcast_service.dart';
 
 class PodcastDiscoveryProvider extends ChangeNotifier {
@@ -13,7 +13,7 @@ class PodcastDiscoveryProvider extends ChangeNotifier {
   String _genre = '';
   String get genre => _genre;
 
-  SearchResult charts = SearchResult(items: []);
+  List<PodcastFeed> charts = [];
 
   PodcastDiscoveryProvider()
       : _podcastService = PodcastService(),

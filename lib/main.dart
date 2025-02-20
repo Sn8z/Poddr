@@ -43,7 +43,7 @@ class Poddr extends StatelessWidget {
         title: "Poddr",
         themeMode: themeProvider.isDark ? ThemeMode.dark : ThemeMode.light,
         theme: themeProvider.lightTheme.copyWith(
-          textTheme: GoogleFonts.poppinsTextTheme(
+          textTheme: GoogleFonts.outfitTextTheme(
             ThemeData(brightness: Brightness.light).textTheme,
           ),
         ),

@@ -13,9 +13,8 @@ class MediaTitle extends StatelessWidget {
     return Text(
       artist ?? "Artist",
       style: TextStyle(
-        color: Theme.of(context).colorScheme.primary,
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
+        color: Theme.of(context).colorScheme.onSurface,
+        fontSize: 12,
       ),
       overflow: TextOverflow.ellipsis,
     );

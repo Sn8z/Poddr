@@ -34,8 +34,8 @@ class LargePlayer extends StatelessWidget {
                       children: [
                         PositionText(),
                         Spacer(),
-                        MediaTitle(),
                         EpisodeTitle(),
+                        MediaTitle(),
                       ],
                     ),
                   ),

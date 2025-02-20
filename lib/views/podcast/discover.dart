@@ -101,7 +101,7 @@ class DiscoveryList extends StatelessWidget {
   Widget build(BuildContext context) {
     final charts = context.watch<PodcastDiscoveryProvider>();
     final isLoading = charts.isLoading;
-    final items = charts.charts.items;
+    final items = charts.charts;
 
     if (isLoading) {
       return const SliverFillRemaining(
@@ -120,20 +120,20 @@ class DiscoveryList extends StatelessWidget {
 
             return PoddrListItem(
               leading: PoddrImage(
-                imageUri: Uri.parse(podcast.artworkUrl100 ?? ""),
+                imageUri: Uri.parse(podcast.image ?? ''),
               ),
-              title: podcast.artistName ?? "",
-              subtitle: podcast.trackName ?? "",
+              title: podcast.title ?? '',
+              subtitle: podcast.title ?? '',
               onTap: () {
-                context.push('/podcast?rss=${podcast.feedUrl}');
+                context.push('/podcast?rss=${podcast.rss}');
               },
               actions: [
                 PoddrAddFavBtn(
-                  title: podcast.trackName ?? "",
-                  description: podcast.artistName ?? "",
-                  author: podcast.artistName ?? "",
-                  image: podcast.artworkUrl600 ?? "",
-                  rss: podcast.feedUrl ?? "",
+                  title: podcast.title ?? '',
+                  description: podcast.description ?? '',
+                  author: podcast.author ?? '',
+                  image: podcast.image ?? '',
+                  rss: podcast.rss ?? '',
                 ),
               ],
             );
@@ -154,7 +154,7 @@ class DiscoveryGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final charts = context.watch<PodcastDiscoveryProvider>();
     final isLoading = charts.isLoading;
-    final items = charts.charts.items;
+    final items = charts.charts;
 
     if (isLoading) {
       return const SliverFillRemaining(
@@ -177,19 +177,19 @@ class DiscoveryGrid extends StatelessWidget {
           final podcast = items[index];
 
           return PoddrGridItem(
-            title: podcast.collectionName ?? "",
-            subtitle: podcast.trackName ?? "",
-            imageUri: Uri.parse(podcast.artworkUrl600 ?? ""),
+            title: podcast.title ?? '',
+            subtitle: podcast.title ?? '',
+            imageUri: Uri.parse(podcast.image ?? ''),
             onTap: () {
-              context.push('/podcast?rss=${podcast.feedUrl}');
+              context.push('/podcast?rss=${podcast.rss}');
             },
             actions: [
               PoddrAddFavBtn(
-                title: podcast.trackName ?? "",
-                description: podcast.artistName ?? "",
-                author: podcast.artistName ?? "",
-                image: podcast.artworkUrl600 ?? "",
-                rss: podcast.feedUrl ?? "",
+                title: podcast.title ?? '',
+                description: podcast.description ?? '',
+                author: podcast.author ?? '',
+                image: podcast.image ?? '',
+                rss: podcast.rss ?? '',
               ),
             ],
           );

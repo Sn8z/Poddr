@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:podcast_search/podcast_search.dart';
+import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/podcast_service.dart';
 
 class SearchProvider extends ChangeNotifier {
   final PodcastService _podcastService = PodcastService();
-  SearchResult searchResults = SearchResult();
+  List<PodcastFeed> searchResults = [];
   List<String> searchHistory = [];
   List<String> searchSuggestions = [];
   bool isSearching = false;
@@ -17,11 +17,11 @@ class SearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<SearchResult> getCharts(String? code, String? genre) async {
+  Future<List<PodcastFeed>> getCharts(String code, String genre) async {
     return _podcastService.getCharts(code, genre);
   }
 
-  Future<Podcast> getFeed(String rss) async {
+  Future<PodcastFeed> getFeed(String rss) async {
     return _podcastService.getFeed(rss);
   }
 

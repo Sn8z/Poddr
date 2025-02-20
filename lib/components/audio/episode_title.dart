@@ -13,8 +13,9 @@ class EpisodeTitle extends StatelessWidget {
     return Text(
       title ?? "Title",
       style: TextStyle(
-        color: Theme.of(context).colorScheme.onSurface,
-        fontSize: 12,
+        color: Theme.of(context).colorScheme.primary,
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
       ),
       overflow: TextOverflow.ellipsis,
     );
