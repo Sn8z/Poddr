@@ -19,7 +19,7 @@ class PoddrBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 80,
+      height: 56,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainer,
       ),

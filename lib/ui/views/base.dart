@@ -31,10 +31,15 @@ class BasePage extends StatelessWidget {
                   state: state,
                 ),
                 Expanded(
-                  child: Column(
+                  child: Stack(
                     children: [
-                      Expanded(child: child),
-                      const LargePlayer(),
+                      Positioned.fill(child: child),
+                      const Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: LargePlayer(),
+                      ),
                     ],
                   ),
                 ),

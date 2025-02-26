@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/audio/duration_text.dart';
@@ -13,157 +15,168 @@ class LargePlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 120,
-      margin: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(12)),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          const MediaProgressSlider(),
-          Expanded(
-            child: Row(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+          child: Container(
+            height: 120,
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerLowest
+                  .withOpacity(0.5),
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
               children: [
-                const Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        PositionText(),
-                        Spacer(),
-                        EpisodeTitle(),
-                        MediaTitle(),
-                      ],
-                    ),
-                  ),
-                ),
-                //const Spacer(),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.shuffle_rounded,
-                    size: 28,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.skip_previous_rounded,
-                    size: 28,
-                  ),
-                ),
-                const PlayButton(
-                  size: 58,
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.skip_next_rounded,
-                    size: 28,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.repeat_rounded,
-                    size: 28,
-                  ),
-                ),
-                //const Spacer(),
+                const MediaProgressSlider(),
                 Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const DurationText(),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              IconButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return SimpleDialog(
-                                        title: const Text('Queue'),
-                                        contentPadding:
-                                            const EdgeInsets.all(16),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                        ),
-                                        children: [
-                                          const Text('Queue'),
-                                          SimpleDialogOption(
-                                            onPressed: () {},
-                                            child: const Text('1'),
-                                          ),
-                                          SimpleDialogOption(
-                                            onPressed: () {},
-                                            child: const Text('2'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                icon: const Icon(
-                                  Icons.queue_music_rounded,
-                                  size: 20,
-                                ),
-                              ),
-                              PopupMenuButton(
-                                icon:
-                                    const Icon(Icons.one_x_mobiledata_rounded),
-                                itemBuilder: (context) {
-                                  return [
-                                    PopupMenuItem(
-                                      child: const Text('Settings'),
-                                      onTap: () => debugPrint('1'),
-                                    ),
-                                    PopupMenuItem(
-                                      child: const Text('Settings'),
-                                      onTap: () => debugPrint('2'),
-                                    ),
-                                    PopupMenuItem(
-                                      child: const Text('Settings'),
-                                      onTap: () => debugPrint('3'),
-                                    ),
-                                  ];
-                                },
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  context.push('/player');
-                                },
-                                icon: const Icon(
-                                  Icons.fullscreen_rounded,
-                                  size: 20,
-                                ),
-                              ),
-                              const VolumeSlider(),
+                              PositionText(),
+                              Spacer(),
+                              EpisodeTitle(),
+                              MediaTitle(),
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      //const Spacer(),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.shuffle_rounded,
+                          size: 28,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.skip_previous_rounded,
+                          size: 28,
+                        ),
+                      ),
+                      const PlayButton(
+                        size: 58,
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.skip_next_rounded,
+                          size: 28,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.repeat_rounded,
+                          size: 28,
+                        ),
+                      ),
+                      //const Spacer(),
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const DurationText(),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return SimpleDialog(
+                                              title: const Text('Queue'),
+                                              contentPadding:
+                                                  const EdgeInsets.all(16),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                              ),
+                                              children: [
+                                                const Text('Queue'),
+                                                SimpleDialogOption(
+                                                  onPressed: () {},
+                                                  child: const Text('1'),
+                                                ),
+                                                SimpleDialogOption(
+                                                  onPressed: () {},
+                                                  child: const Text('2'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.queue_music_rounded,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    PopupMenuButton(
+                                      icon: const Icon(
+                                          Icons.one_x_mobiledata_rounded),
+                                      itemBuilder: (context) {
+                                        return [
+                                          PopupMenuItem(
+                                            child: const Text('Settings'),
+                                            onTap: () => debugPrint('1'),
+                                          ),
+                                          PopupMenuItem(
+                                            child: const Text('Settings'),
+                                            onTap: () => debugPrint('2'),
+                                          ),
+                                          PopupMenuItem(
+                                            child: const Text('Settings'),
+                                            onTap: () => debugPrint('3'),
+                                          ),
+                                        ];
+                                      },
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        context.push('/player');
+                                      },
+                                      icon: const Icon(
+                                        Icons.fullscreen_rounded,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    const VolumeSlider(),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

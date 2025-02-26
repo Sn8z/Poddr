@@ -21,6 +21,9 @@ class PoddrAppBar extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       backgroundColor: Theme.of(context).colorScheme.primary,
       expandedHeight: 120,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       flexibleSpace: FlexibleSpaceBar(
         title: title,
         collapseMode: CollapseMode.parallax,
@@ -29,6 +32,7 @@ class PoddrAppBar extends StatelessWidget {
         expandedTitleScale: 2.0,
         background: Container(
           decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,

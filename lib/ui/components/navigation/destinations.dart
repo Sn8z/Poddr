@@ -17,14 +17,14 @@ class NavItem {
 final List<NavItem> destinations = [
   NavItem(
     label: 'Podcasts',
-    icon: Icons.podcasts_rounded,
-    selectedIcon: Icons.multitrack_audio_rounded,
+    icon: Icons.podcasts_outlined,
+    selectedIcon: Icons.podcasts_rounded,
     route: '/podcasts',
   ),
   NavItem(
     label: 'Radio',
-    icon: Icons.radio_rounded,
-    selectedIcon: Icons.multitrack_audio_rounded,
+    icon: Icons.radio_outlined,
+    selectedIcon: Icons.radio_rounded,
     route: '/radio',
   ),
   NavItem(
@@ -35,8 +35,8 @@ final List<NavItem> destinations = [
   ),
   NavItem(
     label: 'Search',
-    icon: Icons.search_rounded,
-    selectedIcon: Icons.manage_search_rounded,
+    icon: Icons.search_outlined,
+    selectedIcon: Icons.search_rounded,
     route: '/search',
   ),
   NavItem(
