@@ -19,7 +19,7 @@ final List<NavItem> destinations = [
     label: 'Podcasts',
     icon: Icons.podcasts_rounded,
     selectedIcon: Icons.multitrack_audio_rounded,
-    route: '/',
+    route: '/podcasts',
   ),
   NavItem(
     label: 'Radio',

@@ -27,7 +27,7 @@ abstract class PoddrRouter {
   static final GoRouter router = GoRouter(
     debugLogDiagnostics: true,
     navigatorKey: _rootNavKey,
-    initialLocation: "/",
+    initialLocation: "/podcasts",
     routes: [
       GoRoute(
         path: '/player',
@@ -68,7 +68,7 @@ abstract class PoddrRouter {
             navigatorKey: _podcastNavKey,
             routes: [
               GoRoute(
-                path: '/',
+                path: '/podcasts',
                 parentNavigatorKey: _podcastNavKey,
                 pageBuilder: (context, state) {
                   return const NoTransitionPage(
@@ -77,7 +77,7 @@ abstract class PoddrRouter {
                 },
                 routes: [
                   GoRoute(
-                    path: 'podcast',
+                    path: 'details',
                     parentNavigatorKey: _podcastNavKey,
                     pageBuilder: (context, state) {
                       return NoTransitionPage(

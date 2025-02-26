@@ -68,7 +68,8 @@ class _SearchViewContent extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    onTap: () => context.push('/podcast?rss=${item.rss}'),
+                    onTap: () =>
+                        context.push('/podcasts/details?rss=${item.rss}'),
                     actions: [
                       PoddrAddFavBtn(
                         title: item.title ?? '',

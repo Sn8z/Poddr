@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/audio/large_player.dart';
 import 'package:poddr/ui/components/audio/small_player.dart';
-import 'package:poddr/ui/components/navigation/bottom_navigation.dart';
 import 'package:poddr/ui/components/navigation/bottombar.dart';
 import 'package:poddr/ui/components/navigation/sidebar.dart';
-import 'package:poddr/ui/components/navigation/sidemenu.dart';
 
 import 'package:poddr/ui/utils/breakpoints.dart';
 

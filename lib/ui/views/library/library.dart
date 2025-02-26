@@ -65,7 +65,7 @@ class LibraryView extends StatelessWidget {
                   subtitle: favouritesProvider.favourites[index]['author'],
                   onTap: () {
                     context.push(
-                        '/podcast?rss=${favouritesProvider.favourites[index]['rss']}');
+                        '/podcasts/details?rss=${favouritesProvider.favourites[index]['rss']}');
                   },
                   leading: Container(
                     clipBehavior: Clip.antiAlias,

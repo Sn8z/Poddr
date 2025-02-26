@@ -125,7 +125,7 @@ class DiscoveryList extends StatelessWidget {
               title: podcast.title ?? '',
               subtitle: podcast.title ?? '',
               onTap: () {
-                context.push('/podcast?rss=${podcast.rss}');
+                context.push('/podcasts/details?rss=${podcast.rss}');
               },
               actions: [
                 PoddrAddFavBtn(
@@ -181,7 +181,7 @@ class DiscoveryGrid extends StatelessWidget {
             subtitle: podcast.title ?? '',
             imageUri: Uri.parse(podcast.image ?? ''),
             onTap: () {
-              context.push('/podcast?rss=${podcast.rss}');
+              context.push('/podcasts/details?rss=${podcast.rss}');
             },
             actions: [
               PoddrAddFavBtn(
