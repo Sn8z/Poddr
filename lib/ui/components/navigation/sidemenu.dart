@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/audio/artwork.dart';
 import 'package:poddr/ui/components/navigation/destinations.dart';
-import 'package:poddr/ui/components/ui/logo.dart';
+import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 
 class PoddrSideMenu extends StatefulWidget {

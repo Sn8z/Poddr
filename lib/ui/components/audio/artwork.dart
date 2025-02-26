@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/ui/components/ui/image.dart';
+import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media.dart';
 

@@ -3,13 +3,20 @@ import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/audio/large_player.dart';
 import 'package:poddr/ui/components/audio/small_player.dart';
 import 'package:poddr/ui/components/navigation/bottom_navigation.dart';
+import 'package:poddr/ui/components/navigation/bottombar.dart';
+import 'package:poddr/ui/components/navigation/sidebar.dart';
 import 'package:poddr/ui/components/navigation/sidemenu.dart';
 
 import 'package:poddr/ui/utils/breakpoints.dart';
 
 class BasePage extends StatelessWidget {
-  const BasePage({super.key, required this.child});
+  const BasePage({
+    super.key,
+    required this.state,
+    required this.child,
+  });
 
+  final GoRouterState state;
   final StatefulNavigationShell child;
 
   @override
@@ -22,8 +29,8 @@ class BasePage extends StatelessWidget {
       body: isTablet
           ? Row(
               children: [
-                PoddrSideMenu(
-                  shell: child,
+                PoddrSideBar(
+                  state: state,
                 ),
                 Expanded(
                   child: Column(
@@ -46,7 +53,7 @@ class BasePage extends StatelessWidget {
                 ),
               ],
             ),
-      bottomNavigationBar: isTablet ? null : PoddrBottomNav(shell: child),
+      bottomNavigationBar: isTablet ? null : PoddrBottomBar(state: state),
     );
   }
 }

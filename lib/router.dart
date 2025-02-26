@@ -57,6 +57,7 @@ abstract class PoddrRouter {
           return NoTransitionPage(
             child: PoddrShortcuts(
               child: BasePage(
+                state: state,
                 child: navigationShell,
               ),
             ),

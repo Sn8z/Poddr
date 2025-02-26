@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/ui/components/ui/carousel.dart';
-import 'package:poddr/ui/components/ui/tag.dart';
+import 'package:poddr/ui/components/widgets/carousel.dart';
+import 'package:poddr/ui/components/widgets/tag.dart';
 
 class RadioDiscoveryView extends StatelessWidget {
   const RadioDiscoveryView({super.key});

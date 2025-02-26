@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:poddr/ui/components/ui/shimmer.dart';
+import 'package:poddr/ui/components/widgets/shimmer.dart';
 
 class PoddrImage extends StatelessWidget {
   const PoddrImage({

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:poddr/ui/components/ui/add_fav_btn.dart';
-import 'package:poddr/ui/components/ui/image.dart';
-import 'package:poddr/ui/components/ui/list_item.dart';
-import 'package:poddr/ui/components/ui/shimmer.dart';
-import 'package:poddr/ui/components/ui/text_input.dart';
+import 'package:poddr/ui/components/widgets/add_fav_btn.dart';
+import 'package:poddr/ui/components/widgets/image.dart';
+import 'package:poddr/ui/components/widgets/list_item.dart';
+import 'package:poddr/ui/components/widgets/shimmer.dart';
+import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/services/search.dart';
 import 'package:provider/provider.dart';
 

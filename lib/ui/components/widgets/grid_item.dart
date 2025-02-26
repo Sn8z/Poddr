@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:poddr/ui/components/ui/image.dart';
+import 'package:poddr/ui/components/widgets/image.dart';
 
 class PoddrGridItem extends StatefulWidget {
   const PoddrGridItem(

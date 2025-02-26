@@ -15,9 +15,12 @@ class LargePlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 120,
+      margin: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerLow,
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           const MediaProgressSlider(),

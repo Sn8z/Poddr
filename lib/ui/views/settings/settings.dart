@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/auth/user_tile.dart';
-import 'package:poddr/ui/components/ui/appbar.dart';
-import 'package:poddr/ui/components/ui/logo.dart';
+import 'package:poddr/ui/components/widgets/appbar.dart';
+import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/ui/utils/theme_colors.dart';
 import 'package:provider/provider.dart';
