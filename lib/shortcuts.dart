@@ -17,7 +17,7 @@ class PoddrShortcuts extends StatelessWidget {
           context.read<MediaProvider>().playOrPause();
         },
         const SingleActivator(LogicalKeyboardKey.digit1, control: true): () {
-          context.go('/');
+          context.go('/podcasts');
         },
         const SingleActivator(LogicalKeyboardKey.digit2, control: true): () {
           context.go('/radio');

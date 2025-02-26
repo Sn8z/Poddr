@@ -11,7 +11,19 @@ class RadioDiscoveryView extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Radio Discovery"),
+          title: const Text("Radio"),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search_rounded),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.more_vert_rounded),
+              onPressed: () {},
+            ),
+          ],
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          surfaceTintColor: Theme.of(context).colorScheme.surfaceContainerHigh,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),

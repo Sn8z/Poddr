@@ -8,7 +8,7 @@ class PoddrAppBar extends StatelessWidget {
     this.actions,
   });
 
-  final Widget title;
+  final String title;
   final List<Widget>? actions;
   final PreferredSizeWidget? bottom;
 
@@ -19,30 +19,27 @@ class PoddrAppBar extends StatelessWidget {
       floating: true,
       forceMaterialTransparency: false,
       clipBehavior: Clip.antiAlias,
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? Theme.of(context).colorScheme.primary
+          : Theme.of(context).colorScheme.primaryContainer,
+      foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+      surfaceTintColor: Theme.of(context).colorScheme.onPrimaryContainer,
       expandedHeight: 120,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
       flexibleSpace: FlexibleSpaceBar(
-        title: title,
-        collapseMode: CollapseMode.parallax,
-        centerTitle: false,
-        titlePadding: const EdgeInsets.all(8.0),
-        expandedTitleScale: 2.0,
-        background: Container(
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(16)),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.secondary,
-              ],
-            ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
           ),
         ),
+        titlePadding: const EdgeInsets.only(left: 16.0, bottom: 10.0),
+        collapseMode: CollapseMode.parallax,
+        centerTitle: false,
       ),
       bottom: bottom,
       actions: actions,

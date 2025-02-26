@@ -15,6 +15,9 @@ class PoddrAppBarOptions extends StatelessWidget {
       pinned: true,
       toolbarHeight: 72,
       automaticallyImplyLeading: false,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
       title: title,
       actions: actions,

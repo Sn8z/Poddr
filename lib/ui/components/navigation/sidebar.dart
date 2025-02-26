@@ -22,48 +22,54 @@ class PoddrSideBar extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final bool shouldExpand = size.width > Breakpoints.desktopScreen;
 
-    return Container(
-      width: shouldExpand ? 220 : 80,
-      height: double.infinity,
-      margin: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainer,
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 8,
+        top: 8,
+        bottom: 8,
       ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 80,
-            child: Center(
-              child: PoddrLogo(
-                size: 40,
+      child: Container(
+        width: shouldExpand ? 220 : 80,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainer,
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 80,
+              child: Center(
+                child: PoddrLogo(
+                  size: 40,
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: Column(
-              children: destinations.map((dest) {
-                final isSelected = _isSelected(dest.route);
-                return PoddrSideBarItem(
-                  icon: dest.icon,
-                  selectedIcon: dest.selectedIcon,
-                  title: dest.label,
-                  status: isSelected
-                      ? SideBarItemStatus.selected
-                      : SideBarItemStatus.normal,
-                  onTap: () {
-                    context.go(dest.route);
-                  },
-                );
-              }).toList(),
+            Expanded(
+              child: Column(
+                children: destinations.map((dest) {
+                  final isSelected = _isSelected(dest.route);
+                  return PoddrSideBarItem(
+                    icon: dest.icon,
+                    selectedIcon: dest.selectedIcon,
+                    title: dest.label,
+                    status: isSelected
+                        ? SideBarItemStatus.selected
+                        : SideBarItemStatus.normal,
+                    onTap: () {
+                      context.go(dest.route);
+                    },
+                  );
+                }).toList(),
+              ),
             ),
-          ),
-          SizedBox.square(
-            dimension: shouldExpand ? 220 : 80,
-            child: const Artwork(),
-          ),
-        ],
+            SizedBox.square(
+              dimension: shouldExpand ? 220 : 80,
+              child: const Artwork(),
+            ),
+          ],
+        ),
       ),
     );
   }

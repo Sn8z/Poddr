@@ -21,12 +21,7 @@ class LibraryView extends StatelessWidget {
         body: CustomScrollView(
           slivers: [
             PoddrAppBar(
-              title: Text(
-                'Library',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onPrimary),
-              ),
+              title: 'Library',
               actions: [
                 IconButton(
                   onPressed: () {},

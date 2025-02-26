@@ -18,16 +18,16 @@ class LargePlayer extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Container(
             height: 120,
             decoration: BoxDecoration(
               color: Theme.of(context)
                   .colorScheme
-                  .surfaceContainerLowest
-                  .withOpacity(0.5),
+                  .surfaceContainerHigh
+                  .withOpacity(0.7),
               borderRadius: const BorderRadius.all(Radius.circular(12)),
             ),
             clipBehavior: Clip.antiAlias,
