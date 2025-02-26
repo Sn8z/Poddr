@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:poddr/providers/media.dart';
+import 'package:poddr/services/media.dart';
 import 'package:provider/provider.dart';
 
 class PoddrShortcuts extends StatelessWidget {

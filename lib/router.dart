@@ -3,14 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:poddr/shortcuts.dart';
 
 // pages
-import 'package:poddr/views/base.dart';
-import 'package:poddr/views/player/player.dart';
-import 'package:poddr/views/podcast/discover.dart';
-import 'package:poddr/views/podcast/podcast.dart';
-import 'package:poddr/views/library/library.dart';
-import 'package:poddr/views/radio/radio.dart';
-import 'package:poddr/views/search/search.dart';
-import 'package:poddr/views/settings/settings.dart';
+import 'package:poddr/ui/views/base.dart';
+import 'package:poddr/ui/views/player/player.dart';
+import 'package:poddr/ui/views/podcast/discover.dart';
+import 'package:poddr/ui/views/podcast/podcast.dart';
+import 'package:poddr/ui/views/library/library.dart';
+import 'package:poddr/ui/views/radio/radio.dart';
+import 'package:poddr/ui/views/search/search.dart';
+import 'package:poddr/ui/views/settings/settings.dart';
 
 final _rootNavKey = GlobalKey<NavigatorState>(debugLabel: 'Root navigation');
 final _podcastNavKey =
