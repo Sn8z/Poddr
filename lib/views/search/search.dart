@@ -57,7 +57,7 @@ class _SearchViewContent extends StatelessWidget {
                   final item = searchProvider.searchResults[index];
                   return PoddrListItem(
                     title: item.title ?? '',
-                    subtitle: item.explicit.toString(),
+                    subtitle: item.description ?? '',
                     leading: Container(
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(

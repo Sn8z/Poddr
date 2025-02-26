@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart' hide AudioDevice;
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +15,8 @@ class MediaProvider extends BaseAudioHandler
     ),
   );
 
-  final isMobile = Platform.isAndroid || Platform.isIOS;
+  //TODO: Improve check... Platform causes issues on web
+  final isMobile = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
   SharedPreferences? _prefs;
   AudioHandler? _audioHandler;

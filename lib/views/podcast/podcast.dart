@@ -57,93 +57,90 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
         slivers: [
           SliverAppBar(
             pinned: true,
+            backgroundColor: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).colorScheme.surfaceContainerLowest
+                : Theme.of(context).colorScheme.primaryContainer,
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
                 fit: StackFit.expand,
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Theme.of(context).colorScheme.surfaceContainerLowest
+                          : Theme.of(context).colorScheme.primaryContainer,
                     ),
                   ),
                   ClipRRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
+                    child: Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: PoddrImage(
+                              imageUri: Uri.parse(
+                                podcastProvider.podcast?.image ?? "",
                               ),
-                              child: PoddrImage(
-                                imageUri: Uri.parse(
-                                  podcastProvider.podcast?.image ?? "",
+                              width: 160,
+                              height: 160,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          gapW16,
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  podcastProvider.podcast?.title ?? "",
+                                  style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    fontSize: 48,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
                                 ),
-                                width: 160,
-                                height: 160,
-                                fit: BoxFit.cover,
-                              ),
+                                Text(
+                                  podcastProvider.podcast?.description ?? "",
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    fontSize: 12,
+                                    color: Colors.white.withOpacity(0.7),
+                                  ),
+                                ),
+                                gapH16,
+                                Row(
+                                  children: podcastProvider.podcast?.tags
+                                          .map((e) => PoddrTag(
+                                                title: e,
+                                                color: Colors.grey,
+                                              ))
+                                          .toList() ??
+                                      [],
+                                ),
+                                gapH16,
+                                Text(
+                                  "${podcastProvider.podcast?.episodes.length ?? 0} Episodes",
+                                  style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ),
+                              ],
                             ),
-                            gapW16,
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    podcastProvider.podcast?.title ?? "",
-                                    style: TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 48,
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                    ),
-                                  ),
-                                  Text(
-                                    podcastProvider.podcast?.description ?? "",
-                                    maxLines: 3,
-                                    style: TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 12,
-                                      color: Colors.white.withOpacity(0.7),
-                                    ),
-                                  ),
-                                  gapH16,
-                                  const Row(
-                                    children: [
-                                      PoddrTag(
-                                          title: "Music", color: Colors.red),
-                                      PoddrTag(
-                                          title: "Audiobook",
-                                          color: Colors.green),
-                                      PoddrTag(
-                                          title: "Comedy", color: Colors.blue),
-                                      PoddrTag(
-                                          title: "Drama", color: Colors.purple),
-                                    ],
-                                  ),
-                                  gapH16,
-                                  Text(
-                                    "${podcastProvider.podcast?.episodes.length ?? 0} Episodes",
-                                    style: TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -47,6 +47,33 @@ class PodcastFeed {
 
     final image = imagee ?? imageee;
 
+    final tags = <String>{}; // Using a Set to avoid duplicates
+
+    // Extract iTunes categories
+    for (var category in channel.findElements('itunes:category')) {
+      // Get main category
+      final mainCategory = category.getAttribute('text');
+      if (mainCategory != null) {
+        tags.add(mainCategory);
+      }
+
+      // Get subcategories
+      for (var subCategory in category.findElements('itunes:category')) {
+        final subCategoryText = subCategory.getAttribute('text');
+        if (subCategoryText != null) {
+          tags.add(subCategoryText);
+        }
+      }
+    }
+
+    // Extract regular RSS categories if present
+    for (var category in channel.findElements('category')) {
+      final categoryText = category.innerText;
+      if (categoryText.isNotEmpty) {
+        tags.add(categoryText);
+      }
+    }
+
     final feed = PodcastFeed(
       title: channel.findElements('title').firstOrNull?.innerText,
       description: channel.findElements('description').firstOrNull?.innerText,
@@ -58,7 +85,7 @@ class PodcastFeed {
       explicit: _parseExplicit(
           channel.findElements('itunes:explicit').firstOrNull?.innerText),
       rss: channel.findElements('atom:link').firstOrNull?.getAttribute('href'),
-      tags: [],
+      tags: tags.toList(),
       episodes: channel
           .findElements('item')
           .map((e) => PodcastEpisode.fromXml(e, image))
@@ -69,6 +96,22 @@ class PodcastFeed {
   }
 
   factory PodcastFeed.fromItunes(Map<String, dynamic> data) {
+    // Extract all available genres from iTunes data
+    final tags = <String>[];
+
+    // Add primary genre
+    if (data['primaryGenreName'] != null) {
+      tags.add(data['primaryGenreName']);
+    }
+
+    // Add genres from genreIds if available
+    if (data['genreIds'] is List) {
+      final genreNames = data['genres'] as List?;
+      if (genreNames != null) {
+        tags.addAll(genreNames.map((e) => e.toString()));
+      }
+    }
+
     return PodcastFeed(
       title: data['collectionName'] ?? 'Missing name',
       description: data['collectionDescription'],
@@ -79,7 +122,7 @@ class PodcastFeed {
       copyright: data['copyright'],
       explicit: _parseExplicit(data['explicit']),
       rss: data['feedUrl'],
-      tags: [data['primaryGenreName'] ?? ''],
+      tags: tags,
       episodes:
           data['episodes']?.map((e) => PodcastEpisode.fromItunes(e)).toList() ??
               [],
