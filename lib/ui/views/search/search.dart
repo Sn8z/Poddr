@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/add_fav_btn.dart';
+import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
@@ -84,6 +85,7 @@ class _SearchViewContent extends StatelessWidget {
                 childCount: searchProvider.searchResults.length,
               ),
             ),
+          const BottomPaddingFix(),
         ],
       ),
     );

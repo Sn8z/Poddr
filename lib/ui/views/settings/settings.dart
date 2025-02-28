@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
+import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/ui/utils/gaps.dart';
@@ -99,9 +100,26 @@ class SettingsView extends StatelessWidget {
                 onTap: () => debugPrint('Export'),
               ),
             ]),
+            SettingsBox(title: "Support", children: [
+              ListTile(
+                leading: const Icon(Icons.monetization_on_outlined),
+                title: const Text("GitHub Sponsor"),
+                onTap: () => debugPrint('GH sponsor'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.open_in_browser_outlined),
+                title: const Text("Paypal"),
+                onTap: () => debugPrint('Paypal'),
+              ),
+            ]),
             SettingsBox(
               title: "About",
               children: [
+                ListTile(
+                  leading: Icon(Icons.bug_report_outlined),
+                  title: Text("Issues"),
+                  onTap: () => debugPrint('/issues'),
+                ),
                 ListTile(
                   leading: const Icon(Icons.info_outline),
                   title: const Text('Licenses'),
@@ -109,13 +127,14 @@ class SettingsView extends StatelessWidget {
                     showAboutDialog(
                       context: context,
                       applicationName: "Poddr",
-                      applicationVersion: "1.0.0",
+                      applicationVersion: "3.0.0",
                       applicationIcon: const PoddrLogo(),
                     );
                   },
                 ),
               ],
             ),
+            const BottomPaddingFix(),
           ],
         ),
       ),

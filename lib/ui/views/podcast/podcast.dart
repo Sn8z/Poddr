@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/audio/currently_playing.dart';
 import 'package:poddr/ui/components/widgets/add_fav_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
+import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
@@ -226,6 +227,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                   },
                 ),
               ),
+            const BottomPaddingFix(),
           ],
         ),
       ),

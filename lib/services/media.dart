@@ -43,8 +43,19 @@ class MediaProvider extends BaseAudioHandler
   }
 
   Future<void> initAudioService() async {
-    AudioSession.instance.then((AudioSession audioSession) {
-      audioSession.configure(const AudioSessionConfiguration.speech());
+    final AudioSession audioSession = await AudioSession.instance;
+    await audioSession.configure(const AudioSessionConfiguration.speech());
+
+    audioSession.setActive(true);
+
+    audioSession.becomingNoisyEventStream.listen((_) {
+      debugPrint('Headphones disconnected');
+      _player.pause();
+    });
+
+    audioSession.devicesChangedEventStream.listen((event) {
+      debugPrint('Devices added:   ${event.devicesAdded}');
+      debugPrint('Devices removed: ${event.devicesRemoved}');
     });
 
     _audioHandler ??= await AudioService.init(

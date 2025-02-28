@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/add_fav_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
+import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/dropdown.dart';
 import 'package:poddr/ui/components/widgets/grid_item.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
@@ -41,168 +41,15 @@ class _PodcastDiscoveryViewContent extends StatelessWidget {
               actions: [
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.grid_view_rounded),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.view_list_rounded),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.sign_language_rounded),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.pin_drop_outlined),
+                  icon: const Icon(Icons.cast_outlined),
                 ),
               ],
             ),
-            PoddrAppBarOptions(
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: PoddrDropDown(
-                    initialSelection:
-                        context.read<PodcastDiscoveryProvider>().country,
-                    items: itunesCountries.map((e) {
-                      return DropdownMenuEntry(
-                        value: e['code'] ?? "",
-                        label: e['name'] ?? "",
-                      );
-                    }).toList(),
-                    onSelected: (value) {
-                      debugPrint(value);
-                      context
-                          .read<PodcastDiscoveryProvider>()
-                          .setCountry(value ?? '');
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: PoddrDropDown(
-                    initialSelection:
-                        context.read<PodcastDiscoveryProvider>().genre,
-                    items: podcastGenres.map((e) {
-                      return DropdownMenuEntry(
-                        value: e['id'] ?? "",
-                        label: e['genre'] ?? "",
-                      );
-                    }).toList(),
-                    onSelected: (value) {
-                      debugPrint(value);
-                      context
-                          .read<PodcastDiscoveryProvider>()
-                          .setGenre(value ?? '');
-                    },
-                  ),
-                ),
-              ],
-            ),
-            sliverGapH8,
-            SliverToBoxAdapter(
-              child: Text(
-                "Trending",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                    20,
-                    (index) => Container(
-                      width: 160,
-                      height: 160,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Item $index",
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            sliverGapH8,
-            SliverToBoxAdapter(
-              child: Text(
-                "Poddr Picks",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 160),
-                child: CarouselView(
-                  itemExtent: 160,
-                  shrinkExtent: 80,
-                  children: List.generate(
-                      20,
-                      (index) => Container(
-                            width: double.infinity,
-                            height: 160,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Item $index",
-                                style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          )),
-                ),
-              ),
-            ),
-            sliverGapH8,
-            SliverToBoxAdapter(
-              child: Text(
-                "New Releases",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            sliverGapH8,
-            SliverToBoxAdapter(
-              child: Text(
-                "Continue listening",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            sliverGapH8,
-            const DiscoveryGrid(),
-            const DiscoveryList(),
+            sliverGapH16,
+            const NewEpisodes(),
+            sliverGapH16,
+            const TrendingPodcasts(),
+            const BottomPaddingFix(),
           ],
         ),
       ),
@@ -210,63 +57,47 @@ class _PodcastDiscoveryViewContent extends StatelessWidget {
   }
 }
 
-class DiscoveryList extends StatelessWidget {
-  const DiscoveryList({
-    super.key,
-  });
+class NewEpisodes extends StatelessWidget {
+  const NewEpisodes({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final charts = context.watch<PodcastDiscoveryProvider>();
-    final isLoading = charts.isLoading;
-    final items = charts.charts;
-
-    if (isLoading) {
-      return const SliverFillRemaining(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
-    return SliverPadding(
-      padding: const EdgeInsets.all(16.0),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            final podcast = items[index];
-
-            return PoddrListItem(
-              leading: PoddrImage(
-                imageUri: Uri.parse(podcast.image ?? ''),
-              ),
-              title: podcast.title ?? '',
-              subtitle: podcast.title ?? '',
-              onTap: () {
-                context.push('/podcasts/details?rss=${podcast.rss}');
-              },
-              actions: [
-                PoddrAddFavBtn(
-                  title: podcast.title ?? '',
-                  description: podcast.description ?? '',
-                  author: podcast.author ?? '',
-                  image: podcast.image ?? '',
-                  rss: podcast.rss ?? '',
+    return DiscoveryBox(
+      title: "New Episodes",
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(
+              10,
+              (index) => Container(
+                width: 140,
+                height: 140,
+                margin: const EdgeInsets.only(right: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            );
-          },
-          childCount: items.length,
+                child: Center(
+                  child: Text(
+                    "Item $index",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
 
-class DiscoveryGrid extends StatelessWidget {
-  const DiscoveryGrid({
-    super.key,
-  });
+class TrendingPodcasts extends StatelessWidget {
+  const TrendingPodcasts({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -282,37 +113,114 @@ class DiscoveryGrid extends StatelessWidget {
       );
     }
 
-    return SliverPadding(
-      padding: const EdgeInsets.all(16.0),
-      sliver: SliverGrid.builder(
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 280,
-          mainAxisSpacing: 32,
-          crossAxisSpacing: 32,
-          childAspectRatio: 1,
+    return DiscoveryBox(
+      title: "Trending",
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: items
+                .sublist(0, 5)
+                .map(
+                  (e) => MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        context.push('/podcasts/details?rss=${e.rss}');
+                      },
+                      child: Container(
+                        width: 180,
+                        margin: const EdgeInsets.only(right: 12),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Image(
+                                image: NetworkImage(e.image ?? ''),
+                              ),
+                            ),
+                            Text(
+                              e.title ?? '',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
         ),
-        itemBuilder: (context, index) {
-          final podcast = items[index];
-
-          return PoddrGridItem(
-            title: podcast.title ?? '',
-            subtitle: podcast.title ?? '',
-            imageUri: Uri.parse(podcast.image ?? ''),
-            onTap: () {
-              context.push('/podcasts/details?rss=${podcast.rss}');
-            },
-            actions: [
-              PoddrAddFavBtn(
-                title: podcast.title ?? '',
-                description: podcast.description ?? '',
-                author: podcast.author ?? '',
-                image: podcast.image ?? '',
-                rss: podcast.rss ?? '',
+        gapH8,
+        ...items.sublist(5, items.length).map(
+          (e) {
+            return ListTile(
+              title: Text(e.title ?? ''),
+              subtitle: Text(
+                e.rss ?? '',
               ),
-            ],
-          );
-        },
-        itemCount: items.length,
+              onTap: () {
+                context.push('/podcasts/details?rss=${e.rss}');
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class DiscoveryBox extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+
+  const DiscoveryBox({
+    super.key,
+    required this.title,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        padding: const EdgeInsets.all(12.0),
+        margin: const EdgeInsets.only(top: 8.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            gapH8,
+            ...children,
+          ],
+        ),
       ),
     );
   }
