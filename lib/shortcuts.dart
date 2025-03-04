@@ -5,9 +5,9 @@ import 'package:poddr/services/media.dart';
 import 'package:provider/provider.dart';
 
 class PoddrShortcuts extends StatelessWidget {
-  const PoddrShortcuts({super.key, required this.child});
-
   final Widget child;
+
+  const PoddrShortcuts({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +15,18 @@ class PoddrShortcuts extends StatelessWidget {
       bindings: {
         const SingleActivator(LogicalKeyboardKey.space): () {
           context.read<MediaProvider>().playOrPause();
+        },
+        const SingleActivator(LogicalKeyboardKey.mediaPlayPause): () {
+          context.read<MediaProvider>().playOrPause();
+        },
+        const SingleActivator(LogicalKeyboardKey.mediaStop): () {
+          context.read<MediaProvider>().stop();
+        },
+        const SingleActivator(LogicalKeyboardKey.mediaPlay): () {
+          context.read<MediaProvider>().play();
+        },
+        const SingleActivator(LogicalKeyboardKey.mediaPause): () {
+          context.read<MediaProvider>().pause();
         },
         const SingleActivator(LogicalKeyboardKey.digit1, control: true): () {
           context.go('/podcasts');
@@ -34,18 +46,6 @@ class PoddrShortcuts extends StatelessWidget {
         const SingleActivator(LogicalKeyboardKey.digit5, control: true): () {
           context.go('/settings');
         },
-        // const SingleActivator(LogicalKeyboardKey.arrowUp, control: true): () {
-        //   context.read<MediaProvider>().raiseVolume();
-        // },
-        // const SingleActivator(LogicalKeyboardKey.arrowUp, control: true): () {
-        //   context.read<MediaProvider>().lowerVolume();
-        // },
-        // const SingleActivator(LogicalKeyboardKey.arrowLeft, control: true): () {
-        //   context.read<MediaProvider>().jumpBack();
-        // },
-        // const SingleActivator(LogicalKeyboardKey.arrowRight, control: true): () {
-        //   context.read<MediaProvider>().jumpForward();
-        // },
       },
       child: child,
     );
