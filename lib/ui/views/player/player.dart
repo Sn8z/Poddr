@@ -14,6 +14,16 @@ class PlayerView extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Now playing"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.cast_outlined),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_vert_rounded),
+          ),
+        ],
       ),
       body: Column(
         children: [

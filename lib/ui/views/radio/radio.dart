@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
-import 'package:poddr/ui/components/widgets/carousel.dart';
-import 'package:poddr/ui/components/widgets/tag.dart';
 
 class RadioDiscoveryView extends StatelessWidget {
   const RadioDiscoveryView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Scaffold(
-        body: CustomScrollView(
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CustomScrollView(
           slivers: [
             PoddrAppBar(
               title: 'Radio',

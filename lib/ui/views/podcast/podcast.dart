@@ -53,10 +53,10 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
   Widget build(BuildContext context) {
     final podcastProvider = context.watch<PodcastProvider>();
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Scaffold(
-        body: CustomScrollView(
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CustomScrollView(
           slivers: [
             SliverAppBar(
               pinned: true,

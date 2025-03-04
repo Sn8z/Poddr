@@ -14,12 +14,15 @@ class LibraryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final PageController pageController = PageController(
+      initialPage: 0,
+    );
     final favouritesProvider = context.watch<FavouritesProvider>();
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Scaffold(
-        body: CustomScrollView(
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CustomScrollView(
           slivers: [
             PoddrAppBar(
               title: 'Library',
@@ -30,56 +33,82 @@ class LibraryView extends StatelessWidget {
                 ),
               ],
             ),
-            PoddrAppBarOptions(
-              title: const PoddrTextInput(),
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.more_vert_rounded),
-                ),
-              ],
-            ),
-            if (favouritesProvider.isLoading) ...[
-              const SliverToBoxAdapter(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 100,
-                ),
-              ),
-            ] else if (favouritesProvider.favourites.isEmpty) ...[
-              const SliverToBoxAdapter(
-                child: Text('Your library is empty'),
-              ),
-            ] else ...[
-              SliverList.builder(
-                itemCount: favouritesProvider.favourites.length,
-                itemBuilder: (context, index) {
-                  return PoddrListItem(
-                    title: favouritesProvider.favourites[index]['title'],
-                    subtitle: favouritesProvider.favourites[index]['author'],
-                    onTap: () {
-                      context.push(
-                          '/podcasts/details?rss=${favouritesProvider.favourites[index]['rss']}');
+            // if (favouritesProvider.isLoading) ...[
+            //   const SliverToBoxAdapter(
+            //     child: Center(
+            //       child: CircularProgressIndicator(),
+            //     ),
+            //   ),
+            //   const SliverToBoxAdapter(
+            //     child: SizedBox(
+            //       height: 100,
+            //     ),
+            //   ),
+            // ] else if (favouritesProvider.favourites.isEmpty) ...[
+            //   const SliverToBoxAdapter(
+            //     child: Text('Your library is empty'),
+            //   ),
+            // ] else ...[
+            //   SliverList.builder(
+            //     itemCount: favouritesProvider.favourites.length,
+            //     itemBuilder: (context, index) {
+            //       return PoddrListItem(
+            //         title: favouritesProvider.favourites[index]['title'],
+            //         subtitle: favouritesProvider.favourites[index]['author'],
+            //         onTap: () {
+            //           context.push(
+            //               '/podcasts/details?rss=${favouritesProvider.favourites[index]['rss']}');
+            //         },
+            //         leading: Container(
+            //           clipBehavior: Clip.antiAlias,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(8),
+            //           ),
+            //           child: PoddrImage(
+            //             imageUri: Uri.parse(
+            //                 favouritesProvider.favourites[index]['image']),
+            //             fit: BoxFit.cover,
+            //           ),
+            //         ),
+            //       );
+            //     },
+            //   ),
+            // ],
+            SliverAppBar(
+              pinned: true,
+              title: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      pageController.previousPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut);
                     },
-                    leading: Container(
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: PoddrImage(
-                        imageUri: Uri.parse(
-                            favouritesProvider.favourites[index]['image']),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                },
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut);
+                    },
+                    icon: const Icon(Icons.arrow_forward),
+                  ),
+                ],
               ),
-            ],
+            ),
+            SliverFillRemaining(
+              child: PageView.custom(
+                controller: pageController,
+                childrenDelegate: SliverChildListDelegate(
+                  [
+                    const Text('Feed'),
+                    const Text('Favourites'),
+                    const Text('Offline'),
+                  ],
+                ),
+              ),
+            ),
             const BottomPaddingFix(),
           ],
         ),

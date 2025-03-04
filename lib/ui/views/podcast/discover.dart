@@ -20,39 +20,32 @@ class PodcastDiscoveryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PodcastDiscoveryProvider(),
-      child: const _PodcastDiscoveryViewContent(),
-    );
-  }
-}
-
-class _PodcastDiscoveryViewContent extends StatelessWidget {
-  const _PodcastDiscoveryViewContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            PoddrAppBar(
-              title: "Podcasts",
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.cast_outlined),
+      create: (_) => PodcastDiscoveryProvider(),
+      builder: (context, child) {
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomScrollView(
+              slivers: [
+                PoddrAppBar(
+                  title: "Podcasts",
+                  actions: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.cast_outlined),
+                    ),
+                  ],
                 ),
+                sliverGapH16,
+                const NewEpisodes(),
+                sliverGapH16,
+                const TrendingPodcasts(),
+                const BottomPaddingFix(),
               ],
             ),
-            sliverGapH16,
-            const NewEpisodes(),
-            sliverGapH16,
-            const TrendingPodcasts(),
-            const BottomPaddingFix(),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

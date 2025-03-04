@@ -2,20 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:poddr/ui/utils/theme_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const InputDecorationTheme _inputDecorationTheme = InputDecorationTheme(
-  iconColor: Colors.red,
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(
-      Radius.circular(16),
-    ),
-  ),
-);
-
 class ThemeProvider extends ChangeNotifier {
-  static const String _darkModeKey = "isDarkMode";
+  static const String _themeModeKey = "themeMode";
+  ThemeMode _themeMode = ThemeMode.system;
   static const String _colorKey = "themeColor";
-  SharedPreferences? _prefs;
   Color _color = colors[0].color;
+  SharedPreferences? _prefs;
 
   ThemeData _lightTheme = ThemeData.light();
   ThemeData get lightTheme => _lightTheme;
@@ -23,8 +15,8 @@ class ThemeProvider extends ChangeNotifier {
   ThemeData _darkTheme = ThemeData.dark();
   ThemeData get darkTheme => _darkTheme;
 
-  bool _isDark = true;
-  bool get isDark => _isDark;
+  ThemeMode get themeMode => _themeMode;
+  Color get color => _color;
 
   ThemeProvider() {
     _loadTheme();
@@ -32,7 +24,8 @@ class ThemeProvider extends ChangeNotifier {
 
   Future<void> _loadTheme() async {
     _prefs = await SharedPreferences.getInstance();
-    _isDark = _prefs?.getBool(_darkModeKey) ?? true;
+    _themeMode = ThemeMode
+        .values[_prefs?.getInt(_themeModeKey) ?? ThemeMode.system.index];
     _color = Color(_prefs?.getInt(_colorKey) ?? Colors.red.value);
     _updateThemes();
     notifyListeners();
@@ -44,7 +37,6 @@ class ThemeProvider extends ChangeNotifier {
       useMaterial3: true,
       materialTapTargetSize: MaterialTapTargetSize.padded,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      inputDecorationTheme: _inputDecorationTheme,
       primaryColor: _color,
       colorScheme: ColorScheme.fromSeed(
         seedColor: _color,
@@ -59,7 +51,6 @@ class ThemeProvider extends ChangeNotifier {
       useMaterial3: true,
       materialTapTargetSize: MaterialTapTargetSize.padded,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      inputDecorationTheme: _inputDecorationTheme,
       primaryColor: const Color.fromARGB(255, 15, 15, 15),
       colorScheme: ColorScheme.fromSeed(
         seedColor: _color,
@@ -100,9 +91,10 @@ class ThemeProvider extends ChangeNotifier {
     await _prefs?.setInt(_colorKey, _color.value);
   }
 
-  Future<void> toggleThemeMode() async {
-    _isDark = !_isDark;
+  Future<void> setThemeMode(ThemeMode mode) async {
+    _themeMode = mode;
+    _updateThemes();
     notifyListeners();
-    await _prefs?.setBool(_darkModeKey, _isDark);
+    await _prefs?.setInt(_themeModeKey, _themeMode.index);
   }
 }

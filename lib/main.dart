@@ -41,7 +41,7 @@ class Poddr extends StatelessWidget {
     return SafeArea(
       child: MaterialApp.router(
         title: "Poddr",
-        themeMode: themeProvider.isDark ? ThemeMode.dark : ThemeMode.light,
+        themeMode: themeProvider.themeMode,
         theme: themeProvider.lightTheme.copyWith(
           textTheme: GoogleFonts.outfitTextTheme(
             ThemeData(brightness: Brightness.light).textTheme,

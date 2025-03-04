@@ -19,11 +19,9 @@ class PoddrAppBar extends StatelessWidget {
       floating: true,
       forceMaterialTransparency: false,
       clipBehavior: Clip.antiAlias,
-      backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.primaryContainer,
-      foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-      surfaceTintColor: Theme.of(context).colorScheme.onPrimaryContainer,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
+      surfaceTintColor: Theme.of(context).colorScheme.primary,
       expandedHeight: 120,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -32,7 +30,7 @@ class PoddrAppBar extends StatelessWidget {
         title: Text(
           title,
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 28,
             fontWeight: FontWeight.bold,
           ),
