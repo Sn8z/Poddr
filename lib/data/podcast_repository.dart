@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 import '../models/podcast.dart';
 
 abstract class IPodcastRepository {
-  Future<List<PodcastFeed>> search(String query);
-  Future<List<PodcastFeed>> getCharts(String country, String genre);
-  Future<PodcastFeed> getFeed(String rss);
+  Future<List<Podcast>> search(String query);
+  Future<List<Podcast>> getCharts(String country, String genre);
+  Future<Podcast> getFeed(String rss);
 }
 
 class ITunesPodcastRepository implements IPodcastRepository {
@@ -16,8 +16,8 @@ class ITunesPodcastRepository implements IPodcastRepository {
   ITunesPodcastRepository();
 
   @override
-  Future<List<PodcastFeed>> search(String query) async {
-    final List<PodcastFeed> feeds = [];
+  Future<List<Podcast>> search(String query) async {
+    final List<Podcast> feeds = [];
     try {
       final searchUrl = "$baseUrl/search?term=$query&media=podcast";
       debugPrint("Searching for $searchUrl");
@@ -25,7 +25,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         for (var item in data['results']) {
-          final feed = PodcastFeed.fromItunes(item);
+          final feed = Podcast.fromItunes(item);
           feeds.add(feed);
         }
         return feeds;
@@ -40,8 +40,8 @@ class ITunesPodcastRepository implements IPodcastRepository {
   }
 
   @override
-  Future<List<PodcastFeed>> getCharts(String country, String genre) async {
-    final List<PodcastFeed> feeds = [];
+  Future<List<Podcast>> getCharts(String country, String genre) async {
+    final List<Podcast> feeds = [];
     try {
       final chartsUrl =
           "$baseUrl/$country/rss/toppodcasts/limit=50/explicit=true/genre=$genre/json";
@@ -66,7 +66,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
           final results = lookupData['results'] as List<dynamic>?;
           if (results == null) return [];
           for (var result in results) {
-            final feed = PodcastFeed.fromItunes(result);
+            final feed = Podcast.fromItunes(result);
             feeds.add(feed);
           }
         } else {
@@ -84,13 +84,13 @@ class ITunesPodcastRepository implements IPodcastRepository {
   }
 
   @override
-  Future<PodcastFeed> getFeed(String rss) async {
+  Future<Podcast> getFeed(String rss) async {
     try {
       debugPrint("Getting feed $rss");
       final response = await _http.get(Uri.parse(rss));
       debugPrint("Feed return code ${response.statusCode}");
       if (response.statusCode == 200) {
-        return PodcastFeed.fromXml(response.body);
+        return Podcast.fromXml(response.body);
       } else {
         debugPrint("Feed return code ${response.statusCode}");
         throw Exception("Could not get feed");

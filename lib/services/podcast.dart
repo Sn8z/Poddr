@@ -8,8 +8,8 @@ class PodcastProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  PodcastFeed? _podcast;
-  PodcastFeed? get podcast => _podcast;
+  Podcast? _podcast;
+  Podcast? get podcast => _podcast;
 
   String? _currentRss;
   String? get currentRss => _currentRss;

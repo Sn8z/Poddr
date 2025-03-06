@@ -22,6 +22,9 @@ dependencies:
   shared_preferences: ^2.2.3
   http: ^1.3.0
   xml: ^6.5.0
+  drift: ^2.23.1
+  drift_flutter: ^0.2.4
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +33,8 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_launcher_icons: ^0.13.1
   msix: ^3.16.8 # dart run msix:create
+  drift_dev: ^2.23.1
+  build_runner: ^2.4.13
 
 dependency_overrides:
   media_kit: 

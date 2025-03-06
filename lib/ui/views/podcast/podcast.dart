@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/audio/currently_playing.dart';
-import 'package:poddr/ui/components/widgets/add_fav_btn.dart';
+import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
@@ -149,7 +149,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
               ),
               expandedHeight: 320,
               actions: [
-                PoddrAddFavBtn(
+                PoddrAddSubscriptionBtn(
                   title: podcastProvider.podcast?.title ?? "",
                   rss: podcastProvider.podcast?.rss ?? "",
                   description: podcastProvider.podcast?.description ?? "",

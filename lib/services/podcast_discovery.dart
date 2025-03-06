@@ -13,7 +13,7 @@ class PodcastDiscoveryProvider extends ChangeNotifier {
   String _genre = '';
   String get genre => _genre;
 
-  List<PodcastFeed> charts = [];
+  List<Podcast> charts = [];
 
   PodcastDiscoveryProvider() {
     getCharts();

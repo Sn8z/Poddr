@@ -4,7 +4,7 @@ import 'package:poddr/models/podcast.dart';
 
 class SearchProvider extends ChangeNotifier {
   final IPodcastRepository _podcastRepository = ITunesPodcastRepository();
-  List<PodcastFeed> searchResults = [];
+  List<Podcast> searchResults = [];
   List<String> searchHistory = [];
   List<String> searchSuggestions = [];
   bool isSearching = false;
@@ -17,11 +17,11 @@ class SearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<PodcastFeed>> getCharts(String code, String genre) async {
+  Future<List<Podcast>> getCharts(String code, String genre) async {
     return _podcastRepository.getCharts(code, genre);
   }
 
-  Future<PodcastFeed> getFeed(String rss) async {
+  Future<Podcast> getFeed(String rss) async {
     return _podcastRepository.getFeed(rss);
   }
 

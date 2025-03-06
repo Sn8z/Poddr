@@ -1,8 +1,7 @@
-import 'package:flutter/widgets.dart';
 import 'package:xml/xml.dart';
 import 'episode.dart';
 
-class PodcastFeed {
+class Podcast {
   final String? title;
   final String? description;
   final String? image;
@@ -15,7 +14,7 @@ class PodcastFeed {
   final List<String> tags;
   final List<PodcastEpisode> episodes;
 
-  PodcastFeed({
+  Podcast({
     this.title,
     this.description,
     this.image,
@@ -29,7 +28,7 @@ class PodcastFeed {
     this.episodes = const [],
   });
 
-  factory PodcastFeed.fromXml(String rss) {
+  factory Podcast.fromXml(String rss) {
     final xml = XmlDocument.parse(rss);
     final channel = xml.findAllElements('channel').firstOrNull;
     if (channel == null) throw Exception("Invalid RSS");
@@ -74,7 +73,7 @@ class PodcastFeed {
       }
     }
 
-    final feed = PodcastFeed(
+    final feed = Podcast(
       title: channel.findElements('title').firstOrNull?.innerText,
       description: channel.findElements('description').firstOrNull?.innerText,
       image: image,
@@ -95,7 +94,7 @@ class PodcastFeed {
     return feed;
   }
 
-  factory PodcastFeed.fromItunes(Map<String, dynamic> data) {
+  factory Podcast.fromItunes(Map<String, dynamic> data) {
     // Extract all available genres from iTunes data
     final tags = <String>[];
 
@@ -112,7 +111,7 @@ class PodcastFeed {
       }
     }
 
-    return PodcastFeed(
+    return Podcast(
       title: data['collectionName'] ?? 'Missing name',
       description: data['collectionDescription'],
       image: data['artworkUrl600'],
