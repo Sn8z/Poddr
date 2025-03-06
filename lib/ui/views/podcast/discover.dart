@@ -2,16 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
-import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
-import 'package:poddr/ui/components/widgets/dropdown.dart';
-import 'package:poddr/ui/components/widgets/grid_item.dart';
-import 'package:poddr/ui/components/widgets/image.dart';
-import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/services/podcast_discovery.dart';
 import 'package:poddr/ui/utils/gaps.dart';
-import 'package:poddr/ui/utils/itunes_countries.dart';
-import 'package:poddr/ui/utils/itunes_genres.dart';
 import 'package:provider/provider.dart';
 
 class PodcastDiscoveryView extends StatelessWidget {
@@ -32,7 +25,7 @@ class PodcastDiscoveryView extends StatelessWidget {
                   actions: [
                     IconButton(
                       onPressed: () {},
-                      icon: const Icon(Icons.cast_outlined),
+                      icon: const Icon(Icons.more_vert_rounded),
                     ),
                   ],
                 ),

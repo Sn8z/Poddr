@@ -17,10 +17,6 @@ class PlayerView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.cast_outlined),
-          ),
-          IconButton(
-            onPressed: () {},
             icon: const Icon(Icons.more_vert_rounded),
           ),
         ],

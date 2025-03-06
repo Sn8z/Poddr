@@ -17,7 +17,7 @@ class RadioDiscoveryView extends StatelessWidget {
               actions: [
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.cast_outlined),
+                  icon: const Icon(Icons.more_vert_rounded),
                 ),
               ],
             ),
