@@ -3,12 +3,19 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/podcast.dart';
 
-class PodcastService {
+abstract class IPodcastRepository {
+  Future<List<PodcastFeed>> search(String query);
+  Future<List<PodcastFeed>> getCharts(String country, String genre);
+  Future<PodcastFeed> getFeed(String rss);
+}
+
+class ITunesPodcastRepository implements IPodcastRepository {
   final String baseUrl = "https://itunes.apple.com";
   final http.Client _http = http.Client();
 
-  PodcastService();
+  ITunesPodcastRepository();
 
+  @override
   Future<List<PodcastFeed>> search(String query) async {
     final List<PodcastFeed> feeds = [];
     try {
@@ -32,6 +39,7 @@ class PodcastService {
     }
   }
 
+  @override
   Future<List<PodcastFeed>> getCharts(String country, String genre) async {
     final List<PodcastFeed> feeds = [];
     try {
@@ -75,6 +83,7 @@ class PodcastService {
     }
   }
 
+  @override
   Future<PodcastFeed> getFeed(String rss) async {
     try {
       debugPrint("Getting feed $rss");

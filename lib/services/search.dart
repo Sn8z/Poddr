@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:poddr/data/podcast_repository.dart';
 import 'package:poddr/models/podcast.dart';
-import 'package:poddr/data/podcast_service.dart';
 
 class SearchProvider extends ChangeNotifier {
-  final PodcastService _podcastService = PodcastService();
+  final IPodcastRepository _podcastRepository = ITunesPodcastRepository();
   List<PodcastFeed> searchResults = [];
   List<String> searchHistory = [];
   List<String> searchSuggestions = [];
@@ -12,17 +12,17 @@ class SearchProvider extends ChangeNotifier {
   Future<void> searchPodcast(String query) async {
     isSearching = true;
     notifyListeners();
-    searchResults = await _podcastService.search(query);
+    searchResults = await _podcastRepository.search(query);
     isSearching = false;
     notifyListeners();
   }
 
   Future<List<PodcastFeed>> getCharts(String code, String genre) async {
-    return _podcastService.getCharts(code, genre);
+    return _podcastRepository.getCharts(code, genre);
   }
 
   Future<PodcastFeed> getFeed(String rss) async {
-    return _podcastService.getFeed(rss);
+    return _podcastRepository.getFeed(rss);
   }
 
   void addToHistory(String query) {

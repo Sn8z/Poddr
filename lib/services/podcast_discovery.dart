@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:poddr/data/podcast_repository.dart';
 import 'package:poddr/models/podcast.dart';
-import 'package:poddr/data/podcast_service.dart';
 
 class PodcastDiscoveryProvider extends ChangeNotifier {
-  final PodcastService _podcastService;
+  final IPodcastRepository _podcastRepository = ITunesPodcastRepository();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -15,9 +15,7 @@ class PodcastDiscoveryProvider extends ChangeNotifier {
 
   List<PodcastFeed> charts = [];
 
-  PodcastDiscoveryProvider()
-      : _podcastService = PodcastService(),
-        super() {
+  PodcastDiscoveryProvider() {
     getCharts();
   }
 
@@ -36,7 +34,7 @@ class PodcastDiscoveryProvider extends ChangeNotifier {
   Future<void> getCharts() async {
     _isLoading = true;
     notifyListeners();
-    charts = await _podcastService.getCharts(_country, _genre);
+    charts = await _podcastRepository.getCharts(_country, _genre);
     _isLoading = false;
     notifyListeners();
   }

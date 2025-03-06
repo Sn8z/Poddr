@@ -5,7 +5,7 @@ import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
-import 'package:poddr/ui/utils/theme_colors.dart';
+import 'package:poddr/data/theme_colors.dart';
 import 'package:provider/provider.dart';
 
 class SettingsView extends StatelessWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:poddr/data/podcast_repository.dart';
 import 'package:poddr/models/podcast.dart';
-import 'package:poddr/data/podcast_service.dart';
 
 class PodcastProvider extends ChangeNotifier {
-  final PodcastService _podcastService = PodcastService();
+  final IPodcastRepository _podcastRepository = ITunesPodcastRepository();
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -21,7 +21,7 @@ class PodcastProvider extends ChangeNotifier {
     _setLoading(true);
 
     try {
-      _podcast = await _podcastService.getFeed(rss);
+      _podcast = await _podcastRepository.getFeed(rss);
     } catch (error, stackTrace) {
       debugPrint(error.toString());
       debugPrint(stackTrace.toString());

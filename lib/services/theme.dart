@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/ui/utils/theme_colors.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:poddr/data/settings_repository.dart';
+import 'package:poddr/data/theme_colors.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  static const String _themeModeKey = "themeMode";
+  final ISettingsRepository _settingsRepository =
+      SavedPrefsSettingsRepository();
+
   ThemeMode _themeMode = ThemeMode.system;
-  static const String _colorKey = "themeColor";
   Color _color = colors[0].color;
-  SharedPreferences? _prefs;
 
   ThemeData _lightTheme = ThemeData.light();
   ThemeData get lightTheme => _lightTheme;
@@ -23,10 +23,9 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   Future<void> _loadTheme() async {
-    _prefs = await SharedPreferences.getInstance();
-    _themeMode = ThemeMode
-        .values[_prefs?.getInt(_themeModeKey) ?? ThemeMode.system.index];
-    _color = Color(_prefs?.getInt(_colorKey) ?? Colors.red.value);
+    await _settingsRepository.init();
+    _themeMode = await _settingsRepository.getThemeMode();
+    _color = await _settingsRepository.getColor();
     _updateThemes();
     notifyListeners();
   }
@@ -88,13 +87,13 @@ class ThemeProvider extends ChangeNotifier {
     _color = color;
     _updateThemes();
     notifyListeners();
-    await _prefs?.setInt(_colorKey, _color.value);
+    await _settingsRepository.setColor(_color);
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
     _themeMode = mode;
     _updateThemes();
     notifyListeners();
-    await _prefs?.setInt(_themeModeKey, _themeMode.index);
+    await _settingsRepository.setThemeMode(_themeMode);
   }
 }
