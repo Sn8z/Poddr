@@ -21,7 +21,7 @@ class Database extends _$Database {
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
-      name: 'poddr_database',
+      name: 'poddr_db',
       native: const DriftNativeOptions(
         databaseDirectory: getApplicationSupportDirectory,
       ),
