@@ -14,6 +14,7 @@ import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/services/media.dart';
 import 'package:poddr/services/podcast.dart';
 import 'package:poddr/ui/utils/gaps.dart';
+import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:provider/provider.dart';
 
 class PodcastDetailsView extends StatelessWidget {
@@ -196,13 +197,18 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                             podcastProvider.podcast!.episodes[index].title,
                       ),
                       title: podcastProvider.podcast!.episodes[index].title,
-                      subtitle: podcastProvider
-                              .podcast!.episodes[index].publicationDate ??
-                          "date",
+                      subtitle: convertDateToString(podcastProvider
+                          .podcast!.episodes[index].publicationDate),
                       actions: [
                         EpisodeHistory(
-                            audioUrl: podcastProvider
-                                .podcast!.episodes[index].audioUrl),
+                          audioUrl:
+                              podcastProvider.podcast!.episodes[index].audioUrl,
+                        ),
+                        Text(
+                          convertDurationToString(
+                            podcastProvider.podcast!.episodes[index].duration,
+                          ),
+                        ),
                         IconButton(
                           onPressed: () {},
                           icon: const Icon(Icons.more_vert_rounded),

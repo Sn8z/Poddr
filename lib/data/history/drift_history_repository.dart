@@ -43,9 +43,7 @@ class DriftHistoryRepository implements IHistoryRepository {
         title: e.title,
         description: e.description,
         audioUrl: e.audioUrl,
-        //TODO: fix duration type
-        duration: e.duration.toString(),
-        guid: e.audioUrl,
+        duration: Duration(seconds: e.duration),
         publicationDate: null,
         imageUrl: e.imageUrl,
       );

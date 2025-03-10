@@ -1,20 +1,21 @@
+import 'dart:io';
+import 'package:intl/intl.dart';
+import 'package:flutter/widgets.dart';
 import 'package:xml/xml.dart';
 
 class PodcastEpisode {
   final String title;
   final String description;
   final String audioUrl;
-  final String duration;
-  final String? guid;
-  final String? publicationDate;
+  final Duration? duration;
+  final DateTime? publicationDate;
   final String? imageUrl;
 
   PodcastEpisode({
     required this.title,
     required this.description,
     required this.audioUrl,
-    required this.duration,
-    this.guid,
+    this.duration = Duration.zero,
     this.publicationDate,
     this.imageUrl,
   });
@@ -27,11 +28,10 @@ class PodcastEpisode {
       audioUrl:
           episode.findElements('enclosure').firstOrNull?.getAttribute('url') ??
               '',
-      duration:
-          episode.findElements('itunes:duration').firstOrNull?.innerText ?? '',
-      guid: episode.findElements('guid').firstOrNull?.innerText,
-      publicationDate:
-          episode.findElements('pubDate').firstOrNull?.innerText ?? '',
+      duration: _parseDuration(
+          episode.findElements('itunes:duration').firstOrNull?.innerText),
+      publicationDate: _parseDateTime(
+          episode.findElements('pubDate').firstOrNull?.innerText ?? ''),
       imageUrl: episode
               .findElements('itunes:image')
               .firstOrNull
@@ -45,10 +45,42 @@ class PodcastEpisode {
       title: data['title'],
       description: data['subtitle'],
       audioUrl: data['feedUrl'],
-      duration: data['duration'],
-      guid: data['guid'],
-      publicationDate: data['releaseDate'] ?? data['pubDate'] ?? '',
+      duration: _parseDuration(data['duration']),
+      publicationDate:
+          _parseDateTime(data['releaseDate'] ?? data['pubDate'] ?? ''),
       imageUrl: data['artworkUrl600'],
     );
+  }
+}
+
+Duration _parseDuration(String? text) {
+  if (text == null) return Duration.zero;
+
+  List<String> parts = text.split(':').reversed.toList();
+  int seconds = 0;
+
+  if (parts.isNotEmpty) seconds += int.tryParse(parts[0]) ?? 0;
+  if (parts.length > 1) seconds += (int.tryParse(parts[1]) ?? 0) * 60;
+  if (parts.length > 2) seconds += (int.tryParse(parts[2]) ?? 0) * 3600;
+
+  return Duration(seconds: seconds);
+}
+
+DateTime? _parseDateTime(String? text) {
+  if (text == null || text.isEmpty) return null;
+
+  try {
+    final dateFormat = DateFormat('EEE, dd MMM yyyy HH:mm:ss Z');
+    return dateFormat.parse(text);
+  } catch (_) {
+    try {
+      return DateTime.parse(text);
+    } catch (_) {
+      try {
+        return HttpDate.parse(text);
+      } catch (_) {
+        return null;
+      }
+    }
   }
 }
