@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'dart:io';
-
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart' hide AudioDevice;
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:poddr/services/history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MediaProvider extends BaseAudioHandler
@@ -36,16 +37,17 @@ class MediaProvider extends BaseAudioHandler
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  MediaProvider() {
-    initAudioService();
-    _setupPlayer();
-    _setupStreams();
+  final HistoryProvider historyProvider;
+
+  MediaProvider({required this.historyProvider}) {
+    _initAudioService();
+    _initPlayer();
+    _initStreams();
   }
 
-  Future<void> initAudioService() async {
+  Future<void> _initAudioService() async {
     final AudioSession audioSession = await AudioSession.instance;
     await audioSession.configure(const AudioSessionConfiguration.speech());
-
     audioSession.setActive(true);
 
     audioSession.becomingNoisyEventStream.listen((_) {
@@ -70,7 +72,7 @@ class MediaProvider extends BaseAudioHandler
     );
   }
 
-  Future<void> _setupPlayer() async {
+  Future<void> _initPlayer() async {
     _prefs = await SharedPreferences.getInstance();
     try {
       await _player.setRate(_prefs?.getDouble("mediaRate") ?? 1.0);
@@ -83,137 +85,210 @@ class MediaProvider extends BaseAudioHandler
       await _player.setPlaylistMode(PlaylistMode.none);
       await _player.setAudioDevice(AudioDevice.auto());
 
-      final MediaItem mItem = MediaItem(
-        id: _prefs?.getString("mediaID") ?? "",
-        title: _prefs?.getString("mediaTitle") ?? "",
-        artist: _prefs?.getString("mediaArtist") ?? "",
-        artUri: Uri.parse(_prefs?.getString("mediaImage") ?? ""),
-        duration: Duration(
-          seconds: _prefs?.getInt("mediaDuration") ?? 0,
-        ),
+      loadMedia(
+        audioUrl: _prefs?.getString("mediaID") ?? "No audioUrl in storage",
+        episodeTitle:
+            _prefs?.getString("mediaTitle") ?? "No episodeTitle in storage",
+        podcastTitle:
+            _prefs?.getString("mediaArtist") ?? "No podcastTitle in storage",
+        podcastRSS:
+            _prefs?.getString("mediaPodcastRSS") ?? "No podcastRSS in storage",
+        artUri: _prefs?.getString("mediaImage"),
+        autoplay: false,
       );
-      await _player.open(
-        Media(
-          mItem.id,
-          start: Duration(seconds: _prefs?.getInt("mediaPosition") ?? 0),
-        ),
-        play: false,
-      );
-      mediaItem.add(mItem);
-    } catch (e, s) {
-      debugPrint('Exception details:\n $e');
-      debugPrint('Stack trace:\n $s');
+    } catch (error, stackTrace) {
+      debugPrint('Exception details:\n $error');
+      debugPrint('Stack trace:\n $stackTrace');
     }
   }
 
-  void _setupStreams() async {
+  void _initStreams() async {
     _prefs = await SharedPreferences.getInstance();
 
-    mediaItem.listen((MediaItem? media) {
-      if (media == null) return;
-      _prefs?.setString("mediaID", media.id);
-      _prefs?.setString("mediaTitle", media.title);
-      _prefs?.setString("mediaArtist", media.artist ?? "");
-      _prefs?.setString("mediaImage", media.artUri.toString());
-      _prefs?.setInt("mediaDuration", media.duration?.inSeconds ?? 0);
-    });
-
-    _player.stream.playlist.listen((e) {
-      debugPrint("playlist: $e");
-    });
-
-    _player.stream.playing.listen((bool value) {
-      debugPrint("playing: $value");
-      playbackState.add(playbackState.value.copyWith(
-        playing: value,
-        controls: value ? [MediaControl.pause] : [MediaControl.play],
-      ));
-    });
-
-    _player.stream.completed.listen((bool value) {
-      debugPrint("completed: $value");
-      playbackState.add(playbackState.value.copyWith(
-        processingState: AudioProcessingState.completed,
-      ));
-      _isLoading = false;
-      notifyListeners();
-    });
-
-    _player.stream.position.listen((Duration value) {
-      debugPrint("position: $value");
-      playbackState.add(playbackState.value.copyWith(
-        updatePosition: value,
-      ));
-      _prefs?.setInt("mediaPosition", value.inSeconds);
-      _position = value;
-      notifyListeners();
-    });
-
-    _player.stream.duration.listen((Duration value) {
-      debugPrint("duration: $value");
-      mediaItem.add(mediaItem.value?.copyWith(duration: value));
-      _duration = value;
-      notifyListeners();
-    });
-
-    _player.stream.buffer.listen((Duration value) {
-      debugPrint("buffer: $value");
-      playbackState.add(playbackState.value.copyWith(
-        bufferedPosition: value,
-      ));
-      _bufferedPosition = value;
-      notifyListeners();
-    });
-
-    _player.stream.rate.listen((double value) {
-      debugPrint("rate: $value");
-      playbackState.add(playbackState.value.copyWith(
-        speed: value,
-      ));
-      _prefs?.setDouble("mediaRate", value);
-      notifyListeners();
-    });
-
-    _player.stream.buffering.listen((bool value) {
-      debugPrint("buffering: $value");
-      playbackState.add(playbackState.value.copyWith(
-        processingState:
-            value ? AudioProcessingState.buffering : AudioProcessingState.ready,
-      ));
-      _isLoading = value;
-      notifyListeners();
-    });
+    mediaItem.listen(_handleMediaItemChange);
+    _player.stream.playlist.listen(_handlePlaylistChange);
+    _player.stream.playing.listen(_handlePlayingState);
+    _player.stream.completed.listen(_handleCompletion);
+    _player.stream.position.listen(_handlePositionChange);
+    _player.stream.duration.listen(_handleDurationChange);
+    _player.stream.buffer.listen(_handleBufferChange);
+    _player.stream.rate.listen(_handleRateChange);
+    _player.stream.buffering.listen(_handleBufferingState);
+    _player.stream.error.listen(_handleError);
 
     if (!isMobile) {
-      _player.stream.volume.listen((double value) {
-        debugPrint("volume: $value");
-        _prefs?.setDouble("mediaVolume", value);
-        _volume = value;
-        notifyListeners();
-      });
+      _player.stream.volume.listen(_handleVolumeChange);
     }
 
-    _player.stream.error.listen((String error) {
-      debugPrint("Player error: $error");
-      _isLoading = false;
-      notifyListeners();
+    Timer.periodic(const Duration(seconds: 15), (timer) {
+      saveProgress();
     });
   }
 
-  Future<void> loadMedia(MediaItem mItem) async {
+  void _handleMediaItemChange(MediaItem? media) {
+    if (media == null) return;
+
+    _prefs?.setString("mediaID", media.id);
+    _prefs?.setString("mediaTitle", media.title);
+    _prefs?.setString("mediaArtist", media.artist ?? "");
+    _prefs?.setString("mediaImage", media.artUri.toString());
+    _prefs?.setInt("mediaDuration", media.duration?.inSeconds ?? 0);
+  }
+
+  void _handlePlaylistChange(Playlist playlist) {
+    debugPrint("playlist: $playlist");
+  }
+
+  void _handlePlayingState(bool value) {
+    debugPrint("playing: $value");
+    playbackState.add(playbackState.value.copyWith(
+      playing: value,
+      controls: value ? [MediaControl.pause] : [MediaControl.play],
+    ));
+
+    if (!value) {
+      saveProgress();
+    }
+  }
+
+  void _handleCompletion(bool value) {
+    debugPrint("completed: $value");
+    playbackState.add(playbackState.value.copyWith(
+      processingState: AudioProcessingState.completed,
+    ));
+    _isLoading = false;
+    notifyListeners();
+
+    saveProgress();
+  }
+
+  void _handlePositionChange(Duration value) {
+    debugPrint("position: $value");
+    playbackState.add(playbackState.value.copyWith(
+      updatePosition: value,
+    ));
+    _position = value;
+    notifyListeners();
+
+    _prefs?.setInt("mediaPosition", value.inSeconds);
+  }
+
+  void _handleDurationChange(Duration value) {
+    debugPrint("duration: $value");
+    mediaItem.add(mediaItem.value?.copyWith(duration: value));
+    _duration = value;
+    notifyListeners();
+  }
+
+  void _handleRateChange(double value) {
+    debugPrint("rate: $value");
+    playbackState.add(playbackState.value.copyWith(
+      speed: value,
+    ));
+    _prefs?.setDouble("mediaRate", value);
+    notifyListeners();
+  }
+
+  void _handleBufferChange(Duration value) {
+    debugPrint("buffer: $value");
+    playbackState.add(playbackState.value.copyWith(
+      bufferedPosition: value,
+    ));
+    _bufferedPosition = value;
+    notifyListeners();
+  }
+
+  void _handleBufferingState(bool value) {
+    debugPrint("buffering: $value");
+    playbackState.add(playbackState.value.copyWith(
+      processingState:
+          value ? AudioProcessingState.buffering : AudioProcessingState.ready,
+    ));
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  void _handleVolumeChange(double value) {
+    debugPrint("volume: $value");
+    _prefs?.setDouble("mediaVolume", value);
+    _volume = value;
+    notifyListeners();
+  }
+
+  void _handleError(String error) {
+    debugPrint("Player error: $error");
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> loadMedia({
+    required String audioUrl,
+    required String podcastTitle,
+    required String podcastRSS,
+    required String episodeTitle,
+    String? album,
+    String? description,
+    String? artist,
+    String? artUri,
+    Duration startPosition = Duration.zero,
+    bool autoplay = true,
+  }) async {
     debugPrint("Loading media");
-    debugPrint(mItem.toString());
-    await _player.open(Media(mItem.id), play: false);
-    mediaItem.add(mItem);
-    await _player.play();
+    debugPrint("$audioUrl\n$episodeTitle\n$album\n$artist\n$artUri");
+
+    final media = MediaItem(
+      id: audioUrl,
+      title: episodeTitle,
+      album: album ?? "Missing album",
+      displayDescription: description ?? "Missing description",
+      artist: artist ?? podcastTitle,
+      artUri: Uri.parse(artUri ?? ""),
+    );
+
+    final progress = await historyProvider.getProgress(media.id);
+    if (progress != null) {
+      startPosition = Duration(seconds: progress['position']);
+    }
+
+    mediaItem.add(media);
+    await _player.open(
+        Media(
+          media.id,
+          start: startPosition,
+        ),
+        play: false);
+
+    if (progress == null) {
+      historyProvider.addToHistory(
+        media.id,
+        media.title,
+        media.displayDescription ?? "",
+        media.artUri.toString(),
+        podcastTitle,
+        podcastRSS,
+        _position.inSeconds,
+        _duration.inSeconds,
+        _position.inSeconds >= _duration.inSeconds,
+      );
+    }
+
+    if (autoplay) await _player.play();
   }
 
   Future<void> setVolume(double volume) async {
-    if (isMobile) return;
-    await _player.setVolume(volume);
+    if (!isMobile) await _player.setVolume(volume);
   }
 
-  // Callbacks
+  void saveProgress() async {
+    final media = mediaItem.value;
+    if (media == null) return;
+    await historyProvider.updateProgress(
+      media.id,
+      _position.inSeconds,
+      _duration.inSeconds,
+    );
+  }
+
   @override
   Future<void> play() async {
     await _player.play();

@@ -13,9 +13,13 @@ class CurrentlyPlayingIcon extends StatelessWidget {
 
     final isCurrentEpisode = currentEpisode == episodeSource;
 
-    return Icon(
-      isCurrentEpisode ? Icons.audiotrack_rounded : null,
-      color: Theme.of(context).colorScheme.primary,
-    );
+    if (isCurrentEpisode) {
+      return Icon(
+        Icons.audiotrack_rounded,
+        color: Theme.of(context).colorScheme.primary,
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/podcast.dart';
+import 'package:poddr/models/podcast.dart';
 
 abstract class IPodcastRepository {
   Future<List<Podcast>> search(String query);

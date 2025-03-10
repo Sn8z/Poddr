@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/data/settings_repository.dart';
-import 'package:poddr/data/theme_colors.dart';
+import 'package:poddr/data/settings/settings_repository.dart';
+import 'package:poddr/data/theme/theme_colors.dart';
 
 class ThemeProvider extends ChangeNotifier {
   final ISettingsRepository _settingsRepository =

@@ -5,7 +5,7 @@ import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
-import 'package:poddr/data/theme_colors.dart';
+import 'package:poddr/data/theme/theme_colors.dart';
 import 'package:provider/provider.dart';
 
 class SettingsView extends StatelessWidget {
@@ -35,13 +35,13 @@ class SettingsView extends StatelessWidget {
               title: "Preferences",
               children: [
                 ListTile(
-                  leading: Icon(Icons.info_outline),
-                  title: Text("Info"),
+                  leading: Icon(Icons.sort_rounded),
+                  title: Text("Default Sort"),
                   trailing: Icon(Icons.chevron_right),
                 ),
                 ListTile(
                   leading: Icon(Icons.info_outline),
-                  title: Text("Info"),
+                  title: Text(">90% mark as finished"),
                   trailing: Icon(Icons.chevron_right),
                 ),
                 ListTile(

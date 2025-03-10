@@ -1,15 +1,16 @@
-import 'package:poddr/data/subscriptions/drift/database.dart';
+import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
 class DriftSubscriptionRepository implements ISubscriptionRepository {
-  final Database database = Database();
+  final PoddrDatabase database = PoddrDatabase();
+
   DriftSubscriptionRepository();
 
   @override
   Future<List<Podcast>> getSubscriptions() async {
     final subscriptions =
-        await database.select(database.podcastSubscriptions).get();
+        await database.select(database.podcastSubscription).get();
 
     return subscriptions.map((sub) {
       return Podcast(
@@ -17,7 +18,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
         rss: sub.rss,
         description: sub.description,
         author: sub.author,
-        image: sub.image,
+        image: sub.imageUrl,
       );
     }).toList();
   }
@@ -30,20 +31,20 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
     String? author,
     String? image,
   ) async {
-    await database.into(database.podcastSubscriptions).insert(
-          PodcastSubscriptionsCompanion.insert(
+    await database.into(database.podcastSubscription).insert(
+          PodcastSubscriptionCompanion.insert(
             title: title ?? '',
             rss: rss ?? '',
             description: description ?? '',
             author: author ?? '',
-            image: image ?? '',
+            imageUrl: image ?? '',
           ),
         );
   }
 
   @override
   Future<void> removeSubscription(String rss) async {
-    await (database.delete(database.podcastSubscriptions)
+    await (database.delete(database.podcastSubscription)
           ..where((sub) => sub.rss.equals(rss)))
         .go();
   }

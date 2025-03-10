@@ -5,6 +5,7 @@ import 'package:poddr/ui/components/audio/currently_playing.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
+import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
@@ -199,7 +200,9 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                               .podcast!.episodes[index].publicationDate ??
                           "date",
                       actions: [
-                        const Text("00:00"),
+                        EpisodeHistory(
+                            audioUrl: podcastProvider
+                                .podcast!.episodes[index].audioUrl),
                         IconButton(
                           onPressed: () {},
                           icon: const Icon(Icons.more_vert_rounded),
@@ -207,20 +210,20 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                       ],
                       onTap: () {
                         context.read<MediaProvider>().loadMedia(
-                              MediaItem(
-                                id: podcastProvider
-                                    .podcast!.episodes[index].audioUrl,
-                                album: podcastProvider.podcast!.title,
-                                title: podcastProvider
-                                    .podcast!.episodes[index].title,
-                                artist: podcastProvider.podcast!.title,
-                                artUri: Uri.parse(
-                                  podcastProvider
-                                          .podcast!.episodes[index].imageUrl ??
-                                      podcastProvider.podcast!.image ??
-                                      "",
-                                ),
-                              ),
+                              audioUrl: podcastProvider
+                                  .podcast!.episodes[index].audioUrl,
+                              episodeTitle: podcastProvider
+                                  .podcast!.episodes[index].title,
+                              podcastTitle: podcastProvider.podcast!.title ??
+                                  "Missing title",
+                              podcastRSS:
+                                  podcastProvider.podcast!.rss ?? "Missing RSS",
+                              description: podcastProvider
+                                  .podcast!.episodes[index].description,
+                              artUri: podcastProvider.podcast!.image,
+                              album: podcastProvider
+                                  .podcast!.episodes[index].title,
+                              artist: podcastProvider.podcast!.author,
                             );
                       },
                     );

@@ -8,9 +8,10 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 
 // Providers
 import 'package:poddr/services/subscriptions.dart';
+import 'package:poddr/services/history.dart';
 import 'package:poddr/services/theme.dart';
-import 'package:poddr/router.dart';
 import 'package:poddr/services/media.dart';
+import 'package:poddr/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,9 +23,14 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => MediaProvider()),
+        ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
+        ChangeNotifierProvider(create: (_) => HistoryProvider()),
+        ChangeNotifierProvider(
+          create: (context) => MediaProvider(
+            historyProvider: context.read<HistoryProvider>(),
+          ),
+        ),
       ],
       child: Poddr(router: router),
     ),

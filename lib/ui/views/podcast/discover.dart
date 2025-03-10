@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poddr/services/history.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
@@ -32,6 +33,8 @@ class PodcastDiscoveryView extends StatelessWidget {
                 sliverGapH16,
                 const NewEpisodes(),
                 sliverGapH16,
+                const RecentlyPlayedEpisodes(),
+                sliverGapH16,
                 const TrendingPodcasts(),
                 const BottomPaddingFix(),
               ],
@@ -49,7 +52,7 @@ class NewEpisodes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DiscoveryBox(
-      title: "New Episodes",
+      title: "New episodes",
       children: [
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -75,6 +78,54 @@ class NewEpisodes extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class RecentlyPlayedEpisodes extends StatelessWidget {
+  const RecentlyPlayedEpisodes({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final historyProvider = context.watch<HistoryProvider>();
+
+    if (historyProvider.isLoading) {
+      return const SliverFillRemaining(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    return DiscoveryBox(
+      title: "Continue listening",
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: historyProvider.history
+                .map((h) => Container(
+                      width: 140,
+                      height: 140,
+                      margin: const EdgeInsets.only(right: 12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          h.title,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ))
+                .toList(),
           ),
         ),
       ],

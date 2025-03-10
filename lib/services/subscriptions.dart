@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
-import 'package:poddr/data/subscriptions/drift/drift_subscription_repository.dart';
+import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
 class SubscriptionProvider extends ChangeNotifier {
@@ -15,12 +15,8 @@ class SubscriptionProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   SubscriptionProvider() {
-    initStream();
-  }
-
-  void initStream() async {
     _setLoading(true);
-    await _fetchFavourites();
+    _fetchFavourites();
     _setLoading(false);
   }
 
