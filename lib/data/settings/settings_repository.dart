@@ -32,7 +32,7 @@ class SavedPrefsSettingsRepository implements ISettingsRepository {
   @override
   Future<Color> getColor() async {
     final color = _prefs?.getInt(_colorKey);
-    return Color(color ?? 0);
+    return Color(color ?? 4294940190);
   }
 
   @override

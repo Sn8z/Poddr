@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
-import 'package:poddr/data/theme/theme_colors.dart';
 
 class ThemeProvider extends ChangeNotifier {
   final ISettingsRepository _settingsRepository =
       SavedPrefsSettingsRepository();
 
   ThemeMode _themeMode = ThemeMode.system;
-  Color _color = colors[0].color;
+  Color _color = const Color(4294940190);
 
   ThemeData _lightTheme = ThemeData.light();
   ThemeData get lightTheme => _lightTheme;
@@ -36,6 +36,9 @@ class ThemeProvider extends ChangeNotifier {
       useMaterial3: true,
       materialTapTargetSize: MaterialTapTargetSize.padded,
       visualDensity: VisualDensity.adaptivePlatformDensity,
+      textTheme: GoogleFonts.outfitTextTheme(
+        ThemeData(brightness: Brightness.light).textTheme,
+      ),
       primaryColor: _color,
       colorScheme: ColorScheme.fromSeed(
         seedColor: _color,
@@ -50,6 +53,9 @@ class ThemeProvider extends ChangeNotifier {
       useMaterial3: true,
       materialTapTargetSize: MaterialTapTargetSize.padded,
       visualDensity: VisualDensity.adaptivePlatformDensity,
+      textTheme: GoogleFonts.outfitTextTheme(
+        ThemeData(brightness: Brightness.light).textTheme,
+      ),
       primaryColor: const Color.fromARGB(255, 15, 15, 15),
       colorScheme: ColorScheme.fromSeed(
         seedColor: _color,

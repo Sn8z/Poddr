@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
@@ -48,16 +47,8 @@ class Poddr extends StatelessWidget {
       child: MaterialApp.router(
         title: "Poddr",
         themeMode: themeProvider.themeMode,
-        theme: themeProvider.lightTheme.copyWith(
-          textTheme: GoogleFonts.outfitTextTheme(
-            ThemeData(brightness: Brightness.light).textTheme,
-          ),
-        ),
-        darkTheme: themeProvider.darkTheme.copyWith(
-          textTheme: GoogleFonts.outfitTextTheme(
-            ThemeData(brightness: Brightness.dark).textTheme,
-          ),
-        ),
+        theme: themeProvider.lightTheme,
+        darkTheme: themeProvider.darkTheme,
         routerConfig: router,
       ),
     );
