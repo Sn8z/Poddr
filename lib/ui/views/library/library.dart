@@ -63,9 +63,9 @@ class LibraryView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: PoddrImage(
-                        imageUri: Uri.parse(
+                        imageUrl:
                             subscriptionProvider.subscriptions[index].image ??
-                                ''),
+                                '',
                         fit: BoxFit.cover,
                       ),
                     ),

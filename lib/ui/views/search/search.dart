@@ -100,7 +100,7 @@ class ResultBox extends StatelessWidget {
       children: searchResults
           .map(
             (e) => PoddrListItem(
-              leading: PoddrImage(imageUri: Uri.parse(e.image ?? '')),
+              leading: PoddrImage(imageUrl: e.image ?? ''),
               title: e.title ?? '',
               subtitle: e.rss ?? '',
               onTap: () {

@@ -5,6 +5,8 @@ import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/services/podcast_discovery.dart';
+import 'package:poddr/ui/components/widgets/image.dart';
+import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
 
@@ -92,42 +94,79 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
   Widget build(BuildContext context) {
     final historyProvider = context.watch<HistoryProvider>();
 
-    if (historyProvider.isLoading) {
-      return const SliverFillRemaining(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+    if (historyProvider.history.isEmpty) {
+      return const SliverToBoxAdapter(
+        child: SizedBox.shrink(),
       );
     }
 
     return DiscoveryBox(
-      title: "Continue listening",
+      title: "Recently played episodes",
       children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: historyProvider.history
-                .map((h) => Container(
-                      width: 140,
-                      height: 140,
-                      margin: const EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          h.title,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            fontSize: 16,
-                          ),
+        if (historyProvider.isLoading)
+          Row(
+            children: List.generate(
+              5,
+              (index) => Container(
+                width: 140,
+                height: 140,
+                margin: const EdgeInsets.only(right: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const ShimmerBox(),
+              ),
+            ),
+          )
+        else
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: historyProvider.history
+                  .map(
+                    (h) => MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () {
+                          //TODO: Fix media load
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 140,
+                              height: 80,
+                              margin: const EdgeInsets.only(right: 12),
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: PoddrImage(
+                                imageUrl: h.imageUrl ?? '',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Text(
+                              h.title,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
-                    ))
-                .toList(),
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
-        ),
       ],
     );
   }

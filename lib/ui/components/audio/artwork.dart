@@ -11,6 +11,6 @@ class Artwork extends StatelessWidget {
     Uri? artUri =
         context.select<MediaProvider, Uri?>((e) => e.mediaItem.value?.artUri);
 
-    return PoddrImage(imageUri: artUri ?? Uri.parse(''));
+    return PoddrImage(imageUrl: artUri.toString());
   }
 }

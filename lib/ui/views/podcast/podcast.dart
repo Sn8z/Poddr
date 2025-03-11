@@ -84,11 +84,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: PoddrImage(
-                                imageUri: Uri.parse(
-                                  podcastProvider.podcast?.image ?? "",
-                                ),
-                                width: 160,
-                                height: 160,
+                                imageUrl: podcastProvider.podcast?.image ?? "",
                                 fit: BoxFit.cover,
                               ),
                             ),
