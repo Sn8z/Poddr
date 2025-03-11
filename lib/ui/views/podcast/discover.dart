@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:poddr/services/history.dart';
+import 'package:poddr/services/media.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/services/podcast_discovery.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
+import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
 
@@ -101,7 +104,7 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
     }
 
     return DiscoveryBox(
-      title: "Recently played episodes",
+      title: "Continue listening",
       children: [
         if (historyProvider.isLoading)
           Row(
@@ -130,36 +133,47 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () {
                           //TODO: Fix media load
+                          context.read<MediaProvider>().loadMedia(
+                                audioUrl: h.audioUrl,
+                                episodeTitle: h.title,
+                                podcastTitle: '',
+                                podcastRSS: '',
+                              );
                         },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 140,
-                              height: 80,
-                              margin: const EdgeInsets.only(right: 12),
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
-                                borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          width: 140,
+                          height: 120,
+                          margin: const EdgeInsets.only(right: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 140,
+                                height: 80,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: PoddrImage(
+                                  imageUrl: h.imageUrl ?? '',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                              child: PoddrImage(
-                                imageUrl: h.imageUrl ?? '',
-                                fit: BoxFit.cover,
+                              Text(
+                                h.title,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            Text(
-                              h.title,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -181,71 +195,38 @@ class TrendingPodcasts extends StatelessWidget {
     final isLoading = charts.isLoading;
     final items = charts.charts;
 
+    final isMobile =
+        MediaQuery.of(context).size.width < Breakpoints.mobileScreen;
+
     if (isLoading) {
-      return const SliverFillRemaining(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+      return DiscoveryBox(
+        title: "Loading podcasts...",
+        children: [
+          ...List.generate(
+            5,
+            (index) {
+              return const ListTile(
+                title: ShimmerBox(),
+              );
+            },
+          ),
+        ],
+      );
+    }
+
+    if (items.isEmpty) {
+      return const SliverToBoxAdapter(
+        child: SizedBox.shrink(),
       );
     }
 
     return DiscoveryBox(
       title: "Trending",
       children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: items
-                .sublist(0, 5)
-                .map(
-                  (e) => MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                      onTap: () {
-                        context.push('/podcasts/details?rss=${e.rss}');
-                      },
-                      child: Container(
-                        width: 180,
-                        margin: const EdgeInsets.only(right: 12),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Image(
-                                image: NetworkImage(e.image ?? ''),
-                              ),
-                            ),
-                            Text(
-                              e.title ?? '',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-        gapH8,
-        ...items.sublist(5, items.length).map(
-          (e) {
+        if (isMobile)
+          ...items.map((e) {
             return ListTile(
+              leading: PoddrImage(imageUrl: e.image ?? ''),
               title: Text(e.title ?? ''),
               subtitle: Text(
                 e.rss ?? '',
@@ -253,9 +234,80 @@ class TrendingPodcasts extends StatelessWidget {
               onTap: () {
                 context.push('/podcasts/details?rss=${e.rss}');
               },
+              trailing: PoddrAddSubscriptionBtn(
+                title: e.title ?? '',
+                rss: e.rss ?? '',
+                description: e.description ?? '',
+                author: e.author ?? '',
+                image: e.image ?? '',
+              ),
             );
-          },
-        ),
+          })
+        else
+          GridView.builder(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 240,
+              crossAxisSpacing: 32,
+              mainAxisSpacing: 32,
+              childAspectRatio: 0.8,
+            ),
+            shrinkWrap: true,
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              return MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () {
+                    context.push('/podcasts/details?rss=${items[index].rss}');
+                  },
+                  child: Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: PoddrImage(imageUrl: items[index].image ?? ''),
+                        ),
+                        Flexible(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  items[index].title ?? '',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              PoddrAddSubscriptionBtn(
+                                title: items[index].title ?? '',
+                                rss: items[index].rss ?? '',
+                                description: items[index].description ?? '',
+                                author: items[index].author ?? '',
+                                image: items[index].image ?? '',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
       ],
     );
   }

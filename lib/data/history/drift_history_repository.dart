@@ -34,9 +34,33 @@ class DriftHistoryRepository implements IHistoryRepository {
   }
 
   @override
-  Future<List<PodcastEpisode>> getHistory({int limit = 10}) async {
-    final history =
-        await (database.select(database.listeningHistory)..limit(limit)).get();
+  Future<List<PodcastEpisode>> getHistory() async {
+    final history = await (database.select(database.listeningHistory)).get();
+
+    return history.map((e) {
+      return PodcastEpisode(
+        title: e.title,
+        description: e.description,
+        audioUrl: e.audioUrl,
+        duration: Duration(seconds: e.duration),
+        publicationDate: null,
+        imageUrl: e.imageUrl,
+      );
+    }).toList();
+  }
+
+  @override
+  Future<List<PodcastEpisode>> getMostRecentHistory({int limit = 10}) async {
+    final history = await (database.select(database.listeningHistory)
+          ..where((t) => t.isFinished.equals(false))
+          ..orderBy([
+            (t) => OrderingTerm(
+                  expression: t.listenedAt,
+                  mode: OrderingMode.desc,
+                )
+          ])
+          ..limit(limit))
+        .get();
 
     return history.map((e) {
       return PodcastEpisode(

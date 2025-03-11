@@ -12,7 +12,9 @@ abstract class IHistoryRepository {
     int duration,
   );
 
-  Future<List<PodcastEpisode>> getHistory({int limit = 10});
+  Future<List<PodcastEpisode>> getHistory();
+
+  Future<List<PodcastEpisode>> getMostRecentHistory({int limit = 10});
 
   Future<void> updateProgress(String guid, int position, int duration);
 

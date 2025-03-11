@@ -18,10 +18,10 @@ class HistoryProvider extends ChangeNotifier {
     _setLoading(false);
   }
 
-  Future<void> getHistory({int limit = 20}) async {
+  Future<void> getHistory() async {
     _setLoading(true);
     try {
-      _history = await _historyRepository.getHistory(limit: limit);
+      _history = await _historyRepository.getMostRecentHistory();
     } catch (e) {
       debugPrint('Error loading history: $e');
     }
