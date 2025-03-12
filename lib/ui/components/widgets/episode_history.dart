@@ -27,8 +27,12 @@ class EpisodeHistory extends StatelessWidget {
           } else {
             final value = data['position'] / data['duration'];
             if (value != null && value >= 0 && value <= 1) {
-              return CircularProgressIndicator(
-                value: value,
+              return SizedBox(
+                height: 8,
+                width: 100,
+                child: LinearProgressIndicator(
+                  value: value,
+                ),
               );
             } else {
               return const SizedBox.shrink();

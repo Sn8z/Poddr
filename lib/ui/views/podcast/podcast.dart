@@ -182,55 +182,52 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                 child: Text("No podcast found"),
               )
             else
-              SliverPadding(
-                padding: const EdgeInsets.all(16.0),
-                sliver: SliverList.builder(
-                  itemCount: podcastProvider.podcast!.episodes.length,
-                  itemBuilder: (context, index) {
-                    return PoddrListItem(
-                      leading: CurrentlyPlayingIcon(
-                        episodeSource:
-                            podcastProvider.podcast!.episodes[index].title,
+              SliverList.builder(
+                itemCount: podcastProvider.podcast!.episodes.length,
+                itemBuilder: (context, index) {
+                  return PoddrListItem(
+                    leading: CurrentlyPlayingIcon(
+                      episodeSource:
+                          podcastProvider.podcast!.episodes[index].title,
+                    ),
+                    title: podcastProvider.podcast!.episodes[index].title,
+                    subtitle: convertDateToString(podcastProvider
+                        .podcast!.episodes[index].publicationDate),
+                    actions: [
+                      EpisodeHistory(
+                        audioUrl:
+                            podcastProvider.podcast!.episodes[index].audioUrl,
                       ),
-                      title: podcastProvider.podcast!.episodes[index].title,
-                      subtitle: convertDateToString(podcastProvider
-                          .podcast!.episodes[index].publicationDate),
-                      actions: [
-                        EpisodeHistory(
-                          audioUrl:
-                              podcastProvider.podcast!.episodes[index].audioUrl,
+                      Text(
+                        convertDurationToString(
+                          podcastProvider.podcast!.episodes[index].duration,
                         ),
-                        Text(
-                          convertDurationToString(
-                            podcastProvider.podcast!.episodes[index].duration,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.more_vert_rounded),
-                        ),
-                      ],
-                      onTap: () {
-                        context.read<MediaProvider>().loadMedia(
-                              audioUrl: podcastProvider
-                                  .podcast!.episodes[index].audioUrl,
-                              episodeTitle: podcastProvider
-                                  .podcast!.episodes[index].title,
-                              podcastTitle: podcastProvider.podcast!.title ??
-                                  "Missing title",
-                              podcastRSS:
-                                  podcastProvider.podcast!.rss ?? "Missing RSS",
-                              description: podcastProvider
-                                  .podcast!.episodes[index].description,
-                              artUri: podcastProvider.podcast!.image,
-                              album: podcastProvider
-                                  .podcast!.episodes[index].title,
-                              artist: podcastProvider.podcast!.author,
-                            );
-                      },
-                    );
-                  },
-                ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.more_vert_rounded),
+                      ),
+                    ],
+                    onTap: () {
+                      context.read<MediaProvider>().loadMedia(
+                            audioUrl: podcastProvider
+                                .podcast!.episodes[index].audioUrl,
+                            episodeTitle:
+                                podcastProvider.podcast!.episodes[index].title,
+                            podcastTitle: podcastProvider.podcast!.title ??
+                                "Missing title",
+                            podcastRSS:
+                                podcastProvider.podcast!.rss ?? "Missing RSS",
+                            description: podcastProvider
+                                .podcast!.episodes[index].description,
+                            artUri: podcastProvider.podcast!.image,
+                            album:
+                                podcastProvider.podcast!.episodes[index].title,
+                            artist: podcastProvider.podcast!.author,
+                          );
+                    },
+                  );
+                },
               ),
             const BottomPaddingFix(),
           ],
