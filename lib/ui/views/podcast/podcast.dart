@@ -1,5 +1,3 @@
-import 'dart:ui';
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/audio/currently_playing.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';

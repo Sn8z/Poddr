@@ -1,5 +1,6 @@
-import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
+import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart' hide AudioDevice;
 import 'package:flutter/foundation.dart';
@@ -12,14 +13,19 @@ class MediaProvider extends BaseAudioHandler
   final Player _player = Player(
     configuration: PlayerConfiguration(
       title: "Poddr",
-      ready: () => debugPrint('MediaHandler ready'),
+      ready: () => log("MediaHandler ready", name: "MediaProvider"),
+      logLevel: MPVLogLevel.info,
     ),
   );
 
   //TODO: Improve check... Platform causes issues on web
   final isMobile = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
+  final String logName = "MediaProvider";
+
+  //TODO; Migrate to a repository pattern
   SharedPreferences? _prefs;
+
   AudioHandler? _audioHandler;
 
   double _volume = 0.0;
@@ -51,13 +57,13 @@ class MediaProvider extends BaseAudioHandler
     audioSession.setActive(true);
 
     audioSession.becomingNoisyEventStream.listen((_) {
-      debugPrint('Headphones disconnected');
+      log("Headphones disconnected", name: logName);
       _player.pause();
     });
 
     audioSession.devicesChangedEventStream.listen((event) {
-      debugPrint('Devices added:   ${event.devicesAdded}');
-      debugPrint('Devices removed: ${event.devicesRemoved}');
+      log('Devices added: ${event.devicesAdded}', name: logName);
+      log('Devices removed: ${event.devicesRemoved}', name: logName);
     });
 
     _audioHandler ??= await AudioService.init(
@@ -97,8 +103,12 @@ class MediaProvider extends BaseAudioHandler
         autoplay: false,
       );
     } catch (error, stackTrace) {
-      debugPrint('Exception details:\n $error');
-      debugPrint('Stack trace:\n $stackTrace');
+      log(
+        error.toString(),
+        name: logName,
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -136,11 +146,11 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void _handlePlaylistChange(Playlist playlist) {
-    debugPrint("playlist: $playlist");
+    log("Playlist update: $playlist", name: logName);
   }
 
   void _handlePlayingState(bool value) {
-    debugPrint("playing: $value");
+    log(value ? "Playing" : "Paused", name: logName);
     playbackState.add(playbackState.value.copyWith(
       playing: value,
       controls: value ? [MediaControl.pause] : [MediaControl.play],
@@ -152,7 +162,7 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void _handleCompletion(bool value) {
-    debugPrint("completed: $value");
+    log("Completed: $value", name: logName);
     playbackState.add(playbackState.value.copyWith(
       processingState: AudioProcessingState.completed,
     ));
@@ -163,7 +173,7 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void _handlePositionChange(Duration value) {
-    debugPrint("position: $value");
+    //log("Position: $value", name: logName);
     playbackState.add(playbackState.value.copyWith(
       updatePosition: value,
     ));
@@ -174,14 +184,14 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void _handleDurationChange(Duration value) {
-    debugPrint("duration: $value");
+    log("Duration: $value", name: logName);
     mediaItem.add(mediaItem.value?.copyWith(duration: value));
     _duration = value;
     notifyListeners();
   }
 
   void _handleRateChange(double value) {
-    debugPrint("rate: $value");
+    log("Playback rate: $value", name: logName);
     playbackState.add(playbackState.value.copyWith(
       speed: value,
     ));
@@ -190,7 +200,7 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void _handleBufferChange(Duration value) {
-    debugPrint("buffer: $value");
+    log("Buffer: $value", name: logName);
     playbackState.add(playbackState.value.copyWith(
       bufferedPosition: value,
     ));
@@ -199,7 +209,7 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void _handleBufferingState(bool value) {
-    debugPrint("buffering: $value");
+    log(value ? "Buffering" : "Done buffering", name: logName);
     playbackState.add(playbackState.value.copyWith(
       processingState:
           value ? AudioProcessingState.buffering : AudioProcessingState.ready,
@@ -209,23 +219,27 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void _handleVolumeChange(double value) {
-    debugPrint("volume: $value");
+    log("Volume: $value", name: logName);
     _prefs?.setDouble("mediaVolume", value);
     _volume = value;
     notifyListeners();
   }
 
   void _handleError(String error) {
-    debugPrint("Player error: $error");
+    log(
+      error,
+      name: logName,
+      error: error,
+    );
     _isLoading = false;
     notifyListeners();
   }
 
   Future<void> loadMedia({
-    required String audioUrl,
-    required String podcastTitle,
-    required String podcastRSS,
-    required String episodeTitle,
+    String? audioUrl,
+    String? podcastTitle,
+    String? podcastRSS,
+    String? episodeTitle,
     String? album,
     String? description,
     String? artist,
@@ -233,12 +247,14 @@ class MediaProvider extends BaseAudioHandler
     Duration startPosition = Duration.zero,
     bool autoplay = true,
   }) async {
-    debugPrint("Loading media");
-    debugPrint("$audioUrl\n$episodeTitle\n$album\n$artist\n$artUri");
+    log("Loading media", name: logName);
+    log("$audioUrl\n$episodeTitle\n$album\n$artist\n$artUri", name: logName);
+
+    if (audioUrl == null) return;
 
     final media = MediaItem(
       id: audioUrl,
-      title: episodeTitle,
+      title: episodeTitle ?? "Missing title",
       album: album ?? "Missing album",
       displayDescription: description ?? "Missing description",
       artist: artist ?? podcastTitle,
@@ -264,8 +280,8 @@ class MediaProvider extends BaseAudioHandler
         media.title,
         media.displayDescription ?? "",
         media.artUri.toString(),
-        podcastTitle,
-        podcastRSS,
+        podcastTitle ?? "",
+        podcastRSS ?? "",
         _position.inSeconds,
         _duration.inSeconds,
         _position.inSeconds >= _duration.inSeconds,
@@ -335,7 +351,7 @@ class MediaProvider extends BaseAudioHandler
 
   @override
   Future<void> dispose() async {
-    debugPrint("Disposing media");
+    log("Disposing media", name: logName);
     await _player.dispose();
     super.dispose();
   }
