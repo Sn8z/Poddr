@@ -6,6 +6,8 @@ class PodcastEpisode {
   final String title;
   final String description;
   final String audioUrl;
+  final String? podcastRSS;
+  final String? podcastTitle;
   final Duration? duration;
   final DateTime? publicationDate;
   final String? imageUrl;
@@ -14,6 +16,8 @@ class PodcastEpisode {
     required this.title,
     required this.description,
     required this.audioUrl,
+    this.podcastRSS,
+    this.podcastTitle,
     this.duration = Duration.zero,
     this.publicationDate,
     this.imageUrl,

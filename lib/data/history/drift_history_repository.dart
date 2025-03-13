@@ -67,6 +67,8 @@ class DriftHistoryRepository implements IHistoryRepository {
         title: e.title,
         description: e.description,
         audioUrl: e.audioUrl,
+        podcastRSS: e.podcastRSS,
+        podcastTitle: e.podcastTitle,
         duration: Duration(seconds: e.duration),
         publicationDate: null,
         imageUrl: e.imageUrl,

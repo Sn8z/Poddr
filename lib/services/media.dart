@@ -105,6 +105,7 @@ class MediaProvider extends BaseAudioHandler
     } catch (error, stackTrace) {
       log(
         error.toString(),
+        time: DateTime.now(),
         name: logName,
         error: error,
         stackTrace: stackTrace,
@@ -137,12 +138,11 @@ class MediaProvider extends BaseAudioHandler
 
   void _handleMediaItemChange(MediaItem? media) {
     if (media == null) return;
-
     _prefs?.setString("mediaID", media.id);
     _prefs?.setString("mediaTitle", media.title);
     _prefs?.setString("mediaArtist", media.artist ?? "");
     _prefs?.setString("mediaImage", media.artUri.toString());
-    _prefs?.setInt("mediaDuration", media.duration?.inSeconds ?? 0);
+    _prefs?.setString("mediaPodcastRSS", media.extras?["podcastRSS"] ?? "");
   }
 
   void _handlePlaylistChange(Playlist playlist) {
@@ -200,7 +200,7 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void _handleBufferChange(Duration value) {
-    log("Buffer: $value", name: logName);
+    //log("Buffer: $value", name: logName);
     playbackState.add(playbackState.value.copyWith(
       bufferedPosition: value,
     ));
@@ -248,7 +248,16 @@ class MediaProvider extends BaseAudioHandler
     bool autoplay = true,
   }) async {
     log("Loading media", name: logName);
-    log("$audioUrl\n$episodeTitle\n$album\n$artist\n$artUri", name: logName);
+    log("AudioUrl: $audioUrl", name: logName);
+    log("PodcastTitle: $podcastTitle", name: logName);
+    log("PodcastRSS: $podcastRSS", name: logName);
+    log("EpisodeTitle: $episodeTitle", name: logName);
+    log("Album: $album", name: logName);
+    log("Description: $description", name: logName);
+    log("Artist: $artist", name: logName);
+    log("ArtUri: $artUri", name: logName);
+    log("StartPosition: $startPosition", name: logName);
+    log("Autoplay: $autoplay", name: logName);
 
     if (audioUrl == null) return;
 
@@ -259,6 +268,7 @@ class MediaProvider extends BaseAudioHandler
       displayDescription: description ?? "Missing description",
       artist: artist ?? podcastTitle,
       artUri: Uri.parse(artUri ?? ""),
+      extras: {"podcastRSS": podcastRSS},
     );
 
     final progress = await historyProvider.getProgress(media.id);

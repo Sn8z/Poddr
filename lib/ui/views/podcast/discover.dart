@@ -132,12 +132,15 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
                         onTap: () {
-                          //TODO: Fix media load
                           context.read<MediaProvider>().loadMedia(
                                 audioUrl: h.audioUrl,
                                 episodeTitle: h.title,
-                                podcastTitle: '',
-                                podcastRSS: '',
+                                podcastTitle: h.podcastTitle,
+                                podcastRSS: h.podcastRSS,
+                                artUri: h.imageUrl,
+                                artist: h.podcastTitle,
+                                album: h.podcastTitle,
+                                description: h.description,
                               );
                         },
                         child: Container(
