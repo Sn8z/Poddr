@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ShimmerBox extends StatefulWidget {
-  const ShimmerBox({super.key, this.height = 50, this.width = 50});
+  const ShimmerBox({super.key, this.height, this.width});
 
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
 
   @override
   State<ShimmerBox> createState() => _ShimmerBoxState();
@@ -29,8 +29,12 @@ class _ShimmerBoxState extends State<ShimmerBox>
       animation: _controller,
       builder: (context, child) {
         return Container(
-          height: widget.height,
-          width: widget.width,
+          constraints: BoxConstraints(
+            minHeight: 50,
+            minWidth: 50,
+            maxHeight: widget.height ?? double.infinity,
+            maxWidth: widget.width ?? double.infinity,
+          ),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               transform: const GradientRotation(0.5),
@@ -40,12 +44,12 @@ class _ShimmerBoxState extends State<ShimmerBox>
                 _controller.value + 0.1,
               ],
               colors: [
-                Theme.of(context).colorScheme.surfaceContainerLow,
                 Theme.of(context).colorScheme.surfaceContainer,
-                Theme.of(context).colorScheme.surfaceContainerLow,
+                Theme.of(context).colorScheme.surfaceContainerHigh,
+                Theme.of(context).colorScheme.surfaceContainer,
               ],
             ),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(16),
           ),
         );
       },

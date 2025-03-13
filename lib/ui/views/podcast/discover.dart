@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/services/podcast_discovery.dart';
+import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
@@ -163,6 +163,7 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
                                   fit: BoxFit.cover,
                                 ),
                               ),
+                              EpisodeHistory(audioUrl: h.audioUrl),
                               Text(
                                 h.title,
                                 style: TextStyle(

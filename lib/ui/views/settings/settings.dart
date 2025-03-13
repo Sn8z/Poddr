@@ -3,6 +3,7 @@ import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/services/theme.dart';
+import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/data/theme/theme_colors.dart';
@@ -41,13 +42,7 @@ class SettingsView extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.info_outline),
-                  title: Text(">90% mark as finished"),
-                  trailing: Icon(Icons.chevron_right),
-                ),
-                ListTile(
-                  leading: Icon(Icons.info_outline),
-                  title: Text("Info"),
-                  trailing: Icon(Icons.chevron_right),
+                  title: ShimmerBox(),
                 ),
                 ListTile(
                   leading: Icon(Icons.info_outline),

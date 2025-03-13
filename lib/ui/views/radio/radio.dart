@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
+import 'package:poddr/ui/components/widgets/shimmer.dart';
 
 class RadioDiscoveryView extends StatelessWidget {
   const RadioDiscoveryView({super.key});
@@ -20,6 +21,9 @@ class RadioDiscoveryView extends StatelessWidget {
                   icon: const Icon(Icons.more_vert_rounded),
                 ),
               ],
+            ),
+            const SliverToBoxAdapter(
+              child: ShimmerBox(),
             ),
             SliverList.builder(
               itemBuilder: (context, index) {
