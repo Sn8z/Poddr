@@ -335,7 +335,11 @@ class MediaProvider extends BaseAudioHandler
 
   @override
   Future<void> seek(Duration position) async {
+    _isLoading = true;
+    notifyListeners();
     await _player.seek(position);
+    _isLoading = false;
+    notifyListeners();
   }
 
   @override
