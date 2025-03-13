@@ -1,5 +1,6 @@
 name: poddr
 description: "A new Flutter project."
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -58,7 +59,7 @@ flutter:
 
 msix_config:
   display_name: Poddr
-  publisher_display_name: Poddr
-  identity_name: com.poddr.poddr
+  publisher_display_name: Marcus Sneitz
+  identity_name: com.sn8z.poddr
   msix_version: 1.0.0.0
   logo_path: assets/images/icon.png
