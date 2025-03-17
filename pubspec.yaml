@@ -33,7 +33,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^4.0.0
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.13.1 # dart run flutter_launcher_icons
   msix: ^3.16.8 # dart run msix:create
   drift_dev: ^2.23.1
   build_runner: ^2.4.13
