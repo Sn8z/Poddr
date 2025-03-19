@@ -54,7 +54,7 @@ class ThemeProvider extends ChangeNotifier {
       materialTapTargetSize: MaterialTapTargetSize.padded,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       textTheme: GoogleFonts.outfitTextTheme(
-        ThemeData(brightness: Brightness.light).textTheme,
+        ThemeData(brightness: Brightness.dark).textTheme,
       ),
       primaryColor: const Color.fromARGB(255, 15, 15, 15),
       colorScheme: ColorScheme.fromSeed(
