@@ -115,7 +115,6 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
                 height: 140,
                 margin: const EdgeInsets.only(right: 12),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const ShimmerBox(),
@@ -156,17 +155,26 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
                                 height: 80,
                                 clipBehavior: Clip.antiAlias,
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: PoddrImage(
-                                  imageUrl: h.imageUrl ?? '',
-                                  fit: BoxFit.cover,
+                                child: Stack(
+                                  children: [
+                                    Positioned.fill(
+                                      child: PoddrImage(
+                                        imageUrl: h.imageUrl ?? '',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      left: 0,
+                                      right: 0,
+                                      child:
+                                          EpisodeHistory(audioUrl: h.audioUrl),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              EpisodeHistory(audioUrl: h.audioUrl),
                               Text(
                                 h.title,
                                 style: TextStyle(

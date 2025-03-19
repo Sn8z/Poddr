@@ -195,6 +195,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                       EpisodeHistory(
                         audioUrl:
                             podcastProvider.podcast!.episodes[index].audioUrl,
+                        width: 100,
                       ),
                       Text(
                         convertDurationToString(
