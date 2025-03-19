@@ -119,6 +119,13 @@ class DriftHistoryRepository implements IHistoryRepository {
   }
 
   @override
+  Stream<ListeningHistoryData?> getProgressStream(String audioUrl) {
+    return (database.select(database.listeningHistory)
+          ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
+        .watchSingleOrNull();
+  }
+
+  @override
   Future<void> removeHistory(String audioUrl) async {
     await (database.delete(database.listeningHistory)
           ..where((tbl) => tbl.audioUrl.equals(audioUrl)))

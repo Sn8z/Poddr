@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/data/history/history_repository.dart';
 import 'package:poddr/data/history/drift_history_repository.dart';
 import 'package:poddr/models/episode.dart';
 
 class HistoryProvider extends ChangeNotifier {
   final IHistoryRepository _historyRepository = DriftHistoryRepository();
+  final logName = "HistoryProvider";
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -22,8 +26,8 @@ class HistoryProvider extends ChangeNotifier {
     _setLoading(true);
     try {
       _history = await _historyRepository.getMostRecentHistory();
-    } catch (e) {
-      debugPrint('Error loading history: $e');
+    } catch (e, stackTrace) {
+      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }
     _setLoading(false);
   }
@@ -51,8 +55,8 @@ class HistoryProvider extends ChangeNotifier {
         duration,
       );
       await getHistory();
-    } catch (e) {
-      debugPrint('Error adding to history: $e');
+    } catch (e, stackTrace) {
+      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }
   }
 
@@ -60,18 +64,26 @@ class HistoryProvider extends ChangeNotifier {
       String audioUrl, int position, int duration) async {
     try {
       await _historyRepository.updateProgress(audioUrl, position, duration);
-      notifyListeners();
-    } catch (e) {
-      debugPrint('Error updating progress: $e');
+    } catch (e, stackTrace) {
+      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }
   }
 
   Future<Map<String, dynamic>?> getProgress(String guid) async {
     try {
       return await _historyRepository.getProgress(guid);
-    } catch (e) {
-      debugPrint('Error getting progress: $e');
+    } catch (e, stackTrace) {
+      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return null;
+    }
+  }
+
+  Stream<ListeningHistoryData?> getProgressStream(String guid) {
+    try {
+      return _historyRepository.getProgressStream(guid);
+    } catch (e, stackTrace) {
+      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      return const Stream.empty();
     }
   }
 
@@ -79,8 +91,8 @@ class HistoryProvider extends ChangeNotifier {
     try {
       await _historyRepository.removeHistory(guid);
       await getHistory();
-    } catch (e) {
-      debugPrint('Error removing history: $e');
+    } catch (e, stackTrace) {
+      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }
   }
 

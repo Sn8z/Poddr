@@ -1,3 +1,4 @@
+import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/models/episode.dart';
 
 abstract class IHistoryRepository {
@@ -16,9 +17,11 @@ abstract class IHistoryRepository {
 
   Future<List<PodcastEpisode>> getMostRecentHistory({int limit = 10});
 
-  Future<void> updateProgress(String guid, int position, int duration);
+  Future<void> updateProgress(String audioUrl, int position, int duration);
 
   Future<Map<String, dynamic>?> getProgress(String audioUrl);
 
-  Future<void> removeHistory(String guid);
+  Stream<ListeningHistoryData?> getProgressStream(String audioUrl);
+
+  Future<void> removeHistory(String audioUrl);
 }

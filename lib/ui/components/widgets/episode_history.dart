@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/services/history.dart';
 import 'package:provider/provider.dart';
 
@@ -10,33 +11,31 @@ class EpisodeHistory extends StatelessWidget {
   const EpisodeHistory({
     super.key,
     required this.audioUrl,
-    this.height = 8,
+    this.height = 6,
     this.width,
   });
 
   @override
   Widget build(BuildContext context) {
-    final historyProvider = context.watch<HistoryProvider>();
-
     return SizedBox(
       height: height,
       width: width ?? double.infinity,
-      child: FutureBuilder<Map<String, dynamic>?>(
-        future: historyProvider.getProgress(audioUrl),
+      child: StreamBuilder<ListeningHistoryData?>(
+        stream: context.read<HistoryProvider>().getProgressStream(audioUrl),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LinearProgressIndicator();
+            return const SizedBox();
           } else if (snapshot.hasError) {
             return const SizedBox();
           } else if (snapshot.hasData && snapshot.data != null) {
             final data = snapshot.data!;
-            if (data['isFinished']) {
+            if (data.isFinished) {
               return const LinearProgressIndicator(
                 value: 1,
               );
             } else {
-              final value = data['position'] / data['duration'];
-              if (value != null && value >= 0 && value <= 1) {
+              final value = data.position / data.duration;
+              if (value >= 0 && value <= 1) {
                 return LinearProgressIndicator(
                   value: value,
                 );
