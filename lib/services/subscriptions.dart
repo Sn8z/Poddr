@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
 class SubscriptionProvider extends ChangeNotifier {
+  final String logName = "SubscriptionProvider";
   final ISubscriptionRepository _subscriptionRepository =
       DriftSubscriptionRepository();
 
@@ -16,20 +18,25 @@ class SubscriptionProvider extends ChangeNotifier {
 
   SubscriptionProvider() {
     _setLoading(true);
-    _fetchFavourites();
+    _fetchSubscriptions();
     _setLoading(false);
   }
 
-  Future<void> _fetchFavourites() async {
+  Future<void> _fetchSubscriptions() async {
     try {
       _subscriptions = await _subscriptionRepository.getSubscriptions();
       notifyListeners();
-    } catch (error) {
-      debugPrint("Error fetching favourites: $error");
+    } catch (error, stackTrace) {
+      log(
+        error.toString(),
+        name: logName,
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
-  Future<void> addFavourite({
+  Future<void> addSubscription({
     required String title,
     required String rss,
     String? description,
@@ -44,25 +51,29 @@ class SubscriptionProvider extends ChangeNotifier {
         author,
         image,
       );
-      await _fetchFavourites();
+      await _fetchSubscriptions();
     } catch (error, stackTrace) {
       debugPrint(error.toString());
       debugPrint(stackTrace.toString());
     } finally {
-      debugPrint("Finished inserting favourite");
+      log("Added subscription $title - $rss", name: logName);
     }
   }
 
-  Future<void> removeFavourite(String rss) async {
+  Future<void> removeSubscription(String rss) async {
     try {
-      debugPrint("Removing favourite with rss $rss");
+      log("Removing $rss", name: logName);
       await _subscriptionRepository.removeSubscription(rss);
-      await _fetchFavourites();
+      await _fetchSubscriptions();
     } catch (error, stackTrace) {
-      debugPrint(error.toString());
-      debugPrint(stackTrace.toString());
+      log(
+        error.toString(),
+        name: logName,
+        error: error,
+        stackTrace: stackTrace,
+      );
     } finally {
-      debugPrint("Finished removing favourite");
+      log("Finished removing $rss", name: logName);
     }
   }
 

@@ -40,9 +40,9 @@ class PoddrAddSubscriptionBtn extends StatelessWidget {
         if (isSubscription) {
           final podcast =
               subcriptions.firstWhere((podcast) => podcast.rss == rss);
-          subscriptionProvider.removeFavourite(podcast.rss ?? '');
+          subscriptionProvider.removeSubscription(podcast.rss ?? '');
         } else {
-          subscriptionProvider.addFavourite(
+          subscriptionProvider.addSubscription(
             title: title,
             rss: rss,
             description: description,
