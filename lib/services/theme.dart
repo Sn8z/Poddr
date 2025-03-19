@@ -6,8 +6,8 @@ class ThemeProvider extends ChangeNotifier {
   final ISettingsRepository _settingsRepository =
       SavedPrefsSettingsRepository();
 
-  ThemeMode _themeMode = ThemeMode.system;
-  Color _color = const Color(4294940190);
+  Color _color = const Color.fromRGBO(255, 150, 30, 1);
+  Color get color => _color;
 
   ThemeData _lightTheme = ThemeData.light();
   ThemeData get lightTheme => _lightTheme;
@@ -15,8 +15,8 @@ class ThemeProvider extends ChangeNotifier {
   ThemeData _darkTheme = ThemeData.dark();
   ThemeData get darkTheme => _darkTheme;
 
+  ThemeMode _themeMode = ThemeMode.system;
   ThemeMode get themeMode => _themeMode;
-  Color get color => _color;
 
   ThemeProvider() {
     _loadTheme();
