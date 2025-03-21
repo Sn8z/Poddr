@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -10,6 +12,7 @@ abstract class IPodcastRepository {
 }
 
 class ITunesPodcastRepository implements IPodcastRepository {
+  final String logName = "ItunesPodcastRepository";
   final String baseUrl = "https://itunes.apple.com";
   final http.Client _http = http.Client();
 
@@ -20,7 +23,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
     final List<Podcast> feeds = [];
     try {
       final searchUrl = "$baseUrl/search?term=$query&media=podcast";
-      debugPrint("Searching for $searchUrl");
+      log("Searching for $searchUrl", name: logName);
       final response = await _http.get(Uri.parse(searchUrl));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -33,9 +36,13 @@ class ITunesPodcastRepository implements IPodcastRepository {
         throw Exception("Search return code ${response.statusCode}");
       }
     } catch (error, stackTrace) {
-      debugPrint(error.toString());
-      debugPrint(stackTrace.toString());
-      throw Exception("Could not search");
+      log(
+        error.toString(),
+        name: logName,
+        error: error,
+        stackTrace: stackTrace,
+      );
+      return [];
     }
   }
 
@@ -45,6 +52,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
     try {
       final chartsUrl =
           "$baseUrl/$country/rss/toppodcasts/limit=50/explicit=true/genre=$genre/json";
+      log("Checking charts for $chartsUrl", name: logName);
       final response = await _http.get(Uri.parse(chartsUrl));
 
       if (response.statusCode == 200) {
@@ -77,27 +85,35 @@ class ITunesPodcastRepository implements IPodcastRepository {
         throw Exception("Could not get charts");
       }
     } catch (error, stackTrace) {
-      debugPrint(error.toString());
-      debugPrint(stackTrace.toString());
-      throw Exception("Could not get charts");
+      log(
+        error.toString(),
+        name: logName,
+        error: error,
+        stackTrace: stackTrace,
+      );
+      return [];
     }
   }
 
   @override
   Future<Podcast> getFeed(String rss) async {
     try {
-      debugPrint("Getting feed $rss");
+      log("Getting feed $rss", name: logName);
       final response = await _http.get(Uri.parse(rss));
-      debugPrint("Feed return code ${response.statusCode}");
+      log("Feed return code ${response.statusCode}", name: logName);
       if (response.statusCode == 200) {
         return Podcast.fromXml(response.body);
       } else {
-        debugPrint("Feed return code ${response.statusCode}");
+        log("Feed return code ${response.statusCode}", name: logName);
         throw Exception("Could not get feed");
       }
     } catch (error, stackTrace) {
-      debugPrint(error.toString());
-      debugPrint(stackTrace.toString());
+      log(
+        error.toString(),
+        name: logName,
+        error: error,
+        stackTrace: stackTrace,
+      );
       throw Exception("Something went wrong when getting the feed");
     }
   }
