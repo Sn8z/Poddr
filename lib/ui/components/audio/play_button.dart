@@ -3,72 +3,52 @@ import 'package:poddr/ui/components/audio/loading.dart';
 import 'package:poddr/services/media.dart';
 import 'package:provider/provider.dart';
 
-class PlayButton extends StatefulWidget {
-  const PlayButton({super.key, this.size = 48});
+class PlayButton extends StatelessWidget {
   final double size;
 
-  @override
-  State<PlayButton> createState() => _PlayButtonState();
-}
-
-class _PlayButtonState extends State<PlayButton> {
-  bool _isHovered = false;
+  const PlayButton({
+    super.key,
+    this.size = 48,
+  });
 
   @override
   Widget build(BuildContext context) {
-    bool isPlaying = context
-        .select<MediaProvider, bool>((e) => e.playbackState.value.playing);
+    final bool isPlaying = context.select<MediaProvider, bool>(
+      (provider) => provider.playbackState.value.playing,
+    );
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onHover: (event) => setState(
-        () => _isHovered = true,
-      ),
-      onExit: (event) => setState(
-        () => _isHovered = false,
-      ),
       child: GestureDetector(
         onTap: () {
           context.read<MediaProvider>().playOrPause();
         },
-        child: SizedBox(
-          width: widget.size,
-          height: widget.size,
+        child: SizedBox.fromSize(
+          size: Size.square(size),
           child: Stack(
             alignment: Alignment.center,
             children: [
               Positioned.fill(
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 100),
-                  transformAlignment: Alignment.center,
-                  transform: _isHovered
-                      ? (Matrix4.identity()..scale(1.1))
-                      : Matrix4.identity(),
+                child: Container(
                   decoration: BoxDecoration(
-                    color: _isHovered
-                        ? Theme.of(context).colorScheme.surfaceContainerHighest
-                        : Theme.of(context).colorScheme.surfaceContainerHigh,
+                    color:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      width: 2,
+                    ),
                     shape: BoxShape.circle,
-                    boxShadow: _isHovered
-                        ? [
-                            BoxShadow(
-                              color: Theme.of(context).colorScheme.shadow,
-                              blurRadius: 16,
-                              spreadRadius: -4,
-                              offset: const Offset(0, 0),
-                            ),
-                          ]
-                        : null,
                   ),
                 ),
               ),
               Center(
-                child: isPlaying == true
-                    ? const Icon(Icons.pause)
-                    : const Icon(Icons.play_arrow),
+                child: Icon(
+                  isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
               Positioned.fill(
-                child: LoadingIndicator(size: widget.size),
+                child: LoadingIndicator(size: size),
               ),
             ],
           ),

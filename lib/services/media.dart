@@ -155,6 +155,7 @@ class MediaProvider extends BaseAudioHandler
       playing: value,
       controls: value ? [MediaControl.pause] : [MediaControl.play],
     ));
+    notifyListeners();
 
     if (!value) {
       saveProgress();
