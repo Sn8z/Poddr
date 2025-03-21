@@ -22,10 +22,10 @@ final List<NavItem> destinations = [
     route: '/podcasts',
   ),
   NavItem(
-    label: 'Radio',
-    icon: Icons.radio_outlined,
-    selectedIcon: Icons.radio_rounded,
-    route: '/radio',
+    label: 'Local',
+    icon: Icons.home_outlined,
+    selectedIcon: Icons.home_rounded,
+    route: '/local',
   ),
   NavItem(
     label: 'Library',

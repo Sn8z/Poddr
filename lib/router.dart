@@ -7,15 +7,15 @@ import 'package:poddr/ui/views/base.dart';
 import 'package:poddr/ui/views/player/player.dart';
 import 'package:poddr/ui/views/podcast/discover.dart';
 import 'package:poddr/ui/views/podcast/podcast.dart';
+import 'package:poddr/ui/views/local/local.dart';
 import 'package:poddr/ui/views/library/library.dart';
-import 'package:poddr/ui/views/radio/radio.dart';
 import 'package:poddr/ui/views/search/search.dart';
 import 'package:poddr/ui/views/settings/settings.dart';
 
 final _rootNavKey = GlobalKey<NavigatorState>(debugLabel: 'Root navigation');
 final _podcastNavKey =
     GlobalKey<NavigatorState>(debugLabel: 'Podcast navigation');
-final _radioNavKey = GlobalKey<NavigatorState>(debugLabel: 'Radio navigation');
+final _localNavKey = GlobalKey<NavigatorState>(debugLabel: 'Local navigation');
 final _libraryNavKey =
     GlobalKey<NavigatorState>(debugLabel: 'Library navigation');
 final _searchNavKey =
@@ -90,14 +90,14 @@ abstract class PoddrRouter {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _radioNavKey,
+            navigatorKey: _localNavKey,
             routes: [
               GoRoute(
-                path: '/radio',
-                parentNavigatorKey: _radioNavKey,
+                path: '/local',
+                parentNavigatorKey: _localNavKey,
                 pageBuilder: (context, state) {
                   return const NoTransitionPage(
-                    child: RadioDiscoveryView(),
+                    child: LocalDiscoveryView(),
                   );
                 },
               ),

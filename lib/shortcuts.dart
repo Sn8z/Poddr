@@ -32,7 +32,7 @@ class PoddrShortcuts extends StatelessWidget {
           context.go('/podcasts');
         },
         const SingleActivator(LogicalKeyboardKey.digit2, control: true): () {
-          context.go('/radio');
+          context.go('/local');
         },
         const SingleActivator(LogicalKeyboardKey.digit3, control: true): () {
           context.go('/library');

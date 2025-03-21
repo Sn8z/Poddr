@@ -3,8 +3,8 @@ import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 
-class RadioDiscoveryView extends StatelessWidget {
-  const RadioDiscoveryView({super.key});
+class LocalDiscoveryView extends StatelessWidget {
+  const LocalDiscoveryView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class RadioDiscoveryView extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             PoddrAppBar(
-              title: 'Radio',
+              title: 'Local',
               actions: [
                 IconButton(
                   onPressed: () {},
@@ -29,11 +29,11 @@ class RadioDiscoveryView extends StatelessWidget {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(
-                    'Radio ${index + 1}',
+                    'Local ${index + 1}',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   subtitle: Text(
-                    'Radio ${index + 1}',
+                    'Local ${index + 1}',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 );
