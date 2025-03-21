@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/services/history.dart';
+import 'package:poddr/services/latest_episodes.dart';
 import 'package:poddr/services/media.dart';
+import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
@@ -36,7 +38,7 @@ class PodcastDiscoveryView extends StatelessWidget {
                   ],
                 ),
                 sliverGapH16,
-                const NewEpisodes(),
+                const LatestEpisodes(),
                 sliverGapH16,
                 const RecentlyPlayedEpisodes(),
                 sliverGapH16,
@@ -51,41 +53,123 @@ class PodcastDiscoveryView extends StatelessWidget {
   }
 }
 
-class NewEpisodes extends StatelessWidget {
-  const NewEpisodes({super.key});
+class LatestEpisodes extends StatelessWidget {
+  const LatestEpisodes({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return DiscoveryBox(
-      title: "New episodes",
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: List.generate(
-              10,
-              (index) => Container(
-                width: 140,
-                height: 140,
-                margin: const EdgeInsets.only(right: 12),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    "Item $index",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontSize: 16,
+    return ChangeNotifierProvider<LatestEpisodesProvider>(
+      create: (context) =>
+          LatestEpisodesProvider(context.read<SubscriptionProvider>()),
+      builder: (context, child) {
+        final latestEpisodesProvider = context.watch<LatestEpisodesProvider>();
+        return DiscoveryBox(
+          title: "Latest episodes",
+          children: [
+            if (latestEpisodesProvider.isLoading)
+              Row(
+                children: List.generate(
+                  5,
+                  (index) => Container(
+                    width: 140,
+                    height: 140,
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                    child: const ShimmerBox(),
                   ),
                 ),
+              )
+            else if (latestEpisodesProvider.episodes.isEmpty)
+              Center(
+                child: Text(
+                  "No new episodes",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              )
+            else
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: latestEpisodesProvider.episodes
+                      .take(10)
+                      .map(
+                        (episode) => MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () {
+                              context.read<MediaProvider>().loadMedia(
+                                    audioUrl: episode.audioUrl,
+                                    episodeTitle: episode.title,
+                                    podcastTitle: episode.podcastTitle,
+                                    podcastRSS: episode.podcastRSS,
+                                    artUri: episode.imageUrl,
+                                    artist: episode.podcastTitle,
+                                    album: episode.podcastTitle,
+                                    description: episode.description,
+                                  );
+                            },
+                            child: Container(
+                              width: 140,
+                              height: 120,
+                              margin: const EdgeInsets.only(right: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 140,
+                                    height: 80,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          child: PoddrImage(
+                                            imageUrl: episode.imageUrl ?? '',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Text(
+                                    episode.title,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    episode.title,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 }
@@ -204,13 +288,11 @@ class TrendingPodcasts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final charts = context.watch<PodcastDiscoveryProvider>();
-    final isLoading = charts.isLoading;
-    final items = charts.charts;
 
     final isMobile =
         MediaQuery.of(context).size.width < Breakpoints.mobileScreen;
 
-    if (isLoading) {
+    if (charts.isLoading) {
       return DiscoveryBox(
         title: "Loading podcasts...",
         children: [
@@ -226,7 +308,7 @@ class TrendingPodcasts extends StatelessWidget {
       );
     }
 
-    if (items.isEmpty) {
+    if (charts.charts.isEmpty) {
       return const SliverToBoxAdapter(
         child: SizedBox.shrink(),
       );
@@ -236,7 +318,7 @@ class TrendingPodcasts extends StatelessWidget {
       title: "Trending",
       children: [
         if (isMobile)
-          ...items.map((e) {
+          ...charts.charts.map((e) {
             return ListTile(
               leading: PoddrImage(imageUrl: e.image ?? ''),
               title: Text(e.title ?? ''),
@@ -264,13 +346,14 @@ class TrendingPodcasts extends StatelessWidget {
               childAspectRatio: 0.8,
             ),
             shrinkWrap: true,
-            itemCount: items.length,
+            itemCount: charts.charts.length,
             itemBuilder: (context, index) {
               return MouseRegion(
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () {
-                    context.push('/podcasts/details?rss=${items[index].rss}');
+                    context.push(
+                        '/podcasts/details?rss=${charts.charts[index].rss}');
                   },
                   child: Container(
                     clipBehavior: Clip.antiAlias,
@@ -284,7 +367,8 @@ class TrendingPodcasts extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: PoddrImage(imageUrl: items[index].image ?? ''),
+                          child: PoddrImage(
+                              imageUrl: charts.charts[index].image ?? ''),
                         ),
                         Flexible(
                           child: Row(
@@ -293,7 +377,7 @@ class TrendingPodcasts extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  items[index].title ?? '',
+                                  charts.charts[index].title ?? '',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -304,11 +388,12 @@ class TrendingPodcasts extends StatelessWidget {
                                 ),
                               ),
                               PoddrAddSubscriptionBtn(
-                                title: items[index].title ?? '',
-                                rss: items[index].rss ?? '',
-                                description: items[index].description ?? '',
-                                author: items[index].author ?? '',
-                                image: items[index].image ?? '',
+                                title: charts.charts[index].title ?? '',
+                                rss: charts.charts[index].rss ?? '',
+                                description:
+                                    charts.charts[index].description ?? '',
+                                author: charts.charts[index].author ?? '',
+                                image: charts.charts[index].image ?? '',
                               ),
                             ],
                           ),
