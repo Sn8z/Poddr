@@ -3,6 +3,7 @@ import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
+import 'package:poddr/ui/utils/gaps.dart';
 
 class LocalDiscoveryView extends StatelessWidget {
   const LocalDiscoveryView({super.key});
@@ -23,6 +24,7 @@ class LocalDiscoveryView extends StatelessWidget {
                 ),
               ],
             ),
+            sliverGapH16,
             ContentBox(
               title: "Content",
               subtitle: "Subtitle",
@@ -41,6 +43,7 @@ class LocalDiscoveryView extends StatelessWidget {
                 ),
               ],
             ),
+            sliverGapH16,
             const ContentBox(
               title: "Content",
               children: [
@@ -49,6 +52,7 @@ class LocalDiscoveryView extends StatelessWidget {
                 ),
               ],
             ),
+            sliverGapH16,
             const ContentBox(
               subtitle: "Subtitle",
               children: [
@@ -57,6 +61,7 @@ class LocalDiscoveryView extends StatelessWidget {
                 ),
               ],
             ),
+            sliverGapH16,
             ContentBox(
               actions: [
                 IconButton(
@@ -67,6 +72,7 @@ class LocalDiscoveryView extends StatelessWidget {
                     onPressed: () {}, icon: Icon(Icons.grid_3x3_outlined)),
               ],
             ),
+            sliverGapH16,
             const ContentBox(
               children: [
                 ListTile(

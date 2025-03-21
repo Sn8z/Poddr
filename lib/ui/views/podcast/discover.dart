@@ -8,6 +8,7 @@ import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/services/podcast_discovery.dart';
+import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
@@ -63,7 +64,7 @@ class LatestEpisodes extends StatelessWidget {
           LatestEpisodesProvider(context.read<SubscriptionProvider>()),
       builder: (context, child) {
         final latestEpisodesProvider = context.watch<LatestEpisodesProvider>();
-        return DiscoveryBox(
+        return ContentBox(
           title: "Latest episodes",
           children: [
             if (latestEpisodesProvider.isLoading)
@@ -187,7 +188,7 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
       );
     }
 
-    return DiscoveryBox(
+    return ContentBox(
       title: "Continue listening",
       children: [
         if (historyProvider.isLoading)
@@ -293,7 +294,7 @@ class TrendingPodcasts extends StatelessWidget {
         MediaQuery.of(context).size.width < Breakpoints.mobileScreen;
 
     if (charts.isLoading) {
-      return DiscoveryBox(
+      return ContentBox(
         title: "Loading podcasts...",
         children: [
           ...List.generate(
@@ -314,8 +315,9 @@ class TrendingPodcasts extends StatelessWidget {
       );
     }
 
-    return DiscoveryBox(
+    return ContentBox(
       title: "Trending",
+      subtitle: "${charts.country} - ${charts.genre}",
       children: [
         if (isMobile)
           ...charts.charts.map((e) {
@@ -406,47 +408,6 @@ class TrendingPodcasts extends StatelessWidget {
             },
           ),
       ],
-    );
-  }
-}
-
-class DiscoveryBox extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const DiscoveryBox({
-    super.key,
-    required this.title,
-    required this.children,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        margin: const EdgeInsets.only(top: 8.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            gapH8,
-            ...children,
-          ],
-        ),
-      ),
     );
   }
 }

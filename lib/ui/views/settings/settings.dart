@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
+import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
@@ -22,7 +23,8 @@ class SettingsView extends StatelessWidget {
             const PoddrAppBar(
               title: "Settings",
             ),
-            const SettingsBox(
+            sliverGapH16,
+            const ContentBox(
               title: "Appearance",
               children: [
                 gapH32,
@@ -32,7 +34,8 @@ class SettingsView extends StatelessWidget {
                 gapH16,
               ],
             ),
-            const SettingsBox(
+            sliverGapH16,
+            const ContentBox(
               title: "Preferences",
               children: [
                 ListTile(
@@ -56,7 +59,8 @@ class SettingsView extends StatelessWidget {
                 ),
               ],
             ),
-            SettingsBox(title: "OPML", children: [
+            sliverGapH16,
+            ContentBox(title: "OPML", children: [
               ListTile(
                 leading: const Icon(Icons.arrow_circle_right_outlined),
                 title: const Text("Import"),
@@ -68,7 +72,8 @@ class SettingsView extends StatelessWidget {
                 onTap: () => debugPrint('Export'),
               ),
             ]),
-            SettingsBox(title: "Support", children: [
+            sliverGapH16,
+            ContentBox(title: "Support", children: [
               ListTile(
                 leading: const Icon(Icons.monetization_on_outlined),
                 title: const Text("GitHub Sponsor"),
@@ -80,7 +85,8 @@ class SettingsView extends StatelessWidget {
                 onTap: () => debugPrint('Paypal'),
               ),
             ]),
-            SettingsBox(
+            sliverGapH16,
+            ContentBox(
               title: "About",
               children: [
                 ListTile(
@@ -277,46 +283,6 @@ class ColorBox extends StatelessWidget {
           child: isSelected
               ? const Icon(Icons.check_circle_outline_rounded)
               : null,
-        ),
-      ),
-    );
-  }
-}
-
-class SettingsBox extends StatelessWidget {
-  final String title;
-  final List<Widget> children;
-
-  const SettingsBox({
-    super.key,
-    required this.title,
-    required this.children,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        margin: const EdgeInsets.only(top: 8.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const Divider(),
-            ...children,
-          ],
         ),
       ),
     );

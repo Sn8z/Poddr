@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
+import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
@@ -43,6 +44,7 @@ class SearchView extends StatelessWidget {
                     },
                   ),
                 ),
+                sliverGapH16,
                 searchProvider.isSearching
                     ? const LoadingBox()
                     : const ResultBox(),
@@ -61,7 +63,7 @@ class LoadingBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SearchBox(
+    return const ContentBox(
       title: "Searching...",
       children: [
         ListTile(
@@ -86,7 +88,7 @@ class ResultBox extends StatelessWidget {
     final searchResults = context.watch<SearchProvider>().searchResults;
 
     if (searchResults.isEmpty) {
-      return const SearchBox(
+      return const ContentBox(
         children: [
           ListTile(
             title: Text("No results"),
@@ -95,7 +97,7 @@ class ResultBox extends StatelessWidget {
       );
     }
 
-    return SearchBox(
+    return ContentBox(
       title: "Podcasts",
       children: searchResults
           .map(
@@ -109,47 +111,6 @@ class ResultBox extends StatelessWidget {
             ),
           )
           .toList(),
-    );
-  }
-}
-
-class SearchBox extends StatelessWidget {
-  final String? title;
-  final List<Widget> children;
-
-  const SearchBox({
-    super.key,
-    this.title,
-    required this.children,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        margin: const EdgeInsets.only(top: 8.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (title != null)
-              Text(
-                title ?? '',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            if (title != null) gapH8,
-            ...children,
-          ],
-        ),
-      ),
     );
   }
 }
