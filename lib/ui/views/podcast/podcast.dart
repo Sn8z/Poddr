@@ -197,7 +197,6 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                 sliver: SliverList.builder(
                   itemCount: podcastProvider.podcast!.episodes.length,
                   itemBuilder: (context, index) {
-                    debugPrint("$index EP");
                     return Episode(
                         episode: podcastProvider.podcast!.episodes[index]);
                   },
