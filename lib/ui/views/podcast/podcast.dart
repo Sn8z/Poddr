@@ -168,24 +168,12 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                 child: Text("No podcast found"),
               )
             else
-              ContentBox(
-                title: "Episodes",
-                subtitle: "Episodes",
-                actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add),
-                  ),
-                ],
-                children: [
-                  ...podcastProvider.podcast!.episodes.map(
-                    (PodcastEpisode episode) {
-                      return Episode(
-                        episode: episode,
-                      );
-                    },
-                  ),
-                ],
+              SliverList.builder(
+                itemCount: podcastProvider.podcast!.episodes.length,
+                itemBuilder: (context, index) {
+                  return Episode(
+                      episode: podcastProvider.podcast!.episodes[index]);
+                },
               ),
             const BottomPaddingFix(),
           ],
