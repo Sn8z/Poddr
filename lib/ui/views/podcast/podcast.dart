@@ -3,7 +3,6 @@ import 'package:poddr/models/episode.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
-import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
@@ -77,6 +76,8 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
+                              height: 200,
+                              width: 200,
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),

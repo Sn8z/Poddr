@@ -63,19 +63,14 @@ class LoadingBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ContentBox(
-      title: "Searching...",
-      children: [
-        ListTile(
-          title: ShimmerBox(),
-        ),
-        ListTile(
-          title: ShimmerBox(),
-        ),
-        ListTile(
-          title: ShimmerBox(),
-        ),
-      ],
+    return ContentBox(
+      children: List.generate(5, (index) {
+        return const PoddrListItem(
+          data: ShimmerBox(
+            height: 36,
+          ),
+        );
+      }),
     );
   }
 }
@@ -97,20 +92,30 @@ class ResultBox extends StatelessWidget {
       );
     }
 
-    return ContentBox(
-      title: "Podcasts",
-      children: [
-        ...searchResults.map(
-          (e) => PoddrListItem(
-            leading: PoddrImage(imageUrl: e.image ?? ''),
-            title: e.title,
-            subtitle: e.rss,
+    return DecoratedSliver(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      sliver: SliverList.builder(
+        itemCount: searchResults.length,
+        itemBuilder: (context, index) {
+          return PoddrListItem(
+            leading: Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+              child: PoddrImage(imageUrl: searchResults[index].image ?? ''),
+            ),
+            title: searchResults[index].title,
+            subtitle: searchResults[index].rss,
             onTap: () {
-              context.push('/podcasts/details?rss=${e.rss}');
+              context.push('/podcasts/details?rss=${searchResults[index].rss}');
             },
-          ),
-        )
-      ],
+          );
+        },
+      ),
     );
   }
 }

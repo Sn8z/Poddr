@@ -332,7 +332,13 @@ class TrendingPodcasts extends StatelessWidget {
         if (isMobile)
           ...charts.charts.map((e) {
             return PoddrListItem(
-              leading: PoddrImage(imageUrl: e.image ?? ''),
+              leading: Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                ),
+                child: PoddrImage(imageUrl: e.image ?? ''),
+              ),
               title: e.title,
               subtitle: e.rss,
               onTap: () {

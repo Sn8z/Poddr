@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PoddrListItem extends StatefulWidget {
   const PoddrListItem({
@@ -44,6 +45,15 @@ class _PoddrListItemState extends State<PoddrListItem> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: Focus(
+          onKeyEvent: (node, event) {
+            if (event is KeyDownEvent &&
+                event.logicalKey == LogicalKeyboardKey.enter) {
+              widget.onTap?.call();
+              node.unfocus();
+              return KeyEventResult.handled;
+            }
+            return KeyEventResult.ignored;
+          },
           onFocusChange: (focused) {
             setState(() {
               _isFocused = focused;
