@@ -58,7 +58,7 @@ class _PoddrListItemState extends State<PoddrListItem> {
               borderRadius: BorderRadius.circular(8),
               color: _isHovered || _isFocused || widget.isActive
                   ? Theme.of(context).colorScheme.surfaceContainerHigh
-                  : Colors.transparent,
+                  : Theme.of(context).colorScheme.surfaceContainer,
               border: Border(
                 left: BorderSide(
                     width: 8,

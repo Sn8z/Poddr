@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/ui/components/audio/currently_playing.dart';
+import 'package:poddr/models/episode.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
-import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
+import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/tag.dart';
-import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/services/media.dart';
 import 'package:poddr/services/podcast.dart';
 import 'package:poddr/ui/utils/gaps.dart';
@@ -154,18 +153,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                 ),
               ],
             ),
-            const SliverToBoxAdapter(
-              child: gapH12,
-            ),
-            PoddrAppBarOptions(
-              title: const PoddrTextInput(),
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.search_rounded),
-                ),
-              ],
-            ),
+            sliverGapH16,
             if (podcastProvider.isLoading)
               SliverList.builder(
                 itemCount: 5,
@@ -180,58 +168,87 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                 child: Text("No podcast found"),
               )
             else
-              SliverList.builder(
-                itemCount: podcastProvider.podcast!.episodes.length,
-                itemBuilder: (context, index) {
-                  return PoddrListItem(
-                    leading: CurrentlyPlayingIcon(
-                      episodeSource:
-                          podcastProvider.podcast!.episodes[index].title,
-                    ),
-                    title: podcastProvider.podcast!.episodes[index].title,
-                    subtitle: convertDateToString(podcastProvider
-                        .podcast!.episodes[index].publicationDate),
-                    data: EpisodeHistory(
-                      audioUrl:
-                          podcastProvider.podcast!.episodes[index].audioUrl,
-                      width: 200,
-                    ),
-                    actions: [
-                      Text(
-                        convertDurationToString(
-                          podcastProvider.podcast!.episodes[index].duration,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.more_vert_rounded),
-                      ),
-                    ],
-                    onTap: () {
-                      context.read<MediaProvider>().loadMedia(
-                            audioUrl: podcastProvider
-                                .podcast!.episodes[index].audioUrl,
-                            episodeTitle:
-                                podcastProvider.podcast!.episodes[index].title,
-                            podcastTitle: podcastProvider.podcast!.title ??
-                                "Missing title",
-                            podcastRSS:
-                                podcastProvider.podcast!.rss ?? "Missing RSS",
-                            description: podcastProvider
-                                .podcast!.episodes[index].description,
-                            artUri: podcastProvider.podcast!.image,
-                            album:
-                                podcastProvider.podcast!.episodes[index].title,
-                            artist: podcastProvider.podcast!.author,
-                          );
+              ContentBox(
+                title: "Episodes",
+                subtitle: "Episodes",
+                actions: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.add),
+                  ),
+                ],
+                children: [
+                  ...podcastProvider.podcast!.episodes.map(
+                    (PodcastEpisode episode) {
+                      return Episode(
+                        episode: episode,
+                      );
                     },
-                  );
-                },
+                  ),
+                ],
               ),
             const BottomPaddingFix(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class Episode extends StatelessWidget {
+  final PodcastEpisode episode;
+
+  const Episode({super.key, required this.episode});
+
+  @override
+  Widget build(BuildContext context) {
+    final podcastProvider = context.read<PodcastProvider>();
+
+    final isCurrentEpisode =
+        context.select<MediaProvider, bool>((mediaProvider) {
+      return mediaProvider.mediaItem.value?.title == episode.title;
+    });
+
+    return PoddrListItem(
+      title: episode.title,
+      subtitle: convertDateToString(episode.publicationDate),
+      data: EpisodeHistory(
+        audioUrl: episode.audioUrl,
+        width: 200,
+      ),
+      isActive: isCurrentEpisode,
+      actions: [
+        Text(
+          convertDurationToString(
+            episode.duration,
+          ),
+          maxLines: 1,
+          style: TextStyle(
+            color: isCurrentEpisode
+                ? Theme.of(context).colorScheme.onSurface
+                : Theme.of(context).colorScheme.onSurfaceVariant,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.more_vert_rounded),
+        ),
+      ],
+      onTap: () {
+        context.read<MediaProvider>().loadMedia(
+              audioUrl: episode.audioUrl,
+              episodeTitle: episode.title,
+              podcastTitle: episode.title,
+              podcastRSS: podcastProvider.podcast!.rss ?? "Missing RSS",
+              description: episode.description,
+              artUri: podcastProvider.podcast!.image,
+              album: episode.title,
+              artist: podcastProvider.podcast!.author,
+            );
+      },
     );
   }
 }
