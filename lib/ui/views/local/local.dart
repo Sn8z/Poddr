@@ -49,7 +49,13 @@ class LocalDiscoveryView extends StatelessWidget {
                     IconButton(
                         onPressed: () {}, icon: Icon(Icons.grid_3x3_outlined)),
                   ],
-                )
+                ),
+                const PoddrListItem(
+                  data: ShimmerBox(
+                    height: 6,
+                    radius: 0,
+                  ),
+                ),
               ],
             ),
             sliverGapH16,

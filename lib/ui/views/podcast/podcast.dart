@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
+import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
@@ -153,13 +154,33 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                 ),
               ],
             ),
-            sliverGapH16,
+            sliverGapH8,
+            PoddrAppBarOptions(
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.podcasts_rounded),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.open_in_browser_rounded),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.mail_outline_rounded),
+                ),
+              ],
+            ),
+            sliverGapH8,
             if (podcastProvider.isLoading)
               SliverList.builder(
                 itemCount: 5,
                 itemBuilder: (context, index) {
                   return const ListTile(
-                    title: ShimmerBox(),
+                    title: ShimmerBox(
+                      height: 48,
+                      radius: 16,
+                    ),
                   );
                 },
               )
@@ -168,12 +189,19 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                 child: Text("No podcast found"),
               )
             else
-              SliverList.builder(
-                itemCount: podcastProvider.podcast!.episodes.length,
-                itemBuilder: (context, index) {
-                  return Episode(
-                      episode: podcastProvider.podcast!.episodes[index]);
-                },
+              DecoratedSliver(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                sliver: SliverList.builder(
+                  itemCount: podcastProvider.podcast!.episodes.length,
+                  itemBuilder: (context, index) {
+                    debugPrint("$index EP");
+                    return Episode(
+                        episode: podcastProvider.podcast!.episodes[index]);
+                  },
+                ),
               ),
             const BottomPaddingFix(),
           ],

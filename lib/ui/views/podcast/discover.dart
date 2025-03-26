@@ -6,6 +6,7 @@ import 'package:poddr/services/media.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
+import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/services/podcast_discovery.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
@@ -39,11 +40,19 @@ class PodcastDiscoveryView extends StatelessWidget {
                     ),
                   ],
                 ),
-                sliverGapH16,
+                sliverGapH8,
+                PoddrAppBarOptions(
+                  title: const Text("Test"),
+                  actions: [
+                    IconButton(
+                        onPressed: () {}, icon: const Icon(Icons.abc_outlined))
+                  ],
+                ),
+                sliverGapH8,
                 const LatestEpisodes(),
-                sliverGapH16,
+                sliverGapH8,
                 const RecentlyPlayedEpisodes(),
-                sliverGapH16,
+                sliverGapH8,
                 const TrendingPodcasts(),
                 const BottomPaddingFix(),
               ],

@@ -13,7 +13,7 @@ class PoddrAppBarOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       pinned: true,
-      toolbarHeight: 72,
+      toolbarHeight: 42,
       automaticallyImplyLeading: false,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),

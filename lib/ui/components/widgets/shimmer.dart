@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ShimmerBox extends StatefulWidget {
-  const ShimmerBox({super.key, this.height, this.width});
-
   final double? height;
   final double? width;
+  final double? radius;
+
+  const ShimmerBox({
+    super.key,
+    this.height,
+    this.width,
+    this.radius,
+  });
 
   @override
   State<ShimmerBox> createState() => _ShimmerBoxState();
@@ -30,8 +36,8 @@ class _ShimmerBoxState extends State<ShimmerBox>
       builder: (context, child) {
         return Container(
           constraints: BoxConstraints(
-            minHeight: 50,
-            minWidth: 50,
+            minHeight: 2,
+            minWidth: 2,
             maxHeight: widget.height ?? double.infinity,
             maxWidth: widget.width ?? double.infinity,
           ),
@@ -49,7 +55,7 @@ class _ShimmerBoxState extends State<ShimmerBox>
                 Theme.of(context).colorScheme.surfaceContainer,
               ],
             ),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(widget.radius ?? 16),
           ),
         );
       },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
+import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
@@ -31,30 +32,15 @@ class LibraryView extends StatelessWidget {
                 ),
               ],
             ),
-            SliverAppBar(
-              pinned: true,
-              floating: false,
-              snap: false,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              toolbarHeight: 82,
-              backgroundColor:
-                  Theme.of(context).colorScheme.surfaceContainerHigh,
-              foregroundColor: Theme.of(context).colorScheme.onSurface,
-              surfaceTintColor: Theme.of(context).colorScheme.primary,
-              title: Row(
-                children: [
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.mic)),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.motion_photos_paused_sharp)),
-                ],
-              ),
+            sliverGapH8,
+            PoddrAppBarOptions(
+              title: const Text("Test"),
+              actions: [
+                IconButton(
+                    onPressed: () {}, icon: const Icon(Icons.abc_outlined))
+              ],
             ),
-            sliverGapH16,
+            sliverGapH8,
             if (subscriptionProvider.isLoading) ...[
               const SliverToBoxAdapter(
                 child: Center(
