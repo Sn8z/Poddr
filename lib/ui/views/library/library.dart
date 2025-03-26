@@ -69,6 +69,12 @@ class LibraryView extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
+                    actions: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.more_vert_rounded),
+                      ),
+                    ],
                   );
                 },
               ),

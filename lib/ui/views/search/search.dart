@@ -99,18 +99,18 @@ class ResultBox extends StatelessWidget {
 
     return ContentBox(
       title: "Podcasts",
-      children: searchResults
-          .map(
-            (e) => PoddrListItem(
-              leading: PoddrImage(imageUrl: e.image ?? ''),
-              title: e.title ?? '',
-              subtitle: e.rss ?? '',
-              onTap: () {
-                context.push('/podcasts/details?rss=${e.rss}');
-              },
-            ),
-          )
-          .toList(),
+      children: [
+        ...searchResults.map(
+          (e) => PoddrListItem(
+            leading: PoddrImage(imageUrl: e.image ?? ''),
+            title: e.title,
+            subtitle: e.rss,
+            onTap: () {
+              context.push('/podcasts/details?rss=${e.rss}');
+            },
+          ),
+        )
+      ],
     );
   }
 }

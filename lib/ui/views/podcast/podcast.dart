@@ -191,12 +191,12 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                     title: podcastProvider.podcast!.episodes[index].title,
                     subtitle: convertDateToString(podcastProvider
                         .podcast!.episodes[index].publicationDate),
+                    data: EpisodeHistory(
+                      audioUrl:
+                          podcastProvider.podcast!.episodes[index].audioUrl,
+                      width: 200,
+                    ),
                     actions: [
-                      EpisodeHistory(
-                        audioUrl:
-                            podcastProvider.podcast!.episodes[index].audioUrl,
-                        width: 100,
-                      ),
                       Text(
                         convertDurationToString(
                           podcastProvider.podcast!.episodes[index].duration,

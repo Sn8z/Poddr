@@ -11,6 +11,7 @@ import 'package:poddr/services/podcast_discovery.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
+import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
@@ -321,22 +322,22 @@ class TrendingPodcasts extends StatelessWidget {
       children: [
         if (isMobile)
           ...charts.charts.map((e) {
-            return ListTile(
+            return PoddrListItem(
               leading: PoddrImage(imageUrl: e.image ?? ''),
-              title: Text(e.title ?? ''),
-              subtitle: Text(
-                e.rss ?? '',
-              ),
+              title: e.title,
+              subtitle: e.rss,
               onTap: () {
                 context.push('/podcasts/details?rss=${e.rss}');
               },
-              trailing: PoddrAddSubscriptionBtn(
-                title: e.title ?? '',
-                rss: e.rss ?? '',
-                description: e.description ?? '',
-                author: e.author ?? '',
-                image: e.image ?? '',
-              ),
+              actions: [
+                PoddrAddSubscriptionBtn(
+                  title: e.title ?? '',
+                  rss: e.rss ?? '',
+                  description: e.description ?? '',
+                  author: e.author ?? '',
+                  image: e.image ?? '',
+                ),
+              ],
             );
           })
         else

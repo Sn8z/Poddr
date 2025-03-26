@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
+import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
@@ -34,13 +35,21 @@ class LocalDiscoveryView extends StatelessWidget {
                   icon: const Icon(Icons.more_vert_rounded),
                 ),
               ],
-              children: const [
-                ListTile(
-                  title: Text("Title"),
-                ),
-                ListTile(
-                  title: Text("Title"),
-                ),
+              children: [
+                PoddrListItem(
+                  title: "Title",
+                  subtitle: "Subtitle",
+                  leading: Icon(Icons.music_note_rounded),
+                  onTap: () {},
+                  actions: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.more_vert_rounded),
+                    ),
+                    IconButton(
+                        onPressed: () {}, icon: Icon(Icons.grid_3x3_outlined)),
+                  ],
+                )
               ],
             ),
             sliverGapH16,
