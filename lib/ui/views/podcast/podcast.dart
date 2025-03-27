@@ -248,9 +248,42 @@ class Episode extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.more_vert_rounded),
+        PopupMenuButton(
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                child: const Row(
+                  children: [
+                    Icon(Icons.share),
+                    gapH8,
+                    Text('Share'),
+                  ],
+                ),
+                onTap: () {},
+              ),
+              PopupMenuItem(
+                child: const Row(
+                  children: [
+                    Icon(Icons.open_in_new),
+                    gapH8,
+                    Text('Open in browser'),
+                  ],
+                ),
+                onTap: () {},
+              ),
+            ];
+          },
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(16),
+            ),
+          ),
+          child: Container(
+            height: 36,
+            width: 36,
+            alignment: Alignment.centerRight,
+            child: const Icon(Icons.more_vert),
+          ),
         ),
       ],
       onTap: () {
