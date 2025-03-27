@@ -1,0 +1,2 @@
+C:/Users/marcu/Documents/GitHub/Poddrr/android/app/.cxx/RelWithDebInfo/gy1h4ht5/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/marcu/Documents/GitHub/Poddrr/android/app/.cxx/RelWithDebInfo/gy1h4ht5/armeabi-v7a/CMakeFiles/rebuild_cache.dir

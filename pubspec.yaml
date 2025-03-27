@@ -11,19 +11,19 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.6
-  go_router: ^14.2.1
-  provider: ^6.1.2
-  audio_service: ^0.18.14
-  audio_session: ^0.1.20
-  media_kit: ^1.1.10
-  media_kit_video: ^1.2.4
-  media_kit_libs_video: ^1.0.4
+  cupertino_icons: ^1.0.8
+  go_router: ^14.8.1
+  provider: ^6.1.4
+  audio_service: ^0.18.17
+  audio_session: ^0.1.25
+  media_kit: ^1.2.0
+  media_kit_video: ^1.3.0
+  media_kit_libs_video: ^1.0.6
   google_fonts: ^6.2.1
-  shared_preferences: ^2.2.3
+  shared_preferences: ^2.5.3
   http: ^1.3.0
   xml: ^6.5.0
-  drift: ^2.23.1
+  drift: ^2.26.0
   drift_flutter: ^0.2.4
   path_provider: ^2.1.5
   intl: ^0.20.2
@@ -32,25 +32,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^4.0.0
-  flutter_launcher_icons: ^0.13.1 # dart run flutter_launcher_icons
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.3 # dart run flutter_launcher_icons
   msix: ^3.16.8 # dart run msix:create
-  drift_dev: ^2.23.1
-  build_runner: ^2.4.13
-
-dependency_overrides:
-  media_kit: 
-    git:
-      url: https://github.com/media-kit/media-kit
-      path: media_kit
-  media_kit_video: 
-    git:
-      url: https://github.com/media-kit/media-kit
-      path: media_kit_video
-  media_kit_libs_video: 
-    git:
-      url: https://github.com/media-kit/media-kit
-      path: libs/universal/media_kit_libs_video
+  drift_dev: ^2.26.0
+  build_runner: ^2.4.15
 
 flutter:
   uses-material-design: true
