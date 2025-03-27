@@ -90,6 +90,7 @@ class DriftHistoryRepository implements IHistoryRepository {
         position: Value(position),
         duration: Value(duration),
         isFinished: Value(isFinished),
+        listenedAt: Value(DateTime.now()),
       ),
     );
   }
