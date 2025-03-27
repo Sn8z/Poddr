@@ -59,8 +59,22 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
           slivers: [
             SliverAppBar(
               pinned: true,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+              title: Text(
+                podcastProvider.podcast?.author ?? "Author",
+                maxLines: 1,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              clipBehavior: Clip.antiAlias,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
               ),
               backgroundColor: Theme.of(context).brightness == Brightness.dark
                   ? Theme.of(context).colorScheme.surfaceContainerLow
@@ -69,94 +83,110 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
-                    ClipRRect(
-                      child: Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 200,
-                              width: 200,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: PoddrImage(
-                                imageUrl: podcastProvider.podcast?.image ?? "",
-                                fit: BoxFit.cover,
-                              ),
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: const [0.2, 1],
+                            colors: [
+                              Theme.of(context).colorScheme.surfaceContainer,
+                              Theme.of(context).colorScheme.surfaceContainerLow,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            height: 200,
+                            width: 200,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                            gapW16,
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    podcastProvider.podcast?.title ?? "",
-                                    style: TextStyle(
+                            child: PoddrImage(
+                              imageUrl: podcastProvider.podcast?.image ?? "",
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          gapW16,
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  podcastProvider.podcast?.title ?? "Nope",
+                                  style: TextStyle(
                                       overflow: TextOverflow.ellipsis,
-                                      fontSize: 48,
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                    ),
-                                  ),
-                                  Text(
-                                    podcastProvider.podcast?.description ?? "",
-                                    maxLines: 3,
-                                    style: TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 12,
-                                      color: Colors.white.withOpacity(0.7),
-                                    ),
-                                  ),
-                                  gapH16,
-                                  Row(
-                                    children: podcastProvider.podcast?.tags
-                                            .map((e) => PoddrTag(
-                                                  title: e,
-                                                  color: Colors.grey,
-                                                ))
-                                            .toList() ??
-                                        [],
-                                  ),
-                                  gapH16,
-                                  Text(
-                                    "${podcastProvider.podcast?.episodes.length ?? 0} Episodes",
-                                    style: TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 14,
+                                      fontSize: 26,
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .secondary,
-                                    ),
+                                          .primary),
+                                ),
+                                Text(
+                                  podcastProvider.podcast?.description ?? "",
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    fontSize: 14,
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
                                   ),
-                                ],
-                              ),
+                                ),
+                                gapH16,
+                                Text(
+                                  "${podcastProvider.podcast?.episodes.length ?? 0} Episodes",
+                                  style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                  ),
+                                ),
+                                gapH16,
+                                Row(
+                                  children: podcastProvider.podcast?.tags
+                                          .map((e) => PoddrTag(
+                                                title: e,
+                                                color: Colors.grey,
+                                              ))
+                                          .toList() ??
+                                      [],
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-              expandedHeight: 320,
-              actions: [
-                PoddrAddSubscriptionBtn(
-                  title: podcastProvider.podcast?.title ?? "",
-                  rss: podcastProvider.podcast?.rss ?? "",
-                  description: podcastProvider.podcast?.description ?? "",
-                  author: podcastProvider.podcast?.title ?? "",
-                  image: podcastProvider.podcast?.image ?? "",
-                ),
-              ],
+              expandedHeight: 280,
+              actions: const [],
             ),
-            sliverGapH8,
             PoddrAppBarOptions(
+              title: PoddrAddSubscriptionBtn(
+                title: podcastProvider.podcast?.title ?? "",
+                rss: podcastProvider.podcast?.rss ?? "",
+                description: podcastProvider.podcast?.description ?? "",
+                author: podcastProvider.podcast?.title ?? "",
+                image: podcastProvider.podcast?.image ?? "",
+              ),
               actions: [
                 IconButton(
                   onPressed: () {},

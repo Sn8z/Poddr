@@ -40,7 +40,6 @@ class PodcastDiscoveryView extends StatelessWidget {
                     ),
                   ],
                 ),
-                sliverGapH8,
                 PoddrAppBarOptions(
                   title: const Text("Test"),
                   actions: [

@@ -23,21 +23,16 @@ class LibraryView extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: CustomScrollView(
           slivers: [
-            PoddrAppBar(
+            const PoddrAppBar(
               title: 'Library',
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add),
-                ),
-              ],
             ),
-            sliverGapH8,
             PoddrAppBarOptions(
               title: const Text("Test"),
               actions: [
                 IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.abc_outlined))
+                  onPressed: () {},
+                  icon: const Icon(Icons.add),
+                )
               ],
             ),
             sliverGapH8,

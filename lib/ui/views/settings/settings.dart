@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
+import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/logo.dart';
@@ -23,7 +24,8 @@ class SettingsView extends StatelessWidget {
             const PoddrAppBar(
               title: "Settings",
             ),
-            sliverGapH16,
+            PoddrAppBarOptions(),
+            sliverGapH8,
             const ContentBox(
               title: "Appearance",
               children: [
@@ -34,7 +36,7 @@ class SettingsView extends StatelessWidget {
                 gapH16,
               ],
             ),
-            sliverGapH16,
+            sliverGapH8,
             const ContentBox(
               title: "Preferences",
               children: [
