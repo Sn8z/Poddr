@@ -102,7 +102,9 @@ class SettingsView extends StatelessWidget {
                       context: context,
                       applicationName: "Poddr",
                       applicationVersion: "3.0.0",
-                      applicationIcon: const PoddrLogo(),
+                      applicationIcon: const PoddrLogo(
+                        size: 56,
+                      ),
                     );
                   },
                 ),

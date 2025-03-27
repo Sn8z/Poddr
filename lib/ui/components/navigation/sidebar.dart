@@ -42,7 +42,7 @@ class PoddrSideBar extends StatelessWidget {
               height: 80,
               child: Center(
                 child: PoddrLogo(
-                  size: 40,
+                  size: 28,
                 ),
               ),
             ),
@@ -64,8 +64,14 @@ class PoddrSideBar extends StatelessWidget {
                 }).toList(),
               ),
             ),
-            SizedBox.square(
-              dimension: shouldExpand ? 220 : 80,
+            Container(
+              margin: const EdgeInsets.all(8),
+              clipBehavior: Clip.antiAlias,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(8),
+                ),
+              ),
               child: const Artwork(),
             ),
           ],
@@ -133,7 +139,7 @@ class PoddrSideBarItem extends StatelessWidget {
                 status == SideBarItemStatus.selected ? selectedIcon : icon,
                 color: status == SideBarItemStatus.selected
                     ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onSurface,
+                    : Theme.of(context).colorScheme.secondary,
               ),
               if (shouldExpand) ...[
                 const SizedBox(width: 16),
@@ -141,7 +147,7 @@ class PoddrSideBarItem extends StatelessWidget {
                   title,
                   style: TextStyle(
                     color: status == SideBarItemStatus.selected
-                        ? Theme.of(context).colorScheme.primary
+                        ? Theme.of(context).colorScheme.secondary
                         : Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
