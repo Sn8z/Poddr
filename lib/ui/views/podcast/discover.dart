@@ -13,10 +13,12 @@ import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
+import 'package:poddr/ui/components/widgets/grid_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
+import 'package:poddr/ui/utils/platform.dart';
 import 'package:provider/provider.dart';
 
 class PodcastDiscoveryView extends StatelessWidget {
@@ -100,12 +102,10 @@ class LatestEpisodes extends StatelessWidget {
                 ),
               )
             else if (latestEpisodesProvider.episodes.isEmpty)
-              Center(
-                child: Text(
-                  "No new episodes",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+              Text(
+                "No new episodes",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               )
             else
@@ -312,13 +312,14 @@ class TrendingPodcasts extends StatelessWidget {
 
     if (charts.isLoading) {
       return ContentBox(
-        title: "Loading podcasts...",
         children: [
           ...List.generate(
             5,
             (index) {
               return const ListTile(
-                title: ShimmerBox(),
+                title: ShimmerBox(
+                  height: 28,
+                ),
               );
             },
           ),
@@ -364,70 +365,57 @@ class TrendingPodcasts extends StatelessWidget {
                 );
               },
             )
-          : SliverGrid.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 240,
-                crossAxisSpacing: 32,
-                mainAxisSpacing: 32,
-                childAspectRatio: 0.8,
-              ),
-              itemCount: charts.charts.length,
-              itemBuilder: (context, index) {
-                return MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      context.push(
-                          '/podcasts/details?rss=${charts.charts[index].rss}');
-                    },
-                    child: Container(
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: PoddrImage(
-                                imageUrl: charts.charts[index].image ?? ''),
-                          ),
-                          Flexible(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    charts.charts[index].title ?? '',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                PoddrAddSubscriptionBtn(
-                                  title: charts.charts[index].title ?? '',
-                                  rss: charts.charts[index].rss ?? '',
-                                  description:
-                                      charts.charts[index].description ?? '',
-                                  author: charts.charts[index].author ?? '',
-                                  image: charts.charts[index].image ?? '',
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+          : SliverLayoutBuilder(
+              builder: (context, constraints) {
+                var crossAxisCount = 5;
+                final width = MediaQuery.of(context).size.width;
+
+                if (width >= Breakpoints.desktopScreen) {
+                  crossAxisCount = 6;
+                } else if (width >= Breakpoints.tabletScreen) {
+                  crossAxisCount = 4;
+                } else if (width >= Breakpoints.mobileScreen) {
+                  crossAxisCount = 3;
+                } else {
+                  crossAxisCount = 2;
+                }
+
+                return SliverGrid.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
                   ),
+                  itemCount: charts.charts.length,
+                  itemBuilder: (context, index) {
+                    return PoddrGridItem(
+                      onTap: () {
+                        context.push(
+                            '/podcasts/details?rss=${charts.charts[index].rss}');
+                      },
+                      leading: Container(
+                        clipBehavior: Clip.antiAlias,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: PoddrImage(
+                          imageUrl: charts.charts[index].image ?? '',
+                        ),
+                      ),
+                      title: charts.charts[index].title,
+                      subtitle: charts.charts[index].link,
+                      actions: [
+                        PoddrAddSubscriptionBtn(
+                          title: charts.charts[index].title ?? '',
+                          rss: charts.charts[index].rss ?? '',
+                          description: charts.charts[index].description ?? '',
+                          author: charts.charts[index].author ?? '',
+                          image: charts.charts[index].image ?? '',
+                        ),
+                      ],
+                    );
+                  },
                 );
               },
             ),

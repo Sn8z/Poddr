@@ -19,8 +19,8 @@ class PoddrImage extends StatelessWidget {
       imageUrl,
       fit: fit,
       key: imageKey,
-      cacheHeight: 250,
-      cacheWidth: 250,
+      cacheHeight: 500,
+      cacheWidth: 500,
       gaplessPlayback: true,
       headers: const {'Cache-Control': 'max-age=604800'},
       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
