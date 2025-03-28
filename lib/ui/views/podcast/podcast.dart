@@ -191,15 +191,15 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
               actions: [
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.podcasts_rounded),
+                  icon: const Icon(Icons.search_rounded),
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.open_in_browser_rounded),
+                  icon: const Icon(Icons.rss_feed_rounded),
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.mail_outline_rounded),
+                  icon: const Icon(Icons.more_vert_rounded),
                 ),
               ],
             ),

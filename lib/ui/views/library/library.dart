@@ -28,7 +28,18 @@ class LibraryView extends StatelessWidget {
               title: 'Library',
             ),
             PoddrAppBarOptions(
-              title: const Text("Test"),
+              title: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.view_module_rounded),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.view_headline_rounded),
+                  ),
+                ],
+              ),
               actions: [
                 IconButton(
                   onPressed: () {},

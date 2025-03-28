@@ -34,18 +34,25 @@ class PodcastDiscoveryView extends StatelessWidget {
               slivers: [
                 PoddrAppBar(
                   title: "Podcasts",
+                ),
+                PoddrAppBarOptions(
+                  title: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.view_module_rounded),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.view_headline_rounded),
+                      ),
+                    ],
+                  ),
                   actions: [
                     IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.more_vert_rounded),
                     ),
-                  ],
-                ),
-                PoddrAppBarOptions(
-                  title: const Text("Test"),
-                  actions: [
-                    IconButton(
-                        onPressed: () {}, icon: const Icon(Icons.abc_outlined))
                   ],
                 ),
                 sliverGapH8,
