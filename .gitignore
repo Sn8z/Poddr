@@ -10,14 +10,20 @@
 .svn/
 migrate_working_dir/
 
+# Coverage
+coverage/
+
 # IntelliJ related
 *.iml
 *.ipr
 *.iws
 .idea/
 
-
-.vscode/
+# VSCode related
+.classpath
+.project
+.settings/
+.vscode/*
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -39,3 +45,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/.cxx
