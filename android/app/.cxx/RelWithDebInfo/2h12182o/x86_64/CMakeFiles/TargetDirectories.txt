@@ -1,2 +1,0 @@
-C:/Users/marcu/Documents/GitHub/Poddrr/android/app/.cxx/RelWithDebInfo/2h12182o/x86_64/CMakeFiles/edit_cache.dir
-C:/Users/marcu/Documents/GitHub/Poddrr/android/app/.cxx/RelWithDebInfo/2h12182o/x86_64/CMakeFiles/rebuild_cache.dir
