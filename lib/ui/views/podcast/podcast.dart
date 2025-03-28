@@ -7,6 +7,7 @@ import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
+import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/components/widgets/tag.dart';
 import 'package:poddr/services/media.dart';
 import 'package:poddr/services/podcast.dart';
@@ -220,11 +221,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                 child: Text("No podcast found"),
               )
             else
-              DecoratedSliver(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(16),
-                ),
+              PoddrSliverBox(
                 sliver: SliverList.builder(
                   itemCount: podcastProvider.podcast!.episodes.length,
                   itemBuilder: (context, index) {

@@ -14,6 +14,7 @@ import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
+import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
@@ -324,105 +325,105 @@ class TrendingPodcasts extends StatelessWidget {
       );
     }
 
-    return ContentBox(
-      title: "Trending",
-      subtitle: "${charts.country} - ${charts.genre}",
-      children: [
-        if (isMobile)
-          ...charts.charts.map((e) {
-            return PoddrListItem(
-              leading: Container(
-                clipBehavior: Clip.antiAlias,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                ),
-                child: PoddrImage(imageUrl: e.image ?? ''),
-              ),
-              title: e.title,
-              subtitle: e.rss,
-              onTap: () {
-                context.push('/podcasts/details?rss=${e.rss}');
-              },
-              actions: [
-                PoddrAddSubscriptionBtn(
-                  title: e.title ?? '',
-                  rss: e.rss ?? '',
-                  description: e.description ?? '',
-                  author: e.author ?? '',
-                  image: e.image ?? '',
-                ),
-              ],
-            );
-          })
-        else
-          GridView.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 240,
-              crossAxisSpacing: 32,
-              mainAxisSpacing: 32,
-              childAspectRatio: 0.8,
-            ),
-            shrinkWrap: true,
-            itemCount: charts.charts.length,
-            itemBuilder: (context, index) {
-              return MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
+    return PoddrSliverBox(
+      sliver: isMobile
+          ? SliverList.builder(
+              itemCount: charts.charts.length,
+              itemBuilder: (context, index) {
+                return PoddrListItem(
+                  leading: Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                    child:
+                        PoddrImage(imageUrl: charts.charts[index].image ?? ''),
+                  ),
+                  title: charts.charts[index].title,
+                  subtitle: charts.charts[index].rss,
                   onTap: () {
                     context.push(
                         '/podcasts/details?rss=${charts.charts[index].rss}');
                   },
-                  child: Container(
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
+                  actions: [
+                    PoddrAddSubscriptionBtn(
+                      title: charts.charts[index].title ?? '',
+                      rss: charts.charts[index].rss ?? '',
+                      description: charts.charts[index].description ?? '',
+                      author: charts.charts[index].author ?? '',
+                      image: charts.charts[index].image ?? '',
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
+                  ],
+                );
+              },
+            )
+          : SliverGrid.builder(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 240,
+                crossAxisSpacing: 32,
+                mainAxisSpacing: 32,
+                childAspectRatio: 0.8,
+              ),
+              itemCount: charts.charts.length,
+              itemBuilder: (context, index) {
+                return MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () {
+                      context.push(
+                          '/podcasts/details?rss=${charts.charts[index].rss}');
+                    },
+                    child: Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: PoddrImage(
+                                imageUrl: charts.charts[index].image ?? ''),
                           ),
-                          child: PoddrImage(
-                              imageUrl: charts.charts[index].image ?? ''),
-                        ),
-                        Flexible(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  charts.charts[index].title ?? '',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                    fontSize: 16,
+                          Flexible(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    charts.charts[index].title ?? '',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              PoddrAddSubscriptionBtn(
-                                title: charts.charts[index].title ?? '',
-                                rss: charts.charts[index].rss ?? '',
-                                description:
-                                    charts.charts[index].description ?? '',
-                                author: charts.charts[index].author ?? '',
-                                image: charts.charts[index].image ?? '',
-                              ),
-                            ],
+                                PoddrAddSubscriptionBtn(
+                                  title: charts.charts[index].title ?? '',
+                                  rss: charts.charts[index].rss ?? '',
+                                  description:
+                                      charts.charts[index].description ?? '',
+                                  author: charts.charts[index].author ?? '',
+                                  image: charts.charts[index].image ?? '',
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
-      ],
+                );
+              },
+            ),
     );
   }
 }

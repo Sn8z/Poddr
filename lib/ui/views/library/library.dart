@@ -8,6 +8,7 @@ import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/services/subscriptions.dart';
+import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
 
@@ -52,44 +53,37 @@ class LibraryView extends StatelessWidget {
                 child: Text('Your library is empty'),
               ),
             ] else ...[
-              ContentBox(
-                title: "Library",
-                subtitle: "Your library",
-                actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add),
-                  ),
-                ],
-                children: [
-                  ...subscriptionProvider.subscriptions.map(
-                    (Podcast podcast) {
-                      return PoddrListItem(
-                        title: podcast.title ?? 'Missing Title',
-                        subtitle: podcast.author ?? 'Missing Author',
-                        onTap: () {
-                          context.push('/podcasts/details?rss=${podcast.rss}');
-                        },
-                        leading: Container(
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: PoddrImage(
-                            imageUrl: podcast.image ?? '',
-                            fit: BoxFit.cover,
-                          ),
+              PoddrSliverBox(
+                sliver: SliverList.builder(
+                  itemCount: subscriptionProvider.subscriptions.length,
+                  itemBuilder: (context, index) {
+                    final Podcast podcast =
+                        subscriptionProvider.subscriptions[index];
+                    return PoddrListItem(
+                      title: podcast.title ?? 'Missing Title',
+                      subtitle: podcast.author ?? 'Missing Author',
+                      onTap: () {
+                        context.push('/podcasts/details?rss=${podcast.rss}');
+                      },
+                      leading: Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        actions: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.more_vert_rounded),
-                          ),
-                        ],
-                      );
-                    },
-                  )
-                ],
+                        child: PoddrImage(
+                          imageUrl: podcast.image ?? '',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      actions: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.more_vert_rounded),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ],
             const BottomPaddingFix(),
