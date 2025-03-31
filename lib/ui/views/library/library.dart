@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/models/podcast.dart';
+import 'package:poddr/services/podcast_discovery.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
@@ -8,6 +9,7 @@ import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/sliver_box.dart';
+import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
 
@@ -41,8 +43,37 @@ class LibraryView extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {},
                   icon: const Icon(Icons.add),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (dialogContext) {
+                          return SimpleDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(16),
+                              ),
+                            ),
+                            backgroundColor: Theme.of(dialogContext)
+                                .colorScheme
+                                .surfaceContainerLow,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: PoddrTextInput(
+                                  hintText: "Input RSS",
+                                  onFieldSubmitted: (value) {
+                                    context
+                                        .read<SubscriptionProvider>()
+                                        .addSubscription(rss: value);
+                                    Navigator.of(dialogContext).pop();
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
+                        });
+                  },
                 )
               ],
             ),
