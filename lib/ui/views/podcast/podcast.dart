@@ -181,13 +181,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
               actions: const [],
             ),
             PoddrAppBarOptions(
-              title: PoddrAddSubscriptionBtn(
-                title: podcastProvider.podcast?.title ?? "",
-                rss: podcastProvider.podcast?.rss ?? "",
-                description: podcastProvider.podcast?.description ?? "",
-                author: podcastProvider.podcast?.title ?? "",
-                image: podcastProvider.podcast?.image ?? "",
-              ),
+              title: PoddrAddSubscriptionBtn(rss: podcastProvider.podcast?.rss),
               actions: [
                 IconButton(
                   onPressed: () {},

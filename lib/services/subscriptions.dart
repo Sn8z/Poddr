@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
+import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
 import 'package:poddr/models/podcast.dart';
@@ -9,6 +10,7 @@ class SubscriptionProvider extends ChangeNotifier {
   final String logName = "SubscriptionProvider";
   final ISubscriptionRepository _subscriptionRepository =
       DriftSubscriptionRepository();
+  final IPodcastRepository _podcastRepository = ITunesPodcastRepository();
 
   List<Podcast> _subscriptions = [];
   List<Podcast> get subscriptions => _subscriptions;
@@ -37,26 +39,28 @@ class SubscriptionProvider extends ChangeNotifier {
   }
 
   Future<void> addSubscription({
-    required String title,
     required String rss,
-    String? description,
-    String? author,
-    String? image,
   }) async {
     try {
+      final Podcast podcast = await _podcastRepository.getFeed(rss);
+
       await _subscriptionRepository.addSubscription(
-        title,
+        podcast.title,
         rss,
-        description,
-        author,
-        image,
+        podcast.description,
+        podcast.author,
+        podcast.image,
       );
       await _fetchSubscriptions();
     } catch (error, stackTrace) {
-      debugPrint(error.toString());
-      debugPrint(stackTrace.toString());
+      log(
+        error.toString(),
+        name: logName,
+        error: error,
+        stackTrace: stackTrace,
+      );
     } finally {
-      log("Added subscription $title - $rss", name: logName);
+      log("Added subscription $rss", name: logName);
     }
   }
 

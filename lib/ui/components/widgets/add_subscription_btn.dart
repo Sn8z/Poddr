@@ -3,25 +3,18 @@ import 'package:poddr/services/subscriptions.dart';
 import 'package:provider/provider.dart';
 
 class PoddrAddSubscriptionBtn extends StatelessWidget {
-  final String title;
-  final String rss;
-  final String description;
-  final String author;
-  final String image;
+  final String? rss;
   final double size;
 
   const PoddrAddSubscriptionBtn({
     super.key,
-    required this.title,
-    required this.rss,
-    required this.description,
-    required this.author,
-    required this.image,
+    this.rss,
     this.size = 24,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (rss == null) return const SizedBox.shrink();
     final subcriptions =
         context.select((SubscriptionProvider p) => p.subscriptions);
     final isSubscription = subcriptions.any((podcast) => podcast.rss == rss);
@@ -42,13 +35,7 @@ class PoddrAddSubscriptionBtn extends StatelessWidget {
               subcriptions.firstWhere((podcast) => podcast.rss == rss);
           subscriptionProvider.removeSubscription(podcast.rss ?? '');
         } else {
-          subscriptionProvider.addSubscription(
-            title: title,
-            rss: rss,
-            description: description,
-            author: author,
-            image: image,
-          );
+          subscriptionProvider.addSubscription(rss: rss!);
         }
       },
     );

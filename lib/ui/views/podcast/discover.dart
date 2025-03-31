@@ -354,13 +354,7 @@ class TrendingPodcasts extends StatelessWidget {
                         '/podcasts/details?rss=${charts.charts[index].rss}');
                   },
                   actions: [
-                    PoddrAddSubscriptionBtn(
-                      title: charts.charts[index].title ?? '',
-                      rss: charts.charts[index].rss ?? '',
-                      description: charts.charts[index].description ?? '',
-                      author: charts.charts[index].author ?? '',
-                      image: charts.charts[index].image ?? '',
-                    ),
+                    PoddrAddSubscriptionBtn(rss: charts.charts[index].rss),
                   ],
                 );
               },
@@ -406,13 +400,7 @@ class TrendingPodcasts extends StatelessWidget {
                       title: charts.charts[index].title,
                       subtitle: charts.charts[index].link,
                       actions: [
-                        PoddrAddSubscriptionBtn(
-                          title: charts.charts[index].title ?? '',
-                          rss: charts.charts[index].rss ?? '',
-                          description: charts.charts[index].description ?? '',
-                          author: charts.charts[index].author ?? '',
-                          image: charts.charts[index].image ?? '',
-                        ),
+                        PoddrAddSubscriptionBtn(rss: charts.charts[index].rss),
                       ],
                     );
                   },
