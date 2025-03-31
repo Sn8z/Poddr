@@ -36,18 +36,25 @@ class LatestEpisodesProvider extends ChangeNotifier {
       final List<PodcastEpisode> episodes = [];
 
       for (final Podcast podcast in subscriptions) {
-        final Podcast fullPodcast =
-            await _podcastRepository.getFeed(podcast.rss!);
+        if (podcast.rss == null) continue;
 
-        final List<PodcastEpisode> podcastEpisodes = fullPodcast.episodes;
-
-        episodes.addAll(podcastEpisodes);
+        try {
+          final Podcast fullPodcast =
+              await _podcastRepository.getFeed(podcast.rss!);
+          episodes.addAll(fullPodcast.episodes);
+        } catch (error, stackTrace) {
+          log(
+            "Error fetching episodes for ${podcast.rss}",
+            name: logName,
+            error: error,
+            stackTrace: stackTrace,
+          );
+        }
       }
 
       episodes.sort((a, b) => b.publicationDate!.compareTo(a.publicationDate!));
 
       _episodes = episodes.take(100).toList();
-      notifyListeners();
     } catch (error, stackTrace) {
       log(
         error.toString(),
@@ -57,11 +64,18 @@ class LatestEpisodesProvider extends ChangeNotifier {
       );
     } finally {
       setLoading(false);
+      notifyListeners();
     }
   }
 
   void setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _subscriptionProvider.removeListener(_handleSubscriptionChange);
+    super.dispose();
   }
 }
