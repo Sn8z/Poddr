@@ -5,6 +5,8 @@ import 'package:poddr/ui/utils/gaps.dart';
 class PoddrGridItem extends StatefulWidget {
   const PoddrGridItem({
     super.key,
+    this.width,
+    this.height,
     this.title,
     this.subtitle,
     this.data,
@@ -13,6 +15,8 @@ class PoddrGridItem extends StatefulWidget {
     this.actions = const [],
     this.isActive = false,
   });
+  final double? width;
+  final double? height;
   final String? title;
   final String? subtitle;
   final Widget? data;
@@ -61,6 +65,8 @@ class _PoddrListItemState extends State<PoddrGridItem> {
             });
           },
           child: AnimatedContainer(
+            width: widget.width ?? double.infinity,
+            height: widget.height ?? double.infinity,
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             padding: const EdgeInsets.all(8),
