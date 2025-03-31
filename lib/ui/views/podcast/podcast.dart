@@ -11,6 +11,7 @@ import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/components/widgets/tag.dart';
 import 'package:poddr/services/media.dart';
 import 'package:poddr/services/podcast.dart';
+import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:provider/provider.dart';
@@ -81,100 +82,165 @@ class _PodcastDetailsViewState extends State<PodcastDetailsViewContent> {
                   ? Theme.of(context).colorScheme.surfaceContainerLow
                   : Theme.of(context).colorScheme.primaryContainer,
               flexibleSpace: FlexibleSpaceBar(
-                background: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Positioned.fill(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16),
-                          ),
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            stops: const [0.2, 1],
-                            colors: [
-                              Theme.of(context).colorScheme.surfaceContainer,
-                              Theme.of(context).colorScheme.surfaceContainerLow,
-                            ],
+                background: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isMobile =
+                        constraints.maxWidth < Breakpoints.mobileScreen;
+                    return Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              ),
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainer,
+                                  Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerLow,
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            height: 200,
-                            width: 200,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: PoddrImage(
-                              imageUrl: podcastProvider.podcast?.image ?? "",
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          gapW16,
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  podcastProvider.podcast?.title ?? "Nope",
-                                  style: TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: isMobile
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 120,
+                                      width: 120,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: PoddrImage(
+                                        imageUrl:
+                                            podcastProvider.podcast?.image ??
+                                                "",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    gapH8,
+                                    Text(
+                                      podcastProvider.podcast?.title ?? "Nope",
+                                      style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
+                                    gapH8,
+                                    Text(
+                                      podcastProvider.podcast?.description ??
+                                          "",
+                                      maxLines: 3,
+                                      style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      height: 200,
+                                      width: 200,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: PoddrImage(
+                                        imageUrl:
+                                            podcastProvider.podcast?.image ??
+                                                "",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    gapW16,
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            podcastProvider.podcast?.title ??
+                                                "Nope",
+                                            style: TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                fontSize: 26,
+                                                fontWeight: FontWeight.bold,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
+                                          ),
+                                          Text(
+                                            podcastProvider
+                                                    .podcast?.description ??
+                                                "",
+                                            maxLines: 3,
+                                            style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              fontSize: 14,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                            ),
+                                          ),
+                                          gapH16,
+                                          Text(
+                                            "${podcastProvider.podcast?.episodes.length ?? 0} Episodes",
+                                            style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                            ),
+                                          ),
+                                          gapH16,
+                                          Row(
+                                            children: podcastProvider
+                                                    .podcast?.tags
+                                                    .map((e) => PoddrTag(
+                                                          title: e,
+                                                          color: Colors.grey,
+                                                        ))
+                                                    .toList() ??
+                                                [],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  podcastProvider.podcast?.description ?? "",
-                                  maxLines: 3,
-                                  style: TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    fontSize: 14,
-                                    color:
-                                        Theme.of(context).colorScheme.onSurface,
-                                  ),
-                                ),
-                                gapH16,
-                                Text(
-                                  "${podcastProvider.podcast?.episodes.length ?? 0} Episodes",
-                                  style: TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ),
-                                gapH16,
-                                Row(
-                                  children: podcastProvider.podcast?.tags
-                                          .map((e) => PoddrTag(
-                                                title: e,
-                                                color: Colors.grey,
-                                              ))
-                                          .toList() ??
-                                      [],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
               expandedHeight: 280,
@@ -251,7 +317,7 @@ class Episode extends StatelessWidget {
       subtitle: convertDateToString(episode.publicationDate),
       data: EpisodeHistory(
         audioUrl: episode.audioUrl,
-        width: 200,
+        width: 460,
       ),
       isActive: isCurrentEpisode,
       actions: [
