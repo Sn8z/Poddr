@@ -272,8 +272,9 @@ class TrendingPodcasts extends StatelessWidget {
                   title: charts.charts[index].title,
                   subtitle: charts.charts[index].rss,
                   onTap: () {
-                    context.push(
-                        '/podcasts/details?rss=${charts.charts[index].rss}');
+                    final rss =
+                        Uri.encodeComponent(charts.charts[index].rss ?? '');
+                    context.push('/podcasts/$rss');
                   },
                   actions: [
                     PoddrAddSubscriptionBtn(rss: charts.charts[index].rss),
@@ -306,8 +307,9 @@ class TrendingPodcasts extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return PoddrGridItem(
                       onTap: () {
-                        context.push(
-                            '/podcasts/details?rss=${charts.charts[index].rss}');
+                        final rss =
+                            Uri.encodeComponent(charts.charts[index].rss ?? '');
+                        context.push('/podcasts/$rss');
                       },
                       leading: Container(
                         clipBehavior: Clip.antiAlias,

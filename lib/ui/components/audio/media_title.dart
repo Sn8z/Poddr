@@ -18,7 +18,8 @@ class MediaTitle extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           if (podcastRSS != null) {
-            context.go("/podcasts/details?rss=$podcastRSS");
+            final rss = Uri.encodeComponent(podcastRSS);
+            context.push("/podcasts/$rss");
           }
         },
         child: Text(

@@ -111,7 +111,8 @@ class ResultBox extends StatelessWidget {
             title: searchResults[index].title,
             subtitle: searchResults[index].rss,
             onTap: () {
-              context.push('/podcasts/details?rss=${searchResults[index].rss}');
+              final rss = Uri.encodeComponent(searchResults[index].rss ?? '');
+              context.push('/podcasts/$rss');
             },
           );
         },

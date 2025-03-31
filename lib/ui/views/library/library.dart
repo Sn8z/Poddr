@@ -4,7 +4,6 @@ import 'package:poddr/models/podcast.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
-import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/services/subscriptions.dart';
@@ -74,7 +73,8 @@ class LibraryView extends StatelessWidget {
                       title: podcast.title ?? 'Missing Title',
                       subtitle: podcast.author ?? 'Missing Author',
                       onTap: () {
-                        context.push('/podcasts/details?rss=${podcast.rss}');
+                        final rss = Uri.encodeComponent(podcast.rss ?? '');
+                        context.push('/podcasts/$rss');
                       },
                       leading: Container(
                         clipBehavior: Clip.antiAlias,

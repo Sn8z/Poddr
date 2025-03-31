@@ -77,12 +77,14 @@ abstract class PoddrRouter {
                 },
                 routes: [
                   GoRoute(
-                    path: 'details',
+                    path: ':rss',
                     parentNavigatorKey: _podcastNavKey,
                     pageBuilder: (context, state) {
+                      final rss = state.pathParameters['rss'] ?? '';
+                      final decodedRSS = Uri.decodeComponent(rss);
                       return NoTransitionPage(
-                          child: PodcastDetailsView(
-                              rss: state.uri.queryParameters['rss'] ?? ''));
+                        child: PodcastDetailsView(rss: decodedRSS),
+                      );
                     },
                   )
                 ],

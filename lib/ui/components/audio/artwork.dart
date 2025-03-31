@@ -19,7 +19,8 @@ class Artwork extends StatelessWidget {
       child: GestureDetector(
           onTap: () {
             if (podcastRSS != null) {
-              context.go("/podcasts/details?rss=$podcastRSS");
+              final rss = Uri.encodeComponent(podcastRSS);
+              context.go("/podcasts/$rss");
             }
           },
           child: PoddrImage(imageUrl: artUri.toString())),
