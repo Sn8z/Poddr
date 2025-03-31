@@ -18,7 +18,6 @@ import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
-import 'package:poddr/ui/utils/platform.dart';
 import 'package:provider/provider.dart';
 
 class PodcastDiscoveryView extends StatelessWidget {
@@ -91,8 +90,8 @@ class LatestEpisodes extends StatelessWidget {
                 children: List.generate(
                   5,
                   (index) => Container(
-                    width: 140,
-                    height: 140,
+                    width: 200,
+                    height: 160,
                     margin: const EdgeInsets.only(right: 12),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -112,77 +111,36 @@ class LatestEpisodes extends StatelessWidget {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: latestEpisodesProvider.episodes
-                      .take(10)
-                      .map(
-                        (episode) => MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: GestureDetector(
-                            onTap: () {
-                              context.read<MediaProvider>().loadMedia(
-                                    audioUrl: episode.audioUrl,
-                                    episodeTitle: episode.title,
-                                    podcastTitle: episode.podcastTitle,
-                                    podcastRSS: episode.podcastRSS,
-                                    artUri: episode.imageUrl,
-                                    artist: episode.podcastTitle,
-                                    album: episode.podcastTitle,
-                                    description: episode.description,
-                                  );
-                            },
-                            child: Container(
-                              width: 140,
-                              height: 120,
-                              margin: const EdgeInsets.only(right: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 140,
-                                    height: 80,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Stack(
-                                      children: [
-                                        Positioned.fill(
-                                          child: PoddrImage(
-                                            imageUrl: episode.imageUrl ?? '',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Text(
-                                    episode.title,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    episode.title,
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
+                  children:
+                      latestEpisodesProvider.episodes.take(10).map((episode) {
+                    return SizedBox(
+                      width: 200,
+                      height: 160,
+                      child: PoddrGridItem(
+                        leading: Container(
+                          clipBehavior: Clip.antiAlias,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
                           ),
+                          child: PoddrImage(imageUrl: episode.imageUrl ?? ""),
                         ),
-                      )
-                      .toList(),
+                        title: episode.title,
+                        onTap: () {
+                          context.read<MediaProvider>().loadMedia(
+                                audioUrl: episode.audioUrl,
+                                episodeTitle: episode.title,
+                                podcastTitle: episode.podcastTitle,
+                                podcastRSS: episode.podcastRSS,
+                                artUri: episode.imageUrl,
+                                artist: episode.podcastTitle,
+                                album: episode.podcastTitle,
+                                description: episode.description,
+                              );
+                        },
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
           ],
@@ -227,72 +185,36 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: historyProvider.history
-                  .map(
-                    (h) => MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () {
-                          context.read<MediaProvider>().loadMedia(
-                                audioUrl: h.audioUrl,
-                                episodeTitle: h.title,
-                                podcastTitle: h.podcastTitle,
-                                podcastRSS: h.podcastRSS,
-                                artUri: h.imageUrl,
-                                artist: h.podcastTitle,
-                                album: h.podcastTitle,
-                                description: h.description,
-                              );
-                        },
-                        child: Container(
-                          width: 140,
-                          height: 120,
-                          margin: const EdgeInsets.only(right: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 140,
-                                height: 80,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Positioned.fill(
-                                      child: PoddrImage(
-                                        imageUrl: h.imageUrl ?? '',
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 0,
-                                      left: 0,
-                                      right: 0,
-                                      child:
-                                          EpisodeHistory(audioUrl: h.audioUrl),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Text(
-                                h.title,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
+              children: historyProvider.history.map((history) {
+                return SizedBox(
+                  width: 180,
+                  height: 140,
+                  child: PoddrGridItem(
+                    leading: Container(
+                      clipBehavior: Clip.antiAlias,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
                       ),
+                      child: PoddrImage(imageUrl: history.imageUrl ?? ""),
                     ),
-                  )
-                  .toList(),
+                    title: history.title,
+                    data: EpisodeHistory(audioUrl: history.audioUrl),
+                    onTap: () {
+                      context.read<MediaProvider>().loadMedia(
+                            audioUrl: history.audioUrl,
+                            episodeTitle: history.title,
+                            podcastTitle: history.podcastTitle,
+                            podcastRSS: history.podcastRSS,
+                            artUri: history.imageUrl,
+                            artist: history.podcastTitle,
+                            album: history.podcastTitle,
+                            description: history.description,
+                          );
+                    },
+                  ),
+                );
+              }).toList(),
             ),
           ),
       ],
