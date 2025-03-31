@@ -82,67 +82,68 @@ class LatestEpisodes extends StatelessWidget {
           LatestEpisodesProvider(context.read<SubscriptionProvider>()),
       builder: (context, child) {
         final latestEpisodesProvider = context.watch<LatestEpisodesProvider>();
+
+        if (latestEpisodesProvider.episodes.isEmpty) {
+          return const SliverToBoxAdapter(
+            child: SizedBox.shrink(),
+          );
+        }
+
         return ContentBox(
           title: "Latest episodes",
           children: [
-            if (latestEpisodesProvider.isLoading)
-              Row(
-                children: List.generate(
-                  5,
-                  (index) => Container(
-                    width: 200,
-                    height: 160,
-                    margin: const EdgeInsets.only(right: 12),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const ShimmerBox(),
-                  ),
-                ),
-              )
-            else if (latestEpisodesProvider.episodes.isEmpty)
-              Text(
-                "No new episodes",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              )
-            else
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children:
-                      latestEpisodesProvider.episodes.take(10).map((episode) {
-                    return SizedBox(
-                      width: 200,
-                      height: 160,
-                      child: PoddrGridItem(
-                        leading: Container(
-                          clipBehavior: Clip.antiAlias,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: PoddrImage(imageUrl: episode.imageUrl ?? ""),
+            latestEpisodesProvider.isLoading
+                ? Row(
+                    children: List.generate(
+                      5,
+                      (index) => Container(
+                        width: 200,
+                        height: 160,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        title: episode.title,
-                        onTap: () {
-                          context.read<MediaProvider>().loadMedia(
-                                audioUrl: episode.audioUrl,
-                                episodeTitle: episode.title,
-                                podcastTitle: episode.podcastTitle,
-                                podcastRSS: episode.podcastRSS,
-                                artUri: episode.imageUrl,
-                                artist: episode.podcastTitle,
-                                album: episode.podcastTitle,
-                                description: episode.description,
-                              );
-                        },
+                        child: const ShimmerBox(),
                       ),
-                    );
-                  }).toList(),
-                ),
-              ),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: latestEpisodesProvider.episodes
+                          .take(10)
+                          .map((episode) {
+                        return SizedBox(
+                          width: 200,
+                          height: 160,
+                          child: PoddrGridItem(
+                            leading: Container(
+                              clipBehavior: Clip.antiAlias,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child:
+                                  PoddrImage(imageUrl: episode.imageUrl ?? ""),
+                            ),
+                            title: episode.title,
+                            onTap: () {
+                              context.read<MediaProvider>().loadMedia(
+                                    audioUrl: episode.audioUrl,
+                                    episodeTitle: episode.title,
+                                    podcastTitle: episode.podcastTitle,
+                                    podcastRSS: episode.podcastRSS,
+                                    artUri: episode.imageUrl,
+                                    artist: episode.podcastTitle,
+                                    album: episode.podcastTitle,
+                                    description: episode.description,
+                                  );
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
           ],
         );
       },
@@ -166,57 +167,56 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
     return ContentBox(
       title: "Continue listening",
       children: [
-        if (historyProvider.isLoading)
-          Row(
-            children: List.generate(
-              5,
-              (index) => Container(
-                width: 140,
-                height: 140,
-                margin: const EdgeInsets.only(right: 12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const ShimmerBox(),
-              ),
-            ),
-          )
-        else
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: historyProvider.history.map((history) {
-                return SizedBox(
-                  width: 180,
-                  height: 140,
-                  child: PoddrGridItem(
-                    leading: Container(
-                      clipBehavior: Clip.antiAlias,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: PoddrImage(imageUrl: history.imageUrl ?? ""),
+        historyProvider.isLoading
+            ? Row(
+                children: List.generate(
+                  5,
+                  (index) => Container(
+                    width: 140,
+                    height: 140,
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    title: history.title,
-                    data: EpisodeHistory(audioUrl: history.audioUrl),
-                    onTap: () {
-                      context.read<MediaProvider>().loadMedia(
-                            audioUrl: history.audioUrl,
-                            episodeTitle: history.title,
-                            podcastTitle: history.podcastTitle,
-                            podcastRSS: history.podcastRSS,
-                            artUri: history.imageUrl,
-                            artist: history.podcastTitle,
-                            album: history.podcastTitle,
-                            description: history.description,
-                          );
-                    },
+                    child: const ShimmerBox(),
                   ),
-                );
-              }).toList(),
-            ),
-          ),
+                ),
+              )
+            : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: historyProvider.history.map((history) {
+                    return SizedBox(
+                      width: 180,
+                      height: 140,
+                      child: PoddrGridItem(
+                        leading: Container(
+                          clipBehavior: Clip.antiAlias,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: PoddrImage(imageUrl: history.imageUrl ?? ""),
+                        ),
+                        title: history.title,
+                        data: EpisodeHistory(audioUrl: history.audioUrl),
+                        onTap: () {
+                          context.read<MediaProvider>().loadMedia(
+                                audioUrl: history.audioUrl,
+                                episodeTitle: history.title,
+                                podcastTitle: history.podcastTitle,
+                                podcastRSS: history.podcastRSS,
+                                artUri: history.imageUrl,
+                                artist: history.podcastTitle,
+                                album: history.podcastTitle,
+                                description: history.description,
+                              );
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
       ],
     );
   }
@@ -232,6 +232,12 @@ class TrendingPodcasts extends StatelessWidget {
     final isMobile =
         MediaQuery.of(context).size.width < Breakpoints.mobileScreen;
 
+    if (charts.charts.isEmpty) {
+      return const SliverToBoxAdapter(
+        child: SizedBox.shrink(),
+      );
+    }
+
     if (charts.isLoading) {
       return ContentBox(
         children: [
@@ -246,12 +252,6 @@ class TrendingPodcasts extends StatelessWidget {
             },
           ),
         ],
-      );
-    }
-
-    if (charts.charts.isEmpty) {
-      return const SliverToBoxAdapter(
-        child: SizedBox.shrink(),
       );
     }
 
