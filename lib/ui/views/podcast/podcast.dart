@@ -30,7 +30,6 @@ class PodcastDetailsView extends StatelessWidget {
         final podcastProvider = context.watch<PodcastProvider>();
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          log(rss);
           podcastProvider.getPodcast(rss);
         });
 
