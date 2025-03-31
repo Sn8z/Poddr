@@ -1,4 +1,4 @@
-final List<Map<String, String>> podcastGenres = [
+final List<Map<String, String>> itunesGenres = [
   {"genre": "All", "id": ""},
   {"genre": 'Arts', "id": "1301"},
   {"genre": 'Business', "id": "1321"},

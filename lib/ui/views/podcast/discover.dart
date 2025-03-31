@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/services/history.dart';
@@ -50,6 +52,46 @@ class PodcastDiscoveryView extends StatelessWidget {
                     ],
                   ),
                   actions: [
+                    DropdownButton(
+                        items: context
+                            .read<PodcastDiscoveryProvider>()
+                            .countries
+                            .map(
+                          (country) {
+                            return DropdownMenuItem(
+                              value: country['code'],
+                              child: Text(country['name'] ?? "",
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant)),
+                            );
+                          },
+                        ).toList(),
+                        onChanged: (value) {
+                          context
+                              .read<PodcastDiscoveryProvider>()
+                              .setCountry(value ?? '');
+                        }),
+                    DropdownButton(
+                        items: context
+                            .read<PodcastDiscoveryProvider>()
+                            .genres
+                            .map((genre) {
+                          return DropdownMenuItem(
+                            value: genre['id'],
+                            child: Text(genre['genre'] ?? "",
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant)),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          context
+                              .read<PodcastDiscoveryProvider>()
+                              .setGenre(value ?? '');
+                        }),
                     IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.more_vert_rounded),
