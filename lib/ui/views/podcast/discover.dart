@@ -12,6 +12,7 @@ import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/services/podcast_discovery.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
+import 'package:poddr/ui/components/widgets/dialog.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
@@ -46,55 +47,64 @@ class PodcastDiscoveryView extends StatelessWidget {
                         icon: Icon(Icons.view_module_rounded),
                       ),
                       IconButton(
-                        onPressed: () {},
                         icon: Icon(Icons.view_headline_rounded),
+                        onPressed: () {},
                       ),
                     ],
                   ),
                   actions: [
-                    DropdownButton(
-                        items: context
-                            .read<PodcastDiscoveryProvider>()
-                            .countries
-                            .map(
-                          (country) {
-                            return DropdownMenuItem(
-                              value: country['code'],
-                              child: Text(country['name'] ?? "",
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant)),
+                    IconButton(
+                      icon: Text(
+                          context.watch<PodcastDiscoveryProvider>().country),
+                      onPressed: () {
+                        final discoveryProvider =
+                            context.read<PodcastDiscoveryProvider>();
+
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext dialogContext) {
+                            return PoddrDialog(
+                              children:
+                                  discoveryProvider.countries.map((country) {
+                                return SimpleDialogOption(
+                                  onPressed: () {
+                                    discoveryProvider
+                                        .setCountry(country['code'] ?? '');
+                                    Navigator.of(dialogContext).pop();
+                                  },
+                                  child: Text(country['name'] ?? ''),
+                                );
+                              }).toList(),
                             );
                           },
-                        ).toList(),
-                        onChanged: (value) {
-                          context
-                              .read<PodcastDiscoveryProvider>()
-                              .setCountry(value ?? '');
-                        }),
-                    DropdownButton(
-                        items: context
-                            .read<PodcastDiscoveryProvider>()
-                            .genres
-                            .map((genre) {
-                          return DropdownMenuItem(
-                            value: genre['id'],
-                            child: Text(genre['genre'] ?? "",
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant)),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          context
-                              .read<PodcastDiscoveryProvider>()
-                              .setGenre(value ?? '');
-                        }),
+                        );
+                      },
+                    ),
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.more_vert_rounded),
+                      icon:
+                          Text(context.watch<PodcastDiscoveryProvider>().genre),
+                      onPressed: () {
+                        final discoveryProvider =
+                            context.read<PodcastDiscoveryProvider>();
+
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext dialogContext) {
+                            return PoddrDialog(
+                              children: discoveryProvider.genres.map((genre) {
+                                return SimpleDialogOption(
+                                  onPressed: () {
+                                    discoveryProvider
+                                        .setGenre(genre['id'] ?? '');
+                                    Navigator.of(dialogContext).pop();
+                                  },
+                                  child: Text(genre['genre'] ?? ''),
+                                );
+                              }).toList(),
+                            );
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),
