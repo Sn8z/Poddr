@@ -52,9 +52,13 @@ class LatestEpisodesProvider extends ChangeNotifier {
         }
       }
 
-      episodes.sort((a, b) => b.publicationDate!.compareTo(a.publicationDate!));
+      final validEpisodes =
+          episodes.where((ep) => ep.publicationDate != null).toList();
 
-      _episodes = episodes.take(100).toList();
+      validEpisodes
+          .sort((a, b) => b.publicationDate!.compareTo(a.publicationDate!));
+
+      _episodes = validEpisodes.take(100).toList();
     } catch (error, stackTrace) {
       log(
         error.toString(),
