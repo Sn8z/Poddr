@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/audio/artwork.dart';
+import 'package:poddr/ui/components/audio/duration_text.dart';
 import 'package:poddr/ui/components/audio/episode_title.dart';
 import 'package:poddr/ui/components/audio/media_title.dart';
 import 'package:poddr/ui/components/audio/play_button.dart';
+import 'package:poddr/ui/components/audio/position_text.dart';
 import 'package:poddr/ui/components/audio/progress_slider.dart';
+import 'package:poddr/ui/utils/gaps.dart';
 
 class PlayerView extends StatelessWidget {
   const PlayerView({super.key});
@@ -23,16 +26,28 @@ class PlayerView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const Expanded(
-            child: Artwork(),
+          Expanded(
+            child: SizedBox(
+              width: double.infinity,
+              child: Artwork(),
+            ),
           ),
           const MediaProgressSlider(),
+          gapH8,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              PositionText(),
+              DurationText(),
+            ],
+          ),
           Expanded(
             child: Column(
               children: [
-                const SizedBox(height: 16),
+                gapH16,
                 const EpisodeTitle(),
-                const SizedBox(height: 16),
+                gapH16,
                 const MediaTitle(),
                 Expanded(
                   child: Row(
@@ -43,7 +58,9 @@ class PlayerView extends StatelessWidget {
                         onPressed: () {},
                         icon: const Icon(Icons.skip_previous_rounded),
                       ),
-                      const PlayButton(),
+                      const PlayButton(
+                        size: 72,
+                      ),
                       IconButton(
                         onPressed: () {},
                         icon: const Icon(Icons.skip_next_rounded),
