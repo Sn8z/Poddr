@@ -8,7 +8,9 @@ class PoddrGridItem extends StatefulWidget {
     this.width,
     this.height,
     this.title,
+    this.titleMaxLines = 2,
     this.subtitle,
+    this.subtitleMaxLines = 1,
     this.data,
     required this.leading,
     this.onTap,
@@ -18,7 +20,9 @@ class PoddrGridItem extends StatefulWidget {
   final double? width;
   final double? height;
   final String? title;
+  final int? titleMaxLines;
   final String? subtitle;
+  final int? subtitleMaxLines;
   final Widget? data;
   final Widget leading;
   final VoidCallback? onTap;
@@ -93,7 +97,7 @@ class _PoddrListItemState extends State<PoddrGridItem> {
                           if (widget.title != null && widget.title!.isNotEmpty)
                             Text(
                               widget.title!,
-                              maxLines: 2,
+                              maxLines: widget.titleMaxLines,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
@@ -105,7 +109,7 @@ class _PoddrListItemState extends State<PoddrGridItem> {
                               widget.subtitle!.isNotEmpty)
                             Text(
                               widget.subtitle!,
-                              maxLines: 1,
+                              maxLines: widget.subtitleMaxLines,
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 12,
