@@ -240,8 +240,7 @@ class PodcastDetailsView extends StatelessWidget {
                   actions: const [],
                 ),
                 PoddrAppBarOptions(
-                  title: PoddrAddSubscriptionBtn(
-                      rss: podcastProvider.podcast?.rss),
+                  title: PoddrAddSubscriptionBtn(rss: rss),
                   actions: [
                     IconButton(
                       onPressed: () {},
