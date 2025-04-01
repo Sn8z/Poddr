@@ -177,6 +177,7 @@ class LatestEpisodes extends StatelessWidget {
                             child: PoddrImage(imageUrl: episode.imageUrl ?? ""),
                           ),
                           title: episode.title,
+                          titleMaxLines: 1,
                           onTap: () {
                             context.read<MediaProvider>().loadMedia(
                                   audioUrl: episode.audioUrl,
@@ -247,6 +248,7 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
                         child: PoddrImage(imageUrl: history.imageUrl ?? ""),
                       ),
                       title: history.title,
+                      titleMaxLines: 1,
                       data: EpisodeHistory(audioUrl: history.audioUrl),
                       onTap: () {
                         context.read<MediaProvider>().loadMedia(
