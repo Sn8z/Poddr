@@ -130,10 +130,6 @@ class MediaProvider extends BaseAudioHandler
     if (!isMobile) {
       _player.stream.volume.listen(_handleVolumeChange);
     }
-
-    Timer.periodic(const Duration(seconds: 15), (timer) {
-      saveProgress();
-    });
   }
 
   void _handleMediaItemChange(MediaItem? media) {
@@ -181,7 +177,7 @@ class MediaProvider extends BaseAudioHandler
     _position = value;
     notifyListeners();
 
-    _prefs?.setInt("mediaPosition", value.inSeconds);
+    if (value.inSeconds % 10 == 0 && value.inSeconds > 0) saveProgress();
   }
 
   void _handleDurationChange(Duration value) {
@@ -314,6 +310,7 @@ class MediaProvider extends BaseAudioHandler
       _position.inSeconds,
       _duration.inSeconds,
     );
+    _prefs?.setInt("mediaPosition", _position.inSeconds);
   }
 
   @override
