@@ -19,8 +19,8 @@ class PoddrSideBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final bool shouldExpand = size.width > Breakpoints.desktopScreen;
+    final width = MediaQuery.sizeOf(context).width;
+    final bool shouldExpand = Breakpoints.isDesktop(width);
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -111,8 +111,8 @@ class PoddrSideBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final bool shouldExpand = size.width > Breakpoints.desktopScreen;
+    final width = MediaQuery.sizeOf(context).width;
+    final bool shouldExpand = Breakpoints.isDesktop(width);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,

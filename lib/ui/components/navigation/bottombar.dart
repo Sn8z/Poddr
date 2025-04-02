@@ -71,9 +71,6 @@ class PoddrBottomBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final bool shouldExpand = size.width > Breakpoints.desktopScreen;
-
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -105,17 +102,6 @@ class PoddrBottomBarItem extends StatelessWidget {
                     ? Theme.of(context).colorScheme.onSurfaceVariant
                     : Theme.of(context).colorScheme.onSurface,
               ),
-              if (shouldExpand) ...[
-                const SizedBox(width: 16),
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: status == BottomBarItemStatus.selected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ],
             ],
           ),
         ),

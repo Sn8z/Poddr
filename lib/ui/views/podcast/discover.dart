@@ -321,17 +321,19 @@ class TrendingPodcasts extends StatelessWidget {
             )
           : SliverLayoutBuilder(
               builder: (context, constraints) {
-                var crossAxisCount = 5;
-                final width = MediaQuery.of(context).size.width;
+                int crossAxisCount;
+                final width = MediaQuery.sizeOf(context).width;
 
-                if (width >= Breakpoints.desktopScreen) {
-                  crossAxisCount = 6;
-                } else if (width >= Breakpoints.tabletScreen) {
-                  crossAxisCount = 4;
-                } else if (width >= Breakpoints.mobileScreen) {
-                  crossAxisCount = 3;
-                } else {
+                if (Breakpoints.isMobile(width)) {
                   crossAxisCount = 2;
+                } else if (Breakpoints.isTablet(width)) {
+                  crossAxisCount = 3;
+                } else if (Breakpoints.isMedium(width)) {
+                  crossAxisCount = 4;
+                } else if (Breakpoints.isLarge(width)) {
+                  crossAxisCount = 5;
+                } else {
+                  crossAxisCount = 6;
                 }
 
                 return SliverGrid.builder(

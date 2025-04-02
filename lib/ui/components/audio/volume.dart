@@ -8,8 +8,7 @@ class VolumeSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop =
-        MediaQuery.sizeOf(context).width > Breakpoints.desktopScreen;
+    final isDesktop = Breakpoints.isDesktop(MediaQuery.sizeOf(context).width);
     final volume = context.select<MediaProvider, double>((e) => e.volume);
 
     if (isDesktop) {
