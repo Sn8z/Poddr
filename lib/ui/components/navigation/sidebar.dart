@@ -64,16 +64,21 @@ class PoddrSideBar extends StatelessWidget {
                 }).toList(),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.all(8),
-              clipBehavior: Clip.antiAlias,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: AspectRatio(
+                aspectRatio: 1.0, // 1:1 aspect ratio
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    ),
+                  ),
+                  child: const Artwork(),
                 ),
               ),
-              child: const Artwork(),
-            ),
+            )
           ],
         ),
       ),
