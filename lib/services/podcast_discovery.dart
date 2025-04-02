@@ -9,12 +9,26 @@ class PodcastDiscoveryProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  String _country = 'us';
-  String get country => _country;
+  String _countryCode = 'us';
+  String get countryCode => _countryCode;
+  String get country {
+    final country = itunesCountries.firstWhere(
+      (element) => element['code'] == _countryCode,
+    );
+    return country['name'] ?? '';
+  }
+
   List<Map<String, String>> get countries => itunesCountries;
 
-  String _genre = '';
-  String get genre => _genre;
+  String _genreID = '';
+  String get genreID => _genreID;
+  String get genre {
+    final genre = itunesGenres.firstWhere(
+      (element) => element['id'] == _genreID,
+    );
+    return genre['genre'] ?? '';
+  }
+
   List<Map<String, String>> get genres => itunesGenres;
 
   List<Podcast> charts = [];
@@ -24,13 +38,13 @@ class PodcastDiscoveryProvider extends ChangeNotifier {
   }
 
   void setCountry(String code) {
-    _country = code;
+    _countryCode = code;
     notifyListeners();
     getCharts();
   }
 
   void setGenre(String genre) {
-    _genre = genre;
+    _genreID = genre;
     notifyListeners();
     getCharts();
   }
@@ -38,7 +52,7 @@ class PodcastDiscoveryProvider extends ChangeNotifier {
   Future<void> getCharts() async {
     _isLoading = true;
     notifyListeners();
-    charts = await _podcastRepository.getCharts(_country, _genre);
+    charts = await _podcastRepository.getCharts(_countryCode, _genreID);
     _isLoading = false;
     notifyListeners();
   }
