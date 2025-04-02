@@ -40,18 +40,6 @@ class PodcastDiscoveryView extends StatelessWidget {
                   title: "Podcasts",
                 ),
                 PoddrAppBarOptions(
-                  title: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.view_module_rounded),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.view_headline_rounded),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
                   actions: [
                     IconButton(
                       icon: Text(
