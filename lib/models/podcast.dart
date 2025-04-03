@@ -78,7 +78,8 @@ String? _parseTitle(XmlElement channel) {
 
 String? _parseDescription(XmlElement channel) {
   final description = channel.findElements('description').firstOrNull;
-  return description?.innerText;
+  final itunesDescription = channel.findElements('itunes:summary').firstOrNull;
+  return description?.innerText ?? itunesDescription?.innerText;
 }
 
 String? _parseImage(XmlElement channel) {
@@ -97,7 +98,8 @@ String? _parseImage(XmlElement channel) {
 
 String? _parseAuthor(XmlElement channel) {
   final author = channel.findElements('author').firstOrNull;
-  return author?.innerText;
+  final itunesAuthor = channel.findElements('itunes:author').firstOrNull;
+  return author?.innerText ?? itunesAuthor?.innerText;
 }
 
 String? _parseLink(XmlElement channel) {

@@ -58,7 +58,11 @@ String? _parseTitle(XmlElement episode) {
 
 String? _parseDescription(XmlElement episode) {
   final description = episode.findElements('description').firstOrNull;
-  return description?.innerText;
+  final itunesDescription = episode.findElements('itunes:summary').firstOrNull;
+  final itunesSubtitle = episode.findElements('itunes:subtitle').firstOrNull;
+  return description?.innerText ??
+      itunesDescription?.innerText ??
+      itunesSubtitle?.innerText;
 }
 
 String? _parseAudioUrl(XmlElement episode) {
