@@ -28,110 +28,122 @@ class Podcast {
     this.episodes = const [],
   });
 
-  factory Podcast.fromXml(String rss) {
-    final xml = XmlDocument.parse(rss);
+  factory Podcast.fromXml(String data, String rss) {
+    final xml = XmlDocument.parse(data);
     final channel = xml.findAllElements('channel').firstOrNull;
-    if (channel == null) throw Exception("Invalid RSS");
+    if (channel == null) throw Exception("$rss is not a valid RSS feed");
 
-    //TODO: create a function that returns imageURL
-    final imagee = channel
-        .findElements('image')
-        .firstOrNull
-        ?.findElements('url')
-        .firstOrNull
-        ?.innerText;
-
-    final imageee =
-        channel.findElements('itunes:image').firstOrNull?.getAttribute('href');
-
-    final image = imagee ?? imageee;
-
-    final tags = <String>{}; // Using a Set to avoid duplicates
-
-    // Extract iTunes categories
-    for (var category in channel.findElements('itunes:category')) {
-      // Get main category
-      final mainCategory = category.getAttribute('text');
-      if (mainCategory != null) {
-        tags.add(mainCategory);
-      }
-
-      // Get subcategories
-      for (var subCategory in category.findElements('itunes:category')) {
-        final subCategoryText = subCategory.getAttribute('text');
-        if (subCategoryText != null) {
-          tags.add(subCategoryText);
-        }
-      }
-    }
-
-    // Extract regular RSS categories if present
-    for (var category in channel.findElements('category')) {
-      final categoryText = category.innerText;
-      if (categoryText.isNotEmpty) {
-        tags.add(categoryText);
-      }
-    }
+    final image = _parseImage(channel);
+    final title = _parseTitle(channel);
+    final author = _parseAuthor(channel);
 
     final feed = Podcast(
-      title: channel.findElements('title').firstOrNull?.innerText,
-      description: channel.findElements('description').firstOrNull?.innerText,
+      title: title,
+      description: _parseDescription(channel),
       image: image,
-      author: channel.findElements('author').firstOrNull?.innerText,
-      link: channel.findElements('link').firstOrNull?.innerText,
-      language: channel.findElements('language').firstOrNull?.innerText,
-      copyright: channel.findElements('copyright').firstOrNull?.innerText,
-      explicit: _parseExplicit(
-          channel.findElements('itunes:explicit').firstOrNull?.innerText),
-      rss: channel.findElements('atom:link').firstOrNull?.getAttribute('href'),
-      tags: tags.toList(),
+      author: author,
+      link: _parseLink(channel),
+      language: _parseLanguage(channel),
+      copyright: _parseCopyright(channel),
+      explicit: _parseExplicit(channel),
+      rss: rss,
+      tags: _parseGenres(channel),
       episodes: channel
           .findElements('item')
-          .map((e) => PodcastEpisode.fromXml(e, image))
+          .map(
+            (episode) => PodcastEpisode.fromXml(
+              episode: episode,
+              image: image,
+              podcastTitle: title,
+              podcastRSS: rss,
+              author: author,
+            ),
+          )
           .toList(),
     );
 
     return feed;
   }
 
-  factory Podcast.fromItunes(Map<String, dynamic> data) {
-    // Extract all available genres from iTunes data
-    final tags = <String>[];
+  @override
+  String toString() {
+    return 'Podcast{title: $title, description: $description, image: $image, author: $author, rss: $rss, link: $link, language: $language, copyright: $copyright, explicit: $explicit, tags: $tags,}';
+  }
+}
 
-    // Add primary genre
-    if (data['primaryGenreName'] != null) {
-      tags.add(data['primaryGenreName']);
+String? _parseTitle(XmlElement channel) {
+  final title = channel.findElements('title').firstOrNull;
+  return title?.innerText;
+}
+
+String? _parseDescription(XmlElement channel) {
+  final description = channel.findElements('description').firstOrNull;
+  return description?.innerText;
+}
+
+String? _parseImage(XmlElement channel) {
+  final standardImage = channel
+      .findElements('image')
+      .firstOrNull
+      ?.findElements('url')
+      .firstOrNull
+      ?.innerText;
+
+  final itunesImage =
+      channel.findElements('itunes:image').firstOrNull?.getAttribute('href');
+
+  return standardImage ?? itunesImage;
+}
+
+String? _parseAuthor(XmlElement channel) {
+  final author = channel.findElements('author').firstOrNull;
+  return author?.innerText;
+}
+
+String? _parseLink(XmlElement channel) {
+  final link = channel.findElements('link').firstOrNull;
+  return link?.innerText;
+}
+
+String? _parseLanguage(XmlElement channel) {
+  final language = channel.findElements('language').firstOrNull;
+  return language?.innerText;
+}
+
+String? _parseCopyright(XmlElement channel) {
+  final copyright = channel.findElements('copyright').firstOrNull;
+  return copyright?.innerText;
+}
+
+List<String> _parseGenres(XmlElement channel) {
+  final tags = <String>{};
+
+  for (var category in channel.findElements('itunes:category')) {
+    final mainCategory = category.getAttribute('text');
+    if (mainCategory != null) {
+      tags.add(mainCategory);
     }
 
-    // Add genres from genreIds if available
-    if (data['genreIds'] is List) {
-      final genreNames = data['genres'] as List?;
-      if (genreNames != null) {
-        tags.addAll(genreNames.map((e) => e.toString()));
+    for (var subCategory in category.findElements('itunes:category')) {
+      final subCategoryText = subCategory.getAttribute('text');
+      if (subCategoryText != null) {
+        tags.add(subCategoryText);
       }
     }
-
-    return Podcast(
-      title: data['collectionName'] ?? 'Missing name',
-      description: data['collectionDescription'],
-      image: data['artworkUrl600'],
-      author: data['author'],
-      link: data['feedUrl'],
-      language: data['language'],
-      copyright: data['copyright'],
-      explicit: _parseExplicit(data['explicit']),
-      rss: data['feedUrl'],
-      tags: tags,
-      episodes:
-          data['episodes']?.map((e) => PodcastEpisode.fromItunes(e)).toList() ??
-              [],
-    );
   }
 
-  static bool _parseExplicit(dynamic value) {
-    if (value == null) return false;
-    if (value is bool) return value;
-    final strValue = value.toString().toLowerCase();
-    return strValue == 'true' || strValue == 'yes' || strValue == 'explicit';
+  for (var category in channel.findElements('category')) {
+    final categoryText = category.innerText;
+    if (categoryText.isNotEmpty) {
+      tags.add(categoryText);
+    }
   }
+  return tags.toList();
+}
+
+bool _parseExplicit(XmlElement channel) {
+  final explicit = channel.findElements('itunes:explicit').firstOrNull;
+  if (explicit == null) return false;
+  final strValue = explicit.innerText.toLowerCase();
+  return strValue == 'true' || strValue == 'yes' || strValue == 'explicit';
 }

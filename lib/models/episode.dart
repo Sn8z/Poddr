@@ -6,8 +6,9 @@ class PodcastEpisode {
   final String title;
   final String description;
   final String audioUrl;
-  final String? podcastRSS;
   final String? podcastTitle;
+  final String? podcastRSS;
+  final String? author;
   final Duration? duration;
   final DateTime? publicationDate;
   final String? imageUrl;
@@ -16,50 +17,61 @@ class PodcastEpisode {
     required this.title,
     required this.description,
     required this.audioUrl,
-    this.podcastRSS,
     this.podcastTitle,
+    this.podcastRSS,
+    this.author,
     this.duration = Duration.zero,
     this.publicationDate,
     this.imageUrl,
   });
 
-  factory PodcastEpisode.fromXml(XmlElement episode, String? image) {
+  factory PodcastEpisode.fromXml({
+    required XmlElement episode,
+    String? image,
+    String? podcastTitle,
+    String? podcastRSS,
+    String? author,
+  }) {
     return PodcastEpisode(
-      title: episode.findElements('title').firstOrNull?.innerText ?? '',
-      description:
-          episode.findElements('description').firstOrNull?.innerText ?? '',
-      audioUrl:
-          episode.findElements('enclosure').firstOrNull?.getAttribute('url') ??
-              '',
-      duration: _parseDuration(
-          episode.findElements('itunes:duration').firstOrNull?.innerText),
-      publicationDate: _parseDateTime(
-          episode.findElements('pubDate').firstOrNull?.innerText ?? ''),
-      imageUrl: episode
-              .findElements('itunes:image')
-              .firstOrNull
-              ?.getAttribute('href') ??
-          image,
+      title: _parseTitle(episode) ?? '',
+      description: _parseDescription(episode) ?? '',
+      podcastRSS: podcastRSS,
+      podcastTitle: podcastTitle,
+      author: author,
+      audioUrl: _parseAudioUrl(episode) ?? '',
+      duration: _parseDuration(episode),
+      publicationDate: _parsePubDate(episode),
+      imageUrl: _parseImageUrl(episode) ?? image,
     );
   }
 
-  factory PodcastEpisode.fromItunes(Map<String, dynamic> data) {
-    return PodcastEpisode(
-      title: data['title'],
-      description: data['subtitle'],
-      audioUrl: data['feedUrl'],
-      duration: _parseDuration(data['duration']),
-      publicationDate:
-          _parseDateTime(data['releaseDate'] ?? data['pubDate'] ?? ''),
-      imageUrl: data['artworkUrl600'],
-    );
+  @override
+  String toString() {
+    return 'PodcastEpisode{title: $title, description: $description, audioUrl: $audioUrl, podcastTitle: $podcastTitle, podcastRSS: $podcastRSS, author: $author, duration: $duration, publicationDate: $publicationDate, imageUrl: $imageUrl}';
   }
 }
 
-Duration _parseDuration(String? text) {
-  if (text == null) return Duration.zero;
+String? _parseTitle(XmlElement episode) {
+  final title = episode.findElements('title').firstOrNull;
+  return title?.innerText;
+}
 
-  List<String> parts = text.split(':').reversed.toList();
+String? _parseDescription(XmlElement episode) {
+  final description = episode.findElements('description').firstOrNull;
+  return description?.innerText;
+}
+
+String? _parseAudioUrl(XmlElement episode) {
+  final audioUrl = episode.findElements('enclosure').firstOrNull;
+  return audioUrl?.getAttribute('url');
+}
+
+Duration _parseDuration(XmlElement episode) {
+  final duration = episode.findElements('itunes:duration').firstOrNull;
+  final durationText = duration?.innerText;
+  if (durationText == null) return Duration.zero;
+
+  List<String> parts = durationText.split(':').reversed.toList();
   int seconds = 0;
 
   if (parts.isNotEmpty) seconds += int.tryParse(parts[0]) ?? 0;
@@ -69,21 +81,28 @@ Duration _parseDuration(String? text) {
   return Duration(seconds: seconds);
 }
 
-DateTime? _parseDateTime(String? text) {
-  if (text == null || text.isEmpty) return null;
+DateTime? _parsePubDate(XmlElement episode) {
+  final pubDate = episode.findElements('pubDate').firstOrNull;
+  final pubDateText = pubDate?.innerText;
+  if (pubDateText == null || pubDateText.isEmpty) return null;
 
   try {
     final dateFormat = DateFormat('EEE, dd MMM yyyy HH:mm:ss Z');
-    return dateFormat.parse(text);
+    return dateFormat.parse(pubDateText);
   } catch (_) {
     try {
-      return DateTime.parse(text);
+      return DateTime.parse(pubDateText);
     } catch (_) {
       try {
-        return HttpDate.parse(text);
+        return HttpDate.parse(pubDateText);
       } catch (_) {
         return null;
       }
     }
   }
+}
+
+String? _parseImageUrl(XmlElement episode) {
+  final image = episode.findElements('itunes:image').firstOrNull;
+  return image?.getAttribute('href');
 }

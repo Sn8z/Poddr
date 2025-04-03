@@ -109,7 +109,7 @@ class ResultBox extends StatelessWidget {
               child: PoddrImage(imageUrl: searchResults[index].image ?? ''),
             ),
             title: searchResults[index].title,
-            subtitle: searchResults[index].rss,
+            subtitle: searchResults[index].author,
             onTap: () {
               final rss = Uri.encodeComponent(searchResults[index].rss ?? '');
               context.push('/podcasts/$rss');

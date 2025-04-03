@@ -26,7 +26,12 @@ class ITunesPodcastRepository implements IPodcastRepository {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         for (var item in data['results']) {
-          final feed = Podcast.fromItunes(item);
+          final Podcast feed = Podcast(
+            rss: item['feedUrl'],
+            title: item['trackName'] ?? item['trackCensoredName'],
+            image: item['artworkUrl600'] ?? item['artworkUrl100'],
+            author: item['artistName'],
+          );
           feeds.add(feed);
         }
         return feeds;
@@ -72,7 +77,12 @@ class ITunesPodcastRepository implements IPodcastRepository {
           final results = lookupData['results'] as List<dynamic>?;
           if (results == null) return [];
           for (var result in results) {
-            final feed = Podcast.fromItunes(result);
+            final Podcast feed = Podcast(
+              rss: result['feedUrl'],
+              title: result['trackName'] ?? result['trackCensoredName'],
+              image: result['artworkUrl600'] ?? result['artworkUrl100'],
+              author: result['artistName'],
+            );
             feeds.add(feed);
           }
         } else {
@@ -100,7 +110,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
       final response = await _http.get(Uri.parse(rss));
       log("Feed return code ${response.statusCode}", name: logName);
       if (response.statusCode == 200) {
-        return Podcast.fromXml(response.body);
+        return Podcast.fromXml(response.body, rss);
       } else {
         log("Feed return code ${response.statusCode}", name: logName);
         throw Exception("Could not get feed");
