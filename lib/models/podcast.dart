@@ -73,13 +73,13 @@ class Podcast {
 
 String? _parseTitle(XmlElement channel) {
   final title = channel.findElements('title').firstOrNull;
-  return title?.innerText;
+  return title?.innerText.trim();
 }
 
 String? _parseDescription(XmlElement channel) {
   final description = channel.findElements('description').firstOrNull;
   final itunesDescription = channel.findElements('itunes:summary').firstOrNull;
-  return description?.innerText ?? itunesDescription?.innerText;
+  return description?.innerText.trim() ?? itunesDescription?.innerText.trim();
 }
 
 String? _parseImage(XmlElement channel) {
@@ -99,22 +99,22 @@ String? _parseImage(XmlElement channel) {
 String? _parseAuthor(XmlElement channel) {
   final author = channel.findElements('author').firstOrNull;
   final itunesAuthor = channel.findElements('itunes:author').firstOrNull;
-  return author?.innerText ?? itunesAuthor?.innerText;
+  return author?.innerText.trim() ?? itunesAuthor?.innerText.trim();
 }
 
 String? _parseLink(XmlElement channel) {
   final link = channel.findElements('link').firstOrNull;
-  return link?.innerText;
+  return link?.innerText.trim();
 }
 
 String? _parseLanguage(XmlElement channel) {
   final language = channel.findElements('language').firstOrNull;
-  return language?.innerText;
+  return language?.innerText.trim();
 }
 
 String? _parseCopyright(XmlElement channel) {
   final copyright = channel.findElements('copyright').firstOrNull;
-  return copyright?.innerText;
+  return copyright?.innerText.trim();
 }
 
 List<String> _parseGenres(XmlElement channel) {
@@ -146,6 +146,6 @@ List<String> _parseGenres(XmlElement channel) {
 bool _parseExplicit(XmlElement channel) {
   final explicit = channel.findElements('itunes:explicit').firstOrNull;
   if (explicit == null) return false;
-  final strValue = explicit.innerText.toLowerCase();
+  final strValue = explicit.innerText.trim().toLowerCase();
   return strValue == 'true' || strValue == 'yes' || strValue == 'explicit';
 }

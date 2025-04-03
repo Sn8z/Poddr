@@ -53,16 +53,16 @@ class PodcastEpisode {
 
 String? _parseTitle(XmlElement episode) {
   final title = episode.findElements('title').firstOrNull;
-  return title?.innerText;
+  return title?.innerText.trim();
 }
 
 String? _parseDescription(XmlElement episode) {
   final description = episode.findElements('description').firstOrNull;
   final itunesDescription = episode.findElements('itunes:summary').firstOrNull;
   final itunesSubtitle = episode.findElements('itunes:subtitle').firstOrNull;
-  return description?.innerText ??
-      itunesDescription?.innerText ??
-      itunesSubtitle?.innerText;
+  return description?.innerText.trim() ??
+      itunesDescription?.innerText.trim() ??
+      itunesSubtitle?.innerText.trim();
 }
 
 String? _parseAudioUrl(XmlElement episode) {
