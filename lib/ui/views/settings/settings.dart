@@ -42,12 +42,18 @@ class SettingsView extends StatelessWidget {
               children: [
                 ListTile(
                   leading: Icon(Icons.sort_rounded),
-                  title: Text("Default Sort"),
+                  title: Text("Default Region"),
                   trailing: Icon(Icons.chevron_right),
                 ),
                 ListTile(
-                  leading: Icon(Icons.info_outline),
-                  title: ShimmerBox(),
+                  leading: Icon(Icons.sort_rounded),
+                  title: Text("Default Layout"),
+                  trailing: Icon(Icons.chevron_right),
+                ),
+                ListTile(
+                  leading: Icon(Icons.sort_rounded),
+                  title: Text("Default Sort"),
+                  trailing: Icon(Icons.chevron_right),
                 ),
                 ListTile(
                   leading: Icon(Icons.info_outline),

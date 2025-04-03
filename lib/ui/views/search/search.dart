@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
@@ -114,6 +115,9 @@ class ResultBox extends StatelessWidget {
               final rss = Uri.encodeComponent(searchResults[index].rss ?? '');
               context.push('/podcasts/$rss');
             },
+            actions: [
+              PoddrAddSubscriptionBtn(rss: searchResults[index].rss),
+            ],
           );
         },
       ),

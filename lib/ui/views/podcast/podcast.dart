@@ -5,6 +5,7 @@ import 'package:poddr/models/podcast.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
+import 'package:poddr/ui/components/widgets/dialog.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
@@ -13,6 +14,7 @@ import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/components/widgets/tag.dart';
 import 'package:poddr/services/media.dart';
 import 'package:poddr/services/podcast.dart';
+import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
@@ -117,8 +119,7 @@ class PodcastDetailsView extends StatelessWidget {
                                         ),
                                         gapH8,
                                         Text(
-                                          podcastProvider.podcast?.title ??
-                                              "Nope",
+                                          podcastProvider.podcast?.title ?? "",
                                           style: TextStyle(
                                             overflow: TextOverflow.ellipsis,
                                             fontSize: 20,
@@ -240,16 +241,33 @@ class PodcastDetailsView extends StatelessWidget {
                   actions: const [],
                 ),
                 PoddrAppBarOptions(
-                  title: PoddrAddSubscriptionBtn(rss: rss),
+                  title: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.sort_rounded),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.search_rounded),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return PoddrDialog(
+                                children: [
+                                  PoddrTextInput(
+                                    labelText: "Filter",
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                   actions: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.search_rounded),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.rss_feed_rounded),
-                    ),
+                    PoddrAddSubscriptionBtn(rss: rss),
                     IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.more_vert_rounded),
@@ -330,42 +348,24 @@ class Episode extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        PopupMenuButton(
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                child: const Row(
+        IconButton(
+          icon: const Icon(Icons.info_outline_rounded),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return PoddrDialog(
                   children: [
-                    Icon(Icons.share),
-                    gapH8,
-                    Text('Share'),
+                    Text(episode.description),
                   ],
-                ),
-                onTap: () {},
-              ),
-              PopupMenuItem(
-                child: const Row(
-                  children: [
-                    Icon(Icons.open_in_new),
-                    gapH8,
-                    Text('Open in browser'),
-                  ],
-                ),
-                onTap: () {},
-              ),
-            ];
+                );
+              },
+            );
           },
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(16),
-            ),
-          ),
-          child: Container(
-            height: 36,
-            width: 36,
-            alignment: Alignment.centerRight,
-            child: const Icon(Icons.more_vert),
-          ),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.more_vert_rounded),
         ),
       ],
       onTap: () {
