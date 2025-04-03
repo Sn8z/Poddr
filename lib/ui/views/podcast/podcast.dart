@@ -177,7 +177,7 @@ class PodcastDetailsView extends StatelessWidget {
                                               Text(
                                                 podcastProvider
                                                         .podcast?.title ??
-                                                    "Nope",
+                                                    "",
                                                 style: TextStyle(
                                                     overflow:
                                                         TextOverflow.ellipsis,
