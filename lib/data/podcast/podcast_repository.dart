@@ -108,7 +108,6 @@ class ITunesPodcastRepository implements IPodcastRepository {
     try {
       log("Getting feed $rss", name: logName);
       final response = await _http.get(Uri.parse(rss));
-      log(utf8.decode(response.bodyBytes), name: logName);
       log("Feed return code ${response.statusCode}", name: logName);
       if (response.statusCode == 200) {
         return Podcast.fromXml(utf8.decode(response.bodyBytes), rss);
