@@ -8,7 +8,9 @@ import 'package:poddr/ui/components/audio/media_title.dart';
 import 'package:poddr/ui/components/audio/play_button.dart';
 import 'package:poddr/ui/components/audio/position_text.dart';
 import 'package:poddr/ui/components/audio/progress_slider.dart';
+import 'package:poddr/ui/components/audio/speed_button.dart';
 import 'package:poddr/ui/components/audio/volume.dart';
+import 'package:poddr/ui/components/widgets/dialog.dart';
 
 class LargePlayer extends StatelessWidget {
   const LargePlayer({super.key});
@@ -105,14 +107,7 @@ class LargePlayer extends StatelessWidget {
                                         showDialog(
                                           context: context,
                                           builder: (context) {
-                                            return SimpleDialog(
-                                              title: const Text('Queue'),
-                                              contentPadding:
-                                                  const EdgeInsets.all(16),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                              ),
+                                            return PoddrDialog(
                                               children: [
                                                 const Text('Queue'),
                                                 SimpleDialogOption(
@@ -122,6 +117,14 @@ class LargePlayer extends StatelessWidget {
                                                 SimpleDialogOption(
                                                   onPressed: () {},
                                                   child: const Text('2'),
+                                                ),
+                                                SimpleDialogOption(
+                                                  onPressed: () {},
+                                                  child: const Text('3'),
+                                                ),
+                                                SimpleDialogOption(
+                                                  onPressed: () {},
+                                                  child: const Text('4'),
                                                 ),
                                               ],
                                             );
@@ -133,26 +136,7 @@ class LargePlayer extends StatelessWidget {
                                         size: 20,
                                       ),
                                     ),
-                                    PopupMenuButton(
-                                      icon: const Icon(
-                                          Icons.one_x_mobiledata_rounded),
-                                      itemBuilder: (context) {
-                                        return [
-                                          PopupMenuItem(
-                                            child: const Text('Settings'),
-                                            onTap: () => debugPrint('1'),
-                                          ),
-                                          PopupMenuItem(
-                                            child: const Text('Settings'),
-                                            onTap: () => debugPrint('2'),
-                                          ),
-                                          PopupMenuItem(
-                                            child: const Text('Settings'),
-                                            onTap: () => debugPrint('3'),
-                                          ),
-                                        ];
-                                      },
-                                    ),
+                                    SpeedButton(),
                                     IconButton(
                                       onPressed: () {
                                         context.push('/player');

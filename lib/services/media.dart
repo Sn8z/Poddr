@@ -332,6 +332,11 @@ class MediaProvider extends BaseAudioHandler
   }
 
   @override
+  Future<void> setSpeed(double speed) async {
+    await _player.setRate(speed);
+  }
+
+  @override
   Future<void> seek(Duration position) async {
     _isLoading = true;
     notifyListeners();

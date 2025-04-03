@@ -6,6 +6,7 @@ import 'package:poddr/ui/components/audio/media_title.dart';
 import 'package:poddr/ui/components/audio/play_button.dart';
 import 'package:poddr/ui/components/audio/position_text.dart';
 import 'package:poddr/ui/components/audio/progress_slider.dart';
+import 'package:poddr/ui/components/audio/speed_button.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
 class PlayerView extends StatelessWidget {
@@ -71,6 +72,18 @@ class PlayerView extends StatelessWidget {
               ],
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SpeedButton(),
+              SpeedButton(),
+              SpeedButton(),
+              SpeedButton(),
+              SpeedButton(),
+            ],
+          ),
+          gapH16,
         ],
       ),
     );
