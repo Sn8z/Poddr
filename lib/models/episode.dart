@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:audio_service/audio_service.dart';
 import 'package:intl/intl.dart';
 import 'package:xml/xml.dart';
 
@@ -42,6 +43,22 @@ class PodcastEpisode {
       duration: _parseDuration(episode),
       publicationDate: _parsePubDate(episode),
       imageUrl: _parseImageUrl(episode) ?? image,
+    );
+  }
+
+  factory PodcastEpisode.fromMediaItem({required MediaItem mediaItem}) {
+    return PodcastEpisode(
+      title: mediaItem.title ?? '',
+      description: mediaItem.extras?['description'] ?? '',
+      podcastRSS: mediaItem.extras?['podcastRSS'],
+      podcastTitle: mediaItem.artist,
+      author: mediaItem.album,
+      audioUrl: mediaItem.id,
+      duration: mediaItem.duration ?? Duration.zero,
+      publicationDate: mediaItem.extras?['publicationDate'] != null
+          ? DateTime.tryParse(mediaItem.extras?['publicationDate'])
+          : null,
+      imageUrl: mediaItem.artUri?.toString(),
     );
   }
 

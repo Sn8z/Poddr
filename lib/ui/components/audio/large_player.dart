@@ -7,10 +7,12 @@ import 'package:poddr/ui/components/audio/episode_title.dart';
 import 'package:poddr/ui/components/audio/media_title.dart';
 import 'package:poddr/ui/components/audio/play_button.dart';
 import 'package:poddr/ui/components/audio/position_text.dart';
+import 'package:poddr/ui/components/audio/prev_button.dart';
 import 'package:poddr/ui/components/audio/progress_slider.dart';
+import 'package:poddr/ui/components/audio/queue_button.dart';
+import 'package:poddr/ui/components/audio/skip_button.dart';
 import 'package:poddr/ui/components/audio/speed_button.dart';
 import 'package:poddr/ui/components/audio/volume.dart';
-import 'package:poddr/ui/components/widgets/dialog.dart';
 
 class LargePlayer extends StatelessWidget {
   const LargePlayer({super.key});
@@ -63,22 +65,14 @@ class LargePlayer extends StatelessWidget {
                           size: 28,
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.skip_previous_rounded,
-                          size: 28,
-                        ),
+                      const PreviousButton(
+                        size: 28,
                       ),
                       const PlayButton(
                         size: 58,
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.skip_next_rounded,
-                          size: 28,
-                        ),
+                      const SkipButton(
+                        size: 28,
                       ),
                       IconButton(
                         onPressed: () {},
@@ -102,41 +96,8 @@ class LargePlayer extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return PoddrDialog(
-                                              children: [
-                                                const Text('Queue'),
-                                                SimpleDialogOption(
-                                                  onPressed: () {},
-                                                  child: const Text('1'),
-                                                ),
-                                                SimpleDialogOption(
-                                                  onPressed: () {},
-                                                  child: const Text('2'),
-                                                ),
-                                                SimpleDialogOption(
-                                                  onPressed: () {},
-                                                  child: const Text('3'),
-                                                ),
-                                                SimpleDialogOption(
-                                                  onPressed: () {},
-                                                  child: const Text('4'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.queue_music_rounded,
-                                        size: 20,
-                                      ),
-                                    ),
-                                    SpeedButton(),
+                                    const QueueButton(),
+                                    const SpeedButton(),
                                     IconButton(
                                       onPressed: () {
                                         context.push('/player');

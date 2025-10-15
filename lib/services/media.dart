@@ -5,6 +5,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart' hide AudioDevice;
 import 'package:flutter/foundation.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,6 +43,14 @@ class MediaProvider extends BaseAudioHandler
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  List<MediaItem> _mediaQueue = [];
+  List<PodcastEpisode> get mediaQueue => _mediaQueue
+      .map((item) => PodcastEpisode.fromMediaItem(mediaItem: item))
+      .toList();
+
+  int _currentIndex = -1;
+  int get currentIndex => _currentIndex;
 
   final HistoryProvider historyProvider;
 
@@ -117,7 +126,6 @@ class MediaProvider extends BaseAudioHandler
     _prefs = await SharedPreferences.getInstance();
 
     mediaItem.listen(_handleMediaItemChange);
-    _player.stream.playlist.listen(_handlePlaylistChange);
     _player.stream.playing.listen(_handlePlayingState);
     _player.stream.completed.listen(_handleCompletion);
     _player.stream.position.listen(_handlePositionChange);
@@ -141,10 +149,6 @@ class MediaProvider extends BaseAudioHandler
     _prefs?.setString("mediaPodcastRSS", media.extras?["podcastRSS"] ?? "");
   }
 
-  void _handlePlaylistChange(Playlist playlist) {
-    log("Playlist update: $playlist", name: logName);
-  }
-
   void _handlePlayingState(bool value) {
     log(value ? "Playing" : "Paused", name: logName);
     playbackState.add(playbackState.value.copyWith(
@@ -160,6 +164,9 @@ class MediaProvider extends BaseAudioHandler
 
   void _handleCompletion(bool value) {
     log("Completed: $value", name: logName);
+
+    if (value) skipToNext();
+
     playbackState.add(playbackState.value.copyWith(
       processingState: AudioProcessingState.completed,
     ));
@@ -274,12 +281,17 @@ class MediaProvider extends BaseAudioHandler
     }
 
     mediaItem.add(media);
+
+    if (_mediaQueue.isEmpty) {
+      _mediaQueue.add(media);
+      queue.add(_mediaQueue);
+      _currentIndex = 0;
+    }
+
     await _player.open(
-        Media(
-          media.id,
-          start: startPosition,
-        ),
-        play: false);
+      Media(media.id, start: startPosition),
+      play: false,
+    );
 
     if (progress == null) {
       historyProvider.addToHistory(
@@ -296,6 +308,41 @@ class MediaProvider extends BaseAudioHandler
     }
 
     if (autoplay) await _player.play();
+  }
+
+  Future<void> addToQueue({
+    String? audioUrl,
+    String? podcastTitle,
+    String? podcastRSS,
+    String? episodeTitle,
+    String? album,
+    String? description,
+    String? artist,
+    String? artUri,
+  }) async {
+    log("Adding to queue", name: logName);
+    log("AudioUrl: $audioUrl", name: logName);
+    log("PodcastTitle: $podcastTitle", name: logName);
+    log("PodcastRSS: $podcastRSS", name: logName);
+    log("EpisodeTitle: $episodeTitle", name: logName);
+    log("Album: $album", name: logName);
+    log("Description: $description", name: logName);
+    log("Artist: $artist", name: logName);
+    log("ArtUri: $artUri", name: logName);
+
+    if (audioUrl == null) return;
+
+    final media = MediaItem(
+      id: audioUrl,
+      title: episodeTitle ?? "Missing title",
+      album: album ?? "Missing album",
+      displayDescription: description ?? "Missing description",
+      artist: artist ?? podcastTitle,
+      artUri: Uri.parse(artUri ?? ""),
+      extras: {"podcastRSS": podcastRSS},
+    );
+
+    await addQueueItem(media);
   }
 
   Future<void> setVolume(double volume) async {
@@ -347,17 +394,74 @@ class MediaProvider extends BaseAudioHandler
 
   @override
   Future<void> skipToNext() async {
-    await _player.next();
+    if (_currentIndex < _mediaQueue.length - 1) {
+      final nextIndex = _currentIndex + 1;
+      await skipToQueueItem(nextIndex);
+    } else {
+      log("No next item in queue", name: logName);
+      await stop();
+    }
+    log("Skipped to next", name: logName);
   }
 
   @override
   Future<void> skipToPrevious() async {
-    await _player.previous();
+    if (_currentIndex <= 0) {
+      log("No previous item in queue", name: logName);
+      await seek(Duration.zero);
+    } else {
+      log("Skipped to previous", name: logName);
+      final prevIndex = _currentIndex - 1;
+      await skipToQueueItem(prevIndex);
+    }
   }
 
   @override
   Future<void> skipToQueueItem(int index) async {
-    await _player.jump(index);
+    if (index < 0 || index >= _mediaQueue.length) {
+      log("Index out of bounds: $index", name: logName);
+      return;
+    }
+
+    await loadMedia(
+      audioUrl: _mediaQueue[index].id,
+      episodeTitle: _mediaQueue[index].title,
+      podcastTitle: _mediaQueue[index].artist,
+      podcastRSS: _mediaQueue[index].extras?["podcastRSS"],
+      artUri: _mediaQueue[index].artUri.toString(),
+      autoplay: true,
+    );
+
+    _currentIndex = index;
+
+    log("Skipped to queue item $index", name: logName);
+  }
+
+  @override
+  Future<void> addQueueItem(MediaItem mediaItem) async {
+    _mediaQueue.add(mediaItem);
+    queue.add(_mediaQueue);
+    log("Added to queue: ${mediaItem.id}", name: logName);
+  }
+
+  @override
+  Future<void> addQueueItems(List<MediaItem> mediaItems) async {
+    for (var item in mediaItems) {
+      _mediaQueue.add(item);
+      log("Added to queue: ${item.id}", name: logName);
+    }
+    queue.add(_mediaQueue);
+  }
+
+  @override
+  Future<void> removeQueueItemAt(int index) async {
+    if (index < 0 || index >= _mediaQueue.length) {
+      log("Index out of bounds: $index", name: logName);
+      return;
+    }
+    _mediaQueue.removeAt(index);
+    queue.add(_mediaQueue);
+    log("Removed from queue: index $index", name: logName);
   }
 
   @override

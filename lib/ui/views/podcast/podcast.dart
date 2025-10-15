@@ -364,8 +364,19 @@ class Episode extends StatelessWidget {
           },
         ),
         IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.more_vert_rounded),
+          onPressed: () {
+            context.read<MediaProvider>().addToQueue(
+                  audioUrl: episode.audioUrl,
+                  episodeTitle: episode.title,
+                  podcastTitle: episode.title,
+                  podcastRSS: podcastProvider.podcast!.rss ?? "Missing RSS",
+                  description: episode.description,
+                  artUri: podcastProvider.podcast!.image,
+                  album: episode.title,
+                  artist: podcastProvider.podcast!.author,
+                );
+          },
+          icon: const Icon(Icons.queue_music_rounded),
         ),
       ],
       onTap: () {
