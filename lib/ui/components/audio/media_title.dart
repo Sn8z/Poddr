@@ -4,7 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:poddr/services/media.dart';
 
 class MediaTitle extends StatelessWidget {
-  const MediaTitle({super.key});
+  final double size;
+  final Color? color;
+
+  const MediaTitle({
+    super.key,
+    this.size = 12,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +32,8 @@ class MediaTitle extends StatelessWidget {
         child: Text(
           artist ?? "Artist",
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontSize: 12,
+            color: color ?? Theme.of(context).colorScheme.onSurface,
+            fontSize: size,
           ),
           overflow: TextOverflow.ellipsis,
         ),

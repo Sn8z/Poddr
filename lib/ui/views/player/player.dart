@@ -19,8 +19,6 @@ class PlayerView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Now playing"),
-        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {},
@@ -37,14 +35,16 @@ class PlayerView extends StatelessWidget {
             ),
           ),
           const MediaProgressSlider(),
-          gapH8,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              PositionText(),
-              DurationText(),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                PositionText(),
+                DurationText(),
+              ],
+            ),
           ),
           Expanded(
             child: Column(
@@ -61,9 +61,11 @@ class PlayerView extends StatelessWidget {
                       PreviousButton(
                         size: 56,
                       ),
+                      gapW16,
                       const PlayButton(
                         size: 72,
                       ),
+                      gapW16,
                       SkipButton(
                         size: 56,
                       ),
@@ -78,9 +80,13 @@ class PlayerView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               QueueButton(),
+              gapW16,
               SpeedButton(),
+              gapW16,
               SpeedButton(),
+              gapW16,
               SpeedButton(),
+              gapW16,
               SpeedButton(),
             ],
           ),

@@ -4,7 +4,12 @@ import 'package:poddr/ui/components/widgets/dialog.dart';
 import 'package:provider/provider.dart';
 
 class SpeedButton extends StatelessWidget {
-  const SpeedButton({super.key});
+  final double size;
+
+  const SpeedButton({
+    super.key,
+    this.size = 26,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +47,7 @@ class SpeedButton extends StatelessWidget {
                         Text(
                           "${speedSteps[currentIndex.clamp(0, speedSteps.length - 1)]}x",
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 16,
                             color:
                                 Theme.of(context).colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.w500,
@@ -73,7 +78,13 @@ class SpeedButton extends StatelessWidget {
         "${context.select<MediaProvider, double>(
           (mediaProvider) => mediaProvider.playbackState.value.speed,
         )}x",
+        style: TextStyle(
+          fontSize: size * 0.6,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          fontWeight: FontWeight.bold,
+        ),
       ),
+      iconSize: size,
     );
   }
 }

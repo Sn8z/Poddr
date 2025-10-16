@@ -44,13 +44,16 @@ class MediaProvider extends BaseAudioHandler
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  List<MediaItem> _mediaQueue = [];
+  final List<MediaItem> _mediaQueue = [];
   List<PodcastEpisode> get mediaQueue => _mediaQueue
       .map((item) => PodcastEpisode.fromMediaItem(mediaItem: item))
       .toList();
 
   int _currentIndex = -1;
   int get currentIndex => _currentIndex;
+
+  bool get canGoNext => _currentIndex < _mediaQueue.length - 1;
+  bool get canGoPrevious => _currentIndex > 0;
 
   final HistoryProvider historyProvider;
 
@@ -441,6 +444,7 @@ class MediaProvider extends BaseAudioHandler
   Future<void> addQueueItem(MediaItem mediaItem) async {
     _mediaQueue.add(mediaItem);
     queue.add(_mediaQueue);
+    notifyListeners();
     log("Added to queue: ${mediaItem.id}", name: logName);
   }
 
@@ -451,6 +455,7 @@ class MediaProvider extends BaseAudioHandler
       log("Added to queue: ${item.id}", name: logName);
     }
     queue.add(_mediaQueue);
+    notifyListeners();
   }
 
   @override
@@ -461,6 +466,10 @@ class MediaProvider extends BaseAudioHandler
     }
     _mediaQueue.removeAt(index);
     queue.add(_mediaQueue);
+    notifyListeners();
+
+    // TODO: Adjust _currentIndex if necessary
+
     log("Removed from queue: index $index", name: logName);
   }
 

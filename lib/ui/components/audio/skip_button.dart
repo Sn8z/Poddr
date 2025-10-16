@@ -12,16 +12,15 @@ class SkipButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Enable/disable based on whether there is a next item in the queue
-    //final bool isSkippable = context.select<MediaProvider, bool>(
-    //  (provider) => provider.playbackState.que,
-    //);
+    final bool canGoNext = context.select<MediaProvider, bool>(
+      (provider) => provider.canGoNext,
+    );
 
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      cursor: canGoNext ? SystemMouseCursors.click : SystemMouseCursors.basic,
       child: GestureDetector(
         onTap: () {
-          context.read<MediaProvider>().skipToNext();
+          canGoNext ? context.read<MediaProvider>().skipToNext() : null;
         },
         child: SizedBox.fromSize(
           size: Size.square(size),
@@ -33,10 +32,6 @@ class SkipButton extends StatelessWidget {
                   decoration: BoxDecoration(
                     color:
                         Theme.of(context).colorScheme.surfaceContainerHighest,
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      width: 1,
-                    ),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -44,7 +39,9 @@ class SkipButton extends StatelessWidget {
               Center(
                 child: Icon(
                   Icons.skip_next_rounded,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: canGoNext
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Theme.of(context).colorScheme.onInverseSurface,
                 ),
               ),
             ],

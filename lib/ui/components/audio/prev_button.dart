@@ -12,16 +12,16 @@ class PreviousButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Enable/disable based on whether there is a previous item in the queue
-    //final bool isSkippable = context.select<MediaProvider, bool>(
-    //  (provider) => provider.playbackState.que,
-    //);
+    final bool canGoPrevious = context.select<MediaProvider, bool>(
+      (provider) => provider.canGoPrevious,
+    );
 
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      cursor:
+          canGoPrevious ? SystemMouseCursors.click : SystemMouseCursors.basic,
       child: GestureDetector(
         onTap: () {
-          context.read<MediaProvider>().skipToPrevious();
+          canGoPrevious ? context.read<MediaProvider>().skipToPrevious() : null;
         },
         child: SizedBox.fromSize(
           size: Size.square(size),
@@ -33,10 +33,6 @@ class PreviousButton extends StatelessWidget {
                   decoration: BoxDecoration(
                     color:
                         Theme.of(context).colorScheme.surfaceContainerHighest,
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      width: 1,
-                    ),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -44,7 +40,9 @@ class PreviousButton extends StatelessWidget {
               Center(
                 child: Icon(
                   Icons.skip_previous_rounded,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: canGoPrevious
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Theme.of(context).colorScheme.onInverseSurface,
                 ),
               ),
             ],

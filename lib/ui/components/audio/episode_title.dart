@@ -3,7 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:poddr/services/media.dart';
 
 class EpisodeTitle extends StatelessWidget {
-  const EpisodeTitle({super.key});
+  final double size;
+  final Color? color;
+
+  const EpisodeTitle({
+    super.key,
+    this.size = 16,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +20,9 @@ class EpisodeTitle extends StatelessWidget {
     return Text(
       title ?? "Title",
       style: TextStyle(
-        color: Theme.of(context).colorScheme.primary,
+        color: color ?? Theme.of(context).colorScheme.primary,
         fontWeight: FontWeight.bold,
-        fontSize: 16,
+        fontSize: size,
       ),
       overflow: TextOverflow.ellipsis,
     );

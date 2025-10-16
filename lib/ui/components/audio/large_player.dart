@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/audio/duration_text.dart';
 import 'package:poddr/ui/components/audio/episode_title.dart';
 import 'package:poddr/ui/components/audio/media_title.dart';
@@ -13,6 +12,8 @@ import 'package:poddr/ui/components/audio/queue_button.dart';
 import 'package:poddr/ui/components/audio/skip_button.dart';
 import 'package:poddr/ui/components/audio/speed_button.dart';
 import 'package:poddr/ui/components/audio/volume.dart';
+import 'package:poddr/ui/components/navigation/fullscreen_button.dart';
+import 'package:poddr/ui/utils/gaps.dart';
 
 class LargePlayer extends StatelessWidget {
   const LargePlayer({super.key});
@@ -31,7 +32,7 @@ class LargePlayer extends StatelessWidget {
               color: Theme.of(context)
                   .colorScheme
                   .surfaceContainerHigh
-                  .withOpacity(0.7),
+                  .withValues(alpha: 0.75),
               borderRadius: const BorderRadius.all(Radius.circular(12)),
             ),
             clipBehavior: Clip.antiAlias,
@@ -57,7 +58,6 @@ class LargePlayer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      //const Spacer(),
                       IconButton(
                         onPressed: () {},
                         icon: const Icon(
@@ -66,13 +66,15 @@ class LargePlayer extends StatelessWidget {
                         ),
                       ),
                       const PreviousButton(
-                        size: 28,
+                        size: 36,
                       ),
+                      gapW8,
                       const PlayButton(
-                        size: 58,
+                        size: 56,
                       ),
+                      gapW8,
                       const SkipButton(
-                        size: 28,
+                        size: 36,
                       ),
                       IconButton(
                         onPressed: () {},
@@ -81,7 +83,6 @@ class LargePlayer extends StatelessWidget {
                           size: 28,
                         ),
                       ),
-                      //const Spacer(),
                       Expanded(
                         flex: 2,
                         child: Padding(
@@ -98,15 +99,7 @@ class LargePlayer extends StatelessWidget {
                                   children: [
                                     const QueueButton(),
                                     const SpeedButton(),
-                                    IconButton(
-                                      onPressed: () {
-                                        context.push('/player');
-                                      },
-                                      icon: const Icon(
-                                        Icons.fullscreen_rounded,
-                                        size: 20,
-                                      ),
-                                    ),
+                                    const FullscreenButton(),
                                     const VolumeSlider(),
                                   ],
                                 ),

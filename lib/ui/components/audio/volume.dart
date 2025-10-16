@@ -5,7 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:poddr/services/media.dart';
 
 class VolumeSlider extends StatelessWidget {
-  const VolumeSlider({super.key});
+  final double size;
+  const VolumeSlider({
+    super.key,
+    this.size = 26,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +52,10 @@ class VolumeSlider extends StatelessWidget {
           },
         );
       },
-      icon: const Icon(Icons.volume_up),
+      icon: Icon(
+        Icons.volume_up,
+        size: size,
+      ),
     );
   }
 }
