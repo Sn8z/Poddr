@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/navigation/destinations.dart';
-import 'package:poddr/ui/utils/breakpoints.dart';
 
 class PoddrBottomBar extends StatelessWidget {
   final GoRouterState state;

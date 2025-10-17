@@ -5,7 +5,6 @@ import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/services/theme.dart';
-import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/data/theme/theme_colors.dart';

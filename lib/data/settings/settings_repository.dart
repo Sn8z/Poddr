@@ -26,7 +26,7 @@ class SavedPrefsSettingsRepository implements ISettingsRepository {
 
   @override
   Future<void> setColor(Color color) async {
-    await _prefs?.setInt(_colorKey, color.value);
+    await _prefs?.setInt(_colorKey, color.toARGB32());
   }
 
   @override

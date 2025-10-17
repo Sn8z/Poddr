@@ -1,7 +1,5 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:poddr/models/episode.dart';
-import 'package:poddr/models/podcast.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';

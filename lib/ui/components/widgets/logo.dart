@@ -20,8 +20,8 @@ class PoddrLogo extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white.withOpacity(opacity)
-                    : Colors.black.withOpacity(opacity),
+                    ? Colors.white.withValues(alpha: opacity)
+                    : Colors.black.withValues(alpha: opacity),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(size * multiplier),
                   topRight: Radius.circular(size * multiplier),
@@ -38,8 +38,10 @@ class PoddrLogo extends StatelessWidget {
             height: size * multiplier,
             child: Container(
               decoration: BoxDecoration(
-                color:
-                    Theme.of(context).colorScheme.primary.withOpacity(opacity),
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: opacity),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(size * multiplier),
                   topRight: Radius.circular(size * multiplier / 2),

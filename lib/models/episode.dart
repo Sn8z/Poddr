@@ -48,7 +48,7 @@ class PodcastEpisode {
 
   factory PodcastEpisode.fromMediaItem({required MediaItem mediaItem}) {
     return PodcastEpisode(
-      title: mediaItem.title ?? '',
+      title: mediaItem.title,
       description: mediaItem.extras?['description'] ?? '',
       podcastRSS: mediaItem.extras?['podcastRSS'],
       podcastTitle: mediaItem.artist,

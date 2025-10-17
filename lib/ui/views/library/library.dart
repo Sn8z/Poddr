@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/models/podcast.dart';
-import 'package:poddr/services/podcast_discovery.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
