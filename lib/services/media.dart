@@ -416,7 +416,7 @@ class MediaProvider extends BaseAudioHandler
   Future<void> skipToPrevious() async {
     if (_currentIndex <= 0) {
       log("No previous item in queue", name: logName);
-      await seek(Duration.zero);
+      return;
     } else {
       log("Skipped to previous", name: logName);
       final prevIndex = _currentIndex - 1;
@@ -431,12 +431,18 @@ class MediaProvider extends BaseAudioHandler
       return;
     }
 
+    final media = _mediaQueue[index];
+
     await loadMedia(
-      audioUrl: _mediaQueue[index].id,
-      episodeTitle: _mediaQueue[index].title,
-      podcastTitle: _mediaQueue[index].artist,
-      podcastRSS: _mediaQueue[index].extras?["podcastRSS"],
-      artUri: _mediaQueue[index].artUri.toString(),
+      audioUrl: media.id,
+      episodeTitle: media.title,
+      podcastTitle: media.artist,
+      album: media.album,
+      description: media.displayDescription,
+      artist: media.artist,
+      podcastRSS: media.extras?["podcastRSS"],
+      artUri: media.artUri.toString(),
+      startPosition: Duration.zero,
       autoplay: true,
     );
 
