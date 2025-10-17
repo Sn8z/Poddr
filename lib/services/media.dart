@@ -156,7 +156,18 @@ class MediaProvider extends BaseAudioHandler
     log(value ? "Playing" : "Paused", name: logName);
     playbackState.add(playbackState.value.copyWith(
       playing: value,
-      controls: value ? [MediaControl.pause] : [MediaControl.play],
+      controls: [
+        MediaControl.skipToPrevious,
+        value ? MediaControl.pause : MediaControl.play,
+        MediaControl.skipToNext,
+      ],
+      systemActions: {
+        MediaAction.seek,
+        MediaAction.seekBackward,
+        MediaAction.seekForward,
+        MediaAction.setShuffleMode,
+        MediaAction.setRepeatMode,
+      },
     ));
     notifyListeners();
 
@@ -284,12 +295,6 @@ class MediaProvider extends BaseAudioHandler
     }
 
     mediaItem.add(media);
-
-    if (_mediaQueue.isEmpty) {
-      _mediaQueue.add(media);
-      queue.add(_mediaQueue);
-      _currentIndex = 0;
-    }
 
     await _player.open(
       Media(media.id, start: startPosition),
@@ -468,7 +473,9 @@ class MediaProvider extends BaseAudioHandler
     queue.add(_mediaQueue);
     notifyListeners();
 
-    // TODO: Adjust _currentIndex if necessary
+    if (_currentIndex >= index) {
+      _currentIndex--;
+    }
 
     log("Removed from queue: index $index", name: logName);
   }
