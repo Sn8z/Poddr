@@ -21,12 +21,36 @@ class ShuffleButton extends StatelessWidget {
         ? Theme.of(context).colorScheme.primary
         : Theme.of(context).colorScheme.onInverseSurface;
 
-    return IconButton(
-      icon: Icon(icon, size: size),
-      color: color,
-      onPressed: () {
-        context.read<MediaProvider>().cycleShuffleMode();
-      },
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () {
+          context.read<MediaProvider>().cycleShuffleMode();
+        },
+        child: SizedBox.fromSize(
+          size: Size.square(size),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              Center(
+                child: Icon(
+                  icon,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
