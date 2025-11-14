@@ -8,6 +8,8 @@ import 'package:poddr/ui/components/audio/position_text.dart';
 import 'package:poddr/ui/components/audio/prev_button.dart';
 import 'package:poddr/ui/components/audio/progress_slider.dart';
 import 'package:poddr/ui/components/audio/queue_button.dart';
+import 'package:poddr/ui/components/audio/repeat_button.dart';
+import 'package:poddr/ui/components/audio/shuffle_button.dart';
 import 'package:poddr/ui/components/audio/skip_button.dart';
 import 'package:poddr/ui/components/audio/speed_button.dart';
 import 'package:poddr/ui/utils/gaps.dart';
@@ -59,7 +61,7 @@ class PlayerView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       PreviousButton(
-                        size: 56,
+                        size: 36,
                       ),
                       gapW16,
                       const PlayButton(
@@ -67,7 +69,7 @@ class PlayerView extends StatelessWidget {
                       ),
                       gapW16,
                       SkipButton(
-                        size: 56,
+                        size: 36,
                       ),
                     ],
                   ),
@@ -83,11 +85,9 @@ class PlayerView extends StatelessWidget {
               gapW16,
               SpeedButton(),
               gapW16,
-              SpeedButton(),
+              ShuffleButton(),
               gapW16,
-              SpeedButton(),
-              gapW16,
-              SpeedButton(),
+              RepeatButton(),
             ],
           ),
           gapH16,

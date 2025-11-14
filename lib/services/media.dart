@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
+import 'dart:math' hide log;
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart' hide AudioDevice;
 import 'package:flutter/foundation.dart';
@@ -55,6 +56,12 @@ class MediaProvider extends BaseAudioHandler
   bool get canGoNext => _currentIndex < _mediaQueue.length - 1;
   bool get canGoPrevious => _currentIndex > 0;
 
+  bool _isShuffling = false;
+  bool get isShuffling => _isShuffling;
+
+  AudioServiceRepeatMode _repeatMode = AudioServiceRepeatMode.none;
+  AudioServiceRepeatMode get repeatMode => _repeatMode;
+
   final HistoryProvider historyProvider;
 
   MediaProvider({required this.historyProvider}) {
@@ -92,6 +99,7 @@ class MediaProvider extends BaseAudioHandler
 
   Future<void> _initPlayer() async {
     _prefs = await SharedPreferences.getInstance();
+
     try {
       await _player.setRate(_prefs?.getDouble("mediaRate") ?? 1.0);
       if (isMobile) {
@@ -99,8 +107,7 @@ class MediaProvider extends BaseAudioHandler
       } else {
         await _player.setVolume(_prefs?.getDouble("mediaVolume") ?? 50);
       }
-      await _player.setShuffle(false);
-      await _player.setPlaylistMode(PlaylistMode.none);
+
       await _player.setAudioDevice(AudioDevice.auto());
 
       loadMedia(
@@ -176,10 +183,40 @@ class MediaProvider extends BaseAudioHandler
     }
   }
 
-  void _handleCompletion(bool value) {
-    log("Completed: $value", name: logName);
+  void _handleCompletion(bool isCompleted) {
+    log("Completed: $isCompleted", name: logName);
 
-    if (value) skipToNext();
+    if (isCompleted) {
+      switch (_repeatMode) {
+        case AudioServiceRepeatMode.one:
+          log("Repeat one: restarting current track", name: logName);
+          seek(Duration.zero);
+          play();
+          break;
+
+        case AudioServiceRepeatMode.all:
+          if (_mediaQueue.isNotEmpty) {
+            if (_currentIndex >= _mediaQueue.length - 1) {
+              log("Repeat all: restarting queue from beginning", name: logName);
+              skipToQueueItem(0);
+            } else {
+              log("Repeat all: playing next track", name: logName);
+              skipToNext();
+            }
+          }
+          break;
+
+        default:
+          if (_currentIndex < _mediaQueue.length - 1) {
+            log("No repeat: playing next track", name: logName);
+            skipToNext();
+          } else {
+            log("No repeat: queue completed, stopping", name: logName);
+            pause();
+          }
+          break;
+      }
+    }
 
     playbackState.add(playbackState.value.copyWith(
       processingState: AudioProcessingState.completed,
@@ -402,14 +439,27 @@ class MediaProvider extends BaseAudioHandler
 
   @override
   Future<void> skipToNext() async {
-    if (_currentIndex < _mediaQueue.length - 1) {
+    log("Skipping to next", name: logName);
+
+    final queueLength = _mediaQueue.length;
+    if (_isShuffling) {
+      int newIndex;
+      do {
+        newIndex = Random().nextInt(queueLength);
+      } while (newIndex == _currentIndex);
+
+      await skipToQueueItem(newIndex);
+    } else if (_currentIndex < queueLength - 1) {
       final nextIndex = _currentIndex + 1;
-      await skipToQueueItem(nextIndex);
+      if (nextIndex > queueLength - 1) {
+        await skipToQueueItem(0);
+      } else {
+        await skipToQueueItem(nextIndex);
+      }
     } else {
       log("No next item in queue", name: logName);
-      await stop();
+      await _player.pause();
     }
-    log("Skipped to next", name: logName);
   }
 
   @override
@@ -484,6 +534,60 @@ class MediaProvider extends BaseAudioHandler
     }
 
     log("Removed from queue: index $index", name: logName);
+  }
+
+  Future<void> clearQueue() async {
+    _mediaQueue.clear();
+    queue.add(_mediaQueue);
+    notifyListeners();
+    log("Cleared queue", name: logName);
+  }
+
+  @override
+  Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) async {
+    log("Setting repeat mode: $repeatMode", name: logName);
+
+    _repeatMode = repeatMode;
+
+    playbackState.add(playbackState.value.copyWith(repeatMode: repeatMode));
+
+    notifyListeners();
+  }
+
+  Future<void> cycleRepeatMode() async {
+    switch (_repeatMode) {
+      case AudioServiceRepeatMode.none:
+        await setRepeatMode(AudioServiceRepeatMode.one);
+        break;
+      case AudioServiceRepeatMode.one:
+        await setRepeatMode(AudioServiceRepeatMode.all);
+        break;
+      case AudioServiceRepeatMode.all:
+        await setRepeatMode(AudioServiceRepeatMode.none);
+        break;
+      default:
+        await setRepeatMode(AudioServiceRepeatMode.none);
+        break;
+    }
+  }
+
+  @override
+  Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {
+    log("Shuffle mode: $shuffleMode", name: logName);
+
+    _isShuffling = shuffleMode == AudioServiceShuffleMode.all;
+
+    playbackState.add(playbackState.value.copyWith(shuffleMode: shuffleMode));
+
+    notifyListeners();
+  }
+
+  Future<void> cycleShuffleMode() async {
+    if (_isShuffling) {
+      await setShuffleMode(AudioServiceShuffleMode.none);
+    } else {
+      await setShuffleMode(AudioServiceShuffleMode.all);
+    }
   }
 
   @override

@@ -9,6 +9,8 @@ import 'package:poddr/ui/components/audio/position_text.dart';
 import 'package:poddr/ui/components/audio/prev_button.dart';
 import 'package:poddr/ui/components/audio/progress_slider.dart';
 import 'package:poddr/ui/components/audio/queue_button.dart';
+import 'package:poddr/ui/components/audio/repeat_button.dart';
+import 'package:poddr/ui/components/audio/shuffle_button.dart';
 import 'package:poddr/ui/components/audio/skip_button.dart';
 import 'package:poddr/ui/components/audio/speed_button.dart';
 import 'package:poddr/ui/components/audio/volume.dart';
@@ -58,13 +60,7 @@ class LargePlayer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.shuffle_rounded,
-                          size: 28,
-                        ),
-                      ),
+                      ShuffleButton(),
                       const PreviousButton(
                         size: 36,
                       ),
@@ -76,13 +72,7 @@ class LargePlayer extends StatelessWidget {
                       const SkipButton(
                         size: 36,
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.repeat_rounded,
-                          size: 28,
-                        ),
-                      ),
+                      RepeatButton(),
                       Expanded(
                         flex: 2,
                         child: Padding(
