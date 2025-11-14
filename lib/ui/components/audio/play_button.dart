@@ -29,15 +29,17 @@ class PlayButton extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
+                child: DecoratedBox(
+                  decoration: ShapeDecoration(
                     color:
                         Theme.of(context).colorScheme.surfaceContainerHighest,
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      width: 2,
+                    shape: RoundedSuperellipseBorder(
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        width: 1.5,
+                      ),
+                      borderRadius: BorderRadius.circular(size / 3),
                     ),
-                    shape: BoxShape.circle,
                   ),
                 ),
               ),
