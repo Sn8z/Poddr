@@ -81,13 +81,21 @@ class PlayerView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              QueueButton(),
+              QueueButton(
+                size: 32,
+              ),
               gapW16,
-              SpeedButton(),
+              SpeedButton(
+                size: 32,
+              ),
               gapW16,
-              ShuffleButton(),
+              ShuffleButton(
+                size: 32,
+              ),
               gapW16,
-              RepeatButton(),
+              RepeatButton(
+                size: 32,
+              ),
             ],
           ),
           gapH16,

@@ -60,7 +60,10 @@ class LargePlayer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      ShuffleButton(),
+                      ShuffleButton(
+                        size: 28,
+                      ),
+                      gapW8,
                       const PreviousButton(
                         size: 36,
                       ),
@@ -72,7 +75,10 @@ class LargePlayer extends StatelessWidget {
                       const SkipButton(
                         size: 36,
                       ),
-                      RepeatButton(),
+                      gapW8,
+                      RepeatButton(
+                        size: 28,
+                      ),
                       Expanded(
                         flex: 2,
                         child: Padding(
