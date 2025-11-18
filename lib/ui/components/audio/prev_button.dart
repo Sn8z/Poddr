@@ -28,21 +28,13 @@ class PreviousButton extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color:
-                        Theme.of(context).colorScheme.surfaceContainerHighest,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
               Center(
                 child: Icon(
                   Icons.skip_previous_rounded,
+                  size: size * 0.8,
                   color: canGoPrevious
-                      ? Theme.of(context).colorScheme.onSurface
-                      : Theme.of(context).colorScheme.onInverseSurface,
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],

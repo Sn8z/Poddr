@@ -61,7 +61,7 @@ class LargePlayer extends StatelessWidget {
                         ),
                       ),
                       ShuffleButton(
-                        size: 28,
+                        size: 36,
                       ),
                       gapW8,
                       const PreviousButton(
@@ -77,7 +77,7 @@ class LargePlayer extends StatelessWidget {
                       ),
                       gapW8,
                       RepeatButton(
-                        size: 28,
+                        size: 36,
                       ),
                       Expanded(
                         flex: 2,

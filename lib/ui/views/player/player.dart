@@ -10,7 +10,7 @@ import 'package:poddr/ui/components/audio/progress_slider.dart';
 import 'package:poddr/ui/components/audio/queue_button.dart';
 import 'package:poddr/ui/components/audio/repeat_button.dart';
 import 'package:poddr/ui/components/audio/shuffle_button.dart';
-import 'package:poddr/ui/components/audio/skip_button.dart';
+import 'package:poddr/ui/components/audio/next_button.dart';
 import 'package:poddr/ui/components/audio/speed_button.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
