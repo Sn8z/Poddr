@@ -42,20 +42,20 @@ class PodcastDiscoveryProvider extends ChangeNotifier {
 
   void setCountry(String code) {
     _countryCode = code;
-    notifyListeners();
     getCharts();
   }
 
   void setGenre(String genre) {
     _genreID = genre;
-    notifyListeners();
     getCharts();
   }
 
   Future<void> getCharts() async {
     _isLoading = true;
     notifyListeners();
+
     charts = await _podcastRepository.getCharts(_countryCode, _genreID);
+
     _isLoading = false;
     notifyListeners();
   }

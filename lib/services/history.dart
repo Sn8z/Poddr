@@ -46,13 +46,15 @@ class HistoryProvider extends ChangeNotifier {
     if (profileId == null) return;
 
     try {
-      _setLoading(true);
+      _isLoading = true;
+      notifyListeners();
+
       _history = await _historyRepository.getHistory(profileId);
     } catch (e, stackTrace) {
       log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     } finally {
+      _isLoading = false;
       notifyListeners();
-      _setLoading(false);
     }
   }
 
@@ -138,10 +140,5 @@ class HistoryProvider extends ChangeNotifier {
     } catch (e, stackTrace) {
       log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }
-  }
-
-  void _setLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
   }
 }

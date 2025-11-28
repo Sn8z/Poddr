@@ -50,7 +50,9 @@ class SubscriptionProvider extends ChangeNotifier {
     if (profileId == null) return;
 
     try {
-      _setLoading(true);
+      _isLoading = true;
+      notifyListeners();
+
       _subscriptions =
           await _subscriptionRepository.getSubscriptions(profileId);
     } catch (error, stackTrace) {
@@ -61,7 +63,7 @@ class SubscriptionProvider extends ChangeNotifier {
         stackTrace: stackTrace,
       );
     } finally {
-      _setLoading(false);
+      _isLoading = false;
       notifyListeners();
     }
   }
@@ -114,10 +116,5 @@ class SubscriptionProvider extends ChangeNotifier {
     } finally {
       log("Finished removing $rss", name: logName);
     }
-  }
-
-  void _setLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
   }
 }
