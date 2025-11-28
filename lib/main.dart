@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:poddr/data/db/drift/database.dart';
-import 'package:poddr/data/history/drift_history_repository.dart';
-import 'package:poddr/data/history/history_repository.dart';
-import 'package:poddr/data/profiles/drift_profiles_repository.dart';
-import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
-import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/services/latest_episodes.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 
-//TODO: Rename this to something better
 class BottomPaddingFix extends StatelessWidget {
   const BottomPaddingFix({super.key});
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/models/user_profile.dart';
 import 'package:poddr/services/profile.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
