@@ -35,7 +35,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.3 # dart run flutter_launcher_icons
   msix: ^3.16.8 # dart run msix:create
-  drift_dev: ^2.26.0
+  drift_dev: ^2.26.0 # dart run build_runner build
   build_runner: ^2.4.15
 
 flutter:

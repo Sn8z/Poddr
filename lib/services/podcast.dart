@@ -3,7 +3,7 @@ import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
 class PodcastProvider extends ChangeNotifier {
-  final IPodcastRepository _podcastRepository = ITunesPodcastRepository();
+  final IPodcastRepository _podcastRepository;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -14,24 +14,26 @@ class PodcastProvider extends ChangeNotifier {
   String? _currentRss;
   String? get currentRss => _currentRss;
 
+  PodcastProvider({IPodcastRepository? podcastRepository})
+      : _podcastRepository = podcastRepository ?? ITunesPodcastRepository();
+
   Future<void> getPodcast(String rss) async {
     if (_currentRss == rss) return;
-    _currentRss = rss;
-    _podcast = null;
-    _setLoading(true);
 
     try {
+      _isLoading = true;
+      notifyListeners();
+
+      _currentRss = rss;
+      _podcast = null;
+
       _podcast = await _podcastRepository.getFeed(rss);
     } catch (error, stackTrace) {
       debugPrint(error.toString());
       debugPrint(stackTrace.toString());
     } finally {
-      _setLoading(false);
+      _isLoading = false;
+      notifyListeners();
     }
-  }
-
-  void _setLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
   }
 }

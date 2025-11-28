@@ -10,6 +10,7 @@ import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// TODO: Split into Provider and AudioHandler
 class MediaProvider extends BaseAudioHandler
     with QueueHandler, SeekHandler, ChangeNotifier {
   final Player _player = Player(
@@ -62,9 +63,9 @@ class MediaProvider extends BaseAudioHandler
   AudioServiceRepeatMode _repeatMode = AudioServiceRepeatMode.none;
   AudioServiceRepeatMode get repeatMode => _repeatMode;
 
-  final HistoryProvider historyProvider;
+  final HistoryProvider? historyProvider;
 
-  MediaProvider({required this.historyProvider}) {
+  MediaProvider(this.historyProvider) {
     _initAudioService();
     _initPlayer();
     _initStreams();
@@ -315,6 +316,7 @@ class MediaProvider extends BaseAudioHandler
     log("Autoplay: $autoplay", name: logName);
 
     if (audioUrl == null) return;
+    if (historyProvider == null) return;
 
     final media = MediaItem(
       id: audioUrl,
@@ -326,7 +328,7 @@ class MediaProvider extends BaseAudioHandler
       extras: {"podcastRSS": podcastRSS},
     );
 
-    final progress = await historyProvider.getProgress(media.id);
+    final progress = await historyProvider!.getProgress(media.id);
     if (progress != null) {
       startPosition = Duration(seconds: progress['position']);
     }
@@ -339,7 +341,7 @@ class MediaProvider extends BaseAudioHandler
     );
 
     if (progress == null) {
-      historyProvider.addToHistory(
+      historyProvider!.addToHistory(
         media.id,
         media.title,
         media.displayDescription ?? "",
@@ -348,7 +350,6 @@ class MediaProvider extends BaseAudioHandler
         podcastRSS ?? "",
         _position.inSeconds,
         _duration.inSeconds,
-        _position.inSeconds >= _duration.inSeconds,
       );
     }
 
@@ -395,9 +396,10 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void saveProgress() async {
+    if (historyProvider == null) return;
     final media = mediaItem.value;
     if (media == null) return;
-    await historyProvider.updateProgress(
+    await historyProvider!.updateProgress(
       media.id,
       _position.inSeconds,
       _duration.inSeconds,

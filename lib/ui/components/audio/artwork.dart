@@ -23,7 +23,7 @@ class Artwork extends StatelessWidget {
               context.go("/podcasts/$rss");
             }
           },
-          child: PoddrImage(imageUrl: artUri.toString())),
+          child: PoddrImage(imageUrl: artUri?.toString() ?? "")),
     );
   }
 }

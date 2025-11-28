@@ -4,8 +4,10 @@ import 'package:poddr/models/podcast.dart';
 import 'package:poddr/data/itunes_countries.dart';
 import 'package:poddr/data/itunes_genres.dart';
 
+// TODO: Refactor
 class PodcastDiscoveryProvider extends ChangeNotifier {
-  final IPodcastRepository _podcastRepository = ITunesPodcastRepository();
+  final IPodcastRepository _podcastRepository;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -33,7 +35,8 @@ class PodcastDiscoveryProvider extends ChangeNotifier {
 
   List<Podcast> charts = [];
 
-  PodcastDiscoveryProvider() {
+  PodcastDiscoveryProvider({IPodcastRepository? podcastRepository})
+      : _podcastRepository = podcastRepository ?? ITunesPodcastRepository() {
     getCharts();
   }
 

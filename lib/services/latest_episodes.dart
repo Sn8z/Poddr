@@ -9,9 +9,9 @@ import 'package:poddr/services/subscriptions.dart';
 class LatestEpisodesProvider extends ChangeNotifier {
   final String logName = "LatestEpisodesProvider";
 
-  final SubscriptionProvider _subscriptionProvider;
+  final IPodcastRepository _podcastRepository;
 
-  final IPodcastRepository _podcastRepository = ITunesPodcastRepository();
+  SubscriptionProvider? _subscriptionProvider;
 
   List<PodcastEpisode> _episodes = [];
   List<PodcastEpisode> get episodes => _episodes;
@@ -19,20 +19,22 @@ class LatestEpisodesProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  LatestEpisodesProvider(this._subscriptionProvider) {
-    _subscriptionProvider.addListener(_handleSubscriptionChange);
-    fetchNewEpisodes();
+  LatestEpisodesProvider({IPodcastRepository? podcastRepository})
+      : _podcastRepository = podcastRepository ?? ITunesPodcastRepository();
+
+  void update(SubscriptionProvider subscriptionProvider) {
+    _subscriptionProvider = subscriptionProvider;
+    _getNewEpisodes();
   }
 
-  void _handleSubscriptionChange() {
-    fetchNewEpisodes();
-  }
-
-  Future<void> fetchNewEpisodes() async {
-    setLoading(true);
+  Future<void> _getNewEpisodes() async {
+    if (_subscriptionProvider == null) return;
 
     try {
-      final List<Podcast> subscriptions = _subscriptionProvider.subscriptions;
+      _isLoading = true;
+      notifyListeners();
+
+      final List<Podcast> subscriptions = _subscriptionProvider!.subscriptions;
       final List<PodcastEpisode> episodes = [];
 
       for (final Podcast podcast in subscriptions) {
@@ -67,19 +69,8 @@ class LatestEpisodesProvider extends ChangeNotifier {
         stackTrace: stackTrace,
       );
     } finally {
-      setLoading(false);
+      _isLoading = false;
       notifyListeners();
     }
-  }
-
-  void setLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    _subscriptionProvider.removeListener(_handleSubscriptionChange);
-    super.dispose();
   }
 }

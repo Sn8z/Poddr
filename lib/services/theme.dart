@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 
 class ThemeProvider extends ChangeNotifier {

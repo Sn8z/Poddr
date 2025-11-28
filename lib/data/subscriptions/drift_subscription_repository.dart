@@ -8,9 +8,10 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
   DriftSubscriptionRepository();
 
   @override
-  Future<List<Podcast>> getSubscriptions() async {
-    final subscriptions =
-        await database.select(database.podcastSubscription).get();
+  Future<List<Podcast>> getSubscriptions(int profileId) async {
+    final subscriptions = await (database.select(database.podcastSubscription)
+          ..where((tbl) => tbl.profileId.equals(profileId)))
+        .get();
 
     return subscriptions.map((sub) {
       return Podcast(
@@ -30,6 +31,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
     String? description,
     String? author,
     String? image,
+    int profileId,
   ) async {
     await database.into(database.podcastSubscription).insert(
           PodcastSubscriptionCompanion.insert(
@@ -38,14 +40,16 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
             description: description ?? '',
             author: author ?? '',
             imageUrl: image ?? '',
+            profileId: profileId,
           ),
         );
   }
 
   @override
-  Future<void> removeSubscription(String rss) async {
+  Future<void> removeSubscription(int profileId, String rss) async {
     await (database.delete(database.podcastSubscription)
-          ..where((sub) => sub.rss.equals(rss)))
+          ..where((sub) => sub.rss.equals(rss))
+          ..where((sub) => sub.profileId.equals(profileId)))
         .go();
   }
 }

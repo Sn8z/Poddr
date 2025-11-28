@@ -2,15 +2,18 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
-import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
+import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/models/podcast.dart';
+import 'package:poddr/services/profile.dart';
 
 class SubscriptionProvider extends ChangeNotifier {
   final String logName = "SubscriptionProvider";
-  final ISubscriptionRepository _subscriptionRepository =
-      DriftSubscriptionRepository();
-  final IPodcastRepository _podcastRepository = ITunesPodcastRepository();
+  final IPodcastRepository _podcastRepository;
+  final ISubscriptionRepository _subscriptionRepository;
+
+  ProfileProvider? _profileProvider;
+  int? _currentProfileId;
 
   List<Podcast> _subscriptions = [];
   List<Podcast> get subscriptions => _subscriptions;
@@ -18,16 +21,38 @@ class SubscriptionProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  SubscriptionProvider() {
-    _setLoading(true);
-    _fetchSubscriptions();
-    _setLoading(false);
+  SubscriptionProvider(
+      {IPodcastRepository? podcastRepository,
+      ISubscriptionRepository? subscriptionRepository})
+      : _podcastRepository = podcastRepository ?? ITunesPodcastRepository(),
+        _subscriptionRepository =
+            subscriptionRepository ?? DriftSubscriptionRepository();
+
+  void update(ProfileProvider? profileProvider) {
+    _profileProvider = profileProvider;
+
+    final newId = _profileProvider?.currentProfile?.id;
+
+    if (newId != _currentProfileId) {
+      _currentProfileId = newId;
+
+      if (newId != null) {
+        _getSubscriptions();
+      } else {
+        _subscriptions = [];
+        notifyListeners();
+      }
+    }
   }
 
-  Future<void> _fetchSubscriptions() async {
+  Future<void> _getSubscriptions() async {
+    final profileId = _currentProfileId;
+    if (profileId == null) return;
+
     try {
-      _subscriptions = await _subscriptionRepository.getSubscriptions();
-      notifyListeners();
+      _setLoading(true);
+      _subscriptions =
+          await _subscriptionRepository.getSubscriptions(profileId);
     } catch (error, stackTrace) {
       log(
         error.toString(),
@@ -35,12 +60,18 @@ class SubscriptionProvider extends ChangeNotifier {
         error: error,
         stackTrace: stackTrace,
       );
+    } finally {
+      _setLoading(false);
+      notifyListeners();
     }
   }
 
   Future<void> addSubscription({
     required String rss,
   }) async {
+    final profileId = _currentProfileId;
+    if (profileId == null) return;
+
     try {
       final Podcast podcast = await _podcastRepository.getFeed(rss);
 
@@ -50,8 +81,9 @@ class SubscriptionProvider extends ChangeNotifier {
         podcast.description,
         podcast.author,
         podcast.image,
+        profileId,
       );
-      await _fetchSubscriptions();
+      await _getSubscriptions();
     } catch (error, stackTrace) {
       log(
         error.toString(),
@@ -65,10 +97,13 @@ class SubscriptionProvider extends ChangeNotifier {
   }
 
   Future<void> removeSubscription(String rss) async {
+    final profileId = _currentProfileId;
+    if (profileId == null) return;
+
     try {
       log("Removing $rss", name: logName);
-      await _subscriptionRepository.removeSubscription(rss);
-      await _fetchSubscriptions();
+      await _subscriptionRepository.removeSubscription(profileId, rss);
+      await _getSubscriptions();
     } catch (error, stackTrace) {
       log(
         error.toString(),

@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/latest_episodes.dart';
 import 'package:poddr/services/media.dart';
-import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
@@ -115,82 +114,75 @@ class LatestEpisodes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<LatestEpisodesProvider>(
-      create: (context) =>
-          LatestEpisodesProvider(context.read<SubscriptionProvider>()),
-      builder: (context, child) {
-        final latestEpisodesProvider = context.watch<LatestEpisodesProvider>();
+    final latestEpisodesProvider = context.watch<LatestEpisodesProvider>();
 
-        return ContentBox(
-          title: "Latest episodes",
-          children: [
-            if (latestEpisodesProvider.isLoading)
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                    5,
-                    (index) => Container(
-                      width: 200,
-                      height: 140,
-                      margin: const EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const ShimmerBox(),
-                    ),
+    return ContentBox(
+      title: "Latest episodes",
+      children: [
+        if (latestEpisodesProvider.isLoading)
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: List.generate(
+                5,
+                (index) => Container(
+                  width: 200,
+                  height: 140,
+                  margin: const EdgeInsets.only(right: 12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-              )
-            else if (latestEpisodesProvider.episodes.isEmpty)
-              Text(
-                "No episodes available",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              )
-            else
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children:
-                      latestEpisodesProvider.episodes.take(10).map((episode) {
-                    return PoddrGridItem(
-                      width: 200,
-                      height: 140,
-                      leading: Container(
-                        clipBehavior: Clip.antiAlias,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: PoddrImage(imageUrl: episode.imageUrl ?? ""),
-                      ),
-                      title: episode.title,
-                      titleMaxLines: 1,
-                      subtitle: episode.author,
-                      subtitleMaxLines: 1,
-                      onTap: () {
-                        context.read<MediaProvider>().loadMedia(
-                              audioUrl: episode.audioUrl,
-                              episodeTitle: episode.title,
-                              podcastTitle: episode.podcastTitle,
-                              podcastRSS: episode.podcastRSS,
-                              artUri: episode.imageUrl,
-                              artist: episode.podcastTitle,
-                              album: episode.podcastTitle,
-                              description: episode.description,
-                            );
-                      },
-                    );
-                  }).toList(),
+                  child: const ShimmerBox(),
                 ),
               ),
-          ],
-        );
-      },
+            ),
+          )
+        else if (latestEpisodesProvider.episodes.isEmpty)
+          Text(
+            "No episodes available",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          )
+        else
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: latestEpisodesProvider.episodes.take(10).map((episode) {
+                return PoddrGridItem(
+                  width: 200,
+                  height: 140,
+                  leading: Container(
+                    clipBehavior: Clip.antiAlias,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: PoddrImage(imageUrl: episode.imageUrl ?? ""),
+                  ),
+                  title: episode.title,
+                  titleMaxLines: 1,
+                  subtitle: episode.author,
+                  subtitleMaxLines: 1,
+                  onTap: () {
+                    context.read<MediaProvider>().loadMedia(
+                          audioUrl: episode.audioUrl,
+                          episodeTitle: episode.title,
+                          podcastTitle: episode.podcastTitle,
+                          podcastRSS: episode.podcastRSS,
+                          artUri: episode.imageUrl,
+                          artist: episode.podcastTitle,
+                          album: episode.podcastTitle,
+                          description: episode.description,
+                        );
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+      ],
     );
   }
 }

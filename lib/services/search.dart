@@ -3,17 +3,27 @@ import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
 class SearchProvider extends ChangeNotifier {
-  final IPodcastRepository _podcastRepository = ITunesPodcastRepository();
+  final logName = "SearchProvider";
+
+  final IPodcastRepository _podcastRepository;
+
   List<Podcast> searchResults = [];
   List<String> searchHistory = [];
   List<String> searchSuggestions = [];
-  bool isSearching = false;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  SearchProvider({IPodcastRepository? podcastRepository})
+      : _podcastRepository = podcastRepository ?? ITunesPodcastRepository();
 
   Future<void> searchPodcast(String query) async {
-    isSearching = true;
+    _isLoading = true;
     notifyListeners();
+
     searchResults = await _podcastRepository.search(query);
-    isSearching = false;
+
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -31,7 +41,7 @@ class SearchProvider extends ChangeNotifier {
   }
 
   void clearHistory() {
-    searchHistory.clear();
+    searchHistory = [];
     notifyListeners();
   }
 }

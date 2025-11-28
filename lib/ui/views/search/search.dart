@@ -46,7 +46,7 @@ class SearchView extends StatelessWidget {
                   ),
                 ),
                 sliverGapH16,
-                searchProvider.isSearching
+                searchProvider.isLoading
                     ? const LoadingBox()
                     : const ResultBox(),
                 const BottomPaddingFix(),

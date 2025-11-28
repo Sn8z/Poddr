@@ -11,17 +11,18 @@ abstract class IHistoryRepository {
     String podcastRSS,
     int position,
     int duration,
+    int profileId,
   );
 
-  Future<List<PodcastEpisode>> getHistory();
+  Future<List<PodcastEpisode>> getHistory(int profileId);
 
-  Future<List<PodcastEpisode>> getMostRecentHistory({int limit = 10});
+  Future<void> updateProgress(
+      int profileId, String audioUrl, int position, int duration);
 
-  Future<void> updateProgress(String audioUrl, int position, int duration);
+  Future<Map<String, dynamic>?> getProgress(int profileId, String audioUrl);
 
-  Future<Map<String, dynamic>?> getProgress(String audioUrl);
+  Stream<ListeningHistoryData?> getProgressStream(
+      int profileId, String audioUrl);
 
-  Stream<ListeningHistoryData?> getProgressStream(String audioUrl);
-
-  Future<void> removeHistory(String audioUrl);
+  Future<void> removeHistory(int profileId, String audioUrl);
 }
