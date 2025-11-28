@@ -6,4 +6,7 @@ abstract class ISettingsRepository {
   Future<Color> getColor();
   Future<void> setThemeMode(ThemeMode mode);
   Future<ThemeMode> getThemeMode();
+
+  Future<void> saveActiveProfile(int profileId);
+  Future<int?> getActiveProfile();
 }

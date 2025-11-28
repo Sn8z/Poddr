@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SavedPrefsSettingsRepository implements ISettingsRepository {
+class SharedPrefSettingsRepository implements ISettingsRepository {
   static const String _themeModeKey = "themeMode";
   static const String _colorKey = "themeColor";
 
   SharedPreferences? _prefs;
 
-  SavedPrefsSettingsRepository() {
+  SharedPrefSettingsRepository() {
     init();
   }
 
@@ -37,5 +37,15 @@ class SavedPrefsSettingsRepository implements ISettingsRepository {
   Future<ThemeMode> getThemeMode() async {
     final themeMode = _prefs?.getInt(_themeModeKey);
     return ThemeMode.values[themeMode ?? 0];
+  }
+
+  @override
+  Future<void> saveActiveProfile(int profileId) async {
+    await _prefs?.setInt("activeProfile", profileId);
+  }
+
+  @override
+  Future<int?> getActiveProfile() async {
+    return _prefs?.getInt("activeProfile");
   }
 }

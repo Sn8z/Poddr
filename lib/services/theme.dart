@@ -5,7 +5,7 @@ import 'package:poddr/data/settings/settings_repository.dart';
 
 class ThemeProvider extends ChangeNotifier {
   final ISettingsRepository _settingsRepository =
-      SavedPrefsSettingsRepository();
+      SharedPrefSettingsRepository();
 
   Color _color = const Color.fromRGBO(255, 150, 30, 1);
   Color get color => _color;
