@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/latest_episodes.dart';
-import 'package:poddr/services/media.dart';
+import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';

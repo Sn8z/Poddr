@@ -11,7 +11,7 @@ import 'package:poddr/services/profile.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/theme.dart';
-import 'package:poddr/services/media.dart';
+import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/router.dart';
 
 void main() async {
@@ -65,20 +65,13 @@ void main() async {
         ),
 
         // Media
-        // TODO: Refactor
-        // ChangeNotifierProxyProvider<HistoryProvider, MediaProvider>(
-        //   create: (_) => MediaProvider(),
-        //   update: (_, history, prev) {
-        //     prev ??= MediaProvider(history);
-        //     prev.update(history);
-        //     return prev;
-        //   },
-        // ),
-
-        ChangeNotifierProvider<MediaProvider>(
-          create: (context) => MediaProvider(
-            context.read<HistoryProvider>(),
-          ),
+        ChangeNotifierProxyProvider<HistoryProvider, MediaProvider>(
+          create: (_) => MediaProvider(),
+          update: (_, history, prev) {
+            prev ??= MediaProvider();
+            prev.update(history);
+            return prev;
+          },
         ),
       ],
       child: Poddr(router: router),

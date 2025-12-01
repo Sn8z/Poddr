@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/models/episode.dart';
-import 'package:poddr/services/media.dart';
+import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
 import 'package:provider/provider.dart';
 

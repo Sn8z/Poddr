@@ -24,7 +24,6 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   Future<void> _loadTheme() async {
-    await _settingsRepository.init();
     _themeMode = await _settingsRepository.getThemeMode();
     _color = await _settingsRepository.getColor();
     _updateThemes();

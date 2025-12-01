@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:provider/provider.dart';
-import 'package:poddr/services/media.dart';
+import 'package:poddr/services/media/media_provider.dart';
 
 class VolumeSlider extends StatelessWidget {
   final double size;

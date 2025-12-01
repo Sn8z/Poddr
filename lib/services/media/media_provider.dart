@@ -5,31 +5,27 @@ import 'dart:math' hide log;
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart' hide AudioDevice;
 import 'package:flutter/foundation.dart';
-import 'package:media_kit/media_kit.dart';
+import 'package:poddr/data/media/media_repository.dart';
+import 'package:poddr/data/media/prefs_media_repository.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/history.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:poddr/services/media/media_player.dart';
 
-// TODO: Split into Provider and AudioHandler
 class MediaProvider extends BaseAudioHandler
     with QueueHandler, SeekHandler, ChangeNotifier {
-  final Player _player = Player(
-    configuration: PlayerConfiguration(
-      title: "Poddr",
-      ready: () => log("MediaHandler ready", name: "MediaProvider"),
-      logLevel: MPVLogLevel.info,
-    ),
-  );
+  final PoddrMediaPlayer _player = PoddrMediaPlayer();
 
   //TODO: Improve check... Platform causes issues on web
   final isMobile = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
   final String logName = "MediaProvider";
 
-  //TODO; Migrate to a repository pattern
-  SharedPreferences? _prefs;
+  final IMediaRepository _mediaRepository;
+  HistoryProvider? _historyProvider;
 
   AudioHandler? _audioHandler;
+
+  bool get isPlaying => _player.isPlaying;
 
   double _volume = 0.0;
   double get volume => _volume;
@@ -63,12 +59,15 @@ class MediaProvider extends BaseAudioHandler
   AudioServiceRepeatMode _repeatMode = AudioServiceRepeatMode.none;
   AudioServiceRepeatMode get repeatMode => _repeatMode;
 
-  final HistoryProvider? historyProvider;
-
-  MediaProvider(this.historyProvider) {
+  MediaProvider({IMediaRepository? mediaRepository})
+      : _mediaRepository = mediaRepository ?? SharedPrefsMediaRepository() {
     _initAudioService();
     _initPlayer();
     _initStreams();
+  }
+
+  void update(HistoryProvider? historyProvider) {
+    _historyProvider = historyProvider;
   }
 
   Future<void> _initAudioService() async {
@@ -99,27 +98,20 @@ class MediaProvider extends BaseAudioHandler
   }
 
   Future<void> _initPlayer() async {
-    _prefs = await SharedPreferences.getInstance();
-
     try {
-      await _player.setRate(_prefs?.getDouble("mediaRate") ?? 1.0);
+      await _player.setRate(_mediaRepository.getRate());
       if (isMobile) {
         await _player.setVolume(100);
       } else {
-        await _player.setVolume(_prefs?.getDouble("mediaVolume") ?? 50);
+        await _player.setVolume(_mediaRepository.getVolume());
       }
 
-      await _player.setAudioDevice(AudioDevice.auto());
-
       loadMedia(
-        audioUrl: _prefs?.getString("mediaID") ?? "No audioUrl in storage",
-        episodeTitle:
-            _prefs?.getString("mediaTitle") ?? "No episodeTitle in storage",
-        podcastTitle:
-            _prefs?.getString("mediaArtist") ?? "No podcastTitle in storage",
-        podcastRSS:
-            _prefs?.getString("mediaPodcastRSS") ?? "No podcastRSS in storage",
-        artUri: _prefs?.getString("mediaImage"),
+        audioUrl: _mediaRepository.getId(),
+        episodeTitle: _mediaRepository.getEpisodeTitle(),
+        podcastTitle: _mediaRepository.getPodcastTitle(),
+        podcastRSS: _mediaRepository.getRSS(),
+        artUri: _mediaRepository.getArtwork(),
         autoplay: false,
       );
     } catch (error, stackTrace) {
@@ -134,30 +126,30 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void _initStreams() async {
-    _prefs = await SharedPreferences.getInstance();
-
     mediaItem.listen(_handleMediaItemChange);
-    _player.stream.playing.listen(_handlePlayingState);
-    _player.stream.completed.listen(_handleCompletion);
-    _player.stream.position.listen(_handlePositionChange);
-    _player.stream.duration.listen(_handleDurationChange);
-    _player.stream.buffer.listen(_handleBufferChange);
-    _player.stream.rate.listen(_handleRateChange);
-    _player.stream.buffering.listen(_handleBufferingState);
-    _player.stream.error.listen(_handleError);
+
+    final player = _player.player;
+    player.stream.playing.listen(_handlePlayingState);
+    player.stream.completed.listen(_handleCompletion);
+    player.stream.position.listen(_handlePositionChange);
+    player.stream.duration.listen(_handleDurationChange);
+    player.stream.buffer.listen(_handleBufferChange);
+    player.stream.rate.listen(_handleRateChange);
+    player.stream.buffering.listen(_handleBufferingState);
+    player.stream.error.listen(_handleError);
 
     if (!isMobile) {
-      _player.stream.volume.listen(_handleVolumeChange);
+      player.stream.volume.listen(_handleVolumeChange);
     }
   }
 
   void _handleMediaItemChange(MediaItem? media) {
     if (media == null) return;
-    _prefs?.setString("mediaID", media.id);
-    _prefs?.setString("mediaTitle", media.title);
-    _prefs?.setString("mediaArtist", media.artist ?? "");
-    _prefs?.setString("mediaImage", media.artUri.toString());
-    _prefs?.setString("mediaPodcastRSS", media.extras?["podcastRSS"] ?? "");
+    _mediaRepository.setId(media.id);
+    _mediaRepository.setEpisodeTitle(media.title);
+    _mediaRepository.setPodcastTitle(media.artist ?? "");
+    _mediaRepository.setRSS(media.extras?["podcastRSS"] ?? "");
+    _mediaRepository.setArtwork(media.artUri.toString());
   }
 
   void _handlePlayingState(bool value) {
@@ -251,7 +243,7 @@ class MediaProvider extends BaseAudioHandler
     playbackState.add(playbackState.value.copyWith(
       speed: value,
     ));
-    _prefs?.setDouble("mediaRate", value);
+    _mediaRepository.setRate(value);
     notifyListeners();
   }
 
@@ -276,7 +268,7 @@ class MediaProvider extends BaseAudioHandler
 
   void _handleVolumeChange(double value) {
     log("Volume: $value", name: logName);
-    _prefs?.setDouble("mediaVolume", value);
+    _mediaRepository.setVolume(value);
     _volume = value;
     notifyListeners();
   }
@@ -316,7 +308,7 @@ class MediaProvider extends BaseAudioHandler
     log("Autoplay: $autoplay", name: logName);
 
     if (audioUrl == null) return;
-    if (historyProvider == null) return;
+    if (_historyProvider == null) return;
 
     final media = MediaItem(
       id: audioUrl,
@@ -328,7 +320,7 @@ class MediaProvider extends BaseAudioHandler
       extras: {"podcastRSS": podcastRSS},
     );
 
-    final progress = await historyProvider!.getProgress(media.id);
+    final progress = await _historyProvider!.getProgress(media.id);
     if (progress != null) {
       startPosition = Duration(seconds: progress['position']);
     }
@@ -336,12 +328,13 @@ class MediaProvider extends BaseAudioHandler
     mediaItem.add(media);
 
     await _player.open(
-      Media(media.id, start: startPosition),
-      play: false,
+      media.id,
+      startPosition: startPosition,
+      autoplay: false,
     );
 
     if (progress == null) {
-      historyProvider!.addToHistory(
+      _historyProvider!.addToHistory(
         media.id,
         media.title,
         media.displayDescription ?? "",
@@ -396,15 +389,15 @@ class MediaProvider extends BaseAudioHandler
   }
 
   void saveProgress() async {
-    if (historyProvider == null) return;
     final media = mediaItem.value;
     if (media == null) return;
-    await historyProvider!.updateProgress(
+    if (_historyProvider == null) return;
+    await _historyProvider!.updateProgress(
       media.id,
       _position.inSeconds,
       _duration.inSeconds,
     );
-    _prefs?.setInt("mediaPosition", _position.inSeconds);
+    _mediaRepository.setPosition(_position);
   }
 
   @override
@@ -418,7 +411,7 @@ class MediaProvider extends BaseAudioHandler
   }
 
   Future<void> playOrPause() async {
-    if (_player.state.playing) {
+    if (_player.isPlaying) {
       await _player.pause();
     } else {
       await _player.play();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/services/media.dart';
+import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
 
 class SkipButton extends StatelessWidget {

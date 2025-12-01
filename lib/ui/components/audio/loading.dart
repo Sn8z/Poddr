@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/services/media.dart';
 import 'package:provider/provider.dart';
+import 'package:poddr/services/media/media_provider.dart';
 
 class LoadingIndicator extends StatelessWidget {
   const LoadingIndicator({super.key, this.size = 24});

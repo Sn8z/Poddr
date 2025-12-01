@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:provider/provider.dart';
-import 'package:poddr/services/media.dart';
+import 'package:poddr/services/media/media_provider.dart';
 
 class PositionText extends StatelessWidget {
   const PositionText({super.key});

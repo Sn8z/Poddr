@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:poddr/services/media.dart';
 import 'package:provider/provider.dart';
+import 'package:poddr/services/media/media_provider.dart';
 
 class PoddrShortcuts extends StatelessWidget {
   final Widget child;
@@ -18,9 +18,6 @@ class PoddrShortcuts extends StatelessWidget {
         },
         const SingleActivator(LogicalKeyboardKey.mediaPlayPause): () {
           context.read<MediaProvider>().playOrPause();
-        },
-        const SingleActivator(LogicalKeyboardKey.mediaStop): () {
-          context.read<MediaProvider>().stop();
         },
         const SingleActivator(LogicalKeyboardKey.mediaPlay): () {
           context.read<MediaProvider>().play();

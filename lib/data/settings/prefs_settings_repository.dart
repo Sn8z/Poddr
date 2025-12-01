@@ -9,11 +9,10 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   SharedPreferences? _prefs;
 
   SharedPrefSettingsRepository() {
-    init();
+    _init();
   }
 
-  @override
-  Future<void> init() async {
+  Future<void> _init() async {
     _prefs = await SharedPreferences.getInstance();
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/audio/loading.dart';
-import 'package:poddr/services/media.dart';
+import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlayButton extends StatelessWidget {
@@ -14,7 +14,7 @@ class PlayButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isPlaying = context.select<MediaProvider, bool>(
-      (provider) => provider.playbackState.value.playing,
+      (p) => p.isPlaying,
     );
 
     return MouseRegion(
