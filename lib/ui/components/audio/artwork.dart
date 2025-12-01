@@ -9,21 +9,16 @@ class Artwork extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Uri? artUri =
-        context.select<MediaProvider, Uri?>((e) => e.mediaItem.value?.artUri);
-    String? podcastRSS = context.select<MediaProvider, String?>(
-        (e) => e.mediaItem.value?.extras?["podcastRSS"]);
+    String artwork = context.select<MediaProvider, String>((p) => p.artwork);
+    String rss = context.select<MediaProvider, String>((p) => p.podcastRSS);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
           onTap: () {
-            if (podcastRSS != null) {
-              final rss = Uri.encodeComponent(podcastRSS);
-              context.go("/podcasts/$rss");
-            }
+            context.go("/podcasts/$rss");
           },
-          child: PoddrImage(imageUrl: artUri?.toString() ?? "")),
+          child: PoddrImage(imageUrl: artwork)),
     );
   }
 }

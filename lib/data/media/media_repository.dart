@@ -1,28 +1,28 @@
 abstract class IMediaRepository {
-  void setRate(double rate);
-  double getRate();
+  Future<void> setRate(double rate);
+  Future<double> getRate();
 
-  void setVolume(double volume);
-  double getVolume();
+  Future<void> setVolume(double volume);
+  Future<double> getVolume();
 
-  void setPosition(Duration position);
-  Duration getPosition();
+  Future<void> setPosition(Duration position);
+  Future<Duration> getPosition();
 
-  void setId(String id);
-  String getId();
+  Future<void> setId(String id);
+  Future<String> getId();
 
-  void setRSS(String rss);
-  String getRSS();
+  Future<void> setRSS(String rss);
+  Future<String> getRSS();
 
-  void setPodcastTitle(String title);
-  String getPodcastTitle();
+  Future<void> setPodcastTitle(String title);
+  Future<String> getPodcastTitle();
 
-  void setEpisodeTitle(String title);
-  String getEpisodeTitle();
+  Future<void> setEpisodeTitle(String title);
+  Future<String> getEpisodeTitle();
 
-  void setAuthor(String author);
-  String getAuthor();
+  Future<void> setAuthor(String author);
+  Future<String> getAuthor();
 
-  void setArtwork(String uri);
-  String getArtwork();
+  Future<void> setArtwork(String uri);
+  Future<String> getArtwork();
 }

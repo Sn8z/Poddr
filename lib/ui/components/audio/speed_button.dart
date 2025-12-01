@@ -32,8 +32,7 @@ class SpeedButton extends StatelessWidget {
             return PoddrDialog(
               children: [
                 Selector<MediaProvider, double>(
-                  selector: (_, mediaProvider) =>
-                      mediaProvider.playbackState.value.speed,
+                  selector: (_, mediaProvider) => mediaProvider.speed,
                   builder: (context, speed, child) {
                     double currentStep = speedSteps.firstWhere(
                       (step) => (step - speed).abs() < 0.125,
@@ -76,7 +75,7 @@ class SpeedButton extends StatelessWidget {
       },
       icon: Text(
         "${context.select<MediaProvider, double>(
-          (mediaProvider) => mediaProvider.playbackState.value.speed,
+          (mediaProvider) => mediaProvider.speed,
         )}x",
         style: TextStyle(
           fontSize: size * 0.6,

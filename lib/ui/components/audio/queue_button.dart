@@ -92,7 +92,7 @@ class QueueButton extends StatelessWidget {
                                     onPressed: () {
                                       context
                                           .read<MediaProvider>()
-                                          .removeQueueItemAt(index);
+                                          .removeQueueItem(index);
                                     },
                                   ),
                                 );

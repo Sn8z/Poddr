@@ -4,105 +4,156 @@ import 'package:poddr/data/media/media_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsMediaRepository implements IMediaRepository {
-  final String logName = "SharedPrefsMediaRepository";
-  SharedPreferences? _prefs;
+  static const String logName = "SharedPrefsMediaRepository";
 
-  SharedPrefsMediaRepository() {
-    _init();
-  }
-
-  Future<void> _init() async {
-    _prefs = await SharedPreferences.getInstance();
-    log("Initialized repository", name: logName);
+  @override
+  Future<void> setRate(double rate) async {
+    final prefs = await SharedPreferences.getInstance();
+    log("Saving rate: $rate", name: logName);
+    prefs.setDouble("rate", rate);
   }
 
   @override
-  void setRate(double rate) {
-    _prefs?.setDouble("rate", rate);
+  Future<double> getRate() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final double rate = prefs.getDouble("rate") ?? 1.0;
+    log("Loading rate $rate", name: logName);
+    return rate;
   }
 
   @override
-  double getRate() {
-    return _prefs?.getDouble("rate") ?? 1.0;
+  Future<void> setVolume(double volume) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    log("Saving volume: $volume", name: logName);
+    prefs.setDouble("volume", volume);
   }
 
   @override
-  void setVolume(double volume) {
-    _prefs?.setDouble("volume", volume);
+  Future<double> getVolume() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final double volume = prefs.getDouble("volume") ?? 50;
+    log("Loading volume $volume", name: logName);
+    return volume;
   }
 
   @override
-  double getVolume() {
-    return _prefs?.getDouble("volume") ?? 50;
+  Future<void> setPosition(Duration position) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    log("Saving position: $position", name: logName);
+    prefs.setInt("position", position.inSeconds);
   }
 
   @override
-  void setPosition(Duration position) {
-    _prefs?.setInt("position", position.inSeconds);
+  Future<Duration> getPosition() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final Duration position = Duration(seconds: prefs.getInt("position") ?? 0);
+    log("Loading position $position", name: logName);
+    return position;
   }
 
   @override
-  Duration getPosition() {
-    return Duration(seconds: _prefs?.getInt("position") ?? 0);
+  Future<void> setId(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    log("Saving id: $id", name: logName);
+    prefs.setString("id", id);
   }
 
   @override
-  void setId(String id) {
-    _prefs?.setString("id", id);
+  Future<String> getId() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final String id = prefs.getString("id") ?? "";
+    log("Loading id $id", name: logName);
+    return id;
   }
 
   @override
-  String getId() {
-    return _prefs?.getString("id") ?? "";
+  Future<void> setRSS(String rss) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    log("Saving rss: $rss", name: logName);
+    prefs.setString("rss", rss);
   }
 
   @override
-  void setRSS(String rss) {
-    _prefs?.setString("rss", rss);
+  Future<String> getRSS() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final String rss = prefs.getString("rss") ?? "";
+    log("Loading rss $rss", name: logName);
+    return rss;
   }
 
   @override
-  String getRSS() {
-    return _prefs?.getString("rss") ?? "";
+  Future<void> setPodcastTitle(String title) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    log("Saving podcast title: $title", name: logName);
+    prefs.setString("podcastTitle", title);
   }
 
   @override
-  void setPodcastTitle(String title) {
-    _prefs?.setString("podcastTitle", title);
+  Future<String> getPodcastTitle() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final String title = prefs.getString("podcastTitle") ?? "";
+    log("Loading podcast title $title", name: logName);
+    return title;
   }
 
   @override
-  String getPodcastTitle() {
-    return _prefs?.getString("podcastTitle") ?? "";
+  Future<void> setEpisodeTitle(String title) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    log("Saving episode title: $title", name: logName);
+    prefs.setString("episodeTitle", title);
   }
 
   @override
-  void setEpisodeTitle(String title) {
-    _prefs?.setString("episodeTitle", title);
+  Future<String> getEpisodeTitle() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final String title = prefs.getString("episodeTitle") ?? "";
+    log("Loading episode title $title", name: logName);
+    return title;
   }
 
   @override
-  String getEpisodeTitle() {
-    return _prefs?.getString("episodeTitle") ?? "";
+  Future<void> setAuthor(String author) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    log("Saving author: $author", name: logName);
+    prefs.setString("author", author);
   }
 
   @override
-  void setAuthor(String author) {
-    _prefs?.setString("author", author);
+  Future<String> getAuthor() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final String author = prefs.getString("author") ?? "";
+    log("Loading author $author", name: logName);
+    return author;
   }
 
   @override
-  String getAuthor() {
-    return _prefs?.getString("author") ?? "";
+  Future<void> setArtwork(String uri) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    log("Saving artwork: $uri", name: logName);
+    prefs.setString("artwork", uri);
   }
 
   @override
-  void setArtwork(String uri) {
-    _prefs?.setString("artwork", uri);
-  }
+  Future<String> getArtwork() async {
+    final prefs = await SharedPreferences.getInstance();
 
-  @override
-  String getArtwork() {
-    return _prefs?.getString("artwork") ?? "";
+    final String artwork = prefs.getString("artwork") ?? "";
+    log("Loading artwork $artwork", name: logName);
+    return artwork;
   }
 }

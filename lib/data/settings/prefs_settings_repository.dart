@@ -1,50 +1,57 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefSettingsRepository implements ISettingsRepository {
+  static const String logName = "SharedPrefSettingsRepository";
   static const String _themeModeKey = "themeMode";
   static const String _colorKey = "themeColor";
 
-  SharedPreferences? _prefs;
-
-  SharedPrefSettingsRepository() {
-    _init();
-  }
-
-  Future<void> _init() async {
-    _prefs = await SharedPreferences.getInstance();
-  }
-
   @override
   Future<void> setColor(Color color) async {
-    await _prefs?.setInt(_colorKey, color.toARGB32());
+    final prefs = await SharedPreferences.getInstance();
+    final int colorInt = color.toARGB32();
+    log("Saving color: $colorInt", name: logName);
+    prefs.setInt(_colorKey, colorInt);
   }
 
   @override
   Future<Color> getColor() async {
-    final color = _prefs?.getInt(_colorKey);
-    return Color(color ?? 4294940190);
+    final prefs = await SharedPreferences.getInstance();
+    final color = prefs.getInt(_colorKey) ?? 4294940190;
+    log("Loading color: $color", name: logName);
+    return Color(color);
   }
 
   @override
   Future<void> setThemeMode(ThemeMode mode) async {
-    await _prefs?.setInt(_themeModeKey, mode.index);
+    final prefs = await SharedPreferences.getInstance();
+    log("Saving theme mode: $mode", name: logName);
+    prefs.setInt(_themeModeKey, mode.index);
   }
 
   @override
   Future<ThemeMode> getThemeMode() async {
-    final themeMode = _prefs?.getInt(_themeModeKey);
-    return ThemeMode.values[themeMode ?? 0];
+    final prefs = await SharedPreferences.getInstance();
+    final themeMode = prefs.getInt(_themeModeKey) ?? 0;
+    log("Loading theme mode: $themeMode", name: logName);
+    return ThemeMode.values[themeMode];
   }
 
   @override
   Future<void> saveActiveProfile(int profileId) async {
-    await _prefs?.setInt("activeProfile", profileId);
+    final prefs = await SharedPreferences.getInstance();
+    log("Saving active profile: $profileId", name: logName);
+    prefs.setInt("activeProfile", profileId);
   }
 
   @override
-  Future<int?> getActiveProfile() async {
-    return _prefs?.getInt("activeProfile");
+  Future<int> getActiveProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final int profile = prefs.getInt("activeProfile") ?? 0;
+    log("Loading active profile: $profile", name: logName);
+    return profile;
   }
 }

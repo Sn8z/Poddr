@@ -15,7 +15,7 @@ class EpisodeTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? title =
-        context.select<MediaProvider, String?>((e) => e.mediaItem.value?.title);
+        context.select<MediaProvider, String?>((e) => e.episodeTitle);
 
     return Text(
       title ?? "Title",

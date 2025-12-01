@@ -15,19 +15,15 @@ class MediaTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? artist = context
-        .select<MediaProvider, String?>((e) => e.mediaItem.value?.artist);
-    String? podcastRSS = context.select<MediaProvider, String?>(
-        (e) => e.mediaItem.value?.extras?["podcastRSS"]);
+    String? artist =
+        context.select<MediaProvider, String?>((e) => e.podcastTitle);
+    String? rss = context.select<MediaProvider, String?>((e) => e.podcastRSS);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          if (podcastRSS != null) {
-            final rss = Uri.encodeComponent(podcastRSS);
-            context.push("/podcasts/$rss");
-          }
+          context.push("/podcasts/$rss");
         },
         child: Text(
           artist ?? "Artist",
