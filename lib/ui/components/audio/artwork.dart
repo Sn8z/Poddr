@@ -16,7 +16,7 @@ class Artwork extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
           onTap: () {
-            context.go("/podcasts/$rss");
+            context.go("/podcasts/${Uri.encodeComponent(rss)}");
           },
           child: PoddrImage(imageUrl: artwork)),
     );
