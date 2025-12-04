@@ -33,7 +33,7 @@ class SkipButton extends StatelessWidget {
                   size: size * 0.8,
                   color: canGoNext
                       ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                      : Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(50),
                 ),
               ),
             ],

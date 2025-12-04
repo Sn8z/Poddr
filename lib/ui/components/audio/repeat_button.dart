@@ -34,7 +34,7 @@ class RepeatButton extends StatelessWidget {
 
     final color = repeatMode != AudioServiceRepeatMode.none
         ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.onSurfaceVariant;
+        : Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(50);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,

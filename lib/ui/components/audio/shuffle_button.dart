@@ -19,7 +19,7 @@ class ShuffleButton extends StatelessWidget {
 
     final color = isShuffling
         ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.onSurfaceVariant;
+        : Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(50);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,

@@ -16,6 +16,7 @@ class FullscreenButton extends StatelessWidget {
       },
       icon: Icon(
         Icons.fullscreen_rounded,
+        color: Theme.of(context).colorScheme.onSurface,
         size: size,
       ),
     );

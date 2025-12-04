@@ -17,13 +17,19 @@ class VolumeSlider extends StatelessWidget {
     final volume = context.select<MediaProvider, double>((e) => e.volume);
 
     if (isDesktop) {
-      return Slider(
-        value: volume,
-        min: 0.0,
-        max: 100.0,
-        onChanged: (double value) {
-          context.read<MediaProvider>().setVolume(value);
-        },
+      return SliderTheme(
+        data: SliderTheme.of(context).copyWith(
+          trackHeight: 4,
+          inactiveTrackColor: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(50),
+        ),
+        child: Slider(
+          value: volume,
+          min: 0.0,
+          max: 100.0,
+          onChanged: (double value) {
+            context.read<MediaProvider>().setVolume(value);
+          },
+        ),
       );
     }
 
@@ -54,6 +60,7 @@ class VolumeSlider extends StatelessWidget {
       },
       icon: Icon(
         Icons.volume_up,
+        color: Theme.of(context).colorScheme.onSurface,
         size: size,
       ),
     );

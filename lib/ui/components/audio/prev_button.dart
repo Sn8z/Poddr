@@ -34,7 +34,7 @@ class PreviousButton extends StatelessWidget {
                   size: size * 0.8,
                   color: canGoPrevious
                       ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                      : Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(50),
                 ),
               ),
             ],

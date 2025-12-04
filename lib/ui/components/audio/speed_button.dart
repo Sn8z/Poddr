@@ -79,7 +79,7 @@ class SpeedButton extends StatelessWidget {
         )}x",
         style: TextStyle(
           fontSize: size * 0.6,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          color: Theme.of(context).colorScheme.onSurface,
           fontWeight: FontWeight.bold,
         ),
       ),

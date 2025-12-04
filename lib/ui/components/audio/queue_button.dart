@@ -17,6 +17,7 @@ class QueueButton extends StatelessWidget {
     return IconButton(
       icon: Icon(
         Icons.queue_music_rounded,
+        color: Theme.of(context).colorScheme.onSurface,
         size: size,
       ),
       onPressed: () {
@@ -35,7 +36,7 @@ class QueueButton extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                                Theme.of(context).colorScheme.onSurface,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

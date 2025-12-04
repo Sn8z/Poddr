@@ -35,8 +35,8 @@ class PlayButton extends StatelessWidget {
                         Theme.of(context).colorScheme.surfaceContainerHighest,
                     shape: RoundedSuperellipseBorder(
                       side: BorderSide(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        width: 1.5,
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 2,
                       ),
                       borderRadius: BorderRadius.circular(size / 3),
                     ),
@@ -47,6 +47,7 @@ class PlayButton extends StatelessWidget {
                 child: Icon(
                   isPlaying ? Icons.pause : Icons.play_arrow,
                   color: Theme.of(context).colorScheme.onSurface,
+                  size: size * 0.5,
                 ),
               ),
               Positioned.fill(
