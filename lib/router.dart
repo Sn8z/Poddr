@@ -68,6 +68,10 @@ abstract class PoddrRouter {
             navigatorKey: _podcastNavKey,
             routes: [
               GoRoute(
+                path: '/',
+                redirect: (context, state) => '/podcasts',
+              ),
+              GoRoute(
                 path: '/podcasts',
                 parentNavigatorKey: _podcastNavKey,
                 pageBuilder: (context, state) {
