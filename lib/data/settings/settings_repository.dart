@@ -7,4 +7,8 @@ abstract class ISettingsRepository {
   Future<ThemeMode> getThemeMode();
   Future<void> saveActiveProfile(int profileId);
   Future<int> getActiveProfile();
+  Future<void> saveCountryCode(String countryCode);
+  Future<String> getCountryCode();
+  Future<void> saveGenreID(String genreID);
+  Future<String> getGenreID();
 }
