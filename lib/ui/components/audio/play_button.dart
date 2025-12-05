@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/ui/components/audio/loading.dart';
-import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:poddr/services/media/media_provider.dart';
 
 class PlayButton extends StatelessWidget {
   final double size;
@@ -15,6 +14,10 @@ class PlayButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isPlaying = context.select<MediaProvider, bool>(
       (p) => p.isPlaying,
+    );
+
+    final bool isLoading = context.select<MediaProvider, bool>(
+      (p) => p.isLoading,
     );
 
     return MouseRegion(
@@ -44,14 +47,17 @@ class PlayButton extends StatelessWidget {
                 ),
               ),
               Center(
-                child: Icon(
-                  isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  size: size * 0.5,
-                ),
-              ),
-              Positioned.fill(
-                child: LoadingIndicator(size: size),
+                child: isLoading
+                    ? SizedBox(
+                        width: size * 0.4,
+                        height: size * 0.4,
+                        child: const CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Icon(
+                        isPlaying ? Icons.pause : Icons.play_arrow,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        size: size * 0.5,
+                      ),
               ),
             ],
           ),
