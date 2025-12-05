@@ -43,17 +43,7 @@ class ProfileProvider extends ChangeNotifier {
         _settingsRepository.saveActiveProfile(newDefault.id);
       } else {
         final savedProfileId = await _settingsRepository.getActiveProfile();
-
-        if (savedProfileId != null) {
-          try {
-            _currentProfile =
-                await _profileRepository.getProfile(savedProfileId);
-          } catch (e) {
-            await activateProfile(_profiles.first.id);
-          }
-        } else {
-          await activateProfile(_profiles.first.id);
-        }
+        _currentProfile = await _profileRepository.getProfile(savedProfileId);
       }
     } catch (e, stack) {
       log(e.toString(), name: logName, error: e, stackTrace: stack);
