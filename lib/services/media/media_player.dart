@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:media_kit/media_kit.dart';
+import 'package:poddr/ui/utils/platform.dart';
 
 class PoddrMediaPlayer {
   final String logName = "PoddrMediaPlayer";
@@ -23,8 +24,17 @@ class PoddrMediaPlayer {
   }) async {
     try {
       await _player.setRate(rate);
-      await _player.setVolume(volume);
-      await _player.setAudioDevice(AudioDevice.auto());
+
+      if (isMobile) {
+        await _player.setVolume(100);
+      } else {
+        await _player.setVolume(volume);
+      }
+
+      if (!isWeb) {
+        await _player.setAudioDevice(AudioDevice.auto());
+      }
+
       log("Player initialized", name: logName);
     } catch (error, stackTrace) {
       log(
@@ -74,6 +84,7 @@ class PoddrMediaPlayer {
   }
 
   Future<void> setVolume(double volume) async {
+    if (isMobile) return;
     await _player.setVolume(volume);
   }
 
