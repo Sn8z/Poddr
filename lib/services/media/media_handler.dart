@@ -16,6 +16,9 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   AudioHandler? _audioHandler;
 
+  DateTime? _lastPositionSave;
+  static const Duration _saveInterval = Duration(seconds: 10);
+
   Stream<double> get volume => _player.player.stream.volume;
 
   final IMediaRepository _mediaRepository;
@@ -56,6 +59,7 @@ class PoddrMediaHandler extends BaseAudioHandler
           podcastTitle: await _mediaRepository.getPodcastTitle(),
           podcastRSS: await _mediaRepository.getRSS(),
           artUri: await _mediaRepository.getArtwork(),
+          startPosition: await _mediaRepository.getPosition(),
           autoplay: false,
         );
       } else {
@@ -147,6 +151,11 @@ class PoddrMediaHandler extends BaseAudioHandler
         MediaAction.setRepeatMode,
       },
     ));
+
+    if (!value) {
+      _lastPositionSave = DateTime.now();
+      _mediaRepository.setPosition(playbackState.value.updatePosition);
+    }
   }
 
   void _handleCompletion(bool isCompleted) {
@@ -194,6 +203,13 @@ class PoddrMediaHandler extends BaseAudioHandler
     playbackState.add(playbackState.value.copyWith(
       updatePosition: value,
     ));
+
+    final now = DateTime.now();
+    if (_lastPositionSave == null ||
+        now.difference(_lastPositionSave!) >= _saveInterval) {
+      _mediaRepository.setPosition(value);
+      _lastPositionSave = now;
+    }
   }
 
   void _handleDurationChange(Duration value) {
