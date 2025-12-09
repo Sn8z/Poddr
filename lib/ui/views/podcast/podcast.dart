@@ -326,10 +326,6 @@ class Episode extends StatelessWidget {
     return PoddrListItem(
       title: episode.title,
       subtitle: convertDateToString(episode.publicationDate),
-      data: EpisodeHistory(
-        audioUrl: episode.audioUrl,
-        width: 460,
-      ),
       isActive: isCurrentEpisode,
       actions: [
         Text(
@@ -347,7 +343,10 @@ class Episode extends StatelessWidget {
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.info_outline_rounded),
+          icon: const Icon(
+            Icons.info_outline_rounded,
+            size: 24,
+          ),
           onPressed: () {
             showDialog(
               context: context,
@@ -374,7 +373,14 @@ class Episode extends StatelessWidget {
                   artist: podcastProvider.podcast!.author,
                 );
           },
-          icon: const Icon(Icons.queue_music_rounded),
+          icon: const Icon(
+            Icons.queue_music_rounded,
+            size: 24,
+          ),
+        ),
+        EpisodeHistoryCircle(
+          audioUrl: episode.audioUrl,
+          size: 18,
         ),
       ],
       onTap: () {

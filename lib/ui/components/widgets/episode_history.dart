@@ -53,3 +53,61 @@ class EpisodeHistory extends StatelessWidget {
     );
   }
 }
+
+class EpisodeHistoryCircle extends StatelessWidget {
+  final double? size;
+  final String audioUrl;
+
+  const EpisodeHistoryCircle({
+    super.key,
+    required this.audioUrl,
+    this.size = 16,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: StreamBuilder<ListeningHistoryData?>(
+        stream: context.read<HistoryProvider>().getProgressStream(audioUrl),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox();
+          } else if (snapshot.hasError) {
+            return const SizedBox();
+          } else if (snapshot.hasData && snapshot.data != null) {
+            final data = snapshot.data!;
+            if (data.isFinished) {
+              return CircularProgressIndicator(
+                value: 1,
+                strokeWidth: size! / 5,
+                color: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+              );
+            } else {
+              final value = data.position / data.duration;
+              if (value >= 0 && value <= 1) {
+                return CircularProgressIndicator(
+                  value: value,
+                  strokeWidth: size! / 5,
+                  color: Theme.of(context).colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                );
+              } else {
+                return CircularProgressIndicator(
+                  value: 0,
+                  strokeWidth: size! / 5,
+                  color: Theme.of(context).colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                );
+              }
+            }
+          } else {
+            return const SizedBox();
+          }
+        },
+      ),
+    );
+  }
+}
