@@ -10,7 +10,7 @@ class PoddrLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     final imagePath = Theme.of(context).brightness == Brightness.light
         ? 'assets/images/logo_dark.png'
-        : 'assets/images/logo_white.png';
+        : 'assets/images/logo_light.png';
 
     return Image.asset(
       imagePath,

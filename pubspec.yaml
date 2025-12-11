@@ -68,4 +68,4 @@ msix_config:
   publisher_display_name: Marcus Sneitz
   identity_name: com.sn8z.poddr
   msix_version: 1.0.0.0
-  logo_path: assets/images/icon.png
+  logo_path: assets/images/logo.png
