@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 
@@ -37,9 +36,7 @@ class ThemeProvider extends ChangeNotifier {
       useMaterial3: true,
       materialTapTargetSize: MaterialTapTargetSize.padded,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      textTheme: GoogleFonts.outfitTextTheme(
-        ThemeData(brightness: Brightness.light).textTheme,
-      ),
+      fontFamily: 'Outfit',
       primaryColor: _color,
       colorScheme: ColorScheme.fromSeed(
         seedColor: _color,
@@ -54,9 +51,7 @@ class ThemeProvider extends ChangeNotifier {
       useMaterial3: true,
       materialTapTargetSize: MaterialTapTargetSize.padded,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      textTheme: GoogleFonts.outfitTextTheme(
-        ThemeData(brightness: Brightness.dark).textTheme,
-      ),
+      fontFamily: 'Outfit',
       primaryColor: const Color.fromARGB(255, 15, 15, 15),
       colorScheme: ColorScheme.fromSeed(
         seedColor: _color,
