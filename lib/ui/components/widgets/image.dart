@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 
 class PoddrImage extends StatelessWidget {
@@ -14,6 +14,10 @@ class PoddrImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ValueKey<String> imageKey = ValueKey('image-$imageUrl');
+
+    final String errorImage = Theme.of(context).brightness == Brightness.light
+        ? 'assets/images/logo_light.png'
+        : 'assets/images/logo_black.png';
 
     return Image.network(
       imageUrl,
@@ -35,7 +39,7 @@ class PoddrImage extends StatelessWidget {
       },
       errorBuilder: (context, error, stackTrace) {
         return Image.asset(
-          "assets/images/icon.png",
+          errorImage,
           fit: fit,
         );
       },
