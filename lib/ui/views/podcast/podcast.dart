@@ -108,12 +108,14 @@ class PodcastDetailsView extends StatelessWidget {
                                             borderRadius:
                                                 BorderRadius.circular(16),
                                           ),
-                                          child: PoddrImage(
-                                            imageUrl: podcastProvider
-                                                    .podcast?.image ??
-                                                "",
-                                            fit: BoxFit.cover,
-                                          ),
+                                          child: podcastProvider.isLoading
+                                              ? const ShimmerBox()
+                                              : PoddrImage(
+                                                  imageUrl: podcastProvider
+                                                          .podcast?.image ??
+                                                      "",
+                                                  fit: BoxFit.cover,
+                                                ),
                                         ),
                                         gapH8,
                                         Text(

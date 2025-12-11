@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 
 class PoddrImage extends StatelessWidget {
@@ -13,36 +14,22 @@ class PoddrImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueKey<String> imageKey = ValueKey('image-$imageUrl');
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final String errorImage = isDark
+        ? 'assets/images/logo_black.png'
+        : 'assets/images/logo_light.png';
 
-    final String errorImage = Theme.of(context).brightness == Brightness.light
-        ? 'assets/images/logo_light.png'
-        : 'assets/images/logo_black.png';
-
-    return Image.network(
-      imageUrl,
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
       fit: fit,
-      key: imageKey,
-      cacheHeight: 500,
-      cacheWidth: 500,
-      gaplessPlayback: true,
-      headers: const {'Cache-Control': 'max-age=604800'},
-      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-        if (wasSynchronouslyLoaded || frame != null) {
-          return child;
-        }
-        return const ShimmerBox();
-      },
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return const ShimmerBox();
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return Image.asset(
-          errorImage,
-          fit: fit,
-        );
-      },
+      maxHeightDiskCache: 800,
+      fadeInDuration: const Duration(milliseconds: 300),
+      fadeOutDuration: const Duration(milliseconds: 300),
+      placeholder: (context, url) => const ShimmerBox(),
+      errorWidget: (context, url, error) => Image.asset(
+        errorImage,
+        fit: BoxFit.contain,
+      ),
     );
   }
 }
