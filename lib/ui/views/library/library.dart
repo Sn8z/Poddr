@@ -28,6 +28,18 @@ class LibraryView extends StatelessWidget {
               title: 'Library',
             ),
             PoddrAppBarOptions(
+              title: Row(
+                children: [
+                  ElevatedButton(
+                    child: Text("Latest Episodes"),
+                    onPressed: () => context.push("/library/latest"),
+                  ),
+                  ElevatedButton(
+                    child: Text("Downloads"),
+                    onPressed: () => context.push("/library/downloads"),
+                  ),
+                ],
+              ),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.add),

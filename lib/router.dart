@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/shortcuts.dart';
 
-// pages
+// views
 import 'package:poddr/ui/views/base.dart';
 import 'package:poddr/ui/views/player/player.dart';
 import 'package:poddr/ui/views/podcast/discover.dart';
 import 'package:poddr/ui/views/podcast/podcast.dart';
-import 'package:poddr/ui/views/local/local.dart';
 import 'package:poddr/ui/views/library/library.dart';
+import 'package:poddr/ui/views/library/downloads.dart';
+import 'package:poddr/ui/views/library/latest.dart';
 import 'package:poddr/ui/views/search/search.dart';
 import 'package:poddr/ui/views/settings/settings.dart';
 
 final _rootNavKey = GlobalKey<NavigatorState>(debugLabel: 'Root navigation');
 final _podcastNavKey =
     GlobalKey<NavigatorState>(debugLabel: 'Podcast navigation');
-final _localNavKey = GlobalKey<NavigatorState>(debugLabel: 'Local navigation');
 final _libraryNavKey =
     GlobalKey<NavigatorState>(debugLabel: 'Library navigation');
 final _searchNavKey =
@@ -96,20 +96,6 @@ abstract class PoddrRouter {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _localNavKey,
-            routes: [
-              GoRoute(
-                path: '/local',
-                parentNavigatorKey: _localNavKey,
-                pageBuilder: (context, state) {
-                  return const NoTransitionPage(
-                    child: LocalDiscoveryView(),
-                  );
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
             navigatorKey: _libraryNavKey,
             routes: [
               GoRoute(
@@ -120,6 +106,26 @@ abstract class PoddrRouter {
                     child: LibraryView(),
                   );
                 },
+                routes: [
+                  GoRoute(
+                    path: '/latest',
+                    parentNavigatorKey: _libraryNavKey,
+                    pageBuilder: (context, state) {
+                      return const NoTransitionPage(
+                        child: LatestEpisodesView(),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: '/downloads',
+                    parentNavigatorKey: _libraryNavKey,
+                    pageBuilder: (context, state) {
+                      return const NoTransitionPage(
+                        child: DownloadsView(),
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),
