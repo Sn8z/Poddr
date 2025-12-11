@@ -8,51 +8,14 @@ class PoddrLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.fromSize(
-      size: Size.square(size),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            bottom: 0,
-            width: size * multiplier,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white.withValues(alpha: opacity)
-                    : Colors.black.withValues(alpha: opacity),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(size * multiplier),
-                  topRight: Radius.circular(size * multiplier),
-                  bottomLeft: Radius.circular(size * multiplier / 2),
-                  bottomRight: Radius.circular(size * multiplier * 2),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: size * multiplier,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withValues(alpha: opacity),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(size * multiplier),
-                  topRight: Radius.circular(size * multiplier / 2),
-                  bottomLeft: Radius.circular(size * multiplier),
-                  bottomRight: Radius.circular(size * multiplier * 2),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    final imagePath = Theme.of(context).brightness == Brightness.light
+        ? 'assets/images/logo_dark.png'
+        : 'assets/images/logo_white.png';
+
+    return Image.asset(
+      imagePath,
+      width: size,
+      height: size,
     );
   }
 }

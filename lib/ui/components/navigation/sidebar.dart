@@ -39,12 +39,7 @@ class PoddrSideBar extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(
-              height: 80,
-              child: Center(
-                child: PoddrLogo(
-                  size: 28,
-                ),
-              ),
+              height: 16,
             ),
             Expanded(
               child: Column(
