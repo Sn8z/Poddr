@@ -4,10 +4,9 @@ import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  final ISettingsRepository _settingsRepository =
-      SharedPrefSettingsRepository();
+  final ISettingsRepository _settingsRepository;
 
-  Color _color = const Color.fromRGBO(255, 150, 30, 1);
+  Color _color = const Color.fromRGBO(0xFF, 0xA5, 0x00, 1);
   Color get color => _color;
 
   ThemeData _lightTheme = ThemeData.light();
@@ -19,7 +18,9 @@ class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
   ThemeMode get themeMode => _themeMode;
 
-  ThemeProvider() {
+  ThemeProvider({ISettingsRepository? settingsRepository})
+      : _settingsRepository =
+            settingsRepository ?? SharedPrefSettingsRepository() {
     _loadTheme();
   }
 
