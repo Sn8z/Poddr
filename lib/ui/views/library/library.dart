@@ -76,7 +76,7 @@ class LibraryView extends StatelessWidget {
                 )
               ],
             ),
-            sliverGapH8,
+            sliverGapH16,
             if (subscriptionProvider.isLoading) ...[
               const SliverToBoxAdapter(
                 child: Center(

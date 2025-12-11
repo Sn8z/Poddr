@@ -26,14 +26,14 @@ class SettingsView extends StatelessWidget {
               title: "Settings",
             ),
             PoddrAppBarOptions(),
-            sliverGapH8,
+            sliverGapH16,
             const ContentBox(
               title: "Profile",
               children: [
                 ProfileSection(),
               ],
             ),
-            sliverGapH8,
+            sliverGapH16,
             const ContentBox(
               title: "Appearance",
               children: [
@@ -42,37 +42,6 @@ class SettingsView extends StatelessWidget {
                 gapH32,
                 ColorSelector(),
                 gapH16,
-              ],
-            ),
-            sliverGapH8,
-            const ContentBox(
-              title: "Preferences",
-              children: [
-                ListTile(
-                  leading: Icon(Icons.sort_rounded),
-                  title: Text("Default Region"),
-                  trailing: Icon(Icons.chevron_right),
-                ),
-                ListTile(
-                  leading: Icon(Icons.sort_rounded),
-                  title: Text("Default Layout"),
-                  trailing: Icon(Icons.chevron_right),
-                ),
-                ListTile(
-                  leading: Icon(Icons.sort_rounded),
-                  title: Text("Default Sort"),
-                  trailing: Icon(Icons.chevron_right),
-                ),
-                ListTile(
-                  leading: Icon(Icons.info_outline),
-                  title: Text("Info"),
-                  trailing: Icon(Icons.chevron_right),
-                ),
-                ListTile(
-                  leading: Icon(Icons.info_outline),
-                  title: Text("Info"),
-                  trailing: Icon(Icons.chevron_right),
-                ),
               ],
             ),
             sliverGapH16,
@@ -321,11 +290,14 @@ class ProfileSection extends StatelessWidget {
       children: [
         ListTile(
           leading: const Icon(Icons.person),
-          title: Text("Current profile"),
-          subtitle: Text(current?.name ?? "None"),
+          title: Text(current?.name ?? "None"),
+          trailing: IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {},
+          ),
         ),
         ListTile(
-          leading: const Icon(Icons.change_circle_outlined),
+          leading: const Icon(Icons.change_circle_rounded),
           title: const Text("Change profile"),
           subtitle: Text("${profiles.length} profiles available"),
           onTap: () {

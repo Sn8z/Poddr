@@ -60,6 +60,10 @@ class PlayerView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      ShuffleButton(
+                        size: 36,
+                      ),
+                      gapW16,
                       PreviousButton(
                         size: 36,
                       ),
@@ -69,6 +73,10 @@ class PlayerView extends StatelessWidget {
                       ),
                       gapW16,
                       SkipButton(
+                        size: 36,
+                      ),
+                      gapW16,
+                      RepeatButton(
                         size: 36,
                       ),
                     ],
@@ -86,14 +94,6 @@ class PlayerView extends StatelessWidget {
               ),
               gapW16,
               SpeedButton(
-                size: 32,
-              ),
-              gapW16,
-              ShuffleButton(
-                size: 32,
-              ),
-              gapW16,
-              RepeatButton(
                 size: 32,
               ),
             ],

@@ -93,11 +93,11 @@ class PodcastDiscoveryView extends StatelessWidget {
                     ),
                   ],
                 ),
-                sliverGapH8,
+                sliverGapH16,
                 const LatestEpisodes(),
-                sliverGapH8,
+                sliverGapH16,
                 const RecentlyPlayedEpisodes(),
-                sliverGapH8,
+                sliverGapH16,
                 const TrendingPodcasts(),
                 const BottomPaddingFix(),
               ],
@@ -118,6 +118,14 @@ class LatestEpisodes extends StatelessWidget {
 
     return ContentBox(
       title: "Latest episodes",
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.arrow_right_alt_rounded),
+          onPressed: () {
+            context.push('/library/latest');
+          },
+        ),
+      ],
       children: [
         if (latestEpisodesProvider.isLoading)
           SingleChildScrollView(
