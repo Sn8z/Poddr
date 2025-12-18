@@ -119,43 +119,51 @@ class LatestEpisodesView extends StatelessWidget {
                   ],
                 ),
                 sliverGapH16,
-                ContentBox(
-                  title: "Episodes",
-                  children: [
-                    for (var episode in viewModel.episodes)
-                      PoddrListItem(
-                        title: episode.title,
-                        subtitle: episode.author,
-                        leading: Container(
-                          clipBehavior: Clip.antiAlias,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                if (viewModel.episodes.isEmpty) ...[
+                  const SliverToBoxAdapter(
+                    child: Center(
+                      child: Text("No episodes found."),
+                    ),
+                  ),
+                ] else ...[
+                  ContentBox(
+                    children: [
+                      for (var episode in viewModel.episodes)
+                        PoddrListItem(
+                          title: episode.title,
+                          subtitle: episode.author,
+                          leading: Container(
+                            clipBehavior: Clip.antiAlias,
+                            decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12)),
+                            ),
+                            child: PoddrImage(imageUrl: episode.imageUrl ?? ''),
                           ),
-                          child: PoddrImage(imageUrl: episode.imageUrl ?? ''),
+                          onTap: () {
+                            context.read<MediaProvider>().loadMedia(
+                                  album: episode.podcastTitle,
+                                  podcastTitle: episode.podcastTitle,
+                                  episodeTitle: episode.title,
+                                  artist: episode.author,
+                                  description: episode.description,
+                                  audioUrl: episode.audioUrl,
+                                  podcastRSS: episode.podcastRSS,
+                                  artUri: episode.imageUrl,
+                                );
+                          },
+                          actions: [
+                            Text(convertDurationToString(episode.duration)),
+                            EpisodeHistoryCircle(audioUrl: episode.audioUrl),
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.more_vert_rounded),
+                            ),
+                          ],
                         ),
-                        onTap: () {
-                          context.read<MediaProvider>().loadMedia(
-                                album: episode.podcastTitle,
-                                podcastTitle: episode.podcastTitle,
-                                episodeTitle: episode.title,
-                                artist: episode.author,
-                                description: episode.description,
-                                audioUrl: episode.audioUrl,
-                                podcastRSS: episode.podcastRSS,
-                                artUri: episode.imageUrl,
-                              );
-                        },
-                        actions: [
-                          Text(convertDurationToString(episode.duration)),
-                          EpisodeHistoryCircle(audioUrl: episode.audioUrl),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.more_vert_rounded),
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
                 const BottomPaddingFix(),
               ],
             ),

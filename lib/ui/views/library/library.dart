@@ -90,7 +90,9 @@ class LibraryView extends StatelessWidget {
               ),
             ] else if (subscriptionProvider.subscriptions.isEmpty) ...[
               const SliverToBoxAdapter(
-                child: Text('Your library is empty'),
+                child: Center(
+                  child: Text('Your library is empty'),
+                ),
               ),
             ] else ...[
               PoddrSliverBox(
