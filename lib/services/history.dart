@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/data/history/drift_history_repository.dart';

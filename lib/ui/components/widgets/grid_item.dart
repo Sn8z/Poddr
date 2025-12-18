@@ -85,7 +85,22 @@ class _PoddrListItemState extends State<PoddrGridItem> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(child: widget.leading),
+                Flexible(
+                  child: Stack(
+                    children: [
+                      widget.leading,
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: SizedBox(
+                          height: 8,
+                          child: widget.data ?? const SizedBox(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 gapH4,
                 Row(
                   children: [
@@ -125,7 +140,6 @@ class _PoddrListItemState extends State<PoddrGridItem> {
                     ...widget.actions,
                   ],
                 ),
-                if (widget.data != null) widget.data!,
               ],
             ),
           ),

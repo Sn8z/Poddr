@@ -174,6 +174,7 @@ class LatestEpisodes extends StatelessWidget {
                   titleMaxLines: 1,
                   subtitle: episode.author,
                   subtitleMaxLines: 1,
+                  data: EpisodeHistory(audioUrl: episode.audioUrl),
                   onTap: () {
                     context.read<MediaProvider>().loadMedia(
                           audioUrl: episode.audioUrl,

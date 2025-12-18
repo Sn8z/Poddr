@@ -389,7 +389,7 @@ class Episode extends StatelessWidget {
         context.read<MediaProvider>().loadMedia(
               audioUrl: episode.audioUrl,
               episodeTitle: episode.title,
-              podcastTitle: episode.title,
+              podcastTitle: episode.podcastTitle,
               podcastRSS: podcastProvider.podcast!.rss ?? "Missing RSS",
               description: episode.description,
               artUri: podcastProvider.podcast!.image,

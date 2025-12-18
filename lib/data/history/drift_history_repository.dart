@@ -47,14 +47,16 @@ class DriftHistoryRepository implements IHistoryRepository {
           ]))
         .get();
 
-    return history.map((e) {
+    return history.map((episode) {
       return PodcastEpisode(
-        title: e.title,
-        description: e.description,
-        audioUrl: e.audioUrl,
-        duration: Duration(seconds: e.duration),
+        title: episode.title,
+        podcastTitle: episode.podcastTitle,
+        podcastRSS: episode.podcastRSS,
+        description: episode.description,
+        audioUrl: episode.audioUrl,
+        duration: Duration(seconds: episode.duration),
         publicationDate: null,
-        imageUrl: e.imageUrl,
+        imageUrl: episode.imageUrl,
       );
     }).toList();
   }
