@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:poddr/services/profile.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
@@ -11,6 +13,7 @@ import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/data/theme/theme_colors.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -62,12 +65,37 @@ class SettingsView extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.monetization_on_outlined),
                 title: const Text("GitHub Sponsor"),
-                onTap: () => debugPrint('GH sponsor'),
+                onTap: () async {
+                  try {
+                    await launchUrl(
+                        Uri.parse("https://github.com/sponsors/Sn8z"));
+                  } catch (e) {
+                    log('Error launching URL: $e');
+                  }
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.open_in_browser_outlined),
                 title: const Text("Paypal"),
-                onTap: () => debugPrint('Paypal'),
+                onTap: () {
+                  try {
+                    launchUrl(
+                        Uri.parse("https://www.paypal.com/paypalme/sn8z"));
+                  } catch (e) {
+                    log('Error launching URL: $e');
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.coffee_outlined),
+                title: const Text("Ko-Fi"),
+                onTap: () {
+                  try {
+                    launchUrl(Uri.parse("https://ko-fi.com/sneitz"));
+                  } catch (e) {
+                    log('Error launching URL: $e');
+                  }
+                },
               ),
             ]),
             sliverGapH16,
@@ -77,7 +105,14 @@ class SettingsView extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.bug_report_outlined),
                   title: const Text("Issues"),
-                  onTap: () => debugPrint('/issues'),
+                  onTap: () {
+                    try {
+                      launchUrl(
+                          Uri.parse("https://github.com/Sn8z/Poddr/issues"));
+                    } catch (e) {
+                      log('Error launching URL: $e');
+                    }
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.info_outline),
