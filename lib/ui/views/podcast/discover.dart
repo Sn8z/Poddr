@@ -120,7 +120,7 @@ class LatestEpisodes extends StatelessWidget {
       title: "Latest episodes",
       actions: [
         IconButton(
-          icon: const Icon(Icons.arrow_right_alt_rounded),
+          icon: const Icon(Icons.chevron_right_rounded),
           onPressed: () {
             context.push('/library/latest');
           },

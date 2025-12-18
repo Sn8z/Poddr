@@ -9,7 +9,7 @@ import 'package:poddr/ui/views/podcast/discover.dart';
 import 'package:poddr/ui/views/podcast/podcast.dart';
 import 'package:poddr/ui/views/library/library.dart';
 import 'package:poddr/ui/views/library/downloads.dart';
-import 'package:poddr/ui/views/library/latest.dart';
+import 'package:poddr/ui/views/library/latest/latest.dart';
 import 'package:poddr/ui/views/search/search.dart';
 import 'package:poddr/ui/views/settings/settings.dart';
 
