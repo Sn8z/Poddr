@@ -5,6 +5,7 @@ import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
+import 'package:poddr/ui/components/widgets/html.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
@@ -129,20 +130,6 @@ class PodcastDetailsView extends StatelessWidget {
                                                 .primary,
                                           ),
                                         ),
-                                        gapH8,
-                                        Text(
-                                          podcastProvider
-                                                  .podcast?.description ??
-                                              "",
-                                          maxLines: 3,
-                                          style: TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontSize: 14,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface,
-                                          ),
-                                        ),
                                       ],
                                     )
                                   : Row(
@@ -181,25 +168,11 @@ class PodcastDetailsView extends StatelessWidget {
                                                 style: TextStyle(
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    fontSize: 26,
+                                                    fontSize: 56,
                                                     fontWeight: FontWeight.bold,
                                                     color: Theme.of(context)
                                                         .colorScheme
                                                         .primary),
-                                              ),
-                                              Text(
-                                                podcastProvider
-                                                        .podcast?.description ??
-                                                    "",
-                                                maxLines: 3,
-                                                style: TextStyle(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  fontSize: 14,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onSurface,
-                                                ),
                                               ),
                                               gapH16,
                                               Text(
@@ -269,8 +242,31 @@ class PodcastDetailsView extends StatelessWidget {
                   actions: [
                     PoddrAddSubscriptionBtn(rss: rss),
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.more_vert_rounded),
+                      icon: const Icon(Icons.info_outline_rounded),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return PoddrDialog(
+                              children: [
+                                Text(
+                                  podcastProvider.podcast?.title ?? "Podcast",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                ),
+                                PoddrHTML(
+                                    html:
+                                        podcastProvider.podcast?.description ??
+                                            ""),
+                              ],
+                            );
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -355,7 +351,16 @@ class Episode extends StatelessWidget {
               builder: (context) {
                 return PoddrDialog(
                   children: [
-                    Text(episode.description),
+                    Text(
+                      episode.title,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    gapH16,
+                    PoddrHTML(html: episode.description),
                   ],
                 );
               },

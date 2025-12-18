@@ -25,7 +25,7 @@ class PoddrAddSubscriptionBtn extends StatelessWidget {
         size: size,
         color: isSubscription
             ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.onSurface,
+            : Theme.of(context).colorScheme.onSurfaceVariant,
       ),
       onPressed: () {
         final subscriptionProvider = context.read<SubscriptionProvider>();
