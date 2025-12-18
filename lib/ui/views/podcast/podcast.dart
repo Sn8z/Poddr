@@ -41,16 +41,6 @@ class PodcastDetailsView extends StatelessWidget {
               slivers: [
                 SliverAppBar(
                   pinned: true,
-                  title: Text(
-                    podcastProvider.podcast?.author ?? "Author",
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
                   clipBehavior: Clip.antiAlias,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
@@ -130,6 +120,18 @@ class PodcastDetailsView extends StatelessWidget {
                                                 .primary,
                                           ),
                                         ),
+                                        gapH8,
+                                        Text(
+                                          podcastProvider.podcast?.author ?? "",
+                                          style: TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                          ),
+                                        ),
                                       ],
                                     )
                                   : Row(
@@ -174,7 +176,22 @@ class PodcastDetailsView extends StatelessWidget {
                                                         .colorScheme
                                                         .primary),
                                               ),
-                                              gapH16,
+                                              gapH8,
+                                              Text(
+                                                podcastProvider
+                                                        .podcast?.author ??
+                                                    "",
+                                                style: TextStyle(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                                ),
+                                              ),
+                                              gapH8,
                                               Text(
                                                 "${podcastProvider.podcast?.episodes.length ?? 0} Episodes",
                                                 style: TextStyle(
