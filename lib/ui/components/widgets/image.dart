@@ -16,8 +16,8 @@ class PoddrImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final String errorImage = isDark
-        ? 'assets/images/logo_dark.png'
-        : 'assets/images/logo_light.png';
+        ? 'assets/images/logo_dark_bg.png'
+        : 'assets/images/logo_light_bg.png';
 
     return CachedNetworkImage(
       imageUrl: imageUrl,
