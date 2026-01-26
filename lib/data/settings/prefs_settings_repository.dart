@@ -85,7 +85,7 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   @override
   Future<String> getGenreID() async {
     final prefs = await SharedPreferences.getInstance();
-    final String genreID = prefs.getString(_genreIDKey) ?? 'us';
+    final String genreID = prefs.getString(_genreIDKey) ?? '';
     log("Loading genre ID: $genreID", name: logName);
     return genreID;
   }
