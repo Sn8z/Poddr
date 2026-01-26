@@ -8,10 +8,11 @@ import 'package:poddr/services/subscriptions.dart';
 
 class LatestEpisodesProvider extends ChangeNotifier {
   final String logName = "LatestEpisodesProvider";
-
   final IPodcastRepository _podcastRepository;
 
   SubscriptionProvider? _subscriptionProvider;
+  List<String>? _lastSubscriptionRss;
+  static const int _maxEpisodes = 100;
 
   List<PodcastEpisode> _episodes = [];
   List<PodcastEpisode> get episodes => _episodes;
@@ -24,7 +25,31 @@ class LatestEpisodesProvider extends ChangeNotifier {
 
   void update(SubscriptionProvider subscriptionProvider) {
     _subscriptionProvider = subscriptionProvider;
-    _getNewEpisodes();
+
+    final currentRssUrls = _subscriptionProvider!.subscriptions
+        .where((p) => p.rss != null)
+        .map((p) => p.rss!)
+        .toList()
+      ..sort();
+
+    final lastRss = _lastSubscriptionRss?..sort();
+
+    if (_lastSubscriptionRss == null ||
+        !_listsEqual(currentRssUrls, lastRss!)) {
+      log("Subscription list changed, refreshing episodes", name: logName);
+      _lastSubscriptionRss = currentRssUrls;
+      _getNewEpisodes();
+    } else {
+      log("Subscription list unchanged, skipping refresh", name: logName);
+    }
+  }
+
+  bool _listsEqual(List<String> a, List<String> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
   }
 
   Future<void> _getNewEpisodes() async {
@@ -35,32 +60,42 @@ class LatestEpisodesProvider extends ChangeNotifier {
       notifyListeners();
 
       final List<Podcast> subscriptions = _subscriptionProvider!.subscriptions;
-      final List<PodcastEpisode> episodes = [];
+      log("Fetching episodes for ${subscriptions.length} subscriptions",
+          name: logName);
 
-      for (final Podcast podcast in subscriptions) {
+      final futures = <Future<Podcast>>[];
+      for (final podcast in subscriptions) {
         if (podcast.rss == null) continue;
 
-        try {
-          final Podcast fullPodcast =
-              await _podcastRepository.getFeed(podcast.rss!);
-          episodes.addAll(fullPodcast.episodes);
-        } catch (error, stackTrace) {
-          log(
-            "Error fetching episodes for ${podcast.rss}",
-            name: logName,
-            error: error,
-            stackTrace: stackTrace,
-          );
-        }
+        futures.add(
+          _podcastRepository
+              .getFeed(podcast.rss!)
+              .catchError((error, stackTrace) {
+            log(
+              "Error fetching episodes for ${podcast.rss}",
+              name: logName,
+              error: error,
+              stackTrace: stackTrace,
+            );
+
+            return Podcast(
+              title: podcast.title,
+              rss: podcast.rss,
+              author: podcast.author,
+              image: podcast.image,
+              description: podcast.description,
+              episodes: [],
+            );
+          }),
+        );
       }
 
-      final validEpisodes =
-          episodes.where((ep) => ep.publicationDate != null).toList();
+      final results = await Future.wait(futures);
+      log("Fetched ${results.length} podcast feeds in parallel", name: logName);
 
-      validEpisodes
-          .sort((a, b) => b.publicationDate!.compareTo(a.publicationDate!));
+      _episodes = _processAndSortEpisodes(results);
 
-      _episodes = validEpisodes.take(100).toList();
+      log("Total episodes processed: ${_episodes.length}", name: logName);
     } catch (error, stackTrace) {
       log(
         error.toString(),
@@ -72,5 +107,29 @@ class LatestEpisodesProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  List<PodcastEpisode> _processAndSortEpisodes(List<Podcast> podcasts) {
+    log("Processing episodes from ${podcasts.length} podcasts", name: logName);
+
+    final allEpisodes = <PodcastEpisode>[];
+    for (final podcast in podcasts) {
+      for (final episode in podcast.episodes) {
+        if (episode.publicationDate != null) {
+          allEpisodes.add(episode);
+        }
+      }
+    }
+
+    log("Found ${allEpisodes.length} valid episodes", name: logName);
+
+    allEpisodes
+        .sort((a, b) => b.publicationDate!.compareTo(a.publicationDate!));
+
+    return allEpisodes.take(_maxEpisodes).toList();
+  }
+
+  Future<void> refresh() async {
+    await _getNewEpisodes();
   }
 }
