@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:poddr/services/latest_episodes.dart';
+import 'package:poddr/services/opml.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -70,6 +71,16 @@ void main() async {
           update: (_, history, prev) {
             prev ??= MediaProvider();
             prev.update(history);
+            return prev;
+          },
+        ),
+
+        // OPML
+        ChangeNotifierProxyProvider<SubscriptionProvider, OpmlProvider>(
+          create: (_) => OpmlProvider(),
+          update: (_, subscription, prev) {
+            prev ??= OpmlProvider();
+            prev.update(subscription);
             return prev;
           },
         ),
