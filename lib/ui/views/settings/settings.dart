@@ -12,6 +12,7 @@ import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/data/theme/theme_colors.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -54,12 +55,12 @@ class SettingsView extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.monetization_on_outlined),
                 title: const Text("GitHub Sponsor"),
-                onTap: () => debugPrint('GH sponsor'),
+                onTap: () => launchUrl(Uri.parse('https://github.com/sponsors/sn8z')),
               ),
               ListTile(
                 leading: const Icon(Icons.open_in_browser_outlined),
                 title: const Text("Paypal"),
-                onTap: () => debugPrint('Paypal'),
+                onTap: () => launchUrl(Uri.parse('https://paypal.me/sn8z')),
               ),
             ]),
             sliverGapH16,
@@ -69,7 +70,7 @@ class SettingsView extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.bug_report_outlined),
                   title: const Text("Issues"),
-                  onTap: () => debugPrint('/issues'),
+                  onTap: () => launchUrl(Uri.parse('https://github.com/sn8z/poddr/issues')),
                 ),
                 ListTile(
                   leading: const Icon(Icons.info_outline),
