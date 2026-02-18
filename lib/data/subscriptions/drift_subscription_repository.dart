@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/models/podcast.dart';
@@ -42,6 +43,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
             imageUrl: image ?? '',
             profileId: profileId,
           ),
+          mode: InsertMode.insertOrIgnore,
         );
   }
 

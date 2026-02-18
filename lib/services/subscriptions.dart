@@ -98,6 +98,39 @@ class SubscriptionProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> addSubscriptionSilent({
+    required String rss,
+  }) async {
+    final profileId = _currentProfileId;
+    if (profileId == null) return false;
+
+    try {
+      final Podcast podcast = await _podcastRepository.getFeed(rss);
+
+      await _subscriptionRepository.addSubscription(
+        podcast.title,
+        rss,
+        podcast.description,
+        podcast.author,
+        podcast.image,
+        profileId,
+      );
+      return true;
+    } catch (error, stackTrace) {
+      log(
+        error.toString(),
+        name: logName,
+        error: error,
+        stackTrace: stackTrace,
+      );
+      return false;
+    }
+  }
+
+  Future<void> refresh() async {
+    await _getSubscriptions();
+  }
+
   Future<void> removeSubscription(String rss) async {
     final profileId = _currentProfileId;
     if (profileId == null) return;

@@ -20,6 +20,11 @@ class PodcastSubscription extends Table {
   IntColumn get profileId => integer().references(Profile, #id)();
   DateTimeColumn get subscribedAt =>
       dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {rss, profileId},
+  ];
 }
 
 class ListeningHistory extends Table {

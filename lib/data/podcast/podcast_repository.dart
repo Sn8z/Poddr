@@ -3,16 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:poddr/models/podcast.dart';
 
-class _PodcastCache {
-  final Podcast podcast;
-  final DateTime fetchedAt;
-
-  _PodcastCache(this.podcast) : fetchedAt = DateTime.now();
-  bool isValid() {
-    return DateTime.now().difference(fetchedAt) < Duration(minutes: 60);
-  }
-}
-
 abstract class IPodcastRepository {
   Future<List<Podcast>> search(String query);
   Future<List<Podcast>> getCharts(String country, String genre);
@@ -23,8 +13,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
   final String logName = "ItunesPodcastRepository";
   final String baseUrl = "https://itunes.apple.com";
   final http.Client _http = http.Client();
-
-  final Map<String, _PodcastCache> _feedCache = {};
+  final Map<String, _CachedFeed> _feedCache = {};
 
   ITunesPodcastRepository();
 
@@ -73,8 +62,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final entries = data['feed']?['entry'] as List<dynamic>?;
-
-        if (entries == null) return [];
+        if (entries == null || entries.isEmpty) return [];
 
         final ids = entries
             .map((e) => e['id']?['attributes']?['im:id'])
@@ -121,18 +109,40 @@ class ITunesPodcastRepository implements IPodcastRepository {
       log("Getting feed $rss", name: logName);
 
       final cached = _feedCache[rss];
-      if (cached != null && cached.isValid()) {
+      if (cached != null && !cached.isExpired) {
         log("Using cached feed for $rss", name: logName);
-        return cached.podcast;
+        return Podcast.fromXml(cached.content, rss);
       }
 
-      final response = await _http.get(Uri.parse(rss));
+      final headers = <String, String>{};
+      if (cached?.etag != null) {
+        headers['If-None-Match'] = cached!.etag!;
+      }
+      if (cached?.lastModified != null) {
+        headers['If-Modified-Since'] = cached!.lastModified!;
+      }
+
+      final response = await _http.get(Uri.parse(rss), headers: headers);
       log("Feed return code ${response.statusCode}", name: logName);
+
+      if (response.statusCode == 304) {
+        log("Feed not modified (304), using cache for $rss", name: logName);
+        if (cached != null) {
+          return Podcast.fromXml(cached.content, rss);
+        }
+      }
+
       if (response.statusCode == 200) {
-        final String bodyString = utf8.decode(response.bodyBytes);
-        final Podcast podcast = Podcast.fromXml(bodyString, rss);
-        _feedCache[rss] = _PodcastCache(podcast);
-        return podcast;
+        final content = utf8.decode(response.bodyBytes);
+
+        _feedCache[rss] = _CachedFeed(
+          content: content,
+          cachedAt: DateTime.now(),
+          etag: response.headers['etag'],
+          lastModified: response.headers['last-modified'],
+        );
+
+        return Podcast.fromXml(content, rss);
       } else {
         log("Feed return code ${response.statusCode}", name: logName);
         throw Exception("Could not get feed");
@@ -147,4 +157,20 @@ class ITunesPodcastRepository implements IPodcastRepository {
       throw Exception("Something went wrong when getting the feed");
     }
   }
+}
+
+class _CachedFeed {
+  final String content;
+  final DateTime cachedAt;
+  final String? etag;
+  final String? lastModified;
+
+  _CachedFeed({
+    required this.content,
+    required this.cachedAt,
+    this.etag,
+    this.lastModified,
+  });
+
+  bool get isExpired => DateTime.now().difference(cachedAt).inHours >= 1;
 }

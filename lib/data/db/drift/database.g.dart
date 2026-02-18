@@ -348,6 +348,10 @@ class $PodcastSubscriptionTable extends PodcastSubscription
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {rss, profileId},
+      ];
+  @override
   PodcastSubscriptionData map(Map<String, dynamic> data,
       {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
