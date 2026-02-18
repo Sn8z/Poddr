@@ -3,18 +3,18 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/models/episode.dart';
-import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/subscriptions.dart';
 
 class LatestEpisodesProvider extends ChangeNotifier {
-  final String logName = "LatestEpisodesProvider";
+  static const String logName = "LatestEpisodesProvider";
+  static const int maxEpisodes = 50;
 
   final IPodcastRepository _podcastRepository;
 
-  SubscriptionProvider? _subscriptionProvider;
-
   List<PodcastEpisode> _episodes = [];
   List<PodcastEpisode> get episodes => _episodes;
+
+  Set<String> _loadedFeeds = {};
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -23,54 +23,62 @@ class LatestEpisodesProvider extends ChangeNotifier {
       : _podcastRepository = podcastRepository ?? ITunesPodcastRepository();
 
   void update(SubscriptionProvider subscriptionProvider) {
-    _subscriptionProvider = subscriptionProvider;
-    _getNewEpisodes();
+    final newSubs = subscriptionProvider.subscriptions;
+
+    final newRssSet = newSubs.map((p) => p.rss).whereType<String>().toSet();
+
+    if (newRssSet.isEmpty && _loadedFeeds.isNotEmpty) {
+      _episodes = [];
+      _loadedFeeds = {};
+      notifyListeners();
+      return;
+    }
+
+    final added = newRssSet.difference(_loadedFeeds);
+    final removed = _loadedFeeds.difference(newRssSet);
+
+    if (added.isEmpty && removed.isEmpty) return;
+
+    _updateEpisodes(added, removed);
   }
 
-  Future<void> _getNewEpisodes() async {
-    if (_subscriptionProvider == null) return;
+  Future<void> _updateEpisodes(Set<String> toAdd, Set<String> toRemove) async {
+    _isLoading = true;
+    notifyListeners();
 
-    try {
-      _isLoading = true;
-      notifyListeners();
+    if (toRemove.isNotEmpty) {
+      _episodes.removeWhere((ep) => toRemove.contains(ep.podcastRSS));
+      _loadedFeeds.removeAll(toRemove);
+    }
 
-      final List<Podcast> subscriptions = _subscriptionProvider!.subscriptions;
-      final List<PodcastEpisode> episodes = [];
+    for (final rss in toAdd) {
+      try {
+        final fullPodcast = await _podcastRepository.getFeed(rss);
 
-      for (final Podcast podcast in subscriptions) {
-        if (podcast.rss == null) continue;
+        final newEpisodes = fullPodcast.episodes;
 
-        try {
-          final Podcast fullPodcast =
-              await _podcastRepository.getFeed(podcast.rss!);
-          episodes.addAll(fullPodcast.episodes);
-        } catch (error, stackTrace) {
-          log(
-            "Error fetching episodes for ${podcast.rss}",
-            name: logName,
-            error: error,
-            stackTrace: stackTrace,
-          );
-        }
+        _episodes.addAll(newEpisodes);
+        _loadedFeeds.add(rss);
+      } catch (e, st) {
+        log("Failed to fetch $rss", name: logName, error: e, stackTrace: st);
       }
+    }
 
-      final validEpisodes =
-          episodes.where((ep) => ep.publicationDate != null).toList();
+    _sortAndLimit();
 
-      validEpisodes
-          .sort((a, b) => b.publicationDate!.compareTo(a.publicationDate!));
+    _isLoading = false;
+    notifyListeners();
+  }
 
-      _episodes = validEpisodes.take(100).toList();
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+  void _sortAndLimit() {
+    _episodes.sort((a, b) {
+      final dateA = a.publicationDate ?? DateTime.fromMillisecondsSinceEpoch(0);
+      final dateB = b.publicationDate ?? DateTime.fromMillisecondsSinceEpoch(0);
+      return dateB.compareTo(dateA);
+    });
+
+    if (_episodes.length > maxEpisodes) {
+      _episodes = _episodes.take(maxEpisodes).toList();
     }
   }
 }
