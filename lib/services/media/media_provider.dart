@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_handler.dart';
+import 'package:poddr/services/offline.dart';
 
 class MediaProvider extends ChangeNotifier {
   final String logName = "MediaProvider";
@@ -12,6 +13,7 @@ class MediaProvider extends ChangeNotifier {
   final PoddrMediaHandler _mediaHandler = PoddrMediaHandler();
 
   HistoryProvider? _historyProvider;
+  OfflineProvider? _offlineProvider;
 
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
@@ -60,8 +62,9 @@ class MediaProvider extends ChangeNotifier {
     _initMediaListeners();
   }
 
-  void update(HistoryProvider? historyProvider) {
+  void update(HistoryProvider? historyProvider, OfflineProvider? offlineProvider) {
     _historyProvider = historyProvider;
+    _offlineProvider = offlineProvider;
   }
 
   void _initMediaListeners() async {
@@ -202,8 +205,17 @@ class MediaProvider extends ChangeNotifier {
       startPosition = Duration(seconds: progress["position"]);
     }
 
+    String playUrl = audioUrl;
+    if (_offlineProvider != null) {
+      final localPath = await _offlineProvider!.getLocalPath(audioUrl);
+      if (localPath != null) {
+        playUrl = localPath;
+        log("Playing from local file: $localPath", name: logName);
+      }
+    }
+
     await _mediaHandler.loadMedia(
-      audioUrl: audioUrl,
+      audioUrl: playUrl,
       podcastTitle: podcastTitle,
       podcastRSS: podcastRSS,
       episodeTitle: episodeTitle,

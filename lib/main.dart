@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:poddr/services/latest_episodes.dart';
+import 'package:poddr/services/offline.dart';
 import 'package:poddr/services/opml.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
@@ -33,6 +34,9 @@ void main() async {
 
         // Profiles
         ChangeNotifierProvider.value(value: profileProvider),
+
+        // Offline
+        ChangeNotifierProvider(create: (_) => OfflineProvider()),
 
         // Subscriptions
         ChangeNotifierProxyProvider<ProfileProvider, SubscriptionProvider>(
@@ -66,11 +70,11 @@ void main() async {
         ),
 
         // Media
-        ChangeNotifierProxyProvider<HistoryProvider, MediaProvider>(
+        ChangeNotifierProxyProvider2<HistoryProvider, OfflineProvider, MediaProvider>(
           create: (_) => MediaProvider(),
-          update: (_, history, prev) {
+          update: (_, history, offline, prev) {
             prev ??= MediaProvider();
-            prev.update(history);
+            prev.update(history, offline);
             return prev;
           },
         ),

@@ -4,6 +4,7 @@ import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
+import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/html.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
@@ -406,6 +407,7 @@ class Episode extends StatelessWidget {
           audioUrl: episode.audioUrl,
           size: 18,
         ),
+        DownloadButton(episode: episode),
       ],
       onTap: () {
         context.read<MediaProvider>().loadMedia(

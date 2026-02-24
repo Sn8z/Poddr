@@ -7,6 +7,7 @@ import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
+import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
@@ -155,10 +156,7 @@ class LatestEpisodesView extends StatelessWidget {
                           actions: [
                             Text(convertDurationToString(episode.duration)),
                             EpisodeHistoryCircle(audioUrl: episode.audioUrl),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.more_vert_rounded),
-                            ),
+                            DownloadButton(episode: episode),
                           ],
                         ),
                     ],

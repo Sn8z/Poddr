@@ -42,7 +42,21 @@ class ListeningHistory extends Table {
   IntColumn get profileId => integer().references(Profile, #id)();
 }
 
-@DriftDatabase(tables: [Profile, PodcastSubscription, ListeningHistory])
+class OfflineEpisodes extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get audioUrl => text().unique()();
+  TextColumn get localPath => text()();
+  TextColumn get title => text()();
+  TextColumn get description => text()();
+  TextColumn get imageUrl => text()();
+  TextColumn get podcastTitle => text()();
+  TextColumn get podcastRSS => text()();
+  IntColumn get duration => integer()();
+  IntColumn get fileSize => integer()();
+  DateTimeColumn get downloadedAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+@DriftDatabase(tables: [Profile, PodcastSubscription, ListeningHistory, OfflineEpisodes])
 class PoddrDatabase extends _$PoddrDatabase {
   static PoddrDatabase? _instance;
 

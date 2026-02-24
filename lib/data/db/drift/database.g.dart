@@ -1249,6 +1249,553 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
   }
 }
 
+class $OfflineEpisodesTable extends OfflineEpisodes
+    with TableInfo<$OfflineEpisodesTable, OfflineEpisode> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $OfflineEpisodesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _audioUrlMeta =
+      const VerificationMeta('audioUrl');
+  @override
+  late final GeneratedColumn<String> audioUrl = GeneratedColumn<String>(
+      'audio_url', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+  static const VerificationMeta _localPathMeta =
+      const VerificationMeta('localPath');
+  @override
+  late final GeneratedColumn<String> localPath = GeneratedColumn<String>(
+      'local_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _imageUrlMeta =
+      const VerificationMeta('imageUrl');
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+      'image_url', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _podcastTitleMeta =
+      const VerificationMeta('podcastTitle');
+  @override
+  late final GeneratedColumn<String> podcastTitle = GeneratedColumn<String>(
+      'podcast_title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _podcastRSSMeta =
+      const VerificationMeta('podcastRSS');
+  @override
+  late final GeneratedColumn<String> podcastRSS = GeneratedColumn<String>(
+      'podcast_r_s_s', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _durationMeta =
+      const VerificationMeta('duration');
+  @override
+  late final GeneratedColumn<int> duration = GeneratedColumn<int>(
+      'duration', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _fileSizeMeta =
+      const VerificationMeta('fileSize');
+  @override
+  late final GeneratedColumn<int> fileSize = GeneratedColumn<int>(
+      'file_size', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _downloadedAtMeta =
+      const VerificationMeta('downloadedAt');
+  @override
+  late final GeneratedColumn<DateTime> downloadedAt = GeneratedColumn<DateTime>(
+      'downloaded_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        audioUrl,
+        localPath,
+        title,
+        description,
+        imageUrl,
+        podcastTitle,
+        podcastRSS,
+        duration,
+        fileSize,
+        downloadedAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'offline_episodes';
+  @override
+  VerificationContext validateIntegrity(Insertable<OfflineEpisode> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('audio_url')) {
+      context.handle(_audioUrlMeta,
+          audioUrl.isAcceptableOrUnknown(data['audio_url']!, _audioUrlMeta));
+    } else if (isInserting) {
+      context.missing(_audioUrlMeta);
+    }
+    if (data.containsKey('local_path')) {
+      context.handle(_localPathMeta,
+          localPath.isAcceptableOrUnknown(data['local_path']!, _localPathMeta));
+    } else if (isInserting) {
+      context.missing(_localPathMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(_imageUrlMeta,
+          imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta));
+    } else if (isInserting) {
+      context.missing(_imageUrlMeta);
+    }
+    if (data.containsKey('podcast_title')) {
+      context.handle(
+          _podcastTitleMeta,
+          podcastTitle.isAcceptableOrUnknown(
+              data['podcast_title']!, _podcastTitleMeta));
+    } else if (isInserting) {
+      context.missing(_podcastTitleMeta);
+    }
+    if (data.containsKey('podcast_r_s_s')) {
+      context.handle(
+          _podcastRSSMeta,
+          podcastRSS.isAcceptableOrUnknown(
+              data['podcast_r_s_s']!, _podcastRSSMeta));
+    } else if (isInserting) {
+      context.missing(_podcastRSSMeta);
+    }
+    if (data.containsKey('duration')) {
+      context.handle(_durationMeta,
+          duration.isAcceptableOrUnknown(data['duration']!, _durationMeta));
+    } else if (isInserting) {
+      context.missing(_durationMeta);
+    }
+    if (data.containsKey('file_size')) {
+      context.handle(_fileSizeMeta,
+          fileSize.isAcceptableOrUnknown(data['file_size']!, _fileSizeMeta));
+    } else if (isInserting) {
+      context.missing(_fileSizeMeta);
+    }
+    if (data.containsKey('downloaded_at')) {
+      context.handle(
+          _downloadedAtMeta,
+          downloadedAt.isAcceptableOrUnknown(
+              data['downloaded_at']!, _downloadedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  OfflineEpisode map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return OfflineEpisode(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      audioUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}audio_url'])!,
+      localPath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}local_path'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      imageUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_url'])!,
+      podcastTitle: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}podcast_title'])!,
+      podcastRSS: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}podcast_r_s_s'])!,
+      duration: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}duration'])!,
+      fileSize: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}file_size'])!,
+      downloadedAt: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}downloaded_at'])!,
+    );
+  }
+
+  @override
+  $OfflineEpisodesTable createAlias(String alias) {
+    return $OfflineEpisodesTable(attachedDatabase, alias);
+  }
+}
+
+class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
+  final int id;
+  final String audioUrl;
+  final String localPath;
+  final String title;
+  final String description;
+  final String imageUrl;
+  final String podcastTitle;
+  final String podcastRSS;
+  final int duration;
+  final int fileSize;
+  final DateTime downloadedAt;
+  const OfflineEpisode(
+      {required this.id,
+      required this.audioUrl,
+      required this.localPath,
+      required this.title,
+      required this.description,
+      required this.imageUrl,
+      required this.podcastTitle,
+      required this.podcastRSS,
+      required this.duration,
+      required this.fileSize,
+      required this.downloadedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['audio_url'] = Variable<String>(audioUrl);
+    map['local_path'] = Variable<String>(localPath);
+    map['title'] = Variable<String>(title);
+    map['description'] = Variable<String>(description);
+    map['image_url'] = Variable<String>(imageUrl);
+    map['podcast_title'] = Variable<String>(podcastTitle);
+    map['podcast_r_s_s'] = Variable<String>(podcastRSS);
+    map['duration'] = Variable<int>(duration);
+    map['file_size'] = Variable<int>(fileSize);
+    map['downloaded_at'] = Variable<DateTime>(downloadedAt);
+    return map;
+  }
+
+  OfflineEpisodesCompanion toCompanion(bool nullToAbsent) {
+    return OfflineEpisodesCompanion(
+      id: Value(id),
+      audioUrl: Value(audioUrl),
+      localPath: Value(localPath),
+      title: Value(title),
+      description: Value(description),
+      imageUrl: Value(imageUrl),
+      podcastTitle: Value(podcastTitle),
+      podcastRSS: Value(podcastRSS),
+      duration: Value(duration),
+      fileSize: Value(fileSize),
+      downloadedAt: Value(downloadedAt),
+    );
+  }
+
+  factory OfflineEpisode.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return OfflineEpisode(
+      id: serializer.fromJson<int>(json['id']),
+      audioUrl: serializer.fromJson<String>(json['audioUrl']),
+      localPath: serializer.fromJson<String>(json['localPath']),
+      title: serializer.fromJson<String>(json['title']),
+      description: serializer.fromJson<String>(json['description']),
+      imageUrl: serializer.fromJson<String>(json['imageUrl']),
+      podcastTitle: serializer.fromJson<String>(json['podcastTitle']),
+      podcastRSS: serializer.fromJson<String>(json['podcastRSS']),
+      duration: serializer.fromJson<int>(json['duration']),
+      fileSize: serializer.fromJson<int>(json['fileSize']),
+      downloadedAt: serializer.fromJson<DateTime>(json['downloadedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'audioUrl': serializer.toJson<String>(audioUrl),
+      'localPath': serializer.toJson<String>(localPath),
+      'title': serializer.toJson<String>(title),
+      'description': serializer.toJson<String>(description),
+      'imageUrl': serializer.toJson<String>(imageUrl),
+      'podcastTitle': serializer.toJson<String>(podcastTitle),
+      'podcastRSS': serializer.toJson<String>(podcastRSS),
+      'duration': serializer.toJson<int>(duration),
+      'fileSize': serializer.toJson<int>(fileSize),
+      'downloadedAt': serializer.toJson<DateTime>(downloadedAt),
+    };
+  }
+
+  OfflineEpisode copyWith(
+          {int? id,
+          String? audioUrl,
+          String? localPath,
+          String? title,
+          String? description,
+          String? imageUrl,
+          String? podcastTitle,
+          String? podcastRSS,
+          int? duration,
+          int? fileSize,
+          DateTime? downloadedAt}) =>
+      OfflineEpisode(
+        id: id ?? this.id,
+        audioUrl: audioUrl ?? this.audioUrl,
+        localPath: localPath ?? this.localPath,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        imageUrl: imageUrl ?? this.imageUrl,
+        podcastTitle: podcastTitle ?? this.podcastTitle,
+        podcastRSS: podcastRSS ?? this.podcastRSS,
+        duration: duration ?? this.duration,
+        fileSize: fileSize ?? this.fileSize,
+        downloadedAt: downloadedAt ?? this.downloadedAt,
+      );
+  OfflineEpisode copyWithCompanion(OfflineEpisodesCompanion data) {
+    return OfflineEpisode(
+      id: data.id.present ? data.id.value : this.id,
+      audioUrl: data.audioUrl.present ? data.audioUrl.value : this.audioUrl,
+      localPath: data.localPath.present ? data.localPath.value : this.localPath,
+      title: data.title.present ? data.title.value : this.title,
+      description:
+          data.description.present ? data.description.value : this.description,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      podcastTitle: data.podcastTitle.present
+          ? data.podcastTitle.value
+          : this.podcastTitle,
+      podcastRSS:
+          data.podcastRSS.present ? data.podcastRSS.value : this.podcastRSS,
+      duration: data.duration.present ? data.duration.value : this.duration,
+      fileSize: data.fileSize.present ? data.fileSize.value : this.fileSize,
+      downloadedAt: data.downloadedAt.present
+          ? data.downloadedAt.value
+          : this.downloadedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OfflineEpisode(')
+          ..write('id: $id, ')
+          ..write('audioUrl: $audioUrl, ')
+          ..write('localPath: $localPath, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('podcastTitle: $podcastTitle, ')
+          ..write('podcastRSS: $podcastRSS, ')
+          ..write('duration: $duration, ')
+          ..write('fileSize: $fileSize, ')
+          ..write('downloadedAt: $downloadedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, audioUrl, localPath, title, description,
+      imageUrl, podcastTitle, podcastRSS, duration, fileSize, downloadedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is OfflineEpisode &&
+          other.id == this.id &&
+          other.audioUrl == this.audioUrl &&
+          other.localPath == this.localPath &&
+          other.title == this.title &&
+          other.description == this.description &&
+          other.imageUrl == this.imageUrl &&
+          other.podcastTitle == this.podcastTitle &&
+          other.podcastRSS == this.podcastRSS &&
+          other.duration == this.duration &&
+          other.fileSize == this.fileSize &&
+          other.downloadedAt == this.downloadedAt);
+}
+
+class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
+  final Value<int> id;
+  final Value<String> audioUrl;
+  final Value<String> localPath;
+  final Value<String> title;
+  final Value<String> description;
+  final Value<String> imageUrl;
+  final Value<String> podcastTitle;
+  final Value<String> podcastRSS;
+  final Value<int> duration;
+  final Value<int> fileSize;
+  final Value<DateTime> downloadedAt;
+  const OfflineEpisodesCompanion({
+    this.id = const Value.absent(),
+    this.audioUrl = const Value.absent(),
+    this.localPath = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.podcastTitle = const Value.absent(),
+    this.podcastRSS = const Value.absent(),
+    this.duration = const Value.absent(),
+    this.fileSize = const Value.absent(),
+    this.downloadedAt = const Value.absent(),
+  });
+  OfflineEpisodesCompanion.insert({
+    this.id = const Value.absent(),
+    required String audioUrl,
+    required String localPath,
+    required String title,
+    required String description,
+    required String imageUrl,
+    required String podcastTitle,
+    required String podcastRSS,
+    required int duration,
+    required int fileSize,
+    this.downloadedAt = const Value.absent(),
+  })  : audioUrl = Value(audioUrl),
+        localPath = Value(localPath),
+        title = Value(title),
+        description = Value(description),
+        imageUrl = Value(imageUrl),
+        podcastTitle = Value(podcastTitle),
+        podcastRSS = Value(podcastRSS),
+        duration = Value(duration),
+        fileSize = Value(fileSize);
+  static Insertable<OfflineEpisode> custom({
+    Expression<int>? id,
+    Expression<String>? audioUrl,
+    Expression<String>? localPath,
+    Expression<String>? title,
+    Expression<String>? description,
+    Expression<String>? imageUrl,
+    Expression<String>? podcastTitle,
+    Expression<String>? podcastRSS,
+    Expression<int>? duration,
+    Expression<int>? fileSize,
+    Expression<DateTime>? downloadedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (audioUrl != null) 'audio_url': audioUrl,
+      if (localPath != null) 'local_path': localPath,
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (podcastTitle != null) 'podcast_title': podcastTitle,
+      if (podcastRSS != null) 'podcast_r_s_s': podcastRSS,
+      if (duration != null) 'duration': duration,
+      if (fileSize != null) 'file_size': fileSize,
+      if (downloadedAt != null) 'downloaded_at': downloadedAt,
+    });
+  }
+
+  OfflineEpisodesCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? audioUrl,
+      Value<String>? localPath,
+      Value<String>? title,
+      Value<String>? description,
+      Value<String>? imageUrl,
+      Value<String>? podcastTitle,
+      Value<String>? podcastRSS,
+      Value<int>? duration,
+      Value<int>? fileSize,
+      Value<DateTime>? downloadedAt}) {
+    return OfflineEpisodesCompanion(
+      id: id ?? this.id,
+      audioUrl: audioUrl ?? this.audioUrl,
+      localPath: localPath ?? this.localPath,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      podcastTitle: podcastTitle ?? this.podcastTitle,
+      podcastRSS: podcastRSS ?? this.podcastRSS,
+      duration: duration ?? this.duration,
+      fileSize: fileSize ?? this.fileSize,
+      downloadedAt: downloadedAt ?? this.downloadedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (audioUrl.present) {
+      map['audio_url'] = Variable<String>(audioUrl.value);
+    }
+    if (localPath.present) {
+      map['local_path'] = Variable<String>(localPath.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (podcastTitle.present) {
+      map['podcast_title'] = Variable<String>(podcastTitle.value);
+    }
+    if (podcastRSS.present) {
+      map['podcast_r_s_s'] = Variable<String>(podcastRSS.value);
+    }
+    if (duration.present) {
+      map['duration'] = Variable<int>(duration.value);
+    }
+    if (fileSize.present) {
+      map['file_size'] = Variable<int>(fileSize.value);
+    }
+    if (downloadedAt.present) {
+      map['downloaded_at'] = Variable<DateTime>(downloadedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OfflineEpisodesCompanion(')
+          ..write('id: $id, ')
+          ..write('audioUrl: $audioUrl, ')
+          ..write('localPath: $localPath, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('podcastTitle: $podcastTitle, ')
+          ..write('podcastRSS: $podcastRSS, ')
+          ..write('duration: $duration, ')
+          ..write('fileSize: $fileSize, ')
+          ..write('downloadedAt: $downloadedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$PoddrDatabase extends GeneratedDatabase {
   _$PoddrDatabase(QueryExecutor e) : super(e);
   $PoddrDatabaseManager get managers => $PoddrDatabaseManager(this);
@@ -1257,12 +1804,14 @@ abstract class _$PoddrDatabase extends GeneratedDatabase {
       $PodcastSubscriptionTable(this);
   late final $ListeningHistoryTable listeningHistory =
       $ListeningHistoryTable(this);
+  late final $OfflineEpisodesTable offlineEpisodes =
+      $OfflineEpisodesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [profile, podcastSubscription, listeningHistory];
+      [profile, podcastSubscription, listeningHistory, offlineEpisodes];
 }
 
 typedef $$ProfileTableCreateCompanionBuilder = ProfileCompanion Function({
@@ -2261,6 +2810,266 @@ typedef $$ListeningHistoryTableProcessedTableManager = ProcessedTableManager<
     (ListeningHistoryData, $$ListeningHistoryTableReferences),
     ListeningHistoryData,
     PrefetchHooks Function({bool profileId})>;
+typedef $$OfflineEpisodesTableCreateCompanionBuilder = OfflineEpisodesCompanion
+    Function({
+  Value<int> id,
+  required String audioUrl,
+  required String localPath,
+  required String title,
+  required String description,
+  required String imageUrl,
+  required String podcastTitle,
+  required String podcastRSS,
+  required int duration,
+  required int fileSize,
+  Value<DateTime> downloadedAt,
+});
+typedef $$OfflineEpisodesTableUpdateCompanionBuilder = OfflineEpisodesCompanion
+    Function({
+  Value<int> id,
+  Value<String> audioUrl,
+  Value<String> localPath,
+  Value<String> title,
+  Value<String> description,
+  Value<String> imageUrl,
+  Value<String> podcastTitle,
+  Value<String> podcastRSS,
+  Value<int> duration,
+  Value<int> fileSize,
+  Value<DateTime> downloadedAt,
+});
+
+class $$OfflineEpisodesTableFilterComposer
+    extends Composer<_$PoddrDatabase, $OfflineEpisodesTable> {
+  $$OfflineEpisodesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get audioUrl => $composableBuilder(
+      column: $table.audioUrl, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get localPath => $composableBuilder(
+      column: $table.localPath, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+      column: $table.imageUrl, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get podcastTitle => $composableBuilder(
+      column: $table.podcastTitle, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get podcastRSS => $composableBuilder(
+      column: $table.podcastRSS, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get duration => $composableBuilder(
+      column: $table.duration, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get fileSize => $composableBuilder(
+      column: $table.fileSize, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get downloadedAt => $composableBuilder(
+      column: $table.downloadedAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$OfflineEpisodesTableOrderingComposer
+    extends Composer<_$PoddrDatabase, $OfflineEpisodesTable> {
+  $$OfflineEpisodesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get audioUrl => $composableBuilder(
+      column: $table.audioUrl, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get localPath => $composableBuilder(
+      column: $table.localPath, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+      column: $table.imageUrl, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get podcastTitle => $composableBuilder(
+      column: $table.podcastTitle,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get podcastRSS => $composableBuilder(
+      column: $table.podcastRSS, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get duration => $composableBuilder(
+      column: $table.duration, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get fileSize => $composableBuilder(
+      column: $table.fileSize, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get downloadedAt => $composableBuilder(
+      column: $table.downloadedAt,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$OfflineEpisodesTableAnnotationComposer
+    extends Composer<_$PoddrDatabase, $OfflineEpisodesTable> {
+  $$OfflineEpisodesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get audioUrl =>
+      $composableBuilder(column: $table.audioUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get localPath =>
+      $composableBuilder(column: $table.localPath, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get podcastTitle => $composableBuilder(
+      column: $table.podcastTitle, builder: (column) => column);
+
+  GeneratedColumn<String> get podcastRSS => $composableBuilder(
+      column: $table.podcastRSS, builder: (column) => column);
+
+  GeneratedColumn<int> get duration =>
+      $composableBuilder(column: $table.duration, builder: (column) => column);
+
+  GeneratedColumn<int> get fileSize =>
+      $composableBuilder(column: $table.fileSize, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get downloadedAt => $composableBuilder(
+      column: $table.downloadedAt, builder: (column) => column);
+}
+
+class $$OfflineEpisodesTableTableManager extends RootTableManager<
+    _$PoddrDatabase,
+    $OfflineEpisodesTable,
+    OfflineEpisode,
+    $$OfflineEpisodesTableFilterComposer,
+    $$OfflineEpisodesTableOrderingComposer,
+    $$OfflineEpisodesTableAnnotationComposer,
+    $$OfflineEpisodesTableCreateCompanionBuilder,
+    $$OfflineEpisodesTableUpdateCompanionBuilder,
+    (
+      OfflineEpisode,
+      BaseReferences<_$PoddrDatabase, $OfflineEpisodesTable, OfflineEpisode>
+    ),
+    OfflineEpisode,
+    PrefetchHooks Function()> {
+  $$OfflineEpisodesTableTableManager(
+      _$PoddrDatabase db, $OfflineEpisodesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$OfflineEpisodesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$OfflineEpisodesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$OfflineEpisodesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> audioUrl = const Value.absent(),
+            Value<String> localPath = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<String> imageUrl = const Value.absent(),
+            Value<String> podcastTitle = const Value.absent(),
+            Value<String> podcastRSS = const Value.absent(),
+            Value<int> duration = const Value.absent(),
+            Value<int> fileSize = const Value.absent(),
+            Value<DateTime> downloadedAt = const Value.absent(),
+          }) =>
+              OfflineEpisodesCompanion(
+            id: id,
+            audioUrl: audioUrl,
+            localPath: localPath,
+            title: title,
+            description: description,
+            imageUrl: imageUrl,
+            podcastTitle: podcastTitle,
+            podcastRSS: podcastRSS,
+            duration: duration,
+            fileSize: fileSize,
+            downloadedAt: downloadedAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String audioUrl,
+            required String localPath,
+            required String title,
+            required String description,
+            required String imageUrl,
+            required String podcastTitle,
+            required String podcastRSS,
+            required int duration,
+            required int fileSize,
+            Value<DateTime> downloadedAt = const Value.absent(),
+          }) =>
+              OfflineEpisodesCompanion.insert(
+            id: id,
+            audioUrl: audioUrl,
+            localPath: localPath,
+            title: title,
+            description: description,
+            imageUrl: imageUrl,
+            podcastTitle: podcastTitle,
+            podcastRSS: podcastRSS,
+            duration: duration,
+            fileSize: fileSize,
+            downloadedAt: downloadedAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$OfflineEpisodesTableProcessedTableManager = ProcessedTableManager<
+    _$PoddrDatabase,
+    $OfflineEpisodesTable,
+    OfflineEpisode,
+    $$OfflineEpisodesTableFilterComposer,
+    $$OfflineEpisodesTableOrderingComposer,
+    $$OfflineEpisodesTableAnnotationComposer,
+    $$OfflineEpisodesTableCreateCompanionBuilder,
+    $$OfflineEpisodesTableUpdateCompanionBuilder,
+    (
+      OfflineEpisode,
+      BaseReferences<_$PoddrDatabase, $OfflineEpisodesTable, OfflineEpisode>
+    ),
+    OfflineEpisode,
+    PrefetchHooks Function()>;
 
 class $PoddrDatabaseManager {
   final _$PoddrDatabase _db;
@@ -2271,4 +3080,6 @@ class $PoddrDatabaseManager {
       $$PodcastSubscriptionTableTableManager(_db, _db.podcastSubscription);
   $$ListeningHistoryTableTableManager get listeningHistory =>
       $$ListeningHistoryTableTableManager(_db, _db.listeningHistory);
+  $$OfflineEpisodesTableTableManager get offlineEpisodes =>
+      $$OfflineEpisodesTableTableManager(_db, _db.offlineEpisodes);
 }
