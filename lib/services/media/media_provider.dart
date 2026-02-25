@@ -62,7 +62,8 @@ class MediaProvider extends ChangeNotifier {
     _initMediaListeners();
   }
 
-  void update(HistoryProvider? historyProvider, OfflineProvider? offlineProvider) {
+  void update(
+      HistoryProvider? historyProvider, OfflineProvider? offlineProvider) {
     _historyProvider = historyProvider;
     _offlineProvider = offlineProvider;
   }
@@ -87,7 +88,10 @@ class MediaProvider extends ChangeNotifier {
       _isLoading = state.processingState == AudioProcessingState.loading ||
           state.processingState == AudioProcessingState.buffering;
       notifyListeners();
-      _saveProgress();
+
+      if (_position.inSeconds % 10 == 0) {
+        _saveProgress();
+      }
     });
 
     _mediaHandler.volume.listen((volume) {
