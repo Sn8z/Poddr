@@ -9,7 +9,7 @@ class DriftHistoryRepository implements IHistoryRepository {
   DriftHistoryRepository();
 
   @override
-  Future<void> addHistory(
+  Future<PodcastEpisode?> addHistory(
     String audioUrl,
     String title,
     String description,
@@ -20,7 +20,7 @@ class DriftHistoryRepository implements IHistoryRepository {
     int duration,
     int profileId,
   ) async {
-    await database.into(database.listeningHistory).insert(
+    final id = await database.into(database.listeningHistory).insert(
           ListeningHistoryCompanion.insert(
             audioUrl: audioUrl,
             title: title,
@@ -33,6 +33,23 @@ class DriftHistoryRepository implements IHistoryRepository {
             profileId: profileId,
           ),
         );
+
+    final inserted = await (database.select(database.listeningHistory)
+          ..where((tbl) => tbl.id.equals(id)))
+        .getSingleOrNull();
+
+    if (inserted == null) return null;
+
+    return PodcastEpisode(
+      title: inserted.title,
+      podcastTitle: inserted.podcastTitle,
+      podcastRSS: inserted.podcastRSS,
+      description: inserted.description,
+      audioUrl: inserted.audioUrl,
+      duration: Duration(seconds: inserted.duration),
+      publicationDate: null,
+      imageUrl: inserted.imageUrl,
+    );
   }
 
   @override

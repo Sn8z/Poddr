@@ -2,7 +2,7 @@ import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/models/episode.dart';
 
 abstract class IHistoryRepository {
-  Future<void> addHistory(
+  Future<PodcastEpisode?> addHistory(
     String audioUrl,
     String title,
     String description,

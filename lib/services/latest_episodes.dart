@@ -51,16 +51,14 @@ class LatestEpisodesProvider extends ChangeNotifier {
       _loadedFeeds.removeAll(toRemove);
     }
 
-    for (final rss in toAdd) {
-      try {
-        final fullPodcast = await _podcastRepository.getFeed(rss);
+    final results = await Future.wait(
+      toAdd.map((rss) => _fetchFeed(rss)),
+    );
 
-        final newEpisodes = fullPodcast.episodes;
-
-        _episodes.addAll(newEpisodes);
-        _loadedFeeds.add(rss);
-      } catch (e, st) {
-        log("Failed to fetch $rss", name: logName, error: e, stackTrace: st);
+    for (final result in results) {
+      if (result != null) {
+        _episodes.addAll(result.episodes);
+        _loadedFeeds.add(result.rss);
       }
     }
 
@@ -68,6 +66,16 @@ class LatestEpisodesProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<_FeedResult?> _fetchFeed(String rss) async {
+    try {
+      final fullPodcast = await _podcastRepository.getFeed(rss);
+      return _FeedResult(rss, fullPodcast.episodes);
+    } catch (e, st) {
+      log("Failed to fetch $rss", name: logName, error: e, stackTrace: st);
+      return null;
+    }
   }
 
   void _sortAndLimit() {
@@ -81,4 +89,10 @@ class LatestEpisodesProvider extends ChangeNotifier {
       _episodes = _episodes.take(maxEpisodes).toList();
     }
   }
+}
+
+class _FeedResult {
+  final String rss;
+  final List<PodcastEpisode> episodes;
+  _FeedResult(this.rss, this.episodes);
 }

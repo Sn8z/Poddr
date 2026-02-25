@@ -1806,12 +1806,33 @@ abstract class _$PoddrDatabase extends GeneratedDatabase {
       $ListeningHistoryTable(this);
   late final $OfflineEpisodesTable offlineEpisodes =
       $OfflineEpisodesTable(this);
+  late final Index idxPodcastSubscriptionRss = Index(
+      'idx_podcast_subscription_rss',
+      'CREATE INDEX idx_podcast_subscription_rss ON podcast_subscription (rss)');
+  late final Index idxPodcastSubscriptionProfileId = Index(
+      'idx_podcast_subscription_profile_id',
+      'CREATE INDEX idx_podcast_subscription_profile_id ON podcast_subscription (profile_id)');
+  late final Index idxHistoryAudioUrl = Index('idx_history_audio_url',
+      'CREATE INDEX idx_history_audio_url ON listening_history (audio_url)');
+  late final Index idxHistoryProfileId = Index('idx_history_profile_id',
+      'CREATE INDEX idx_history_profile_id ON listening_history (profile_id)');
+  late final Index idxHistoryListenedAt = Index('idx_history_listened_at',
+      'CREATE INDEX idx_history_listened_at ON listening_history (listened_at)');
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [profile, podcastSubscription, listeningHistory, offlineEpisodes];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        profile,
+        podcastSubscription,
+        listeningHistory,
+        offlineEpisodes,
+        idxPodcastSubscriptionRss,
+        idxPodcastSubscriptionProfileId,
+        idxHistoryAudioUrl,
+        idxHistoryProfileId,
+        idxHistoryListenedAt
+      ];
 }
 
 typedef $$ProfileTableCreateCompanionBuilder = ProfileCompanion Function({

@@ -71,7 +71,7 @@ class HistoryProvider extends ChangeNotifier {
     if (profileId == null) return;
 
     try {
-      await _historyRepository.addHistory(
+      final newItem = await _historyRepository.addHistory(
         audioUrl,
         title,
         description,
@@ -82,7 +82,10 @@ class HistoryProvider extends ChangeNotifier {
         duration,
         profileId,
       );
-      await getHistory();
+      if (newItem != null) {
+        _history.insert(0, newItem);
+        notifyListeners();
+      }
     } catch (e, stackTrace) {
       log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }
@@ -135,7 +138,8 @@ class HistoryProvider extends ChangeNotifier {
 
     try {
       await _historyRepository.removeHistory(profileId, audioUrl);
-      getHistory();
+      _history.removeWhere((ep) => ep.audioUrl == audioUrl);
+      notifyListeners();
     } catch (e, stackTrace) {
       log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }

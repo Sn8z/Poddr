@@ -10,6 +10,9 @@ class Profile extends Table {
   BoolColumn get shouldSync => boolean().withDefault(const Constant(false))();
 }
 
+@DataClassName('PodcastSubscriptionData')
+@TableIndex(name: 'idx_podcast_subscription_rss', columns: {#rss})
+@TableIndex(name: 'idx_podcast_subscription_profile_id', columns: {#profileId})
 class PodcastSubscription extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get rss => text()();
@@ -27,6 +30,10 @@ class PodcastSubscription extends Table {
   ];
 }
 
+@DataClassName('ListeningHistoryData')
+@TableIndex(name: 'idx_history_audio_url', columns: {#audioUrl})
+@TableIndex(name: 'idx_history_profile_id', columns: {#profileId})
+@TableIndex(name: 'idx_history_listened_at', columns: {#listenedAt})
 class ListeningHistory extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get audioUrl => text()();
