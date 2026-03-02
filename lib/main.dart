@@ -4,6 +4,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:poddr/services/latest_episodes.dart';
 import 'package:poddr/services/offline.dart';
 import 'package:poddr/services/opml.dart';
+import 'package:poddr/shortcuts.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -70,7 +71,8 @@ void main() async {
         ),
 
         // Media
-        ChangeNotifierProxyProvider2<HistoryProvider, OfflineProvider, MediaProvider>(
+        ChangeNotifierProxyProvider2<HistoryProvider, OfflineProvider,
+            MediaProvider>(
           create: (_) => MediaProvider(),
           update: (_, history, offline, prev) {
             prev ??= MediaProvider();
@@ -108,6 +110,12 @@ class Poddr extends StatelessWidget {
         theme: themeProvider.lightTheme,
         darkTheme: themeProvider.darkTheme,
         routerConfig: router,
+        builder: (context, child) {
+          return PoddrShortcuts(
+            router: router,
+            child: child!,
+          );
+        },
       ),
     );
   }

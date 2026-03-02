@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:poddr/shortcuts.dart';
 
 // views
 import 'package:poddr/ui/views/base.dart';
@@ -55,11 +54,9 @@ abstract class PoddrRouter {
       StatefulShellRoute.indexedStack(
         pageBuilder: (context, state, navigationShell) {
           return NoTransitionPage(
-            child: PoddrShortcuts(
-              child: BasePage(
-                state: state,
-                child: navigationShell,
-              ),
+            child: BasePage(
+              state: state,
+              child: navigationShell,
             ),
           );
         },

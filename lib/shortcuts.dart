@@ -6,8 +6,13 @@ import 'package:poddr/services/media/media_provider.dart';
 
 class PoddrShortcuts extends StatelessWidget {
   final Widget child;
+  final GoRouter router;
 
-  const PoddrShortcuts({super.key, required this.child});
+  const PoddrShortcuts({
+    super.key,
+    required this.child,
+    required this.router,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +31,19 @@ class PoddrShortcuts extends StatelessWidget {
           context.read<MediaProvider>().pause();
         },
         const SingleActivator(LogicalKeyboardKey.digit1, control: true): () {
-          context.go('/podcasts');
+          router.go('/podcasts');
         },
         const SingleActivator(LogicalKeyboardKey.digit2, control: true): () {
-          context.go('/library');
+          router.go('/library');
         },
         const SingleActivator(LogicalKeyboardKey.digit3, control: true): () {
-          context.go('/search');
+          router.go('/search');
         },
         const SingleActivator(LogicalKeyboardKey.keyF, control: true): () {
-          context.go('/search');
+          router.go('/search');
         },
         const SingleActivator(LogicalKeyboardKey.digit4, control: true): () {
-          context.go('/settings');
+          router.go('/settings');
         },
         const SingleActivator(LogicalKeyboardKey.arrowUp, control: true): () {
           context.read<MediaProvider>().increaseVolume();
