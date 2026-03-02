@@ -14,6 +14,8 @@ dependencies:
   go_router: ^17.1.0
   provider: ^6.1.4
   audio_service: ^0.18.17
+  audio_service_win: ^0.0.2
+  audio_service_mpris: ^0.2.0
   audio_session: ^0.2.2
   media_kit: ^1.2.0
   media_kit_video: ^2.0.1
