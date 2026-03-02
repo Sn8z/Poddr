@@ -14,6 +14,7 @@ import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
+import 'package:poddr/services/tags.dart';
 import 'package:poddr/router.dart';
 
 void main() async {
@@ -73,6 +74,11 @@ void main() async {
             prev.update(subscription);
             return prev;
           },
+        ),
+
+        // Tags
+        ChangeNotifierProvider<TagsProvider>(
+          create: (_) => TagsProvider(),
         ),
       ],
       child: Poddr(router: router),

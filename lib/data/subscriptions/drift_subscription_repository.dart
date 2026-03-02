@@ -25,14 +25,14 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
   }
 
   @override
-  Future<void> addSubscription(
+  Future<int> addSubscription(
     String? title,
     String? rss,
     String? description,
     String? author,
     String? image,
   ) async {
-    await database.into(database.podcastSubscription).insert(
+    final id = await database.into(database.podcastSubscription).insert(
           PodcastSubscriptionCompanion.insert(
             title: title ?? '',
             rss: rss ?? '',
@@ -42,6 +42,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
           ),
           mode: InsertMode.insertOrIgnore,
         );
+    return id;
   }
 
   @override
@@ -49,5 +50,13 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
     await (database.delete(database.podcastSubscription)
           ..where((sub) => sub.rss.equals(rss)))
         .go();
+  }
+
+  @override
+  Future<int?> getSubscriptionIdByRss(String rss) async {
+    final result = await (database.select(database.podcastSubscription)
+          ..where((sub) => sub.rss.equals(rss)))
+        .getSingleOrNull();
+    return result?.id;
   }
 }

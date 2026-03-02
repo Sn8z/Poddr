@@ -9,7 +9,6 @@ abstract class IHistoryRepository {
     String imageUrl,
     String podcastTitle,
     String podcastRSS,
-    int position,
     int duration,
   );
 

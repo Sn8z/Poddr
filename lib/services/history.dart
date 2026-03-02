@@ -17,8 +17,9 @@ class HistoryProvider extends ChangeNotifier {
   List<PodcastEpisode> get history => _history;
 
   HistoryProvider({IHistoryRepository? historyRepository})
-      : _historyRepository = historyRepository ?? DriftHistoryRepository();
-
+      : _historyRepository = historyRepository ?? DriftHistoryRepository() {
+    getHistory();
+  }
 
   Future<void> getHistory() async {
     try {
@@ -41,7 +42,6 @@ class HistoryProvider extends ChangeNotifier {
     String imageUrl,
     String podcastTitle,
     String podcastRSS,
-    int position,
     int duration,
   ) async {
     try {
@@ -52,7 +52,6 @@ class HistoryProvider extends ChangeNotifier {
         imageUrl,
         podcastTitle,
         podcastRSS,
-        position,
         duration,
       );
       if (newItem != null) {

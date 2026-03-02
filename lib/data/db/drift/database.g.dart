@@ -22,7 +22,9 @@ class $PodcastSubscriptionTable extends PodcastSubscription
   @override
   late final GeneratedColumn<String> rss = GeneratedColumn<String>(
       'rss', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -404,7 +406,9 @@ class $ListeningHistoryTable extends ListeningHistory
   @override
   late final GeneratedColumn<String> audioUrl = GeneratedColumn<String>(
       'audio_url', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -439,7 +443,9 @@ class $ListeningHistoryTable extends ListeningHistory
   @override
   late final GeneratedColumn<int> position = GeneratedColumn<int>(
       'position', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   static const VerificationMeta _durationMeta =
       const VerificationMeta('duration');
   @override
@@ -537,8 +543,6 @@ class $ListeningHistoryTable extends ListeningHistory
     if (data.containsKey('position')) {
       context.handle(_positionMeta,
           position.isAcceptableOrUnknown(data['position']!, _positionMeta));
-    } else if (isInserting) {
-      context.missing(_positionMeta);
     }
     if (data.containsKey('duration')) {
       context.handle(_durationMeta,
@@ -809,7 +813,7 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
     required String imageUrl,
     required String podcastTitle,
     required String podcastRSS,
-    required int position,
+    this.position = const Value.absent(),
     required int duration,
     this.isFinished = const Value.absent(),
     this.listenedAt = const Value.absent(),
@@ -819,7 +823,6 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
         imageUrl = Value(imageUrl),
         podcastTitle = Value(podcastTitle),
         podcastRSS = Value(podcastRSS),
-        position = Value(position),
         duration = Value(duration);
   static Insertable<ListeningHistoryData> custom({
     Expression<int>? id,
@@ -1481,6 +1484,422 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
   }
 }
 
+class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TagsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<int> color = GeneratedColumn<int>(
+      'color', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, name, color];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'tags';
+  @override
+  VerificationContext validateIntegrity(Insertable<Tag> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+          _colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
+    } else if (isInserting) {
+      context.missing(_colorMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Tag map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Tag(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      color: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}color'])!,
+    );
+  }
+
+  @override
+  $TagsTable createAlias(String alias) {
+    return $TagsTable(attachedDatabase, alias);
+  }
+}
+
+class Tag extends DataClass implements Insertable<Tag> {
+  final int id;
+  final String name;
+  final int color;
+  const Tag({required this.id, required this.name, required this.color});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['color'] = Variable<int>(color);
+    return map;
+  }
+
+  TagsCompanion toCompanion(bool nullToAbsent) {
+    return TagsCompanion(
+      id: Value(id),
+      name: Value(name),
+      color: Value(color),
+    );
+  }
+
+  factory Tag.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Tag(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      color: serializer.fromJson<int>(json['color']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'color': serializer.toJson<int>(color),
+    };
+  }
+
+  Tag copyWith({int? id, String? name, int? color}) => Tag(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        color: color ?? this.color,
+      );
+  Tag copyWithCompanion(TagsCompanion data) {
+    return Tag(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      color: data.color.present ? data.color.value : this.color,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Tag(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('color: $color')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, color);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Tag &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.color == this.color);
+}
+
+class TagsCompanion extends UpdateCompanion<Tag> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<int> color;
+  const TagsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.color = const Value.absent(),
+  });
+  TagsCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    required int color,
+  })  : name = Value(name),
+        color = Value(color);
+  static Insertable<Tag> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<int>? color,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (color != null) 'color': color,
+    });
+  }
+
+  TagsCompanion copyWith(
+      {Value<int>? id, Value<String>? name, Value<int>? color}) {
+    return TagsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      color: color ?? this.color,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<int>(color.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TagsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('color: $color')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SubscriptionTagsTable extends SubscriptionTags
+    with TableInfo<$SubscriptionTagsTable, SubscriptionTag> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SubscriptionTagsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _subscriptionIdMeta =
+      const VerificationMeta('subscriptionId');
+  @override
+  late final GeneratedColumn<int> subscriptionId = GeneratedColumn<int>(
+      'subscription_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES podcast_subscription (id) ON DELETE CASCADE'));
+  static const VerificationMeta _tagIdMeta = const VerificationMeta('tagId');
+  @override
+  late final GeneratedColumn<int> tagId = GeneratedColumn<int>(
+      'tag_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES tags (id) ON DELETE CASCADE'));
+  @override
+  List<GeneratedColumn> get $columns => [subscriptionId, tagId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'subscription_tags';
+  @override
+  VerificationContext validateIntegrity(Insertable<SubscriptionTag> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('subscription_id')) {
+      context.handle(
+          _subscriptionIdMeta,
+          subscriptionId.isAcceptableOrUnknown(
+              data['subscription_id']!, _subscriptionIdMeta));
+    } else if (isInserting) {
+      context.missing(_subscriptionIdMeta);
+    }
+    if (data.containsKey('tag_id')) {
+      context.handle(
+          _tagIdMeta, tagId.isAcceptableOrUnknown(data['tag_id']!, _tagIdMeta));
+    } else if (isInserting) {
+      context.missing(_tagIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {subscriptionId, tagId};
+  @override
+  SubscriptionTag map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SubscriptionTag(
+      subscriptionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}subscription_id'])!,
+      tagId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}tag_id'])!,
+    );
+  }
+
+  @override
+  $SubscriptionTagsTable createAlias(String alias) {
+    return $SubscriptionTagsTable(attachedDatabase, alias);
+  }
+}
+
+class SubscriptionTag extends DataClass implements Insertable<SubscriptionTag> {
+  final int subscriptionId;
+  final int tagId;
+  const SubscriptionTag({required this.subscriptionId, required this.tagId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['subscription_id'] = Variable<int>(subscriptionId);
+    map['tag_id'] = Variable<int>(tagId);
+    return map;
+  }
+
+  SubscriptionTagsCompanion toCompanion(bool nullToAbsent) {
+    return SubscriptionTagsCompanion(
+      subscriptionId: Value(subscriptionId),
+      tagId: Value(tagId),
+    );
+  }
+
+  factory SubscriptionTag.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SubscriptionTag(
+      subscriptionId: serializer.fromJson<int>(json['subscriptionId']),
+      tagId: serializer.fromJson<int>(json['tagId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'subscriptionId': serializer.toJson<int>(subscriptionId),
+      'tagId': serializer.toJson<int>(tagId),
+    };
+  }
+
+  SubscriptionTag copyWith({int? subscriptionId, int? tagId}) =>
+      SubscriptionTag(
+        subscriptionId: subscriptionId ?? this.subscriptionId,
+        tagId: tagId ?? this.tagId,
+      );
+  SubscriptionTag copyWithCompanion(SubscriptionTagsCompanion data) {
+    return SubscriptionTag(
+      subscriptionId: data.subscriptionId.present
+          ? data.subscriptionId.value
+          : this.subscriptionId,
+      tagId: data.tagId.present ? data.tagId.value : this.tagId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SubscriptionTag(')
+          ..write('subscriptionId: $subscriptionId, ')
+          ..write('tagId: $tagId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(subscriptionId, tagId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SubscriptionTag &&
+          other.subscriptionId == this.subscriptionId &&
+          other.tagId == this.tagId);
+}
+
+class SubscriptionTagsCompanion extends UpdateCompanion<SubscriptionTag> {
+  final Value<int> subscriptionId;
+  final Value<int> tagId;
+  final Value<int> rowid;
+  const SubscriptionTagsCompanion({
+    this.subscriptionId = const Value.absent(),
+    this.tagId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SubscriptionTagsCompanion.insert({
+    required int subscriptionId,
+    required int tagId,
+    this.rowid = const Value.absent(),
+  })  : subscriptionId = Value(subscriptionId),
+        tagId = Value(tagId);
+  static Insertable<SubscriptionTag> custom({
+    Expression<int>? subscriptionId,
+    Expression<int>? tagId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (subscriptionId != null) 'subscription_id': subscriptionId,
+      if (tagId != null) 'tag_id': tagId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SubscriptionTagsCompanion copyWith(
+      {Value<int>? subscriptionId, Value<int>? tagId, Value<int>? rowid}) {
+    return SubscriptionTagsCompanion(
+      subscriptionId: subscriptionId ?? this.subscriptionId,
+      tagId: tagId ?? this.tagId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (subscriptionId.present) {
+      map['subscription_id'] = Variable<int>(subscriptionId.value);
+    }
+    if (tagId.present) {
+      map['tag_id'] = Variable<int>(tagId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SubscriptionTagsCompanion(')
+          ..write('subscriptionId: $subscriptionId, ')
+          ..write('tagId: $tagId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$PoddrDatabase extends GeneratedDatabase {
   _$PoddrDatabase(QueryExecutor e) : super(e);
   $PoddrDatabaseManager get managers => $PoddrDatabaseManager(this);
@@ -1490,11 +1909,9 @@ abstract class _$PoddrDatabase extends GeneratedDatabase {
       $ListeningHistoryTable(this);
   late final $OfflineEpisodesTable offlineEpisodes =
       $OfflineEpisodesTable(this);
-  late final Index idxPodcastSubscriptionRss = Index(
-      'idx_podcast_subscription_rss',
-      'CREATE INDEX idx_podcast_subscription_rss ON podcast_subscription (rss)');
-  late final Index idxHistoryAudioUrl = Index('idx_history_audio_url',
-      'CREATE INDEX idx_history_audio_url ON listening_history (audio_url)');
+  late final $TagsTable tags = $TagsTable(this);
+  late final $SubscriptionTagsTable subscriptionTags =
+      $SubscriptionTagsTable(this);
   late final Index idxHistoryListenedAt = Index('idx_history_listened_at',
       'CREATE INDEX idx_history_listened_at ON listening_history (listened_at)');
   @override
@@ -1505,10 +1922,29 @@ abstract class _$PoddrDatabase extends GeneratedDatabase {
         podcastSubscription,
         listeningHistory,
         offlineEpisodes,
-        idxPodcastSubscriptionRss,
-        idxHistoryAudioUrl,
+        tags,
+        subscriptionTags,
         idxHistoryListenedAt
       ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
+        [
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('podcast_subscription',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('subscription_tags', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('tags',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('subscription_tags', kind: UpdateKind.delete),
+            ],
+          ),
+        ],
+      );
 }
 
 typedef $$PodcastSubscriptionTableCreateCompanionBuilder
@@ -1531,6 +1967,29 @@ typedef $$PodcastSubscriptionTableUpdateCompanionBuilder
   Value<String> imageUrl,
   Value<DateTime> subscribedAt,
 });
+
+final class $$PodcastSubscriptionTableReferences extends BaseReferences<
+    _$PoddrDatabase, $PodcastSubscriptionTable, PodcastSubscriptionData> {
+  $$PodcastSubscriptionTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$SubscriptionTagsTable, List<SubscriptionTag>>
+      _subscriptionTagsRefsTable(_$PoddrDatabase db) =>
+          MultiTypedResultKey.fromTable(db.subscriptionTags,
+              aliasName: $_aliasNameGenerator(db.podcastSubscription.id,
+                  db.subscriptionTags.subscriptionId));
+
+  $$SubscriptionTagsTableProcessedTableManager get subscriptionTagsRefs {
+    final manager = $$SubscriptionTagsTableTableManager(
+            $_db, $_db.subscriptionTags)
+        .filter((f) => f.subscriptionId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_subscriptionTagsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
 
 class $$PodcastSubscriptionTableFilterComposer
     extends Composer<_$PoddrDatabase, $PodcastSubscriptionTable> {
@@ -1561,6 +2020,27 @@ class $$PodcastSubscriptionTableFilterComposer
 
   ColumnFilters<DateTime> get subscribedAt => $composableBuilder(
       column: $table.subscribedAt, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> subscriptionTagsRefs(
+      Expression<bool> Function($$SubscriptionTagsTableFilterComposer f) f) {
+    final $$SubscriptionTagsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.subscriptionTags,
+        getReferencedColumn: (t) => t.subscriptionId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SubscriptionTagsTableFilterComposer(
+              $db: $db,
+              $table: $db.subscriptionTags,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$PodcastSubscriptionTableOrderingComposer
@@ -1624,6 +2104,27 @@ class $$PodcastSubscriptionTableAnnotationComposer
 
   GeneratedColumn<DateTime> get subscribedAt => $composableBuilder(
       column: $table.subscribedAt, builder: (column) => column);
+
+  Expression<T> subscriptionTagsRefs<T extends Object>(
+      Expression<T> Function($$SubscriptionTagsTableAnnotationComposer a) f) {
+    final $$SubscriptionTagsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.subscriptionTags,
+        getReferencedColumn: (t) => t.subscriptionId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SubscriptionTagsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.subscriptionTags,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$PodcastSubscriptionTableTableManager extends RootTableManager<
@@ -1635,13 +2136,9 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
     $$PodcastSubscriptionTableAnnotationComposer,
     $$PodcastSubscriptionTableCreateCompanionBuilder,
     $$PodcastSubscriptionTableUpdateCompanionBuilder,
-    (
-      PodcastSubscriptionData,
-      BaseReferences<_$PoddrDatabase, $PodcastSubscriptionTable,
-          PodcastSubscriptionData>
-    ),
+    (PodcastSubscriptionData, $$PodcastSubscriptionTableReferences),
     PodcastSubscriptionData,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function({bool subscriptionTagsRefs})> {
   $$PodcastSubscriptionTableTableManager(
       _$PoddrDatabase db, $PodcastSubscriptionTable table)
       : super(TableManagerState(
@@ -1692,9 +2189,37 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
             subscribedAt: subscribedAt,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable(table),
+                    $$PodcastSubscriptionTableReferences(db, table, e)
+                  ))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({subscriptionTagsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (subscriptionTagsRefs) db.subscriptionTags
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (subscriptionTagsRefs)
+                    await $_getPrefetchedData<PodcastSubscriptionData,
+                            $PodcastSubscriptionTable, SubscriptionTag>(
+                        currentTable: table,
+                        referencedTable: $$PodcastSubscriptionTableReferences
+                            ._subscriptionTagsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$PodcastSubscriptionTableReferences(db, table, p0)
+                                .subscriptionTagsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.subscriptionId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
@@ -1707,13 +2232,9 @@ typedef $$PodcastSubscriptionTableProcessedTableManager = ProcessedTableManager<
     $$PodcastSubscriptionTableAnnotationComposer,
     $$PodcastSubscriptionTableCreateCompanionBuilder,
     $$PodcastSubscriptionTableUpdateCompanionBuilder,
-    (
-      PodcastSubscriptionData,
-      BaseReferences<_$PoddrDatabase, $PodcastSubscriptionTable,
-          PodcastSubscriptionData>
-    ),
+    (PodcastSubscriptionData, $$PodcastSubscriptionTableReferences),
     PodcastSubscriptionData,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function({bool subscriptionTagsRefs})>;
 typedef $$ListeningHistoryTableCreateCompanionBuilder
     = ListeningHistoryCompanion Function({
   Value<int> id,
@@ -1723,7 +2244,7 @@ typedef $$ListeningHistoryTableCreateCompanionBuilder
   required String imageUrl,
   required String podcastTitle,
   required String podcastRSS,
-  required int position,
+  Value<int> position,
   required int duration,
   Value<bool> isFinished,
   Value<DateTime> listenedAt,
@@ -1934,7 +2455,7 @@ class $$ListeningHistoryTableTableManager extends RootTableManager<
             required String imageUrl,
             required String podcastTitle,
             required String podcastRSS,
-            required int position,
+            Value<int> position = const Value.absent(),
             required int duration,
             Value<bool> isFinished = const Value.absent(),
             Value<DateTime> listenedAt = const Value.absent(),
@@ -2235,6 +2756,534 @@ typedef $$OfflineEpisodesTableProcessedTableManager = ProcessedTableManager<
     ),
     OfflineEpisode,
     PrefetchHooks Function()>;
+typedef $$TagsTableCreateCompanionBuilder = TagsCompanion Function({
+  Value<int> id,
+  required String name,
+  required int color,
+});
+typedef $$TagsTableUpdateCompanionBuilder = TagsCompanion Function({
+  Value<int> id,
+  Value<String> name,
+  Value<int> color,
+});
+
+final class $$TagsTableReferences
+    extends BaseReferences<_$PoddrDatabase, $TagsTable, Tag> {
+  $$TagsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$SubscriptionTagsTable, List<SubscriptionTag>>
+      _subscriptionTagsRefsTable(_$PoddrDatabase db) =>
+          MultiTypedResultKey.fromTable(db.subscriptionTags,
+              aliasName:
+                  $_aliasNameGenerator(db.tags.id, db.subscriptionTags.tagId));
+
+  $$SubscriptionTagsTableProcessedTableManager get subscriptionTagsRefs {
+    final manager =
+        $$SubscriptionTagsTableTableManager($_db, $_db.subscriptionTags)
+            .filter((f) => f.tagId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_subscriptionTagsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$TagsTableFilterComposer extends Composer<_$PoddrDatabase, $TagsTable> {
+  $$TagsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get color => $composableBuilder(
+      column: $table.color, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> subscriptionTagsRefs(
+      Expression<bool> Function($$SubscriptionTagsTableFilterComposer f) f) {
+    final $$SubscriptionTagsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.subscriptionTags,
+        getReferencedColumn: (t) => t.tagId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SubscriptionTagsTableFilterComposer(
+              $db: $db,
+              $table: $db.subscriptionTags,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$TagsTableOrderingComposer
+    extends Composer<_$PoddrDatabase, $TagsTable> {
+  $$TagsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get color => $composableBuilder(
+      column: $table.color, builder: (column) => ColumnOrderings(column));
+}
+
+class $$TagsTableAnnotationComposer
+    extends Composer<_$PoddrDatabase, $TagsTable> {
+  $$TagsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  Expression<T> subscriptionTagsRefs<T extends Object>(
+      Expression<T> Function($$SubscriptionTagsTableAnnotationComposer a) f) {
+    final $$SubscriptionTagsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.subscriptionTags,
+        getReferencedColumn: (t) => t.tagId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SubscriptionTagsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.subscriptionTags,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$TagsTableTableManager extends RootTableManager<
+    _$PoddrDatabase,
+    $TagsTable,
+    Tag,
+    $$TagsTableFilterComposer,
+    $$TagsTableOrderingComposer,
+    $$TagsTableAnnotationComposer,
+    $$TagsTableCreateCompanionBuilder,
+    $$TagsTableUpdateCompanionBuilder,
+    (Tag, $$TagsTableReferences),
+    Tag,
+    PrefetchHooks Function({bool subscriptionTagsRefs})> {
+  $$TagsTableTableManager(_$PoddrDatabase db, $TagsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TagsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TagsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TagsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<int> color = const Value.absent(),
+          }) =>
+              TagsCompanion(
+            id: id,
+            name: name,
+            color: color,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String name,
+            required int color,
+          }) =>
+              TagsCompanion.insert(
+            id: id,
+            name: name,
+            color: color,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$TagsTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({subscriptionTagsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (subscriptionTagsRefs) db.subscriptionTags
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (subscriptionTagsRefs)
+                    await $_getPrefetchedData<Tag, $TagsTable, SubscriptionTag>(
+                        currentTable: table,
+                        referencedTable: $$TagsTableReferences
+                            ._subscriptionTagsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$TagsTableReferences(db, table, p0)
+                                .subscriptionTagsRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.tagId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$TagsTableProcessedTableManager = ProcessedTableManager<
+    _$PoddrDatabase,
+    $TagsTable,
+    Tag,
+    $$TagsTableFilterComposer,
+    $$TagsTableOrderingComposer,
+    $$TagsTableAnnotationComposer,
+    $$TagsTableCreateCompanionBuilder,
+    $$TagsTableUpdateCompanionBuilder,
+    (Tag, $$TagsTableReferences),
+    Tag,
+    PrefetchHooks Function({bool subscriptionTagsRefs})>;
+typedef $$SubscriptionTagsTableCreateCompanionBuilder
+    = SubscriptionTagsCompanion Function({
+  required int subscriptionId,
+  required int tagId,
+  Value<int> rowid,
+});
+typedef $$SubscriptionTagsTableUpdateCompanionBuilder
+    = SubscriptionTagsCompanion Function({
+  Value<int> subscriptionId,
+  Value<int> tagId,
+  Value<int> rowid,
+});
+
+final class $$SubscriptionTagsTableReferences extends BaseReferences<
+    _$PoddrDatabase, $SubscriptionTagsTable, SubscriptionTag> {
+  $$SubscriptionTagsTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $PodcastSubscriptionTable _subscriptionIdTable(_$PoddrDatabase db) =>
+      db.podcastSubscription.createAlias($_aliasNameGenerator(
+          db.subscriptionTags.subscriptionId, db.podcastSubscription.id));
+
+  $$PodcastSubscriptionTableProcessedTableManager get subscriptionId {
+    final $_column = $_itemColumn<int>('subscription_id')!;
+
+    final manager =
+        $$PodcastSubscriptionTableTableManager($_db, $_db.podcastSubscription)
+            .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_subscriptionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $TagsTable _tagIdTable(_$PoddrDatabase db) => db.tags
+      .createAlias($_aliasNameGenerator(db.subscriptionTags.tagId, db.tags.id));
+
+  $$TagsTableProcessedTableManager get tagId {
+    final $_column = $_itemColumn<int>('tag_id')!;
+
+    final manager = $$TagsTableTableManager($_db, $_db.tags)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_tagIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$SubscriptionTagsTableFilterComposer
+    extends Composer<_$PoddrDatabase, $SubscriptionTagsTable> {
+  $$SubscriptionTagsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$PodcastSubscriptionTableFilterComposer get subscriptionId {
+    final $$PodcastSubscriptionTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.subscriptionId,
+        referencedTable: $db.podcastSubscription,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$PodcastSubscriptionTableFilterComposer(
+              $db: $db,
+              $table: $db.podcastSubscription,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$TagsTableFilterComposer get tagId {
+    final $$TagsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.tagId,
+        referencedTable: $db.tags,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TagsTableFilterComposer(
+              $db: $db,
+              $table: $db.tags,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SubscriptionTagsTableOrderingComposer
+    extends Composer<_$PoddrDatabase, $SubscriptionTagsTable> {
+  $$SubscriptionTagsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$PodcastSubscriptionTableOrderingComposer get subscriptionId {
+    final $$PodcastSubscriptionTableOrderingComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.subscriptionId,
+            referencedTable: $db.podcastSubscription,
+            getReferencedColumn: (t) => t.id,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$PodcastSubscriptionTableOrderingComposer(
+                  $db: $db,
+                  $table: $db.podcastSubscription,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return composer;
+  }
+
+  $$TagsTableOrderingComposer get tagId {
+    final $$TagsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.tagId,
+        referencedTable: $db.tags,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TagsTableOrderingComposer(
+              $db: $db,
+              $table: $db.tags,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SubscriptionTagsTableAnnotationComposer
+    extends Composer<_$PoddrDatabase, $SubscriptionTagsTable> {
+  $$SubscriptionTagsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$PodcastSubscriptionTableAnnotationComposer get subscriptionId {
+    final $$PodcastSubscriptionTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.subscriptionId,
+            referencedTable: $db.podcastSubscription,
+            getReferencedColumn: (t) => t.id,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$PodcastSubscriptionTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.podcastSubscription,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return composer;
+  }
+
+  $$TagsTableAnnotationComposer get tagId {
+    final $$TagsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.tagId,
+        referencedTable: $db.tags,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TagsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.tags,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$SubscriptionTagsTableTableManager extends RootTableManager<
+    _$PoddrDatabase,
+    $SubscriptionTagsTable,
+    SubscriptionTag,
+    $$SubscriptionTagsTableFilterComposer,
+    $$SubscriptionTagsTableOrderingComposer,
+    $$SubscriptionTagsTableAnnotationComposer,
+    $$SubscriptionTagsTableCreateCompanionBuilder,
+    $$SubscriptionTagsTableUpdateCompanionBuilder,
+    (SubscriptionTag, $$SubscriptionTagsTableReferences),
+    SubscriptionTag,
+    PrefetchHooks Function({bool subscriptionId, bool tagId})> {
+  $$SubscriptionTagsTableTableManager(
+      _$PoddrDatabase db, $SubscriptionTagsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SubscriptionTagsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SubscriptionTagsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SubscriptionTagsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> subscriptionId = const Value.absent(),
+            Value<int> tagId = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SubscriptionTagsCompanion(
+            subscriptionId: subscriptionId,
+            tagId: tagId,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required int subscriptionId,
+            required int tagId,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              SubscriptionTagsCompanion.insert(
+            subscriptionId: subscriptionId,
+            tagId: tagId,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$SubscriptionTagsTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({subscriptionId = false, tagId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (subscriptionId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.subscriptionId,
+                    referencedTable: $$SubscriptionTagsTableReferences
+                        ._subscriptionIdTable(db),
+                    referencedColumn: $$SubscriptionTagsTableReferences
+                        ._subscriptionIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (tagId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.tagId,
+                    referencedTable:
+                        $$SubscriptionTagsTableReferences._tagIdTable(db),
+                    referencedColumn:
+                        $$SubscriptionTagsTableReferences._tagIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$SubscriptionTagsTableProcessedTableManager = ProcessedTableManager<
+    _$PoddrDatabase,
+    $SubscriptionTagsTable,
+    SubscriptionTag,
+    $$SubscriptionTagsTableFilterComposer,
+    $$SubscriptionTagsTableOrderingComposer,
+    $$SubscriptionTagsTableAnnotationComposer,
+    $$SubscriptionTagsTableCreateCompanionBuilder,
+    $$SubscriptionTagsTableUpdateCompanionBuilder,
+    (SubscriptionTag, $$SubscriptionTagsTableReferences),
+    SubscriptionTag,
+    PrefetchHooks Function({bool subscriptionId, bool tagId})>;
 
 class $PoddrDatabaseManager {
   final _$PoddrDatabase _db;
@@ -2245,4 +3294,7 @@ class $PoddrDatabaseManager {
       $$ListeningHistoryTableTableManager(_db, _db.listeningHistory);
   $$OfflineEpisodesTableTableManager get offlineEpisodes =>
       $$OfflineEpisodesTableTableManager(_db, _db.offlineEpisodes);
+  $$TagsTableTableManager get tags => $$TagsTableTableManager(_db, _db.tags);
+  $$SubscriptionTagsTableTableManager get subscriptionTags =>
+      $$SubscriptionTagsTableTableManager(_db, _db.subscriptionTags);
 }

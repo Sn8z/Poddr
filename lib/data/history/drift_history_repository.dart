@@ -16,7 +16,6 @@ class DriftHistoryRepository implements IHistoryRepository {
     String imageUrl,
     String podcastTitle,
     String podcastRSS,
-    int position,
     int duration,
   ) async {
     final id = await database.into(database.listeningHistory).insert(
@@ -27,7 +26,6 @@ class DriftHistoryRepository implements IHistoryRepository {
             imageUrl: imageUrl,
             podcastTitle: podcastTitle,
             podcastRSS: podcastRSS,
-            position: position,
             duration: duration,
           ),
         );

@@ -248,7 +248,6 @@ class MediaProvider extends ChangeNotifier {
         artUri ?? "",
         podcastTitle ?? "",
         podcastRSS ?? "",
-        _position.inSeconds,
         _duration.inSeconds,
       );
     }

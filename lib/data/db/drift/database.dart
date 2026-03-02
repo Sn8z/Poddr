@@ -5,10 +5,9 @@ import 'package:path_provider/path_provider.dart';
 part 'database.g.dart';
 
 @DataClassName('PodcastSubscriptionData')
-@TableIndex(name: 'idx_podcast_subscription_rss', columns: {#rss})
 class PodcastSubscription extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get rss => text()();
+  TextColumn get rss => text().unique()();
   TextColumn get title => text()();
   TextColumn get description => text()();
   TextColumn get author => text()();
@@ -18,17 +17,16 @@ class PodcastSubscription extends Table {
 }
 
 @DataClassName('ListeningHistoryData')
-@TableIndex(name: 'idx_history_audio_url', columns: {#audioUrl})
 @TableIndex(name: 'idx_history_listened_at', columns: {#listenedAt})
 class ListeningHistory extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get audioUrl => text()();
+  TextColumn get audioUrl => text().unique()();
   TextColumn get title => text()();
   TextColumn get description => text()();
   TextColumn get imageUrl => text()();
   TextColumn get podcastTitle => text()();
   TextColumn get podcastRSS => text()();
-  IntColumn get position => integer()();
+  IntColumn get position => integer().withDefault(const Constant(0))();
   IntColumn get duration => integer()();
   BoolColumn get isFinished => boolean().withDefault(const Constant(false))();
   DateTimeColumn get listenedAt => dateTime().withDefault(currentDateAndTime)();
@@ -45,10 +43,33 @@ class OfflineEpisodes extends Table {
   TextColumn get podcastRSS => text()();
   IntColumn get duration => integer()();
   IntColumn get fileSize => integer()();
-  DateTimeColumn get downloadedAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get downloadedAt =>
+      dateTime().withDefault(currentDateAndTime)();
 }
 
-@DriftDatabase(tables: [PodcastSubscription, ListeningHistory, OfflineEpisodes])
+class Tags extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().unique()();
+  IntColumn get color => integer()();
+}
+
+class SubscriptionTags extends Table {
+  IntColumn get subscriptionId => integer()
+      .references(PodcastSubscription, #id, onDelete: KeyAction.cascade)();
+  IntColumn get tagId =>
+      integer().references(Tags, #id, onDelete: KeyAction.cascade)();
+
+  @override
+  Set<Column> get primaryKey => {subscriptionId, tagId};
+}
+
+@DriftDatabase(tables: [
+  PodcastSubscription,
+  ListeningHistory,
+  OfflineEpisodes,
+  Tags,
+  SubscriptionTags
+])
 class PoddrDatabase extends _$PoddrDatabase {
   static PoddrDatabase? _instance;
 

@@ -4,12 +4,15 @@ import 'package:flutter/foundation.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
+import 'package:poddr/data/tags/drift_tags_repository.dart';
+import 'package:poddr/data/tags/tags_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
 class SubscriptionProvider extends ChangeNotifier {
   final String logName = "SubscriptionProvider";
   final IPodcastRepository _podcastRepository;
   final ISubscriptionRepository _subscriptionRepository;
+  final ITagsRepository _tagsRepository;
 
   List<Podcast> _subscriptions = [];
   List<Podcast> get subscriptions => _subscriptions;
@@ -17,12 +20,16 @@ class SubscriptionProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  SubscriptionProvider(
-      {IPodcastRepository? podcastRepository,
-      ISubscriptionRepository? subscriptionRepository})
-      : _podcastRepository = podcastRepository ?? ITunesPodcastRepository(),
+  SubscriptionProvider({
+    IPodcastRepository? podcastRepository,
+    ISubscriptionRepository? subscriptionRepository,
+    ITagsRepository? tagsRepository,
+  })  : _podcastRepository = podcastRepository ?? ITunesPodcastRepository(),
         _subscriptionRepository =
-            subscriptionRepository ?? DriftSubscriptionRepository();
+            subscriptionRepository ?? DriftSubscriptionRepository(),
+        _tagsRepository = tagsRepository ?? DriftTagsRepository() {
+    _getSubscriptions();
+  }
 
   Future<void> _getSubscriptions() async {
     try {
@@ -50,13 +57,21 @@ class SubscriptionProvider extends ChangeNotifier {
     try {
       final Podcast podcast = await _podcastRepository.getFeed(rss);
 
-      await _subscriptionRepository.addSubscription(
+      final subscriptionId = await _subscriptionRepository.addSubscription(
         podcast.title,
         rss,
         podcast.description,
         podcast.author,
         podcast.image,
       );
+
+      for (final genre in podcast.tags) {
+        if (genre.isNotEmpty) {
+          final tag = await _tagsRepository.getOrCreate(genre);
+          await _tagsRepository.linkTagToSubscription(tag.id, subscriptionId);
+        }
+      }
+
       await _getSubscriptions();
     } catch (error, stackTrace) {
       log(
@@ -76,13 +91,21 @@ class SubscriptionProvider extends ChangeNotifier {
     try {
       final Podcast podcast = await _podcastRepository.getFeed(rss);
 
-      await _subscriptionRepository.addSubscription(
+      final subscriptionId = await _subscriptionRepository.addSubscription(
         podcast.title,
         rss,
         podcast.description,
         podcast.author,
         podcast.image,
       );
+
+      for (final genre in podcast.tags) {
+        if (genre.isNotEmpty) {
+          final tag = await _tagsRepository.getOrCreate(genre);
+          await _tagsRepository.linkTagToSubscription(tag.id, subscriptionId);
+        }
+      }
+
       return true;
     } catch (error, stackTrace) {
       log(
@@ -102,6 +125,13 @@ class SubscriptionProvider extends ChangeNotifier {
   Future<void> removeSubscription(String rss) async {
     try {
       log("Removing $rss", name: logName);
+      final subscriptionId = await _subscriptionRepository.getSubscriptionIdByRss(rss);
+      if (subscriptionId != null) {
+        final tags = await _tagsRepository.getTagsForSubscription(subscriptionId);
+        for (final tag in tags) {
+          await _tagsRepository.unlinkTagFromSubscription(tag.id, subscriptionId);
+        }
+      }
       await _subscriptionRepository.removeSubscription(rss);
       await _getSubscriptions();
     } catch (error, stackTrace) {
