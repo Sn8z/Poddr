@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/ui/components/widgets/dialog.dart';
-import 'package:poddr/ui/utils/breakpoints.dart';
+import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
 
 class VolumeSlider extends StatelessWidget {
   final double size;
+  
   const VolumeSlider({
     super.key,
     this.size = 26,
@@ -13,55 +13,70 @@ class VolumeSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = Breakpoints.isDesktop(MediaQuery.sizeOf(context).width);
+    final mediaProvider = context.read<MediaProvider>();
     final volume = context.select<MediaProvider, double>((e) => e.volume);
 
-    if (isDesktop) {
-      return SliderTheme(
-        data: SliderTheme.of(context).copyWith(
-          trackHeight: 4,
-          inactiveTrackColor: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(50),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          _getVolumeIcon(volume),
+          color: Theme.of(context).colorScheme.onSurface,
+          size: size,
         ),
-        child: Slider(
-          value: volume,
-          min: 0.0,
-          max: 100.0,
-          onChanged: (double value) {
-            context.read<MediaProvider>().setVolume(value);
-          },
+        _VolumeControl(
+          mediaProvider: mediaProvider,
+          volume: volume,
         ),
-      );
-    }
+      ],
+    );
+  }
 
-    return IconButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return PoddrDialog(
-              children: [
-                Selector<MediaProvider, double>(
-                  selector: (_, mediaProvider) => mediaProvider.volume,
-                  builder: (context, volume, child) {
-                    return Slider(
-                      value: volume,
-                      min: 0.0,
-                      max: 100.0,
-                      onChanged: (double value) {
-                        context.read<MediaProvider>().setVolume(value);
-                      },
-                    );
-                  },
-                ),
-              ],
-            );
+  IconData _getVolumeIcon(double volume) {
+    if (volume == 0) return Icons.volume_off;
+    if (volume <= 50) return Icons.volume_down;
+    return Icons.volume_up;
+  }
+}
+
+class _VolumeControl extends StatelessWidget {
+  final MediaProvider mediaProvider;
+  final double volume;
+
+  const _VolumeControl({
+    required this.mediaProvider,
+    required this.volume,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliderTheme(
+      data: SliderTheme.of(context).copyWith(
+        trackHeight: 4,
+        inactiveTrackColor: Theme.of(context)
+            .colorScheme
+            .onSurfaceVariant
+            .withAlpha(50),
+      ),
+      child: SizedBox(
+        width: 160,
+        child: Listener(
+          onPointerSignal: (event) {
+            if (event is PointerScrollEvent) {
+              if (event.scrollDelta.dy < 0) {
+                mediaProvider.increaseVolume();
+              } else {
+                mediaProvider.decreaseVolume();
+              }
+            }
           },
-        );
-      },
-      icon: Icon(
-        Icons.volume_up,
-        color: Theme.of(context).colorScheme.onSurface,
-        size: size,
+          child: Slider(
+            value: volume,
+            min: 0.0,
+            max: 100.0,
+            onChanged: mediaProvider.setVolume,
+          ),
+        ),
       ),
     );
   }

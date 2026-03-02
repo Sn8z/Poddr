@@ -29,19 +29,22 @@ class PoddrShortcuts extends StatelessWidget {
           context.go('/podcasts');
         },
         const SingleActivator(LogicalKeyboardKey.digit2, control: true): () {
-          context.go('/local');
-        },
-        const SingleActivator(LogicalKeyboardKey.digit3, control: true): () {
           context.go('/library');
         },
-        const SingleActivator(LogicalKeyboardKey.digit4, control: true): () {
+        const SingleActivator(LogicalKeyboardKey.digit3, control: true): () {
           context.go('/search');
         },
         const SingleActivator(LogicalKeyboardKey.keyF, control: true): () {
           context.go('/search');
         },
-        const SingleActivator(LogicalKeyboardKey.digit5, control: true): () {
+        const SingleActivator(LogicalKeyboardKey.digit4, control: true): () {
           context.go('/settings');
+        },
+        const SingleActivator(LogicalKeyboardKey.arrowUp, control: true): () {
+          context.read<MediaProvider>().increaseVolume();
+        },
+        const SingleActivator(LogicalKeyboardKey.arrowDown, control: true): () {
+          context.read<MediaProvider>().decreaseVolume();
         },
       },
       child: child,

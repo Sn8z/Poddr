@@ -116,6 +116,16 @@ class MediaProvider extends ChangeNotifier {
 
   void setVolume(double volume) async => await _mediaHandler.setVolume(volume);
 
+  void increaseVolume([double amount = 5]) {
+    final newVolume = (_volume + amount);
+    setVolume(newVolume);
+  }
+
+  void decreaseVolume([double amount = 5]) {
+    final newVolume = (_volume - amount);
+    setVolume(newVolume);
+  }
+
   void setSpeed(double speed) async => await _mediaHandler.setSpeed(speed);
 
   void skipToNext() async => await _mediaHandler.skipToNext();

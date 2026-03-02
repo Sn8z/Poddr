@@ -85,7 +85,7 @@ class PoddrMediaPlayer {
 
   Future<void> setVolume(double volume) async {
     if (isMobile) return;
-    await _player.setVolume(volume);
+    await _player.setVolume(volume.clamp(0.0, 100.0));
   }
 
   Future<void> stop() async {
