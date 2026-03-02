@@ -3,225 +3,6 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $ProfileTable extends Profile with TableInfo<$ProfileTable, ProfileData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $ProfileTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _shouldSyncMeta =
-      const VerificationMeta('shouldSync');
-  @override
-  late final GeneratedColumn<bool> shouldSync = GeneratedColumn<bool>(
-      'should_sync', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("should_sync" IN (0, 1))'),
-      defaultValue: const Constant(false));
-  @override
-  List<GeneratedColumn> get $columns => [id, name, shouldSync];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'profile';
-  @override
-  VerificationContext validateIntegrity(Insertable<ProfileData> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('should_sync')) {
-      context.handle(
-          _shouldSyncMeta,
-          shouldSync.isAcceptableOrUnknown(
-              data['should_sync']!, _shouldSyncMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  ProfileData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ProfileData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      shouldSync: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}should_sync'])!,
-    );
-  }
-
-  @override
-  $ProfileTable createAlias(String alias) {
-    return $ProfileTable(attachedDatabase, alias);
-  }
-}
-
-class ProfileData extends DataClass implements Insertable<ProfileData> {
-  final int id;
-  final String name;
-  final bool shouldSync;
-  const ProfileData(
-      {required this.id, required this.name, required this.shouldSync});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['name'] = Variable<String>(name);
-    map['should_sync'] = Variable<bool>(shouldSync);
-    return map;
-  }
-
-  ProfileCompanion toCompanion(bool nullToAbsent) {
-    return ProfileCompanion(
-      id: Value(id),
-      name: Value(name),
-      shouldSync: Value(shouldSync),
-    );
-  }
-
-  factory ProfileData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ProfileData(
-      id: serializer.fromJson<int>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      shouldSync: serializer.fromJson<bool>(json['shouldSync']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'name': serializer.toJson<String>(name),
-      'shouldSync': serializer.toJson<bool>(shouldSync),
-    };
-  }
-
-  ProfileData copyWith({int? id, String? name, bool? shouldSync}) =>
-      ProfileData(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        shouldSync: shouldSync ?? this.shouldSync,
-      );
-  ProfileData copyWithCompanion(ProfileCompanion data) {
-    return ProfileData(
-      id: data.id.present ? data.id.value : this.id,
-      name: data.name.present ? data.name.value : this.name,
-      shouldSync:
-          data.shouldSync.present ? data.shouldSync.value : this.shouldSync,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('ProfileData(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('shouldSync: $shouldSync')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name, shouldSync);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is ProfileData &&
-          other.id == this.id &&
-          other.name == this.name &&
-          other.shouldSync == this.shouldSync);
-}
-
-class ProfileCompanion extends UpdateCompanion<ProfileData> {
-  final Value<int> id;
-  final Value<String> name;
-  final Value<bool> shouldSync;
-  const ProfileCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.shouldSync = const Value.absent(),
-  });
-  ProfileCompanion.insert({
-    this.id = const Value.absent(),
-    required String name,
-    this.shouldSync = const Value.absent(),
-  }) : name = Value(name);
-  static Insertable<ProfileData> custom({
-    Expression<int>? id,
-    Expression<String>? name,
-    Expression<bool>? shouldSync,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-      if (shouldSync != null) 'should_sync': shouldSync,
-    });
-  }
-
-  ProfileCompanion copyWith(
-      {Value<int>? id, Value<String>? name, Value<bool>? shouldSync}) {
-    return ProfileCompanion(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      shouldSync: shouldSync ?? this.shouldSync,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (shouldSync.present) {
-      map['should_sync'] = Variable<bool>(shouldSync.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('ProfileCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('shouldSync: $shouldSync')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $PodcastSubscriptionTable extends PodcastSubscription
     with TableInfo<$PodcastSubscriptionTable, PodcastSubscriptionData> {
   @override
@@ -264,15 +45,6 @@ class $PodcastSubscriptionTable extends PodcastSubscription
   late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
       'image_url', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _profileIdMeta =
-      const VerificationMeta('profileId');
-  @override
-  late final GeneratedColumn<int> profileId = GeneratedColumn<int>(
-      'profile_id', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: true,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('REFERENCES profile (id)'));
   static const VerificationMeta _subscribedAtMeta =
       const VerificationMeta('subscribedAt');
   @override
@@ -283,7 +55,7 @@ class $PodcastSubscriptionTable extends PodcastSubscription
       defaultValue: currentDateAndTime);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, rss, title, description, author, imageUrl, profileId, subscribedAt];
+      [id, rss, title, description, author, imageUrl, subscribedAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -330,12 +102,6 @@ class $PodcastSubscriptionTable extends PodcastSubscription
     } else if (isInserting) {
       context.missing(_imageUrlMeta);
     }
-    if (data.containsKey('profile_id')) {
-      context.handle(_profileIdMeta,
-          profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta));
-    } else if (isInserting) {
-      context.missing(_profileIdMeta);
-    }
     if (data.containsKey('subscribed_at')) {
       context.handle(
           _subscribedAtMeta,
@@ -347,10 +113,6 @@ class $PodcastSubscriptionTable extends PodcastSubscription
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-        {rss, profileId},
-      ];
   @override
   PodcastSubscriptionData map(Map<String, dynamic> data,
       {String? tablePrefix}) {
@@ -368,8 +130,6 @@ class $PodcastSubscriptionTable extends PodcastSubscription
           .read(DriftSqlType.string, data['${effectivePrefix}author'])!,
       imageUrl: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}image_url'])!,
-      profileId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}profile_id'])!,
       subscribedAt: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}subscribed_at'])!,
     );
@@ -389,7 +149,6 @@ class PodcastSubscriptionData extends DataClass
   final String description;
   final String author;
   final String imageUrl;
-  final int profileId;
   final DateTime subscribedAt;
   const PodcastSubscriptionData(
       {required this.id,
@@ -398,7 +157,6 @@ class PodcastSubscriptionData extends DataClass
       required this.description,
       required this.author,
       required this.imageUrl,
-      required this.profileId,
       required this.subscribedAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -409,7 +167,6 @@ class PodcastSubscriptionData extends DataClass
     map['description'] = Variable<String>(description);
     map['author'] = Variable<String>(author);
     map['image_url'] = Variable<String>(imageUrl);
-    map['profile_id'] = Variable<int>(profileId);
     map['subscribed_at'] = Variable<DateTime>(subscribedAt);
     return map;
   }
@@ -422,7 +179,6 @@ class PodcastSubscriptionData extends DataClass
       description: Value(description),
       author: Value(author),
       imageUrl: Value(imageUrl),
-      profileId: Value(profileId),
       subscribedAt: Value(subscribedAt),
     );
   }
@@ -437,7 +193,6 @@ class PodcastSubscriptionData extends DataClass
       description: serializer.fromJson<String>(json['description']),
       author: serializer.fromJson<String>(json['author']),
       imageUrl: serializer.fromJson<String>(json['imageUrl']),
-      profileId: serializer.fromJson<int>(json['profileId']),
       subscribedAt: serializer.fromJson<DateTime>(json['subscribedAt']),
     );
   }
@@ -451,7 +206,6 @@ class PodcastSubscriptionData extends DataClass
       'description': serializer.toJson<String>(description),
       'author': serializer.toJson<String>(author),
       'imageUrl': serializer.toJson<String>(imageUrl),
-      'profileId': serializer.toJson<int>(profileId),
       'subscribedAt': serializer.toJson<DateTime>(subscribedAt),
     };
   }
@@ -463,7 +217,6 @@ class PodcastSubscriptionData extends DataClass
           String? description,
           String? author,
           String? imageUrl,
-          int? profileId,
           DateTime? subscribedAt}) =>
       PodcastSubscriptionData(
         id: id ?? this.id,
@@ -472,7 +225,6 @@ class PodcastSubscriptionData extends DataClass
         description: description ?? this.description,
         author: author ?? this.author,
         imageUrl: imageUrl ?? this.imageUrl,
-        profileId: profileId ?? this.profileId,
         subscribedAt: subscribedAt ?? this.subscribedAt,
       );
   PodcastSubscriptionData copyWithCompanion(PodcastSubscriptionCompanion data) {
@@ -484,7 +236,6 @@ class PodcastSubscriptionData extends DataClass
           data.description.present ? data.description.value : this.description,
       author: data.author.present ? data.author.value : this.author,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
-      profileId: data.profileId.present ? data.profileId.value : this.profileId,
       subscribedAt: data.subscribedAt.present
           ? data.subscribedAt.value
           : this.subscribedAt,
@@ -500,15 +251,14 @@ class PodcastSubscriptionData extends DataClass
           ..write('description: $description, ')
           ..write('author: $author, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('profileId: $profileId, ')
           ..write('subscribedAt: $subscribedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, rss, title, description, author, imageUrl, profileId, subscribedAt);
+  int get hashCode =>
+      Object.hash(id, rss, title, description, author, imageUrl, subscribedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -519,7 +269,6 @@ class PodcastSubscriptionData extends DataClass
           other.description == this.description &&
           other.author == this.author &&
           other.imageUrl == this.imageUrl &&
-          other.profileId == this.profileId &&
           other.subscribedAt == this.subscribedAt);
 }
 
@@ -531,7 +280,6 @@ class PodcastSubscriptionCompanion
   final Value<String> description;
   final Value<String> author;
   final Value<String> imageUrl;
-  final Value<int> profileId;
   final Value<DateTime> subscribedAt;
   const PodcastSubscriptionCompanion({
     this.id = const Value.absent(),
@@ -540,7 +288,6 @@ class PodcastSubscriptionCompanion
     this.description = const Value.absent(),
     this.author = const Value.absent(),
     this.imageUrl = const Value.absent(),
-    this.profileId = const Value.absent(),
     this.subscribedAt = const Value.absent(),
   });
   PodcastSubscriptionCompanion.insert({
@@ -550,14 +297,12 @@ class PodcastSubscriptionCompanion
     required String description,
     required String author,
     required String imageUrl,
-    required int profileId,
     this.subscribedAt = const Value.absent(),
   })  : rss = Value(rss),
         title = Value(title),
         description = Value(description),
         author = Value(author),
-        imageUrl = Value(imageUrl),
-        profileId = Value(profileId);
+        imageUrl = Value(imageUrl);
   static Insertable<PodcastSubscriptionData> custom({
     Expression<int>? id,
     Expression<String>? rss,
@@ -565,7 +310,6 @@ class PodcastSubscriptionCompanion
     Expression<String>? description,
     Expression<String>? author,
     Expression<String>? imageUrl,
-    Expression<int>? profileId,
     Expression<DateTime>? subscribedAt,
   }) {
     return RawValuesInsertable({
@@ -575,7 +319,6 @@ class PodcastSubscriptionCompanion
       if (description != null) 'description': description,
       if (author != null) 'author': author,
       if (imageUrl != null) 'image_url': imageUrl,
-      if (profileId != null) 'profile_id': profileId,
       if (subscribedAt != null) 'subscribed_at': subscribedAt,
     });
   }
@@ -587,7 +330,6 @@ class PodcastSubscriptionCompanion
       Value<String>? description,
       Value<String>? author,
       Value<String>? imageUrl,
-      Value<int>? profileId,
       Value<DateTime>? subscribedAt}) {
     return PodcastSubscriptionCompanion(
       id: id ?? this.id,
@@ -596,7 +338,6 @@ class PodcastSubscriptionCompanion
       description: description ?? this.description,
       author: author ?? this.author,
       imageUrl: imageUrl ?? this.imageUrl,
-      profileId: profileId ?? this.profileId,
       subscribedAt: subscribedAt ?? this.subscribedAt,
     );
   }
@@ -622,9 +363,6 @@ class PodcastSubscriptionCompanion
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
     }
-    if (profileId.present) {
-      map['profile_id'] = Variable<int>(profileId.value);
-    }
     if (subscribedAt.present) {
       map['subscribed_at'] = Variable<DateTime>(subscribedAt.value);
     }
@@ -640,7 +378,6 @@ class PodcastSubscriptionCompanion
           ..write('description: $description, ')
           ..write('author: $author, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('profileId: $profileId, ')
           ..write('subscribedAt: $subscribedAt')
           ..write(')'))
         .toString();
@@ -727,15 +464,6 @@ class $ListeningHistoryTable extends ListeningHistory
       type: DriftSqlType.dateTime,
       requiredDuringInsert: false,
       defaultValue: currentDateAndTime);
-  static const VerificationMeta _profileIdMeta =
-      const VerificationMeta('profileId');
-  @override
-  late final GeneratedColumn<int> profileId = GeneratedColumn<int>(
-      'profile_id', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: true,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('REFERENCES profile (id)'));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -748,8 +476,7 @@ class $ListeningHistoryTable extends ListeningHistory
         position,
         duration,
         isFinished,
-        listenedAt,
-        profileId
+        listenedAt
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -831,12 +558,6 @@ class $ListeningHistoryTable extends ListeningHistory
           listenedAt.isAcceptableOrUnknown(
               data['listened_at']!, _listenedAtMeta));
     }
-    if (data.containsKey('profile_id')) {
-      context.handle(_profileIdMeta,
-          profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta));
-    } else if (isInserting) {
-      context.missing(_profileIdMeta);
-    }
     return context;
   }
 
@@ -868,8 +589,6 @@ class $ListeningHistoryTable extends ListeningHistory
           .read(DriftSqlType.bool, data['${effectivePrefix}is_finished'])!,
       listenedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}listened_at'])!,
-      profileId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}profile_id'])!,
     );
   }
 
@@ -892,7 +611,6 @@ class ListeningHistoryData extends DataClass
   final int duration;
   final bool isFinished;
   final DateTime listenedAt;
-  final int profileId;
   const ListeningHistoryData(
       {required this.id,
       required this.audioUrl,
@@ -904,8 +622,7 @@ class ListeningHistoryData extends DataClass
       required this.position,
       required this.duration,
       required this.isFinished,
-      required this.listenedAt,
-      required this.profileId});
+      required this.listenedAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -920,7 +637,6 @@ class ListeningHistoryData extends DataClass
     map['duration'] = Variable<int>(duration);
     map['is_finished'] = Variable<bool>(isFinished);
     map['listened_at'] = Variable<DateTime>(listenedAt);
-    map['profile_id'] = Variable<int>(profileId);
     return map;
   }
 
@@ -937,7 +653,6 @@ class ListeningHistoryData extends DataClass
       duration: Value(duration),
       isFinished: Value(isFinished),
       listenedAt: Value(listenedAt),
-      profileId: Value(profileId),
     );
   }
 
@@ -956,7 +671,6 @@ class ListeningHistoryData extends DataClass
       duration: serializer.fromJson<int>(json['duration']),
       isFinished: serializer.fromJson<bool>(json['isFinished']),
       listenedAt: serializer.fromJson<DateTime>(json['listenedAt']),
-      profileId: serializer.fromJson<int>(json['profileId']),
     );
   }
   @override
@@ -974,7 +688,6 @@ class ListeningHistoryData extends DataClass
       'duration': serializer.toJson<int>(duration),
       'isFinished': serializer.toJson<bool>(isFinished),
       'listenedAt': serializer.toJson<DateTime>(listenedAt),
-      'profileId': serializer.toJson<int>(profileId),
     };
   }
 
@@ -989,8 +702,7 @@ class ListeningHistoryData extends DataClass
           int? position,
           int? duration,
           bool? isFinished,
-          DateTime? listenedAt,
-          int? profileId}) =>
+          DateTime? listenedAt}) =>
       ListeningHistoryData(
         id: id ?? this.id,
         audioUrl: audioUrl ?? this.audioUrl,
@@ -1003,7 +715,6 @@ class ListeningHistoryData extends DataClass
         duration: duration ?? this.duration,
         isFinished: isFinished ?? this.isFinished,
         listenedAt: listenedAt ?? this.listenedAt,
-        profileId: profileId ?? this.profileId,
       );
   ListeningHistoryData copyWithCompanion(ListeningHistoryCompanion data) {
     return ListeningHistoryData(
@@ -1024,7 +735,6 @@ class ListeningHistoryData extends DataClass
           data.isFinished.present ? data.isFinished.value : this.isFinished,
       listenedAt:
           data.listenedAt.present ? data.listenedAt.value : this.listenedAt,
-      profileId: data.profileId.present ? data.profileId.value : this.profileId,
     );
   }
 
@@ -1041,26 +751,14 @@ class ListeningHistoryData extends DataClass
           ..write('position: $position, ')
           ..write('duration: $duration, ')
           ..write('isFinished: $isFinished, ')
-          ..write('listenedAt: $listenedAt, ')
-          ..write('profileId: $profileId')
+          ..write('listenedAt: $listenedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      audioUrl,
-      title,
-      description,
-      imageUrl,
-      podcastTitle,
-      podcastRSS,
-      position,
-      duration,
-      isFinished,
-      listenedAt,
-      profileId);
+  int get hashCode => Object.hash(id, audioUrl, title, description, imageUrl,
+      podcastTitle, podcastRSS, position, duration, isFinished, listenedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1075,8 +773,7 @@ class ListeningHistoryData extends DataClass
           other.position == this.position &&
           other.duration == this.duration &&
           other.isFinished == this.isFinished &&
-          other.listenedAt == this.listenedAt &&
-          other.profileId == this.profileId);
+          other.listenedAt == this.listenedAt);
 }
 
 class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
@@ -1091,7 +788,6 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
   final Value<int> duration;
   final Value<bool> isFinished;
   final Value<DateTime> listenedAt;
-  final Value<int> profileId;
   const ListeningHistoryCompanion({
     this.id = const Value.absent(),
     this.audioUrl = const Value.absent(),
@@ -1104,7 +800,6 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
     this.duration = const Value.absent(),
     this.isFinished = const Value.absent(),
     this.listenedAt = const Value.absent(),
-    this.profileId = const Value.absent(),
   });
   ListeningHistoryCompanion.insert({
     this.id = const Value.absent(),
@@ -1118,7 +813,6 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
     required int duration,
     this.isFinished = const Value.absent(),
     this.listenedAt = const Value.absent(),
-    required int profileId,
   })  : audioUrl = Value(audioUrl),
         title = Value(title),
         description = Value(description),
@@ -1126,8 +820,7 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
         podcastTitle = Value(podcastTitle),
         podcastRSS = Value(podcastRSS),
         position = Value(position),
-        duration = Value(duration),
-        profileId = Value(profileId);
+        duration = Value(duration);
   static Insertable<ListeningHistoryData> custom({
     Expression<int>? id,
     Expression<String>? audioUrl,
@@ -1140,7 +833,6 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
     Expression<int>? duration,
     Expression<bool>? isFinished,
     Expression<DateTime>? listenedAt,
-    Expression<int>? profileId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1154,7 +846,6 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
       if (duration != null) 'duration': duration,
       if (isFinished != null) 'is_finished': isFinished,
       if (listenedAt != null) 'listened_at': listenedAt,
-      if (profileId != null) 'profile_id': profileId,
     });
   }
 
@@ -1169,8 +860,7 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
       Value<int>? position,
       Value<int>? duration,
       Value<bool>? isFinished,
-      Value<DateTime>? listenedAt,
-      Value<int>? profileId}) {
+      Value<DateTime>? listenedAt}) {
     return ListeningHistoryCompanion(
       id: id ?? this.id,
       audioUrl: audioUrl ?? this.audioUrl,
@@ -1183,7 +873,6 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
       duration: duration ?? this.duration,
       isFinished: isFinished ?? this.isFinished,
       listenedAt: listenedAt ?? this.listenedAt,
-      profileId: profileId ?? this.profileId,
     );
   }
 
@@ -1223,9 +912,6 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
     if (listenedAt.present) {
       map['listened_at'] = Variable<DateTime>(listenedAt.value);
     }
-    if (profileId.present) {
-      map['profile_id'] = Variable<int>(profileId.value);
-    }
     return map;
   }
 
@@ -1242,8 +928,7 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
           ..write('position: $position, ')
           ..write('duration: $duration, ')
           ..write('isFinished: $isFinished, ')
-          ..write('listenedAt: $listenedAt, ')
-          ..write('profileId: $profileId')
+          ..write('listenedAt: $listenedAt')
           ..write(')'))
         .toString();
   }
@@ -1799,7 +1484,6 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
 abstract class _$PoddrDatabase extends GeneratedDatabase {
   _$PoddrDatabase(QueryExecutor e) : super(e);
   $PoddrDatabaseManager get managers => $PoddrDatabaseManager(this);
-  late final $ProfileTable profile = $ProfileTable(this);
   late final $PodcastSubscriptionTable podcastSubscription =
       $PodcastSubscriptionTable(this);
   late final $ListeningHistoryTable listeningHistory =
@@ -1809,13 +1493,8 @@ abstract class _$PoddrDatabase extends GeneratedDatabase {
   late final Index idxPodcastSubscriptionRss = Index(
       'idx_podcast_subscription_rss',
       'CREATE INDEX idx_podcast_subscription_rss ON podcast_subscription (rss)');
-  late final Index idxPodcastSubscriptionProfileId = Index(
-      'idx_podcast_subscription_profile_id',
-      'CREATE INDEX idx_podcast_subscription_profile_id ON podcast_subscription (profile_id)');
   late final Index idxHistoryAudioUrl = Index('idx_history_audio_url',
       'CREATE INDEX idx_history_audio_url ON listening_history (audio_url)');
-  late final Index idxHistoryProfileId = Index('idx_history_profile_id',
-      'CREATE INDEX idx_history_profile_id ON listening_history (profile_id)');
   late final Index idxHistoryListenedAt = Index('idx_history_listened_at',
       'CREATE INDEX idx_history_listened_at ON listening_history (listened_at)');
   @override
@@ -1823,316 +1502,15 @@ abstract class _$PoddrDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-        profile,
         podcastSubscription,
         listeningHistory,
         offlineEpisodes,
         idxPodcastSubscriptionRss,
-        idxPodcastSubscriptionProfileId,
         idxHistoryAudioUrl,
-        idxHistoryProfileId,
         idxHistoryListenedAt
       ];
 }
 
-typedef $$ProfileTableCreateCompanionBuilder = ProfileCompanion Function({
-  Value<int> id,
-  required String name,
-  Value<bool> shouldSync,
-});
-typedef $$ProfileTableUpdateCompanionBuilder = ProfileCompanion Function({
-  Value<int> id,
-  Value<String> name,
-  Value<bool> shouldSync,
-});
-
-final class $$ProfileTableReferences
-    extends BaseReferences<_$PoddrDatabase, $ProfileTable, ProfileData> {
-  $$ProfileTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$PodcastSubscriptionTable,
-      List<PodcastSubscriptionData>> _podcastSubscriptionRefsTable(
-          _$PoddrDatabase db) =>
-      MultiTypedResultKey.fromTable(db.podcastSubscription,
-          aliasName: $_aliasNameGenerator(
-              db.profile.id, db.podcastSubscription.profileId));
-
-  $$PodcastSubscriptionTableProcessedTableManager get podcastSubscriptionRefs {
-    final manager =
-        $$PodcastSubscriptionTableTableManager($_db, $_db.podcastSubscription)
-            .filter((f) => f.profileId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache =
-        $_typedResult.readTableOrNull(_podcastSubscriptionRefsTable($_db));
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: cache));
-  }
-
-  static MultiTypedResultKey<$ListeningHistoryTable, List<ListeningHistoryData>>
-      _listeningHistoryRefsTable(_$PoddrDatabase db) =>
-          MultiTypedResultKey.fromTable(db.listeningHistory,
-              aliasName: $_aliasNameGenerator(
-                  db.profile.id, db.listeningHistory.profileId));
-
-  $$ListeningHistoryTableProcessedTableManager get listeningHistoryRefs {
-    final manager =
-        $$ListeningHistoryTableTableManager($_db, $_db.listeningHistory)
-            .filter((f) => f.profileId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache =
-        $_typedResult.readTableOrNull(_listeningHistoryRefsTable($_db));
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: cache));
-  }
-}
-
-class $$ProfileTableFilterComposer
-    extends Composer<_$PoddrDatabase, $ProfileTable> {
-  $$ProfileTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<bool> get shouldSync => $composableBuilder(
-      column: $table.shouldSync, builder: (column) => ColumnFilters(column));
-
-  Expression<bool> podcastSubscriptionRefs(
-      Expression<bool> Function($$PodcastSubscriptionTableFilterComposer f) f) {
-    final $$PodcastSubscriptionTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.podcastSubscription,
-        getReferencedColumn: (t) => t.profileId,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$PodcastSubscriptionTableFilterComposer(
-              $db: $db,
-              $table: $db.podcastSubscription,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-
-  Expression<bool> listeningHistoryRefs(
-      Expression<bool> Function($$ListeningHistoryTableFilterComposer f) f) {
-    final $$ListeningHistoryTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.listeningHistory,
-        getReferencedColumn: (t) => t.profileId,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ListeningHistoryTableFilterComposer(
-              $db: $db,
-              $table: $db.listeningHistory,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-}
-
-class $$ProfileTableOrderingComposer
-    extends Composer<_$PoddrDatabase, $ProfileTable> {
-  $$ProfileTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<bool> get shouldSync => $composableBuilder(
-      column: $table.shouldSync, builder: (column) => ColumnOrderings(column));
-}
-
-class $$ProfileTableAnnotationComposer
-    extends Composer<_$PoddrDatabase, $ProfileTable> {
-  $$ProfileTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<bool> get shouldSync => $composableBuilder(
-      column: $table.shouldSync, builder: (column) => column);
-
-  Expression<T> podcastSubscriptionRefs<T extends Object>(
-      Expression<T> Function($$PodcastSubscriptionTableAnnotationComposer a)
-          f) {
-    final $$PodcastSubscriptionTableAnnotationComposer composer =
-        $composerBuilder(
-            composer: this,
-            getCurrentColumn: (t) => t.id,
-            referencedTable: $db.podcastSubscription,
-            getReferencedColumn: (t) => t.profileId,
-            builder: (joinBuilder,
-                    {$addJoinBuilderToRootComposer,
-                    $removeJoinBuilderFromRootComposer}) =>
-                $$PodcastSubscriptionTableAnnotationComposer(
-                  $db: $db,
-                  $table: $db.podcastSubscription,
-                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                  joinBuilder: joinBuilder,
-                  $removeJoinBuilderFromRootComposer:
-                      $removeJoinBuilderFromRootComposer,
-                ));
-    return f(composer);
-  }
-
-  Expression<T> listeningHistoryRefs<T extends Object>(
-      Expression<T> Function($$ListeningHistoryTableAnnotationComposer a) f) {
-    final $$ListeningHistoryTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.listeningHistory,
-        getReferencedColumn: (t) => t.profileId,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ListeningHistoryTableAnnotationComposer(
-              $db: $db,
-              $table: $db.listeningHistory,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return f(composer);
-  }
-}
-
-class $$ProfileTableTableManager extends RootTableManager<
-    _$PoddrDatabase,
-    $ProfileTable,
-    ProfileData,
-    $$ProfileTableFilterComposer,
-    $$ProfileTableOrderingComposer,
-    $$ProfileTableAnnotationComposer,
-    $$ProfileTableCreateCompanionBuilder,
-    $$ProfileTableUpdateCompanionBuilder,
-    (ProfileData, $$ProfileTableReferences),
-    ProfileData,
-    PrefetchHooks Function(
-        {bool podcastSubscriptionRefs, bool listeningHistoryRefs})> {
-  $$ProfileTableTableManager(_$PoddrDatabase db, $ProfileTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$ProfileTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$ProfileTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$ProfileTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> name = const Value.absent(),
-            Value<bool> shouldSync = const Value.absent(),
-          }) =>
-              ProfileCompanion(
-            id: id,
-            name: name,
-            shouldSync: shouldSync,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String name,
-            Value<bool> shouldSync = const Value.absent(),
-          }) =>
-              ProfileCompanion.insert(
-            id: id,
-            name: name,
-            shouldSync: shouldSync,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) =>
-                  (e.readTable(table), $$ProfileTableReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: (
-              {podcastSubscriptionRefs = false, listeningHistoryRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (podcastSubscriptionRefs) db.podcastSubscription,
-                if (listeningHistoryRefs) db.listeningHistory
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (podcastSubscriptionRefs)
-                    await $_getPrefetchedData<ProfileData, $ProfileTable,
-                            PodcastSubscriptionData>(
-                        currentTable: table,
-                        referencedTable: $$ProfileTableReferences
-                            ._podcastSubscriptionRefsTable(db),
-                        managerFromTypedResult: (p0) =>
-                            $$ProfileTableReferences(db, table, p0)
-                                .podcastSubscriptionRefs,
-                        referencedItemsForCurrentItem:
-                            (item, referencedItems) => referencedItems
-                                .where((e) => e.profileId == item.id),
-                        typedResults: items),
-                  if (listeningHistoryRefs)
-                    await $_getPrefetchedData<ProfileData, $ProfileTable,
-                            ListeningHistoryData>(
-                        currentTable: table,
-                        referencedTable: $$ProfileTableReferences
-                            ._listeningHistoryRefsTable(db),
-                        managerFromTypedResult: (p0) =>
-                            $$ProfileTableReferences(db, table, p0)
-                                .listeningHistoryRefs,
-                        referencedItemsForCurrentItem:
-                            (item, referencedItems) => referencedItems
-                                .where((e) => e.profileId == item.id),
-                        typedResults: items)
-                ];
-              },
-            );
-          },
-        ));
-}
-
-typedef $$ProfileTableProcessedTableManager = ProcessedTableManager<
-    _$PoddrDatabase,
-    $ProfileTable,
-    ProfileData,
-    $$ProfileTableFilterComposer,
-    $$ProfileTableOrderingComposer,
-    $$ProfileTableAnnotationComposer,
-    $$ProfileTableCreateCompanionBuilder,
-    $$ProfileTableUpdateCompanionBuilder,
-    (ProfileData, $$ProfileTableReferences),
-    ProfileData,
-    PrefetchHooks Function(
-        {bool podcastSubscriptionRefs, bool listeningHistoryRefs})>;
 typedef $$PodcastSubscriptionTableCreateCompanionBuilder
     = PodcastSubscriptionCompanion Function({
   Value<int> id,
@@ -2141,7 +1519,6 @@ typedef $$PodcastSubscriptionTableCreateCompanionBuilder
   required String description,
   required String author,
   required String imageUrl,
-  required int profileId,
   Value<DateTime> subscribedAt,
 });
 typedef $$PodcastSubscriptionTableUpdateCompanionBuilder
@@ -2152,30 +1529,8 @@ typedef $$PodcastSubscriptionTableUpdateCompanionBuilder
   Value<String> description,
   Value<String> author,
   Value<String> imageUrl,
-  Value<int> profileId,
   Value<DateTime> subscribedAt,
 });
-
-final class $$PodcastSubscriptionTableReferences extends BaseReferences<
-    _$PoddrDatabase, $PodcastSubscriptionTable, PodcastSubscriptionData> {
-  $$PodcastSubscriptionTableReferences(
-      super.$_db, super.$_table, super.$_typedResult);
-
-  static $ProfileTable _profileIdTable(_$PoddrDatabase db) =>
-      db.profile.createAlias($_aliasNameGenerator(
-          db.podcastSubscription.profileId, db.profile.id));
-
-  $$ProfileTableProcessedTableManager get profileId {
-    final $_column = $_itemColumn<int>('profile_id')!;
-
-    final manager = $$ProfileTableTableManager($_db, $_db.profile)
-        .filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_profileIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: [item]));
-  }
-}
 
 class $$PodcastSubscriptionTableFilterComposer
     extends Composer<_$PoddrDatabase, $PodcastSubscriptionTable> {
@@ -2206,26 +1561,6 @@ class $$PodcastSubscriptionTableFilterComposer
 
   ColumnFilters<DateTime> get subscribedAt => $composableBuilder(
       column: $table.subscribedAt, builder: (column) => ColumnFilters(column));
-
-  $$ProfileTableFilterComposer get profileId {
-    final $$ProfileTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.profileId,
-        referencedTable: $db.profile,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ProfileTableFilterComposer(
-              $db: $db,
-              $table: $db.profile,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 }
 
 class $$PodcastSubscriptionTableOrderingComposer
@@ -2258,26 +1593,6 @@ class $$PodcastSubscriptionTableOrderingComposer
   ColumnOrderings<DateTime> get subscribedAt => $composableBuilder(
       column: $table.subscribedAt,
       builder: (column) => ColumnOrderings(column));
-
-  $$ProfileTableOrderingComposer get profileId {
-    final $$ProfileTableOrderingComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.profileId,
-        referencedTable: $db.profile,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ProfileTableOrderingComposer(
-              $db: $db,
-              $table: $db.profile,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 }
 
 class $$PodcastSubscriptionTableAnnotationComposer
@@ -2309,26 +1624,6 @@ class $$PodcastSubscriptionTableAnnotationComposer
 
   GeneratedColumn<DateTime> get subscribedAt => $composableBuilder(
       column: $table.subscribedAt, builder: (column) => column);
-
-  $$ProfileTableAnnotationComposer get profileId {
-    final $$ProfileTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.profileId,
-        referencedTable: $db.profile,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ProfileTableAnnotationComposer(
-              $db: $db,
-              $table: $db.profile,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 }
 
 class $$PodcastSubscriptionTableTableManager extends RootTableManager<
@@ -2340,9 +1635,13 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
     $$PodcastSubscriptionTableAnnotationComposer,
     $$PodcastSubscriptionTableCreateCompanionBuilder,
     $$PodcastSubscriptionTableUpdateCompanionBuilder,
-    (PodcastSubscriptionData, $$PodcastSubscriptionTableReferences),
+    (
+      PodcastSubscriptionData,
+      BaseReferences<_$PoddrDatabase, $PodcastSubscriptionTable,
+          PodcastSubscriptionData>
+    ),
     PodcastSubscriptionData,
-    PrefetchHooks Function({bool profileId})> {
+    PrefetchHooks Function()> {
   $$PodcastSubscriptionTableTableManager(
       _$PoddrDatabase db, $PodcastSubscriptionTable table)
       : super(TableManagerState(
@@ -2363,7 +1662,6 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
             Value<String> description = const Value.absent(),
             Value<String> author = const Value.absent(),
             Value<String> imageUrl = const Value.absent(),
-            Value<int> profileId = const Value.absent(),
             Value<DateTime> subscribedAt = const Value.absent(),
           }) =>
               PodcastSubscriptionCompanion(
@@ -2373,7 +1671,6 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
             description: description,
             author: author,
             imageUrl: imageUrl,
-            profileId: profileId,
             subscribedAt: subscribedAt,
           ),
           createCompanionCallback: ({
@@ -2383,7 +1680,6 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
             required String description,
             required String author,
             required String imageUrl,
-            required int profileId,
             Value<DateTime> subscribedAt = const Value.absent(),
           }) =>
               PodcastSubscriptionCompanion.insert(
@@ -2393,51 +1689,12 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
             description: description,
             author: author,
             imageUrl: imageUrl,
-            profileId: profileId,
             subscribedAt: subscribedAt,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (
-                    e.readTable(table),
-                    $$PodcastSubscriptionTableReferences(db, table, e)
-                  ))
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({profileId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins: <
-                  T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic>>(state) {
-                if (profileId) {
-                  state = state.withJoin(
-                    currentTable: table,
-                    currentColumn: table.profileId,
-                    referencedTable: $$PodcastSubscriptionTableReferences
-                        ._profileIdTable(db),
-                    referencedColumn: $$PodcastSubscriptionTableReferences
-                        ._profileIdTable(db)
-                        .id,
-                  ) as T;
-                }
-
-                return state;
-              },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ));
 }
 
@@ -2450,9 +1707,13 @@ typedef $$PodcastSubscriptionTableProcessedTableManager = ProcessedTableManager<
     $$PodcastSubscriptionTableAnnotationComposer,
     $$PodcastSubscriptionTableCreateCompanionBuilder,
     $$PodcastSubscriptionTableUpdateCompanionBuilder,
-    (PodcastSubscriptionData, $$PodcastSubscriptionTableReferences),
+    (
+      PodcastSubscriptionData,
+      BaseReferences<_$PoddrDatabase, $PodcastSubscriptionTable,
+          PodcastSubscriptionData>
+    ),
     PodcastSubscriptionData,
-    PrefetchHooks Function({bool profileId})>;
+    PrefetchHooks Function()>;
 typedef $$ListeningHistoryTableCreateCompanionBuilder
     = ListeningHistoryCompanion Function({
   Value<int> id,
@@ -2466,7 +1727,6 @@ typedef $$ListeningHistoryTableCreateCompanionBuilder
   required int duration,
   Value<bool> isFinished,
   Value<DateTime> listenedAt,
-  required int profileId,
 });
 typedef $$ListeningHistoryTableUpdateCompanionBuilder
     = ListeningHistoryCompanion Function({
@@ -2481,29 +1741,7 @@ typedef $$ListeningHistoryTableUpdateCompanionBuilder
   Value<int> duration,
   Value<bool> isFinished,
   Value<DateTime> listenedAt,
-  Value<int> profileId,
 });
-
-final class $$ListeningHistoryTableReferences extends BaseReferences<
-    _$PoddrDatabase, $ListeningHistoryTable, ListeningHistoryData> {
-  $$ListeningHistoryTableReferences(
-      super.$_db, super.$_table, super.$_typedResult);
-
-  static $ProfileTable _profileIdTable(_$PoddrDatabase db) =>
-      db.profile.createAlias(
-          $_aliasNameGenerator(db.listeningHistory.profileId, db.profile.id));
-
-  $$ProfileTableProcessedTableManager get profileId {
-    final $_column = $_itemColumn<int>('profile_id')!;
-
-    final manager = $$ProfileTableTableManager($_db, $_db.profile)
-        .filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_profileIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: [item]));
-  }
-}
 
 class $$ListeningHistoryTableFilterComposer
     extends Composer<_$PoddrDatabase, $ListeningHistoryTable> {
@@ -2546,26 +1784,6 @@ class $$ListeningHistoryTableFilterComposer
 
   ColumnFilters<DateTime> get listenedAt => $composableBuilder(
       column: $table.listenedAt, builder: (column) => ColumnFilters(column));
-
-  $$ProfileTableFilterComposer get profileId {
-    final $$ProfileTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.profileId,
-        referencedTable: $db.profile,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ProfileTableFilterComposer(
-              $db: $db,
-              $table: $db.profile,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 }
 
 class $$ListeningHistoryTableOrderingComposer
@@ -2610,26 +1828,6 @@ class $$ListeningHistoryTableOrderingComposer
 
   ColumnOrderings<DateTime> get listenedAt => $composableBuilder(
       column: $table.listenedAt, builder: (column) => ColumnOrderings(column));
-
-  $$ProfileTableOrderingComposer get profileId {
-    final $$ProfileTableOrderingComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.profileId,
-        referencedTable: $db.profile,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ProfileTableOrderingComposer(
-              $db: $db,
-              $table: $db.profile,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 }
 
 class $$ListeningHistoryTableAnnotationComposer
@@ -2673,26 +1871,6 @@ class $$ListeningHistoryTableAnnotationComposer
 
   GeneratedColumn<DateTime> get listenedAt => $composableBuilder(
       column: $table.listenedAt, builder: (column) => column);
-
-  $$ProfileTableAnnotationComposer get profileId {
-    final $$ProfileTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.profileId,
-        referencedTable: $db.profile,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ProfileTableAnnotationComposer(
-              $db: $db,
-              $table: $db.profile,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
-    return composer;
-  }
 }
 
 class $$ListeningHistoryTableTableManager extends RootTableManager<
@@ -2704,9 +1882,13 @@ class $$ListeningHistoryTableTableManager extends RootTableManager<
     $$ListeningHistoryTableAnnotationComposer,
     $$ListeningHistoryTableCreateCompanionBuilder,
     $$ListeningHistoryTableUpdateCompanionBuilder,
-    (ListeningHistoryData, $$ListeningHistoryTableReferences),
+    (
+      ListeningHistoryData,
+      BaseReferences<_$PoddrDatabase, $ListeningHistoryTable,
+          ListeningHistoryData>
+    ),
     ListeningHistoryData,
-    PrefetchHooks Function({bool profileId})> {
+    PrefetchHooks Function()> {
   $$ListeningHistoryTableTableManager(
       _$PoddrDatabase db, $ListeningHistoryTable table)
       : super(TableManagerState(
@@ -2730,7 +1912,6 @@ class $$ListeningHistoryTableTableManager extends RootTableManager<
             Value<int> duration = const Value.absent(),
             Value<bool> isFinished = const Value.absent(),
             Value<DateTime> listenedAt = const Value.absent(),
-            Value<int> profileId = const Value.absent(),
           }) =>
               ListeningHistoryCompanion(
             id: id,
@@ -2744,7 +1925,6 @@ class $$ListeningHistoryTableTableManager extends RootTableManager<
             duration: duration,
             isFinished: isFinished,
             listenedAt: listenedAt,
-            profileId: profileId,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -2758,7 +1938,6 @@ class $$ListeningHistoryTableTableManager extends RootTableManager<
             required int duration,
             Value<bool> isFinished = const Value.absent(),
             Value<DateTime> listenedAt = const Value.absent(),
-            required int profileId,
           }) =>
               ListeningHistoryCompanion.insert(
             id: id,
@@ -2772,50 +1951,11 @@ class $$ListeningHistoryTableTableManager extends RootTableManager<
             duration: duration,
             isFinished: isFinished,
             listenedAt: listenedAt,
-            profileId: profileId,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (
-                    e.readTable(table),
-                    $$ListeningHistoryTableReferences(db, table, e)
-                  ))
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({profileId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins: <
-                  T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic>>(state) {
-                if (profileId) {
-                  state = state.withJoin(
-                    currentTable: table,
-                    currentColumn: table.profileId,
-                    referencedTable:
-                        $$ListeningHistoryTableReferences._profileIdTable(db),
-                    referencedColumn: $$ListeningHistoryTableReferences
-                        ._profileIdTable(db)
-                        .id,
-                  ) as T;
-                }
-
-                return state;
-              },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ));
 }
 
@@ -2828,9 +1968,13 @@ typedef $$ListeningHistoryTableProcessedTableManager = ProcessedTableManager<
     $$ListeningHistoryTableAnnotationComposer,
     $$ListeningHistoryTableCreateCompanionBuilder,
     $$ListeningHistoryTableUpdateCompanionBuilder,
-    (ListeningHistoryData, $$ListeningHistoryTableReferences),
+    (
+      ListeningHistoryData,
+      BaseReferences<_$PoddrDatabase, $ListeningHistoryTable,
+          ListeningHistoryData>
+    ),
     ListeningHistoryData,
-    PrefetchHooks Function({bool profileId})>;
+    PrefetchHooks Function()>;
 typedef $$OfflineEpisodesTableCreateCompanionBuilder = OfflineEpisodesCompanion
     Function({
   Value<int> id,
@@ -3095,8 +2239,6 @@ typedef $$OfflineEpisodesTableProcessedTableManager = ProcessedTableManager<
 class $PoddrDatabaseManager {
   final _$PoddrDatabase _db;
   $PoddrDatabaseManager(this._db);
-  $$ProfileTableTableManager get profile =>
-      $$ProfileTableTableManager(_db, _db.profile);
   $$PodcastSubscriptionTableTableManager get podcastSubscription =>
       $$PodcastSubscriptionTableTableManager(_db, _db.podcastSubscription);
   $$ListeningHistoryTableTableManager get listeningHistory =>

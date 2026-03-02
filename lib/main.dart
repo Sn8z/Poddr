@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 // Providers
-import 'package:poddr/services/profile.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/theme.dart';
@@ -22,41 +21,26 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
 
-  final ProfileProvider profileProvider = ProfileProvider();
-  await profileProvider.init();
-
   final GoRouter router = PoddrRouter.router;
 
   runApp(
     MultiProvider(
       providers: [
         // Theme
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-
-        // Profiles
-        ChangeNotifierProvider.value(value: profileProvider),
+        ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
 
         // Offline
-        ChangeNotifierProvider(create: (_) => OfflineProvider()),
+        ChangeNotifierProvider<OfflineProvider>(
+            create: (_) => OfflineProvider()),
 
         // Subscriptions
-        ChangeNotifierProxyProvider<ProfileProvider, SubscriptionProvider>(
+        ChangeNotifierProvider<SubscriptionProvider>(
           create: (_) => SubscriptionProvider(),
-          update: (_, profile, prev) {
-            prev ??= SubscriptionProvider();
-            prev.update(profile);
-            return prev;
-          },
         ),
 
         // History
-        ChangeNotifierProxyProvider<ProfileProvider, HistoryProvider>(
+        ChangeNotifierProvider<HistoryProvider>(
           create: (_) => HistoryProvider(),
-          update: (_, profile, prev) {
-            prev ??= HistoryProvider();
-            prev.update(profile);
-            return prev;
-          },
         ),
 
         // Latest Episodes

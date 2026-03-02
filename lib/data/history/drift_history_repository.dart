@@ -18,7 +18,6 @@ class DriftHistoryRepository implements IHistoryRepository {
     String podcastRSS,
     int position,
     int duration,
-    int profileId,
   ) async {
     final id = await database.into(database.listeningHistory).insert(
           ListeningHistoryCompanion.insert(
@@ -30,7 +29,6 @@ class DriftHistoryRepository implements IHistoryRepository {
             podcastRSS: podcastRSS,
             position: position,
             duration: duration,
-            profileId: profileId,
           ),
         );
 
@@ -53,9 +51,8 @@ class DriftHistoryRepository implements IHistoryRepository {
   }
 
   @override
-  Future<List<PodcastEpisode>> getHistory(int profileId) async {
+  Future<List<PodcastEpisode>> getHistory() async {
     final history = await (database.select(database.listeningHistory)
-          ..where((t) => t.profileId.equals(profileId))
           ..orderBy([
             (t) => OrderingTerm(
                   expression: t.listenedAt,
@@ -80,15 +77,13 @@ class DriftHistoryRepository implements IHistoryRepository {
 
   @override
   Future<void> updateProgress(
-    int profileId,
     String audioUrl,
     int position,
     int duration,
   ) async {
     final bool isFinished = (position / duration) >= .9;
     await (database.update(database.listeningHistory)
-          ..where((tbl) => tbl.audioUrl.equals(audioUrl))
-          ..where((tbl) => tbl.profileId.equals(profileId)))
+          ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
         .write(
       ListeningHistoryCompanion(
         position: Value(position),
@@ -100,11 +95,9 @@ class DriftHistoryRepository implements IHistoryRepository {
   }
 
   @override
-  Future<Map<String, dynamic>?> getProgress(
-      int profileId, String audioUrl) async {
+  Future<Map<String, dynamic>?> getProgress(String audioUrl) async {
     final history = await (database.select(database.listeningHistory)
-          ..where((tbl) => tbl.audioUrl.equals(audioUrl))
-          ..where((tbl) => tbl.profileId.equals(profileId)))
+          ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
         .getSingleOrNull();
 
     if (history == null) {
@@ -126,19 +119,16 @@ class DriftHistoryRepository implements IHistoryRepository {
   }
 
   @override
-  Stream<ListeningHistoryData?> getProgressStream(
-      int profileId, String audioUrl) {
+  Stream<ListeningHistoryData?> getProgressStream(String audioUrl) {
     return (database.select(database.listeningHistory)
-          ..where((tbl) => tbl.audioUrl.equals(audioUrl))
-          ..where((tbl) => tbl.profileId.equals(profileId)))
+          ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
         .watchSingleOrNull();
   }
 
   @override
-  Future<void> removeHistory(int profileId, String audioUrl) async {
+  Future<void> removeHistory(String audioUrl) async {
     await (database.delete(database.listeningHistory)
-          ..where((tbl) => tbl.audioUrl.equals(audioUrl))
-          ..where((tbl) => tbl.profileId.equals(profileId)))
+          ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
         .go();
   }
 }

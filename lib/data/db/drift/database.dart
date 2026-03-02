@@ -4,15 +4,8 @@ import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
 
-class Profile extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text()();
-  BoolColumn get shouldSync => boolean().withDefault(const Constant(false))();
-}
-
 @DataClassName('PodcastSubscriptionData')
 @TableIndex(name: 'idx_podcast_subscription_rss', columns: {#rss})
-@TableIndex(name: 'idx_podcast_subscription_profile_id', columns: {#profileId})
 class PodcastSubscription extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get rss => text()();
@@ -20,19 +13,12 @@ class PodcastSubscription extends Table {
   TextColumn get description => text()();
   TextColumn get author => text()();
   TextColumn get imageUrl => text()();
-  IntColumn get profileId => integer().references(Profile, #id)();
   DateTimeColumn get subscribedAt =>
       dateTime().withDefault(currentDateAndTime)();
-
-  @override
-  List<Set<Column>> get uniqueKeys => [
-    {rss, profileId},
-  ];
 }
 
 @DataClassName('ListeningHistoryData')
 @TableIndex(name: 'idx_history_audio_url', columns: {#audioUrl})
-@TableIndex(name: 'idx_history_profile_id', columns: {#profileId})
 @TableIndex(name: 'idx_history_listened_at', columns: {#listenedAt})
 class ListeningHistory extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -46,7 +32,6 @@ class ListeningHistory extends Table {
   IntColumn get duration => integer()();
   BoolColumn get isFinished => boolean().withDefault(const Constant(false))();
   DateTimeColumn get listenedAt => dateTime().withDefault(currentDateAndTime)();
-  IntColumn get profileId => integer().references(Profile, #id)();
 }
 
 class OfflineEpisodes extends Table {
@@ -63,7 +48,7 @@ class OfflineEpisodes extends Table {
   DateTimeColumn get downloadedAt => dateTime().withDefault(currentDateAndTime)();
 }
 
-@DriftDatabase(tables: [Profile, PodcastSubscription, ListeningHistory, OfflineEpisodes])
+@DriftDatabase(tables: [PodcastSubscription, ListeningHistory, OfflineEpisodes])
 class PoddrDatabase extends _$PoddrDatabase {
   static PoddrDatabase? _instance;
 
@@ -75,19 +60,6 @@ class PoddrDatabase extends _$PoddrDatabase {
 
   @override
   int get schemaVersion => 1;
-
-  @override
-  MigrationStrategy get migration {
-    return MigrationStrategy(
-      onCreate: (migrator) async {
-        await migrator.createAll();
-        await into(profile).insert(
-          ProfileCompanion.insert(name: "Default"),
-        );
-      },
-      onUpgrade: (migrator, from, to) async {},
-    );
-  }
 }
 
 QueryExecutor _openConnection() {

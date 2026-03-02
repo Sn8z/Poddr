@@ -4,15 +4,11 @@ import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/data/history/drift_history_repository.dart';
 import 'package:poddr/data/history/history_repository.dart';
 import 'package:poddr/models/episode.dart';
-import 'package:poddr/services/profile.dart';
 
 class HistoryProvider extends ChangeNotifier {
   final logName = "HistoryProvider";
 
   final IHistoryRepository _historyRepository;
-
-  ProfileProvider? _profileProvider;
-  int? _currentProfileId;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -23,32 +19,13 @@ class HistoryProvider extends ChangeNotifier {
   HistoryProvider({IHistoryRepository? historyRepository})
       : _historyRepository = historyRepository ?? DriftHistoryRepository();
 
-  void update(ProfileProvider? profileProvider) {
-    _profileProvider = profileProvider;
-
-    final newId = _profileProvider?.currentProfile?.id;
-
-    if (newId != _currentProfileId) {
-      _currentProfileId = newId;
-
-      if (newId != null) {
-        getHistory();
-      } else {
-        _history = [];
-        notifyListeners();
-      }
-    }
-  }
 
   Future<void> getHistory() async {
-    final profileId = _currentProfileId;
-    if (profileId == null) return;
-
     try {
       _isLoading = true;
       notifyListeners();
 
-      _history = await _historyRepository.getHistory(profileId);
+      _history = await _historyRepository.getHistory();
     } catch (e, stackTrace) {
       log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     } finally {
@@ -67,9 +44,6 @@ class HistoryProvider extends ChangeNotifier {
     int position,
     int duration,
   ) async {
-    final profileId = _currentProfileId;
-    if (profileId == null) return;
-
     try {
       final newItem = await _historyRepository.addHistory(
         audioUrl,
@@ -80,7 +54,6 @@ class HistoryProvider extends ChangeNotifier {
         podcastRSS,
         position,
         duration,
-        profileId,
       );
       if (newItem != null) {
         _history.insert(0, newItem);
@@ -93,12 +66,8 @@ class HistoryProvider extends ChangeNotifier {
 
   Future<void> updateProgress(
       String audioUrl, int position, int duration) async {
-    final profileId = _currentProfileId;
-    if (profileId == null) return;
-
     try {
       await _historyRepository.updateProgress(
-        profileId,
         audioUrl,
         position,
         duration,
@@ -109,11 +78,8 @@ class HistoryProvider extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>?> getProgress(String audioUrl) async {
-    final profileId = _currentProfileId;
-    if (profileId == null) return null;
-
     try {
-      return await _historyRepository.getProgress(profileId, audioUrl);
+      return await _historyRepository.getProgress(audioUrl);
     } catch (e, stackTrace) {
       log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return null;
@@ -121,11 +87,8 @@ class HistoryProvider extends ChangeNotifier {
   }
 
   Stream<ListeningHistoryData?> getProgressStream(String audioUrl) {
-    final profileId = _currentProfileId;
-    if (profileId == null) return const Stream.empty();
-
     try {
-      return _historyRepository.getProgressStream(profileId, audioUrl);
+      return _historyRepository.getProgressStream(audioUrl);
     } catch (e, stackTrace) {
       log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return const Stream.empty();
@@ -133,11 +96,8 @@ class HistoryProvider extends ChangeNotifier {
   }
 
   Future<void> removeHistory(String audioUrl) async {
-    final profileId = _currentProfileId;
-    if (profileId == null) return;
-
     try {
-      await _historyRepository.removeHistory(profileId, audioUrl);
+      await _historyRepository.removeHistory(audioUrl);
       _history.removeWhere((ep) => ep.audioUrl == audioUrl);
       notifyListeners();
     } catch (e, stackTrace) {

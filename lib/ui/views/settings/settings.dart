@@ -2,14 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:poddr/services/opml.dart';
-import 'package:poddr/services/profile.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/services/theme.dart';
-import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/data/theme/theme_colors.dart';
@@ -30,13 +28,6 @@ class SettingsView extends StatelessWidget {
               title: "Settings",
             ),
             PoddrAppBarOptions(),
-            sliverGapH16,
-            const ContentBox(
-              title: "Profile",
-              children: [
-                ProfileSection(),
-              ],
-            ),
             sliverGapH16,
             const ContentBox(
               title: "Appearance",
@@ -299,94 +290,6 @@ class ColorBox extends StatelessWidget {
               : null,
         ),
       ),
-    );
-  }
-}
-
-class ProfileSection extends StatelessWidget {
-  const ProfileSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final profileProvider = context.watch<ProfileProvider>();
-    final profiles = profileProvider.profiles;
-    final current = profileProvider.currentProfile;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-          leading: const Icon(Icons.person),
-          title: Text(current?.name ?? "None"),
-          trailing: IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {},
-          ),
-        ),
-        ListTile(
-          leading: const Icon(Icons.change_circle_rounded),
-          title: const Text("Change profile"),
-          subtitle: Text("${profiles.length} profiles available"),
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (dialogContext) {
-                  return SimpleDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(16),
-                      ),
-                    ),
-                    backgroundColor:
-                        Theme.of(dialogContext).colorScheme.surfaceContainerLow,
-                    title: Text("Select profile"),
-                    children: [
-                      ...profiles.map((p) {
-                        return SimpleDialogOption(
-                            child: Text(p.name),
-                            onPressed: () {
-                              profileProvider.activateProfile(p.id);
-                              Navigator.of(dialogContext).pop();
-                            });
-                      }),
-                    ],
-                  );
-                });
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.add_circle_outlined),
-          title: const Text("Create profile"),
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (dialogContext) {
-                  return SimpleDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(16),
-                      ),
-                    ),
-                    backgroundColor:
-                        Theme.of(dialogContext).colorScheme.surfaceContainerLow,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: PoddrTextInput(
-                          hintText: "Profile name",
-                          onFieldSubmitted: (value) {
-                            if (value.isEmpty) return;
-                            profileProvider.createProfile(value);
-                            Navigator.of(dialogContext).pop();
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                });
-          },
-        ),
-      ],
     );
   }
 }
