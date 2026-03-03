@@ -349,13 +349,14 @@ class TagsSection extends StatefulWidget {
 
 class _TagsSectionState extends State<TagsSection> {
   Future<void> _showCreateTagDialog(BuildContext context) async {
+    final tagsProvider = context.read<TagsProvider>();
+
     final dialogResult = await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (context) => const _TagCreateDialog(),
     );
 
     if (dialogResult != null && mounted) {
-      final tagsProvider = context.read<TagsProvider>();
       await tagsProvider.createTag(
         dialogResult['name'] as String,
         color: dialogResult['color'] as int,
@@ -430,6 +431,8 @@ class _TagsSectionState extends State<TagsSection> {
   }
 
   Future<void> _showEditTagDialog(BuildContext context, dynamic tag) async {
+    final tagsProvider = context.read<TagsProvider>();
+
     final dialogResult = await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (context) => _TagCreateDialog(
@@ -439,7 +442,6 @@ class _TagsSectionState extends State<TagsSection> {
     );
 
     if (dialogResult != null && mounted) {
-      final tagsProvider = context.read<TagsProvider>();
       final newName = dialogResult['name'] as String;
       final newColor = dialogResult['color'] as int;
 
@@ -454,6 +456,8 @@ class _TagsSectionState extends State<TagsSection> {
 
   Future<void> _showDeleteConfirmation(
       BuildContext context, dynamic tag) async {
+    final tagsProvider = context.read<TagsProvider>();
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -474,7 +478,7 @@ class _TagsSectionState extends State<TagsSection> {
     );
 
     if (confirmed == true && mounted) {
-      await context.read<TagsProvider>().deleteTag(tag.id);
+      await tagsProvider.deleteTag(tag.id);
     }
   }
 }
