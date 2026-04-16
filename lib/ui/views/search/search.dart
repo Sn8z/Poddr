@@ -40,7 +40,7 @@ class SearchView extends StatelessWidget {
                   surfaceTintColor: Theme.of(context).colorScheme.primary,
                   title: PoddrTextInput(
                     hintText: 'Search',
-                    onFieldSubmitted: (value) {
+                    onSubmit: (value) {
                       searchProvider.searchPodcast(value);
                     },
                   ),

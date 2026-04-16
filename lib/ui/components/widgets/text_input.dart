@@ -1,10 +1,13 @@
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class PoddrTextInput extends StatelessWidget {
   const PoddrTextInput({
     super.key,
-    this.controller,
+    this.initialValue,
+    this.onChanged,
+    this.onSubmit,
     this.prefixIcon,
     this.suffixIcon,
     this.labelText,
@@ -12,10 +15,11 @@ class PoddrTextInput extends StatelessWidget {
     this.autofocus = false,
     this.obscure = false,
     this.validator,
-    this.onFieldSubmitted,
   });
 
-  final TextEditingController? controller;
+  final String? initialValue;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmit;
   final String? labelText;
   final String? hintText;
   final Widget? prefixIcon;
@@ -23,38 +27,48 @@ class PoddrTextInput extends StatelessWidget {
   final bool autofocus;
   final bool obscure;
   final FormFieldValidator<String>? validator;
-  final void Function(String)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return Shortcuts(
       shortcuts: const {
         SingleActivator(LogicalKeyboardKey.space):
             DoNothingAndStopPropagationTextIntent(),
       },
       child: TextFormField(
-        controller: controller,
-        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+        initialValue: initialValue,
+        onChanged: onChanged,
+        onFieldSubmitted: onSubmit,
+        style: TextStyle(color: colorScheme.onSurface),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.all(15),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: colorScheme.outline),
           ),
-          prefixIconColor: Theme.of(context).colorScheme.primary,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: colorScheme.outline.withAlpha(128)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: colorScheme.primary, width: 2),
+          ),
+          prefixIconColor: colorScheme.primary,
           labelText: labelText,
           hintText: hintText,
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
           filled: true,
-          fillColor: Theme.of(context).colorScheme.surfaceContainerLow,
-          hoverColor: Theme.of(context).colorScheme.surfaceContainer,
+          fillColor: colorScheme.surfaceContainerLow,
+          hoverColor: colorScheme.surfaceContainer,
         ),
         autofocus: autofocus,
         obscureText: obscure,
-        cursorColor: Theme.of(context).colorScheme.onSurface,
+        cursorColor: colorScheme.onSurface,
         validator: validator,
-        onFieldSubmitted: onFieldSubmitted,
       ),
     );
   }

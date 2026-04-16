@@ -10,3 +10,19 @@ String convertDateToString(DateTime? date) {
   if (date == null) return "";
   return "${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}";
 }
+
+String convertDateToTimeAgo(DateTime? date) {
+  if (date == null) return "";
+  final now = DateTime.now();
+  final difference = now.difference(date);
+
+  if (difference.inMinutes < 1) {
+    return 'Just now';
+  } else if (difference.inMinutes < 60) {
+    return '${difference.inMinutes} minutes ago';
+  } else if (difference.inHours < 24) {
+    return '${difference.inHours} hours ago';
+  } else {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+}

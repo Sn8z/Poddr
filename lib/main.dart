@@ -15,6 +15,7 @@ import 'package:poddr/services/history.dart';
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/tags.dart';
+import 'package:poddr/services/sync.dart';
 import 'package:poddr/router.dart';
 
 void main() async {
@@ -55,13 +56,24 @@ void main() async {
           },
         ),
 
+        // Sync Provider
+        ChangeNotifierProxyProvider2<SubscriptionProvider, HistoryProvider,
+            SyncProvider>(
+          create: (_) => SyncProvider(),
+          update: (_, subscription, history, prev) {
+            prev ??= SyncProvider();
+            prev.update(subscription, history);
+            return prev;
+          },
+        ),
+
         // Media
-        ChangeNotifierProxyProvider2<HistoryProvider, OfflineProvider,
-            MediaProvider>(
+        ChangeNotifierProxyProvider3<HistoryProvider, OfflineProvider,
+            SyncProvider, MediaProvider>(
           create: (_) => MediaProvider(),
-          update: (_, history, offline, prev) {
+          update: (_, history, offline, sync, prev) {
             prev ??= MediaProvider();
-            prev.update(history, offline);
+            prev.update(history, offline, sync);
             return prev;
           },
         ),

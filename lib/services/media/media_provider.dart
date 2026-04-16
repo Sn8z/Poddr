@@ -6,6 +6,7 @@ import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_handler.dart';
 import 'package:poddr/services/offline.dart';
+import 'package:poddr/services/sync.dart';
 
 class MediaProvider extends ChangeNotifier {
   final String logName = "MediaProvider";
@@ -14,6 +15,7 @@ class MediaProvider extends ChangeNotifier {
 
   HistoryProvider? _historyProvider;
   OfflineProvider? _offlineProvider;
+  SyncProvider? _syncProvider;
 
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
@@ -53,6 +55,10 @@ class MediaProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  int _lastPositionSeconds = 0;
+  String _lastAudioUrl = "";
+  DateTime? _lastProgressSave;
+
   List<PodcastEpisode> get mediaQueue => _mediaHandler.mediaQueue;
   bool get canGoNext =>
       _mediaHandler.currentIndex < _mediaHandler.mediaQueue.length - 1;
@@ -62,15 +68,18 @@ class MediaProvider extends ChangeNotifier {
     _initMediaListeners();
   }
 
-  void update(
-      HistoryProvider? historyProvider, OfflineProvider? offlineProvider) {
+  void update(HistoryProvider? historyProvider,
+      OfflineProvider? offlineProvider, SyncProvider? syncProvider) {
     _historyProvider = historyProvider;
     _offlineProvider = offlineProvider;
+    _syncProvider = syncProvider;
   }
 
   void _initMediaListeners() async {
     _mediaHandler.mediaItem.listen((mediaItem) {
       if (mediaItem == null) return;
+
+      _lastAudioUrl = mediaItem.id;
       _audioUrl = mediaItem.id;
       _episodeTitle = mediaItem.title;
       _podcastTitle = mediaItem.artist ?? mediaItem.album ?? "";
@@ -81,16 +90,43 @@ class MediaProvider extends ChangeNotifier {
       notifyListeners();
     });
 
+    _mediaHandler.events.listen((event) {
+      switch (event) {
+        case AudioEvent.pause:
+        case AudioEvent.stop:
+          _saveAllProgress();
+          break;
+        case AudioEvent.seek:
+          _saveAllProgress();
+          break;
+        case AudioEvent.mediaItemChanged:
+          _saveAllProgress(
+            episodeUrl: _lastAudioUrl,
+            position: _position,
+          );
+          break;
+        case AudioEvent.play:
+          break;
+      }
+    });
+
     _mediaHandler.playbackState.listen((state) {
       _isPlaying = state.playing;
       _position = state.updatePosition;
       _bufferedPosition = state.bufferedPosition;
       _isLoading = state.processingState == AudioProcessingState.loading ||
           state.processingState == AudioProcessingState.buffering;
+      _lastPositionSeconds = _position.inSeconds;
       notifyListeners();
 
-      if (_position.inSeconds % 10 == 0) {
-        _saveProgress();
+      // Periodic progress save while playing (debounced, no timer)
+      final now = DateTime.now();
+      if (_isPlaying &&
+          (_lastProgressSave == null ||
+              now.difference(_lastProgressSave!) >=
+                  const Duration(seconds: 30))) {
+        _saveAllProgress();
+        _lastProgressSave = now;
       }
     });
 
@@ -253,14 +289,46 @@ class MediaProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _saveProgress() async {
+  Future<void> _saveLocalProgress({
+    String? episodeUrl,
+    Duration? position,
+  }) async {
     if (_historyProvider == null) return;
 
-    final int pos = _position.inSeconds;
+    final String url = episodeUrl ?? _audioUrl;
+    final Duration pos = position ?? _position;
     final int dur = _duration.inSeconds;
 
-    if (dur > 0 && pos < dur) {
-      await _historyProvider!.updateProgress(_audioUrl, pos, dur);
-    }
+    if (dur <= 0 || pos.inSeconds >= dur) return;
+
+    await _historyProvider!.updateProgress(url, pos.inSeconds, dur);
+  }
+
+  Future<void> _recordSyncAction({
+    String? episodeUrl,
+    Duration? position,
+  }) async {
+    if (_syncProvider == null) return;
+
+    final String url = episodeUrl ?? _audioUrl;
+    final Duration pos = position ?? _position;
+    final int dur = _duration.inSeconds;
+
+    if (dur <= 0 || pos.inSeconds >= dur) return;
+
+    _syncProvider?.recordEpisodeAction(
+      podcastRss: podcastRSS,
+      episodeUrl: url,
+      action: 'play',
+      position: pos.inSeconds,
+    );
+  }
+
+  Future<void> _saveAllProgress({
+    String? episodeUrl,
+    Duration? position,
+  }) async {
+    await _saveLocalProgress(episodeUrl: episodeUrl, position: position);
+    await _recordSyncAction(episodeUrl: episodeUrl, position: position);
   }
 }

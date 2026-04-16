@@ -1900,6 +1900,618 @@ class SubscriptionTagsCompanion extends UpdateCompanion<SubscriptionTag> {
   }
 }
 
+class $PendingEpisodeActionsTable extends PendingEpisodeActions
+    with TableInfo<$PendingEpisodeActionsTable, PendingEpisodeAction> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PendingEpisodeActionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _podcastRssMeta =
+      const VerificationMeta('podcastRss');
+  @override
+  late final GeneratedColumn<String> podcastRss = GeneratedColumn<String>(
+      'podcast_rss', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _episodeUrlMeta =
+      const VerificationMeta('episodeUrl');
+  @override
+  late final GeneratedColumn<String> episodeUrl = GeneratedColumn<String>(
+      'episode_url', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _actionMeta = const VerificationMeta('action');
+  @override
+  late final GeneratedColumn<String> action = GeneratedColumn<String>(
+      'action', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _positionMeta =
+      const VerificationMeta('position');
+  @override
+  late final GeneratedColumn<int> position = GeneratedColumn<int>(
+      'position', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _timestampMeta =
+      const VerificationMeta('timestamp');
+  @override
+  late final GeneratedColumn<DateTime> timestamp = GeneratedColumn<DateTime>(
+      'timestamp', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, podcastRss, episodeUrl, action, position, timestamp];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pending_episode_actions';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<PendingEpisodeAction> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('podcast_rss')) {
+      context.handle(
+          _podcastRssMeta,
+          podcastRss.isAcceptableOrUnknown(
+              data['podcast_rss']!, _podcastRssMeta));
+    } else if (isInserting) {
+      context.missing(_podcastRssMeta);
+    }
+    if (data.containsKey('episode_url')) {
+      context.handle(
+          _episodeUrlMeta,
+          episodeUrl.isAcceptableOrUnknown(
+              data['episode_url']!, _episodeUrlMeta));
+    } else if (isInserting) {
+      context.missing(_episodeUrlMeta);
+    }
+    if (data.containsKey('action')) {
+      context.handle(_actionMeta,
+          action.isAcceptableOrUnknown(data['action']!, _actionMeta));
+    } else if (isInserting) {
+      context.missing(_actionMeta);
+    }
+    if (data.containsKey('position')) {
+      context.handle(_positionMeta,
+          position.isAcceptableOrUnknown(data['position']!, _positionMeta));
+    }
+    if (data.containsKey('timestamp')) {
+      context.handle(_timestampMeta,
+          timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta));
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {episodeUrl, action},
+      ];
+  @override
+  PendingEpisodeAction map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PendingEpisodeAction(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      podcastRss: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}podcast_rss'])!,
+      episodeUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}episode_url'])!,
+      action: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action'])!,
+      position: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}position'])!,
+      timestamp: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}timestamp'])!,
+    );
+  }
+
+  @override
+  $PendingEpisodeActionsTable createAlias(String alias) {
+    return $PendingEpisodeActionsTable(attachedDatabase, alias);
+  }
+}
+
+class PendingEpisodeAction extends DataClass
+    implements Insertable<PendingEpisodeAction> {
+  final int id;
+  final String podcastRss;
+  final String episodeUrl;
+  final String action;
+  final int position;
+  final DateTime timestamp;
+  const PendingEpisodeAction(
+      {required this.id,
+      required this.podcastRss,
+      required this.episodeUrl,
+      required this.action,
+      required this.position,
+      required this.timestamp});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['podcast_rss'] = Variable<String>(podcastRss);
+    map['episode_url'] = Variable<String>(episodeUrl);
+    map['action'] = Variable<String>(action);
+    map['position'] = Variable<int>(position);
+    map['timestamp'] = Variable<DateTime>(timestamp);
+    return map;
+  }
+
+  PendingEpisodeActionsCompanion toCompanion(bool nullToAbsent) {
+    return PendingEpisodeActionsCompanion(
+      id: Value(id),
+      podcastRss: Value(podcastRss),
+      episodeUrl: Value(episodeUrl),
+      action: Value(action),
+      position: Value(position),
+      timestamp: Value(timestamp),
+    );
+  }
+
+  factory PendingEpisodeAction.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PendingEpisodeAction(
+      id: serializer.fromJson<int>(json['id']),
+      podcastRss: serializer.fromJson<String>(json['podcastRss']),
+      episodeUrl: serializer.fromJson<String>(json['episodeUrl']),
+      action: serializer.fromJson<String>(json['action']),
+      position: serializer.fromJson<int>(json['position']),
+      timestamp: serializer.fromJson<DateTime>(json['timestamp']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'podcastRss': serializer.toJson<String>(podcastRss),
+      'episodeUrl': serializer.toJson<String>(episodeUrl),
+      'action': serializer.toJson<String>(action),
+      'position': serializer.toJson<int>(position),
+      'timestamp': serializer.toJson<DateTime>(timestamp),
+    };
+  }
+
+  PendingEpisodeAction copyWith(
+          {int? id,
+          String? podcastRss,
+          String? episodeUrl,
+          String? action,
+          int? position,
+          DateTime? timestamp}) =>
+      PendingEpisodeAction(
+        id: id ?? this.id,
+        podcastRss: podcastRss ?? this.podcastRss,
+        episodeUrl: episodeUrl ?? this.episodeUrl,
+        action: action ?? this.action,
+        position: position ?? this.position,
+        timestamp: timestamp ?? this.timestamp,
+      );
+  PendingEpisodeAction copyWithCompanion(PendingEpisodeActionsCompanion data) {
+    return PendingEpisodeAction(
+      id: data.id.present ? data.id.value : this.id,
+      podcastRss:
+          data.podcastRss.present ? data.podcastRss.value : this.podcastRss,
+      episodeUrl:
+          data.episodeUrl.present ? data.episodeUrl.value : this.episodeUrl,
+      action: data.action.present ? data.action.value : this.action,
+      position: data.position.present ? data.position.value : this.position,
+      timestamp: data.timestamp.present ? data.timestamp.value : this.timestamp,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingEpisodeAction(')
+          ..write('id: $id, ')
+          ..write('podcastRss: $podcastRss, ')
+          ..write('episodeUrl: $episodeUrl, ')
+          ..write('action: $action, ')
+          ..write('position: $position, ')
+          ..write('timestamp: $timestamp')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, podcastRss, episodeUrl, action, position, timestamp);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PendingEpisodeAction &&
+          other.id == this.id &&
+          other.podcastRss == this.podcastRss &&
+          other.episodeUrl == this.episodeUrl &&
+          other.action == this.action &&
+          other.position == this.position &&
+          other.timestamp == this.timestamp);
+}
+
+class PendingEpisodeActionsCompanion
+    extends UpdateCompanion<PendingEpisodeAction> {
+  final Value<int> id;
+  final Value<String> podcastRss;
+  final Value<String> episodeUrl;
+  final Value<String> action;
+  final Value<int> position;
+  final Value<DateTime> timestamp;
+  const PendingEpisodeActionsCompanion({
+    this.id = const Value.absent(),
+    this.podcastRss = const Value.absent(),
+    this.episodeUrl = const Value.absent(),
+    this.action = const Value.absent(),
+    this.position = const Value.absent(),
+    this.timestamp = const Value.absent(),
+  });
+  PendingEpisodeActionsCompanion.insert({
+    this.id = const Value.absent(),
+    required String podcastRss,
+    required String episodeUrl,
+    required String action,
+    this.position = const Value.absent(),
+    required DateTime timestamp,
+  })  : podcastRss = Value(podcastRss),
+        episodeUrl = Value(episodeUrl),
+        action = Value(action),
+        timestamp = Value(timestamp);
+  static Insertable<PendingEpisodeAction> custom({
+    Expression<int>? id,
+    Expression<String>? podcastRss,
+    Expression<String>? episodeUrl,
+    Expression<String>? action,
+    Expression<int>? position,
+    Expression<DateTime>? timestamp,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (podcastRss != null) 'podcast_rss': podcastRss,
+      if (episodeUrl != null) 'episode_url': episodeUrl,
+      if (action != null) 'action': action,
+      if (position != null) 'position': position,
+      if (timestamp != null) 'timestamp': timestamp,
+    });
+  }
+
+  PendingEpisodeActionsCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? podcastRss,
+      Value<String>? episodeUrl,
+      Value<String>? action,
+      Value<int>? position,
+      Value<DateTime>? timestamp}) {
+    return PendingEpisodeActionsCompanion(
+      id: id ?? this.id,
+      podcastRss: podcastRss ?? this.podcastRss,
+      episodeUrl: episodeUrl ?? this.episodeUrl,
+      action: action ?? this.action,
+      position: position ?? this.position,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (podcastRss.present) {
+      map['podcast_rss'] = Variable<String>(podcastRss.value);
+    }
+    if (episodeUrl.present) {
+      map['episode_url'] = Variable<String>(episodeUrl.value);
+    }
+    if (action.present) {
+      map['action'] = Variable<String>(action.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<int>(position.value);
+    }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<DateTime>(timestamp.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingEpisodeActionsCompanion(')
+          ..write('id: $id, ')
+          ..write('podcastRss: $podcastRss, ')
+          ..write('episodeUrl: $episodeUrl, ')
+          ..write('action: $action, ')
+          ..write('position: $position, ')
+          ..write('timestamp: $timestamp')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PendingSubscriptionActionsTable extends PendingSubscriptionActions
+    with
+        TableInfo<$PendingSubscriptionActionsTable, PendingSubscriptionAction> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PendingSubscriptionActionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _rssMeta = const VerificationMeta('rss');
+  @override
+  late final GeneratedColumn<String> rss = GeneratedColumn<String>(
+      'rss', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+  static const VerificationMeta _actionMeta = const VerificationMeta('action');
+  @override
+  late final GeneratedColumn<String> action = GeneratedColumn<String>(
+      'action', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _timestampMeta =
+      const VerificationMeta('timestamp');
+  @override
+  late final GeneratedColumn<DateTime> timestamp = GeneratedColumn<DateTime>(
+      'timestamp', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, rss, action, timestamp];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pending_subscription_actions';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<PendingSubscriptionAction> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('rss')) {
+      context.handle(
+          _rssMeta, rss.isAcceptableOrUnknown(data['rss']!, _rssMeta));
+    } else if (isInserting) {
+      context.missing(_rssMeta);
+    }
+    if (data.containsKey('action')) {
+      context.handle(_actionMeta,
+          action.isAcceptableOrUnknown(data['action']!, _actionMeta));
+    } else if (isInserting) {
+      context.missing(_actionMeta);
+    }
+    if (data.containsKey('timestamp')) {
+      context.handle(_timestampMeta,
+          timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta));
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PendingSubscriptionAction map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PendingSubscriptionAction(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      rss: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}rss'])!,
+      action: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action'])!,
+      timestamp: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}timestamp'])!,
+    );
+  }
+
+  @override
+  $PendingSubscriptionActionsTable createAlias(String alias) {
+    return $PendingSubscriptionActionsTable(attachedDatabase, alias);
+  }
+}
+
+class PendingSubscriptionAction extends DataClass
+    implements Insertable<PendingSubscriptionAction> {
+  final int id;
+  final String rss;
+  final String action;
+  final DateTime timestamp;
+  const PendingSubscriptionAction(
+      {required this.id,
+      required this.rss,
+      required this.action,
+      required this.timestamp});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['rss'] = Variable<String>(rss);
+    map['action'] = Variable<String>(action);
+    map['timestamp'] = Variable<DateTime>(timestamp);
+    return map;
+  }
+
+  PendingSubscriptionActionsCompanion toCompanion(bool nullToAbsent) {
+    return PendingSubscriptionActionsCompanion(
+      id: Value(id),
+      rss: Value(rss),
+      action: Value(action),
+      timestamp: Value(timestamp),
+    );
+  }
+
+  factory PendingSubscriptionAction.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PendingSubscriptionAction(
+      id: serializer.fromJson<int>(json['id']),
+      rss: serializer.fromJson<String>(json['rss']),
+      action: serializer.fromJson<String>(json['action']),
+      timestamp: serializer.fromJson<DateTime>(json['timestamp']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'rss': serializer.toJson<String>(rss),
+      'action': serializer.toJson<String>(action),
+      'timestamp': serializer.toJson<DateTime>(timestamp),
+    };
+  }
+
+  PendingSubscriptionAction copyWith(
+          {int? id, String? rss, String? action, DateTime? timestamp}) =>
+      PendingSubscriptionAction(
+        id: id ?? this.id,
+        rss: rss ?? this.rss,
+        action: action ?? this.action,
+        timestamp: timestamp ?? this.timestamp,
+      );
+  PendingSubscriptionAction copyWithCompanion(
+      PendingSubscriptionActionsCompanion data) {
+    return PendingSubscriptionAction(
+      id: data.id.present ? data.id.value : this.id,
+      rss: data.rss.present ? data.rss.value : this.rss,
+      action: data.action.present ? data.action.value : this.action,
+      timestamp: data.timestamp.present ? data.timestamp.value : this.timestamp,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingSubscriptionAction(')
+          ..write('id: $id, ')
+          ..write('rss: $rss, ')
+          ..write('action: $action, ')
+          ..write('timestamp: $timestamp')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, rss, action, timestamp);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PendingSubscriptionAction &&
+          other.id == this.id &&
+          other.rss == this.rss &&
+          other.action == this.action &&
+          other.timestamp == this.timestamp);
+}
+
+class PendingSubscriptionActionsCompanion
+    extends UpdateCompanion<PendingSubscriptionAction> {
+  final Value<int> id;
+  final Value<String> rss;
+  final Value<String> action;
+  final Value<DateTime> timestamp;
+  const PendingSubscriptionActionsCompanion({
+    this.id = const Value.absent(),
+    this.rss = const Value.absent(),
+    this.action = const Value.absent(),
+    this.timestamp = const Value.absent(),
+  });
+  PendingSubscriptionActionsCompanion.insert({
+    this.id = const Value.absent(),
+    required String rss,
+    required String action,
+    required DateTime timestamp,
+  })  : rss = Value(rss),
+        action = Value(action),
+        timestamp = Value(timestamp);
+  static Insertable<PendingSubscriptionAction> custom({
+    Expression<int>? id,
+    Expression<String>? rss,
+    Expression<String>? action,
+    Expression<DateTime>? timestamp,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (rss != null) 'rss': rss,
+      if (action != null) 'action': action,
+      if (timestamp != null) 'timestamp': timestamp,
+    });
+  }
+
+  PendingSubscriptionActionsCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? rss,
+      Value<String>? action,
+      Value<DateTime>? timestamp}) {
+    return PendingSubscriptionActionsCompanion(
+      id: id ?? this.id,
+      rss: rss ?? this.rss,
+      action: action ?? this.action,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (rss.present) {
+      map['rss'] = Variable<String>(rss.value);
+    }
+    if (action.present) {
+      map['action'] = Variable<String>(action.value);
+    }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<DateTime>(timestamp.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PendingSubscriptionActionsCompanion(')
+          ..write('id: $id, ')
+          ..write('rss: $rss, ')
+          ..write('action: $action, ')
+          ..write('timestamp: $timestamp')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$PoddrDatabase extends GeneratedDatabase {
   _$PoddrDatabase(QueryExecutor e) : super(e);
   $PoddrDatabaseManager get managers => $PoddrDatabaseManager(this);
@@ -1912,8 +2524,10 @@ abstract class _$PoddrDatabase extends GeneratedDatabase {
   late final $TagsTable tags = $TagsTable(this);
   late final $SubscriptionTagsTable subscriptionTags =
       $SubscriptionTagsTable(this);
-  late final Index idxHistoryListenedAt = Index('idx_history_listened_at',
-      'CREATE INDEX idx_history_listened_at ON listening_history (listened_at)');
+  late final $PendingEpisodeActionsTable pendingEpisodeActions =
+      $PendingEpisodeActionsTable(this);
+  late final $PendingSubscriptionActionsTable pendingSubscriptionActions =
+      $PendingSubscriptionActionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1924,7 +2538,8 @@ abstract class _$PoddrDatabase extends GeneratedDatabase {
         offlineEpisodes,
         tags,
         subscriptionTags,
-        idxHistoryListenedAt
+        pendingEpisodeActions,
+        pendingSubscriptionActions
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -3284,6 +3899,354 @@ typedef $$SubscriptionTagsTableProcessedTableManager = ProcessedTableManager<
     (SubscriptionTag, $$SubscriptionTagsTableReferences),
     SubscriptionTag,
     PrefetchHooks Function({bool subscriptionId, bool tagId})>;
+typedef $$PendingEpisodeActionsTableCreateCompanionBuilder
+    = PendingEpisodeActionsCompanion Function({
+  Value<int> id,
+  required String podcastRss,
+  required String episodeUrl,
+  required String action,
+  Value<int> position,
+  required DateTime timestamp,
+});
+typedef $$PendingEpisodeActionsTableUpdateCompanionBuilder
+    = PendingEpisodeActionsCompanion Function({
+  Value<int> id,
+  Value<String> podcastRss,
+  Value<String> episodeUrl,
+  Value<String> action,
+  Value<int> position,
+  Value<DateTime> timestamp,
+});
+
+class $$PendingEpisodeActionsTableFilterComposer
+    extends Composer<_$PoddrDatabase, $PendingEpisodeActionsTable> {
+  $$PendingEpisodeActionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get podcastRss => $composableBuilder(
+      column: $table.podcastRss, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get episodeUrl => $composableBuilder(
+      column: $table.episodeUrl, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get action => $composableBuilder(
+      column: $table.action, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get position => $composableBuilder(
+      column: $table.position, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get timestamp => $composableBuilder(
+      column: $table.timestamp, builder: (column) => ColumnFilters(column));
+}
+
+class $$PendingEpisodeActionsTableOrderingComposer
+    extends Composer<_$PoddrDatabase, $PendingEpisodeActionsTable> {
+  $$PendingEpisodeActionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get podcastRss => $composableBuilder(
+      column: $table.podcastRss, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get episodeUrl => $composableBuilder(
+      column: $table.episodeUrl, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get action => $composableBuilder(
+      column: $table.action, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get position => $composableBuilder(
+      column: $table.position, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get timestamp => $composableBuilder(
+      column: $table.timestamp, builder: (column) => ColumnOrderings(column));
+}
+
+class $$PendingEpisodeActionsTableAnnotationComposer
+    extends Composer<_$PoddrDatabase, $PendingEpisodeActionsTable> {
+  $$PendingEpisodeActionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get podcastRss => $composableBuilder(
+      column: $table.podcastRss, builder: (column) => column);
+
+  GeneratedColumn<String> get episodeUrl => $composableBuilder(
+      column: $table.episodeUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get action =>
+      $composableBuilder(column: $table.action, builder: (column) => column);
+
+  GeneratedColumn<int> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get timestamp =>
+      $composableBuilder(column: $table.timestamp, builder: (column) => column);
+}
+
+class $$PendingEpisodeActionsTableTableManager extends RootTableManager<
+    _$PoddrDatabase,
+    $PendingEpisodeActionsTable,
+    PendingEpisodeAction,
+    $$PendingEpisodeActionsTableFilterComposer,
+    $$PendingEpisodeActionsTableOrderingComposer,
+    $$PendingEpisodeActionsTableAnnotationComposer,
+    $$PendingEpisodeActionsTableCreateCompanionBuilder,
+    $$PendingEpisodeActionsTableUpdateCompanionBuilder,
+    (
+      PendingEpisodeAction,
+      BaseReferences<_$PoddrDatabase, $PendingEpisodeActionsTable,
+          PendingEpisodeAction>
+    ),
+    PendingEpisodeAction,
+    PrefetchHooks Function()> {
+  $$PendingEpisodeActionsTableTableManager(
+      _$PoddrDatabase db, $PendingEpisodeActionsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PendingEpisodeActionsTableFilterComposer(
+                  $db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PendingEpisodeActionsTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PendingEpisodeActionsTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> podcastRss = const Value.absent(),
+            Value<String> episodeUrl = const Value.absent(),
+            Value<String> action = const Value.absent(),
+            Value<int> position = const Value.absent(),
+            Value<DateTime> timestamp = const Value.absent(),
+          }) =>
+              PendingEpisodeActionsCompanion(
+            id: id,
+            podcastRss: podcastRss,
+            episodeUrl: episodeUrl,
+            action: action,
+            position: position,
+            timestamp: timestamp,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String podcastRss,
+            required String episodeUrl,
+            required String action,
+            Value<int> position = const Value.absent(),
+            required DateTime timestamp,
+          }) =>
+              PendingEpisodeActionsCompanion.insert(
+            id: id,
+            podcastRss: podcastRss,
+            episodeUrl: episodeUrl,
+            action: action,
+            position: position,
+            timestamp: timestamp,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PendingEpisodeActionsTableProcessedTableManager
+    = ProcessedTableManager<
+        _$PoddrDatabase,
+        $PendingEpisodeActionsTable,
+        PendingEpisodeAction,
+        $$PendingEpisodeActionsTableFilterComposer,
+        $$PendingEpisodeActionsTableOrderingComposer,
+        $$PendingEpisodeActionsTableAnnotationComposer,
+        $$PendingEpisodeActionsTableCreateCompanionBuilder,
+        $$PendingEpisodeActionsTableUpdateCompanionBuilder,
+        (
+          PendingEpisodeAction,
+          BaseReferences<_$PoddrDatabase, $PendingEpisodeActionsTable,
+              PendingEpisodeAction>
+        ),
+        PendingEpisodeAction,
+        PrefetchHooks Function()>;
+typedef $$PendingSubscriptionActionsTableCreateCompanionBuilder
+    = PendingSubscriptionActionsCompanion Function({
+  Value<int> id,
+  required String rss,
+  required String action,
+  required DateTime timestamp,
+});
+typedef $$PendingSubscriptionActionsTableUpdateCompanionBuilder
+    = PendingSubscriptionActionsCompanion Function({
+  Value<int> id,
+  Value<String> rss,
+  Value<String> action,
+  Value<DateTime> timestamp,
+});
+
+class $$PendingSubscriptionActionsTableFilterComposer
+    extends Composer<_$PoddrDatabase, $PendingSubscriptionActionsTable> {
+  $$PendingSubscriptionActionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rss => $composableBuilder(
+      column: $table.rss, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get action => $composableBuilder(
+      column: $table.action, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get timestamp => $composableBuilder(
+      column: $table.timestamp, builder: (column) => ColumnFilters(column));
+}
+
+class $$PendingSubscriptionActionsTableOrderingComposer
+    extends Composer<_$PoddrDatabase, $PendingSubscriptionActionsTable> {
+  $$PendingSubscriptionActionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rss => $composableBuilder(
+      column: $table.rss, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get action => $composableBuilder(
+      column: $table.action, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get timestamp => $composableBuilder(
+      column: $table.timestamp, builder: (column) => ColumnOrderings(column));
+}
+
+class $$PendingSubscriptionActionsTableAnnotationComposer
+    extends Composer<_$PoddrDatabase, $PendingSubscriptionActionsTable> {
+  $$PendingSubscriptionActionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get rss =>
+      $composableBuilder(column: $table.rss, builder: (column) => column);
+
+  GeneratedColumn<String> get action =>
+      $composableBuilder(column: $table.action, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get timestamp =>
+      $composableBuilder(column: $table.timestamp, builder: (column) => column);
+}
+
+class $$PendingSubscriptionActionsTableTableManager extends RootTableManager<
+    _$PoddrDatabase,
+    $PendingSubscriptionActionsTable,
+    PendingSubscriptionAction,
+    $$PendingSubscriptionActionsTableFilterComposer,
+    $$PendingSubscriptionActionsTableOrderingComposer,
+    $$PendingSubscriptionActionsTableAnnotationComposer,
+    $$PendingSubscriptionActionsTableCreateCompanionBuilder,
+    $$PendingSubscriptionActionsTableUpdateCompanionBuilder,
+    (
+      PendingSubscriptionAction,
+      BaseReferences<_$PoddrDatabase, $PendingSubscriptionActionsTable,
+          PendingSubscriptionAction>
+    ),
+    PendingSubscriptionAction,
+    PrefetchHooks Function()> {
+  $$PendingSubscriptionActionsTableTableManager(
+      _$PoddrDatabase db, $PendingSubscriptionActionsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PendingSubscriptionActionsTableFilterComposer(
+                  $db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PendingSubscriptionActionsTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PendingSubscriptionActionsTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> rss = const Value.absent(),
+            Value<String> action = const Value.absent(),
+            Value<DateTime> timestamp = const Value.absent(),
+          }) =>
+              PendingSubscriptionActionsCompanion(
+            id: id,
+            rss: rss,
+            action: action,
+            timestamp: timestamp,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String rss,
+            required String action,
+            required DateTime timestamp,
+          }) =>
+              PendingSubscriptionActionsCompanion.insert(
+            id: id,
+            rss: rss,
+            action: action,
+            timestamp: timestamp,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PendingSubscriptionActionsTableProcessedTableManager
+    = ProcessedTableManager<
+        _$PoddrDatabase,
+        $PendingSubscriptionActionsTable,
+        PendingSubscriptionAction,
+        $$PendingSubscriptionActionsTableFilterComposer,
+        $$PendingSubscriptionActionsTableOrderingComposer,
+        $$PendingSubscriptionActionsTableAnnotationComposer,
+        $$PendingSubscriptionActionsTableCreateCompanionBuilder,
+        $$PendingSubscriptionActionsTableUpdateCompanionBuilder,
+        (
+          PendingSubscriptionAction,
+          BaseReferences<_$PoddrDatabase, $PendingSubscriptionActionsTable,
+              PendingSubscriptionAction>
+        ),
+        PendingSubscriptionAction,
+        PrefetchHooks Function()>;
 
 class $PoddrDatabaseManager {
   final _$PoddrDatabase _db;
@@ -3297,4 +4260,10 @@ class $PoddrDatabaseManager {
   $$TagsTableTableManager get tags => $$TagsTableTableManager(_db, _db.tags);
   $$SubscriptionTagsTableTableManager get subscriptionTags =>
       $$SubscriptionTagsTableTableManager(_db, _db.subscriptionTags);
+  $$PendingEpisodeActionsTableTableManager get pendingEpisodeActions =>
+      $$PendingEpisodeActionsTableTableManager(_db, _db.pendingEpisodeActions);
+  $$PendingSubscriptionActionsTableTableManager
+      get pendingSubscriptionActions =>
+          $$PendingSubscriptionActionsTableTableManager(
+              _db, _db.pendingSubscriptionActions);
 }

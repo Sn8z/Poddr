@@ -1,0 +1,24 @@
+class ApiException implements Exception {
+  final String message;
+  ApiException(this.message);
+
+  @override
+  String toString() => 'ApiException: $message';
+}
+
+class UnauthorizedException extends ApiException {
+  UnauthorizedException([String message = 'Unauthorized access']) : super(message);
+}
+
+class NotFoundException extends ApiException {
+  NotFoundException([String message = 'Resource not found']) : super(message);
+}
+
+class ServerErrorException extends ApiException {
+  final int statusCode;
+  ServerErrorException(this.statusCode, [String message = 'Internal server error']) : super(message);
+}
+
+class NetworkException extends ApiException {
+  NetworkException([String message = 'Network communication failure']) : super(message);
+}

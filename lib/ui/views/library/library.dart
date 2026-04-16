@@ -61,11 +61,11 @@ class LibraryView extends StatelessWidget {
                                 padding: const EdgeInsets.all(8.0),
                                 child: PoddrTextInput(
                                   hintText: "Input RSS",
-                                  onFieldSubmitted: (value) {
+                                  onSubmit: (value) {
                                     context
                                         .read<SubscriptionProvider>()
                                         .addSubscription(rss: value);
-                                    Navigator.of(dialogContext).pop();
+                                    context.pop();
                                   },
                                 ),
                               ),

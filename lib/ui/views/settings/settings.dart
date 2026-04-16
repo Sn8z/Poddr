@@ -4,18 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:poddr/models/tag.dart';
 import 'package:poddr/services/opml.dart';
 import 'package:poddr/services/tags.dart';
+
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/ui/components/widgets/color_picker.dart';
+
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/data/theme/theme_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:poddr/ui/views/settings/sync/sync_settings.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -52,6 +55,10 @@ class SettingsView extends StatelessWidget {
             sliverGapH16,
             ContentBox(title: "OPML", children: [
               OpmlSection(),
+            ]),
+            sliverGapH16,
+            ContentBox(title: "gPodder sync", children: [
+              SyncSection(),
             ]),
             sliverGapH16,
             ContentBox(title: "Support", children: [

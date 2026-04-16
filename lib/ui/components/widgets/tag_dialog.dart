@@ -25,6 +25,7 @@ class TagDialog extends StatefulWidget {
 class _TagDialogState extends State<TagDialog> {
   late TextEditingController _nameController;
   late Color _selectedColor;
+  String _error = '';
 
   bool get isEditing => widget.tag != null;
 
@@ -32,9 +33,8 @@ class _TagDialogState extends State<TagDialog> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.tag?.name ?? '');
-    _selectedColor = widget.tag != null
-        ? Color(widget.tag!.color)
-        : _generateRandomColor();
+    _selectedColor =
+        widget.tag != null ? Color(widget.tag!.color) : _generateRandomColor();
   }
 
   Color _generateRandomColor() {
@@ -54,9 +54,7 @@ class _TagDialogState extends State<TagDialog> {
   void _save() {
     final name = _nameController.text.trim();
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tag name cannot be empty')),
-      );
+      setState(() => _error = 'Tag name cannot be empty');
       return;
     }
 
@@ -93,12 +91,16 @@ class _TagDialogState extends State<TagDialog> {
               // Name field
               TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Tag Name',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  errorText: _error.isNotEmpty ? _error : null,
                 ),
                 autofocus: true,
                 textCapitalization: TextCapitalization.words,
+                onChanged: (_) {
+                  if (_error.isNotEmpty) setState(() => _error = '');
+                },
               ),
               const SizedBox(height: 24),
 

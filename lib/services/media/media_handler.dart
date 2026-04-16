@@ -8,6 +8,8 @@ import 'package:poddr/data/media/prefs_media_repository.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/media/media_player.dart';
 
+enum AudioEvent { play, pause, seek, stop, mediaItemChanged }
+
 class PoddrMediaHandler extends BaseAudioHandler
     with QueueHandler, SeekHandler {
   final String logName = "PoddrMediaHandler";
@@ -18,6 +20,10 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   DateTime? _lastPositionSave;
   static const Duration _saveInterval = Duration(seconds: 10);
+
+  final StreamController<AudioEvent> _eventController =
+      StreamController<AudioEvent>.broadcast();
+  Stream<AudioEvent> get events => _eventController.stream;
 
   Stream<double> get volume => _player.player.stream.volume;
 
@@ -123,6 +129,10 @@ class PoddrMediaHandler extends BaseAudioHandler
         error: error,
       );
     });
+  }
+
+  void _emit(AudioEvent event) {
+    _eventController.add(event);
   }
 
   void _handleMediaItemChange(MediaItem? media) {
@@ -271,6 +281,8 @@ class PoddrMediaHandler extends BaseAudioHandler
 
     if (audioUrl == null) return;
 
+    _emit(AudioEvent.mediaItemChanged);
+
     final media = MediaItem(
       id: audioUrl,
       title: episodeTitle ?? "Missing title",
@@ -292,16 +304,29 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   @override
   Future<void> play() async {
+    _emit(AudioEvent.play);
     await _player.play();
   }
 
   @override
   Future<void> pause() async {
+    _emit(AudioEvent.pause);
     await _player.pause();
   }
 
   Future<void> playOrPause() async {
-    await _player.playOrPause();
+    if (playbackState.value.playing) {
+      await pause();
+    } else {
+      await play();
+    }
+  }
+
+  @override
+  Future<void> stop() async {
+    _emit(AudioEvent.stop);
+    await _player.stop();
+    super.stop();
   }
 
   @override
@@ -315,6 +340,7 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   @override
   Future<void> seek(Duration position) async {
+    _emit(AudioEvent.seek);
     await _player.seek(position);
   }
 
@@ -473,14 +499,9 @@ class PoddrMediaHandler extends BaseAudioHandler
     playbackState.add(playbackState.value.copyWith(shuffleMode: shuffleMode));
   }
 
-  @override
-  Future<void> stop() async {
-    await _player.stop();
-    super.stop();
-  }
-
   Future<void> dispose() async {
     log("Disposing media", name: logName);
+    _eventController.close();
     await _player.dispose();
   }
 }

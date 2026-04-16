@@ -4,7 +4,6 @@ import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
 
-@DataClassName('PodcastSubscriptionData')
 class PodcastSubscription extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get rss => text().unique()();
@@ -16,8 +15,6 @@ class PodcastSubscription extends Table {
       dateTime().withDefault(currentDateAndTime)();
 }
 
-@DataClassName('ListeningHistoryData')
-@TableIndex(name: 'idx_history_listened_at', columns: {#listenedAt})
 class ListeningHistory extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get audioUrl => text().unique()();
@@ -63,12 +60,35 @@ class SubscriptionTags extends Table {
   Set<Column> get primaryKey => {subscriptionId, tagId};
 }
 
+class PendingEpisodeActions extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get podcastRss => text()();
+  TextColumn get episodeUrl => text()();
+  TextColumn get action => text()();
+  IntColumn get position => integer().withDefault(const Constant(0))();
+  DateTimeColumn get timestamp => dateTime()();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+        {episodeUrl, action},
+      ];
+}
+
+class PendingSubscriptionActions extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get rss => text().unique()();
+  TextColumn get action => text()();
+  DateTimeColumn get timestamp => dateTime()();
+}
+
 @DriftDatabase(tables: [
   PodcastSubscription,
   ListeningHistory,
   OfflineEpisodes,
   Tags,
-  SubscriptionTags
+  SubscriptionTags,
+  PendingEpisodeActions,
+  PendingSubscriptionActions
 ])
 class PoddrDatabase extends _$PoddrDatabase {
   static PoddrDatabase? _instance;
@@ -81,6 +101,16 @@ class PoddrDatabase extends _$PoddrDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {},
+    );
+  }
 }
 
 QueryExecutor _openConnection() {

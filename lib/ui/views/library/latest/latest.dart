@@ -46,7 +46,7 @@ class LatestEpisodesView extends StatelessWidget {
                         return PoddrTextInput(
                           labelText: "Filter",
                           hintText: "Type to filter episodes...",
-                          onFieldSubmitted: (value) {
+                          onChanged: (value) {
                             viewModel.setFilter(value);
                           },
                           suffixIcon: IconButton(
@@ -68,7 +68,7 @@ class LatestEpisodesView extends StatelessWidget {
                                     PoddrTextInput(
                                       labelText: "Filter",
                                       hintText: "Type to filter episodes...",
-                                      onFieldSubmitted: (value) {
+                                      onSubmit: (value) {
                                         viewModel.setFilter(value);
                                         context.pop();
                                       },
