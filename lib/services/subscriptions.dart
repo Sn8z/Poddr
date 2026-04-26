@@ -6,8 +6,6 @@ import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/data/sync/drift_sync_repository.dart';
 import 'package:poddr/data/sync/sync_repository.dart';
-import 'package:poddr/data/tags/drift_tags_repository.dart';
-import 'package:poddr/data/tags/tags_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
 class SubscriptionProvider extends ChangeNotifier {
@@ -15,7 +13,6 @@ class SubscriptionProvider extends ChangeNotifier {
   final IPodcastRepository _podcastRepository;
   final ISubscriptionRepository _subscriptionRepository;
   final ISyncRepository _syncRepository;
-  final ITagsRepository _tagsRepository;
 
   List<Podcast> _subscriptions = [];
   List<Podcast> get subscriptions => _subscriptions;
@@ -27,12 +24,10 @@ class SubscriptionProvider extends ChangeNotifier {
     IPodcastRepository? podcastRepository,
     ISubscriptionRepository? subscriptionRepository,
     ISyncRepository? syncRepository,
-    ITagsRepository? tagsRepository,
   })  : _podcastRepository = podcastRepository ?? ITunesPodcastRepository(),
         _subscriptionRepository =
             subscriptionRepository ?? DriftSubscriptionRepository(),
-        _syncRepository = syncRepository ?? DriftSyncRepository(),
-        _tagsRepository = tagsRepository ?? DriftTagsRepository() {
+        _syncRepository = syncRepository ?? DriftSyncRepository() {
     _getSubscriptions();
   }
 
@@ -62,20 +57,13 @@ class SubscriptionProvider extends ChangeNotifier {
     try {
       final Podcast podcast = await _podcastRepository.getFeed(rss);
 
-      final subscriptionId = await _subscriptionRepository.addSubscription(
+      await _subscriptionRepository.addSubscription(
         podcast.title,
         rss,
         podcast.description,
         podcast.author,
         podcast.image,
       );
-
-      for (final genre in podcast.tags) {
-        if (genre.isNotEmpty) {
-          final tag = await _tagsRepository.getOrCreate(genre);
-          await _tagsRepository.linkTagToSubscription(tag.id, subscriptionId);
-        }
-      }
 
       if (!fromSync) {
         await _syncRepository.addPendingSubscriptionAction(rss, 'add');
@@ -107,7 +95,6 @@ class SubscriptionProvider extends ChangeNotifier {
         description: podcast.description,
         author: podcast.author,
         image: podcast.image,
-        tags: podcast.tags,
         fromSync: fromSync,
       );
     } catch (error, stackTrace) {
@@ -127,26 +114,16 @@ class SubscriptionProvider extends ChangeNotifier {
     String? description,
     String? author,
     String? image,
-    List<String>? tags,
     bool fromSync = false,
   }) async {
     try {
-      final subscriptionId = await _subscriptionRepository.addSubscription(
+      await _subscriptionRepository.addSubscription(
         title ?? '',
         rss,
         description ?? '',
         author ?? '',
         image ?? '',
       );
-
-      if (tags != null) {
-        for (final genre in tags) {
-          if (genre.isNotEmpty) {
-            final tag = await _tagsRepository.getOrCreate(genre);
-            await _tagsRepository.linkTagToSubscription(tag.id, subscriptionId);
-          }
-        }
-      }
 
       if (!fromSync) {
         await _syncRepository.addPendingSubscriptionAction(rss, 'add');
@@ -169,19 +146,18 @@ class SubscriptionProvider extends ChangeNotifier {
     await _getSubscriptions();
   }
 
+  Future<int?> getSubscriptionId(String rss) async {
+    return await _subscriptionRepository.getSubscriptionIdByRss(rss);
+  }
+
+  Stream<int?> watchSubscriptionId(String rss) {
+    return _subscriptionRepository.watchSubscriptionIdByRss(rss);
+  }
+
   Future<void> removeSubscription(String rss, {bool fromSync = false}) async {
     try {
       log("Removing $rss", name: logName);
-      final subscriptionId =
-          await _subscriptionRepository.getSubscriptionIdByRss(rss);
-      if (subscriptionId != null) {
-        final tags =
-            await _tagsRepository.getTagsForSubscription(subscriptionId);
-        for (final tag in tags) {
-          await _tagsRepository.unlinkTagFromSubscription(
-              tag.id, subscriptionId);
-        }
-      }
+
       await _subscriptionRepository.removeSubscription(rss);
 
       if (!fromSync) {

@@ -14,8 +14,16 @@ class PodcastProvider extends ChangeNotifier {
   String? _currentRss;
   String? get currentRss => _currentRss;
 
-  PodcastProvider({IPodcastRepository? podcastRepository})
-      : _podcastRepository = podcastRepository ?? ITunesPodcastRepository();
+  PodcastProvider({
+    IPodcastRepository? podcastRepository,
+    String? initialRss,
+  }) : _podcastRepository = podcastRepository ?? ITunesPodcastRepository() {
+    if (initialRss != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        getPodcast(initialRss);
+      });
+    }
+  }
 
   Future<void> getPodcast(String rss) async {
     if (_currentRss == rss) return;

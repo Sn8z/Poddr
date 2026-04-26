@@ -44,20 +44,20 @@ class OfflineEpisodes extends Table {
       dateTime().withDefault(currentDateAndTime)();
 }
 
-class Tags extends Table {
+class Collections extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text().unique()();
   IntColumn get color => integer()();
 }
 
-class SubscriptionTags extends Table {
+class SubscriptionCollections extends Table {
   IntColumn get subscriptionId => integer()
       .references(PodcastSubscription, #id, onDelete: KeyAction.cascade)();
-  IntColumn get tagId =>
-      integer().references(Tags, #id, onDelete: KeyAction.cascade)();
+  IntColumn get collectionId =>
+      integer().references(Collections, #id, onDelete: KeyAction.cascade)();
 
   @override
-  Set<Column> get primaryKey => {subscriptionId, tagId};
+  Set<Column> get primaryKey => {subscriptionId, collectionId};
 }
 
 class PendingEpisodeActions extends Table {
@@ -85,8 +85,8 @@ class PendingSubscriptionActions extends Table {
   PodcastSubscription,
   ListeningHistory,
   OfflineEpisodes,
-  Tags,
-  SubscriptionTags,
+  Collections,
+  SubscriptionCollections,
   PendingEpisodeActions,
   PendingSubscriptionActions
 ])

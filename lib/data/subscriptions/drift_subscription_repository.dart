@@ -59,4 +59,12 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
         .getSingleOrNull();
     return result?.id;
   }
+
+  @override
+  Stream<int?> watchSubscriptionIdByRss(String rss) {
+    return (database.select(database.podcastSubscription)
+          ..where((sub) => sub.rss.equals(rss)))
+        .watchSingleOrNull()
+        .map((row) => row?.id);
+  }
 }

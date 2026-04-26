@@ -1,20 +1,20 @@
-class PodcastTag {
+class PodcastCollection {
   final int id;
   final String name;
   final int color;
 
-  const PodcastTag({
+  const PodcastCollection({
     required this.id,
     required this.name,
     required this.color,
   });
 
-  PodcastTag copyWith({
+  PodcastCollection copyWith({
     int? id,
     String? name,
     int? color,
   }) {
-    return PodcastTag(
+    return PodcastCollection(
       id: id ?? this.id,
       name: name ?? this.name,
       color: color ?? this.color,

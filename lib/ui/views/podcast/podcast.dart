@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/models/episode.dart';
+import 'package:poddr/models/collection.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
+import 'package:poddr/ui/components/widgets/collections_display.dart';
+import 'package:poddr/ui/components/widgets/collection_link_button.dart';
+import 'package:poddr/services/collections.dart';
+import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
@@ -11,7 +16,6 @@ import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/sliver_box.dart';
-import 'package:poddr/ui/components/widgets/tag.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/podcast.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
@@ -27,13 +31,9 @@ class PodcastDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PodcastProvider(),
+      create: (context) => PodcastProvider(initialRss: rss),
       builder: (context, child) {
         final podcastProvider = context.watch<PodcastProvider>();
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          podcastProvider.getPodcast(rss);
-        });
 
         return Scaffold(
           body: Padding(
@@ -169,13 +169,14 @@ class PodcastDetailsView extends StatelessWidget {
                                                         .podcast?.title ??
                                                     "",
                                                 style: TextStyle(
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    fontSize: 56,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  fontSize: 56,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                ),
                                               ),
                                               gapH8,
                                               Text(
@@ -204,18 +205,6 @@ class PodcastDetailsView extends StatelessWidget {
                                                       .colorScheme
                                                       .secondary,
                                                 ),
-                                              ),
-                                              gapH16,
-                                              Row(
-                                                children: podcastProvider
-                                                        .podcast?.tags
-                                                        .map((e) => PoddrTag(
-                                                              title: e,
-                                                              color:
-                                                                  Colors.grey,
-                                                            ))
-                                                        .toList() ??
-                                                    [],
                                               ),
                                             ],
                                           ),
@@ -287,6 +276,44 @@ class PodcastDetailsView extends StatelessWidget {
                       },
                     ),
                   ],
+                ),
+                SliverToBoxAdapter(
+                  child: StreamBuilder<int?>(
+                    stream: context
+                        .read<SubscriptionProvider>()
+                        .watchSubscriptionId(rss),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting &&
+                          !snapshot.hasData) {
+                        return const SizedBox.shrink();
+                      }
+                      final subscriptionId = snapshot.data;
+                      if (subscriptionId == null) {
+                        return const SizedBox.shrink();
+                      }
+                      return StreamBuilder<List<PodcastCollection>>(
+                        stream: context
+                            .read<CollectionsProvider>()
+                            .watchCollectionsForSubscription(subscriptionId),
+                        builder: (context, colSnapshot) {
+                          final collections = colSnapshot.data ?? [];
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: PoddrCollectionsDisplay(collections: collections),
+                                ),
+                                gapW8,
+                                PoddrCollectionLinkButton(subscriptionId: subscriptionId),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
                 sliverGapH8,
                 if (podcastProvider.isLoading)
@@ -390,7 +417,7 @@ class Episode extends StatelessWidget {
             context.read<MediaProvider>().addToQueue(
                   audioUrl: episode.audioUrl,
                   episodeTitle: episode.title,
-                  podcastTitle: episode.title,
+                  podcastTitle: episode.podcastTitle,
                   podcastRSS: podcastProvider.podcast!.rss ?? "Missing RSS",
                   description: episode.description,
                   artUri: podcastProvider.podcast!.image,

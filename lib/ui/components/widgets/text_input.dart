@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -6,6 +5,7 @@ class PoddrTextInput extends StatelessWidget {
   const PoddrTextInput({
     super.key,
     this.initialValue,
+    this.controller,
     this.onChanged,
     this.onSubmit,
     this.prefixIcon,
@@ -18,6 +18,7 @@ class PoddrTextInput extends StatelessWidget {
   });
 
   final String? initialValue;
+  final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmit;
   final String? labelText;
@@ -38,7 +39,8 @@ class PoddrTextInput extends StatelessWidget {
             DoNothingAndStopPropagationTextIntent(),
       },
       child: TextFormField(
-        initialValue: initialValue,
+        initialValue: controller == null ? initialValue : null,
+        controller: controller,
         onChanged: onChanged,
         onFieldSubmitted: onSubmit,
         style: TextStyle(color: colorScheme.onSurface),

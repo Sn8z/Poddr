@@ -11,7 +11,6 @@ class Podcast {
   final String? language;
   final String? copyright;
   final bool explicit;
-  final List<String> tags;
   final List<PodcastEpisode> episodes;
 
   Podcast({
@@ -24,7 +23,6 @@ class Podcast {
     this.language,
     this.copyright,
     this.explicit = false,
-    this.tags = const [],
     this.episodes = const [],
   });
 
@@ -47,7 +45,6 @@ class Podcast {
       copyright: _parseCopyright(channel),
       explicit: _parseExplicit(channel),
       rss: rss,
-      tags: _parseGenres(channel),
       episodes: channel
           .findElements('item')
           .map(
@@ -67,7 +64,7 @@ class Podcast {
 
   @override
   String toString() {
-    return 'Podcast{title: $title, description: $description, image: $image, author: $author, rss: $rss, link: $link, language: $language, copyright: $copyright, explicit: $explicit, tags: $tags,}';
+    return 'Podcast{title: $title, description: $description, image: $image, author: $author, rss: $rss, link: $link, language: $language, copyright: $copyright, explicit: $explicit}';
   }
 }
 
@@ -115,32 +112,6 @@ String? _parseLanguage(XmlElement channel) {
 String? _parseCopyright(XmlElement channel) {
   final copyright = channel.findElements('copyright').firstOrNull;
   return copyright?.innerText.trim();
-}
-
-List<String> _parseGenres(XmlElement channel) {
-  final tags = <String>{};
-
-  for (var category in channel.findElements('itunes:category')) {
-    final mainCategory = category.getAttribute('text');
-    if (mainCategory != null) {
-      tags.add(mainCategory);
-    }
-
-    for (var subCategory in category.findElements('itunes:category')) {
-      final subCategoryText = subCategory.getAttribute('text');
-      if (subCategoryText != null) {
-        tags.add(subCategoryText);
-      }
-    }
-  }
-
-  for (var category in channel.findElements('category')) {
-    final categoryText = category.innerText;
-    if (categoryText.isNotEmpty) {
-      tags.add(categoryText);
-    }
-  }
-  return tags.toList();
 }
 
 bool _parseExplicit(XmlElement channel) {
