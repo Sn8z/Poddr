@@ -16,14 +16,23 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   late final PoddrMediaPlayer _player = PoddrMediaPlayer();
 
-  AudioHandler? _audioHandler;
-
   DateTime? _lastPositionSave;
   static const Duration _saveInterval = Duration(seconds: 10);
 
   final StreamController<AudioEvent> _eventController =
       StreamController<AudioEvent>.broadcast();
   Stream<AudioEvent> get events => _eventController.stream;
+
+  late final StreamSubscription<MediaItem?> _mediaItemSub;
+  late final StreamSubscription<bool> _playingSub;
+  late final StreamSubscription<bool> _completedSub;
+  late final StreamSubscription<Duration> _positionSub;
+  late final StreamSubscription<Duration> _durationSub;
+  late final StreamSubscription<Duration> _bufferSub;
+  late final StreamSubscription<double> _rateSub;
+  late final StreamSubscription<bool> _bufferingSub;
+  late final StreamSubscription<double> _volumeSub;
+  late final StreamSubscription<String> _errorSub;
 
   Stream<double> get volume => _player.player.stream.volume;
 
@@ -57,10 +66,10 @@ class PoddrMediaHandler extends BaseAudioHandler
         volume: await _mediaRepository.getVolume(),
       );
 
-      final id = await _mediaRepository.getId();
-      if (id.isNotEmpty) {
+      final audioUrl = await _mediaRepository.getAudioUrl();
+      if (audioUrl.isNotEmpty) {
         loadMedia(
-          audioUrl: await _mediaRepository.getId(),
+          audioUrl: await _mediaRepository.getAudioUrl(),
           episodeTitle: await _mediaRepository.getEpisodeTitle(),
           podcastTitle: await _mediaRepository.getPodcastTitle(),
           podcastRSS: await _mediaRepository.getRSS(),
@@ -84,7 +93,7 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   Future<void> _initAudioSession() async {
     final AudioSession audioSession = await AudioSession.instance;
-    await audioSession.configure(const AudioSessionConfiguration.speech());
+    await audioSession.configure(const AudioSessionConfiguration.music());
     audioSession.setActive(true);
 
     audioSession.becomingNoisyEventStream.listen((_) {
@@ -97,7 +106,7 @@ class PoddrMediaHandler extends BaseAudioHandler
       log('Devices removed: ${event.devicesRemoved}', name: logName);
     });
 
-    _audioHandler ??= await AudioService.init(
+    await AudioService.init(
       builder: () => this,
       config: const AudioServiceConfig(
         androidNotificationChannelName: "Poddr",
@@ -110,19 +119,19 @@ class PoddrMediaHandler extends BaseAudioHandler
   }
 
   void _initListeners() {
-    mediaItem.listen(_handleMediaItemChange);
+    _mediaItemSub = mediaItem.listen(_handleMediaItemChange);
 
     final player = _player.player;
-    player.stream.playing.listen(_handlePlayingState);
-    player.stream.completed.listen(_handleCompletion);
-    player.stream.position.listen(_handlePositionChange);
-    player.stream.duration.listen(_handleDurationChange);
-    player.stream.buffer.listen(_handleBufferChange);
-    player.stream.rate.listen(_handleRateChange);
-    player.stream.buffering.listen(_handleBufferingState);
-    player.stream.volume.listen(_handleVolumeChange);
+    _playingSub = player.stream.playing.listen(_handlePlayingState);
+    _completedSub = player.stream.completed.listen(_handleCompletion);
+    _positionSub = player.stream.position.listen(_handlePositionChange);
+    _durationSub = player.stream.duration.listen(_handleDurationChange);
+    _bufferSub = player.stream.buffer.listen(_handleBufferChange);
+    _rateSub = player.stream.rate.listen(_handleRateChange);
+    _bufferingSub = player.stream.buffering.listen(_handleBufferingState);
+    _volumeSub = player.stream.volume.listen(_handleVolumeChange);
 
-    player.stream.error.listen((String error) {
+    _errorSub = player.stream.error.listen((String error) {
       log(
         error,
         name: logName,
@@ -137,7 +146,7 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   void _handleMediaItemChange(MediaItem? media) {
     if (media == null || media.id.isEmpty) return;
-    _mediaRepository.setId(media.id);
+    _mediaRepository.setAudioUrl(media.id);
     _mediaRepository.setEpisodeTitle(media.title);
     _mediaRepository.setPodcastTitle(media.artist ?? "");
     _mediaRepository.setRSS(media.extras?["podcastRSS"] ?? "");
@@ -177,7 +186,7 @@ class PoddrMediaHandler extends BaseAudioHandler
           log("Repeat one: restarting current track", name: logName);
           seek(Duration.zero);
           play();
-          break;
+          return;
 
         case AudioServiceRepeatMode.all:
           if (_mediaQueue.isNotEmpty) {
@@ -188,6 +197,7 @@ class PoddrMediaHandler extends BaseAudioHandler
               log("Repeat all: playing next track", name: logName);
               skipToNext();
             }
+            return;
           }
           break;
 
@@ -195,6 +205,7 @@ class PoddrMediaHandler extends BaseAudioHandler
           if (_currentIndex < _mediaQueue.length - 1) {
             log("No repeat: playing next track", name: logName);
             skipToNext();
+            return;
           } else {
             log("No repeat: queue completed, stopping", name: logName);
             pause();
@@ -350,6 +361,10 @@ class PoddrMediaHandler extends BaseAudioHandler
 
     final queueLength = _mediaQueue.length;
     if (_isShuffling) {
+      if (queueLength <= 1) {
+        log("No items to shuffle", name: logName);
+        return;
+      }
       int newIndex;
       do {
         newIndex = Random().nextInt(queueLength);
@@ -358,11 +373,7 @@ class PoddrMediaHandler extends BaseAudioHandler
       await skipToQueueItem(newIndex);
     } else if (_currentIndex < queueLength - 1) {
       final nextIndex = _currentIndex + 1;
-      if (nextIndex > queueLength - 1) {
-        await skipToQueueItem(0);
-      } else {
-        await skipToQueueItem(nextIndex);
-      }
+      await skipToQueueItem(nextIndex);
     } else {
       log("No next item in queue", name: logName);
       await _player.pause();
@@ -482,6 +493,16 @@ class PoddrMediaHandler extends BaseAudioHandler
   }
 
   @override
+  Future<void> removeQueueItem(MediaItem mediaItem) async {
+    final index = _mediaQueue.indexOf(mediaItem);
+    if (index == -1) {
+      log("Item not found in queue", name: logName);
+      return;
+    }
+    await removeQueueItemAt(index);
+  }
+
+  @override
   Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) async {
     log("Setting repeat mode: $repeatMode", name: logName);
 
@@ -499,8 +520,25 @@ class PoddrMediaHandler extends BaseAudioHandler
     playbackState.add(playbackState.value.copyWith(shuffleMode: shuffleMode));
   }
 
+  @override
+  Future<void> onTaskRemoved() async {
+    log("Task removed, saving position", name: logName);
+    _mediaRepository.setPosition(playbackState.value.updatePosition);
+    await stop();
+  }
+
   Future<void> dispose() async {
     log("Disposing media", name: logName);
+    await _mediaItemSub.cancel();
+    await _playingSub.cancel();
+    await _completedSub.cancel();
+    await _positionSub.cancel();
+    await _durationSub.cancel();
+    await _bufferSub.cancel();
+    await _rateSub.cancel();
+    await _bufferingSub.cancel();
+    await _volumeSub.cancel();
+    await _errorSub.cancel();
     _eventController.close();
     await _player.dispose();
   }

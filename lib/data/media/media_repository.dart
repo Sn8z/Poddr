@@ -8,8 +8,8 @@ abstract class IMediaRepository {
   Future<void> setPosition(Duration position);
   Future<Duration> getPosition();
 
-  Future<void> setId(String id);
-  Future<String> getId();
+  Future<void> setAudioUrl(String url);
+  Future<String> getAudioUrl();
 
   Future<void> setRSS(String rss);
   Future<String> getRSS();

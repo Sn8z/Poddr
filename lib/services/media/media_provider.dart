@@ -55,7 +55,6 @@ class MediaProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  int _lastPositionSeconds = 0;
   String _lastAudioUrl = "";
   DateTime? _lastProgressSave;
 
@@ -63,6 +62,12 @@ class MediaProvider extends ChangeNotifier {
   bool get canGoNext =>
       _mediaHandler.currentIndex < _mediaHandler.mediaQueue.length - 1;
   bool get canGoPrevious => _mediaHandler.currentIndex > 0;
+
+  late final StreamSubscription<MediaItem?> _mediaItemSub;
+  late final StreamSubscription<AudioEvent> _eventsSub;
+  late final StreamSubscription<PlaybackState> _playbackStateSub;
+  late final StreamSubscription<double> _volumeSub;
+  late final StreamSubscription<List<MediaItem>> _queueSub;
 
   MediaProvider() {
     _initMediaListeners();
@@ -76,7 +81,7 @@ class MediaProvider extends ChangeNotifier {
   }
 
   void _initMediaListeners() async {
-    _mediaHandler.mediaItem.listen((mediaItem) {
+    _mediaItemSub = _mediaHandler.mediaItem.listen((mediaItem) {
       if (mediaItem == null) return;
 
       _lastAudioUrl = mediaItem.id;
@@ -90,7 +95,7 @@ class MediaProvider extends ChangeNotifier {
       notifyListeners();
     });
 
-    _mediaHandler.events.listen((event) {
+    _eventsSub = _mediaHandler.events.listen((event) {
       switch (event) {
         case AudioEvent.pause:
         case AudioEvent.stop:
@@ -110,13 +115,12 @@ class MediaProvider extends ChangeNotifier {
       }
     });
 
-    _mediaHandler.playbackState.listen((state) {
+    _playbackStateSub = _mediaHandler.playbackState.listen((state) {
       _isPlaying = state.playing;
       _position = state.updatePosition;
       _bufferedPosition = state.bufferedPosition;
       _isLoading = state.processingState == AudioProcessingState.loading ||
           state.processingState == AudioProcessingState.buffering;
-      _lastPositionSeconds = _position.inSeconds;
       notifyListeners();
 
       // Periodic progress save while playing (debounced, no timer)
@@ -130,14 +134,24 @@ class MediaProvider extends ChangeNotifier {
       }
     });
 
-    _mediaHandler.volume.listen((volume) {
+    _volumeSub = _mediaHandler.volume.listen((volume) {
       _volume = volume;
       notifyListeners();
     });
 
-    _mediaHandler.queue.listen((queue) {
+    _queueSub = _mediaHandler.queue.listen((queue) {
       notifyListeners();
     });
+  }
+
+  @override
+  void dispose() {
+    _mediaItemSub.cancel();
+    _eventsSub.cancel();
+    _playbackStateSub.cancel();
+    _volumeSub.cancel();
+    _queueSub.cancel();
+    super.dispose();
   }
 
   void play() async => await _mediaHandler.play();

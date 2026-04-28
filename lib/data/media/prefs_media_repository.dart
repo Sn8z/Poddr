@@ -57,19 +57,19 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   }
 
   @override
-  Future<void> setId(String id) async {
+  Future<void> setAudioUrl(String url) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving id: $id", name: logName);
-    prefs.setString("id", id);
+    log("Saving audio url: $url", name: logName);
+    prefs.setString("audioUrl", url);
   }
 
   @override
-  Future<String> getId() async {
+  Future<String> getAudioUrl() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final String id = prefs.getString("id") ?? "";
-    log("Loading id $id", name: logName);
-    return id;
+    final String url = prefs.getString("audioUrl") ?? "";
+    log("Loading audio url $url", name: logName);
+    return url;
   }
 
   @override
