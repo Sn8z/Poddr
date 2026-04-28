@@ -7,8 +7,8 @@ import 'package:poddr/models/podcast.dart';
 import 'package:poddr/data/itunes_countries.dart';
 import 'package:poddr/data/itunes_genres.dart';
 
-class PodcastDiscoveryProvider extends ChangeNotifier {
-  static const String logName = "PodcastDiscoveryProvider";
+class DiscoverViewModel extends ChangeNotifier {
+  static const String logName = "DiscoverViewModel";
 
   final IPodcastRepository _podcastRepository;
   final ISettingsRepository _settingsRepository =
@@ -43,13 +43,13 @@ class PodcastDiscoveryProvider extends ChangeNotifier {
 
   List<Podcast> charts = [];
 
-  PodcastDiscoveryProvider({IPodcastRepository? podcastRepository})
+  DiscoverViewModel({IPodcastRepository? podcastRepository})
       : _podcastRepository = podcastRepository ?? ITunesPodcastRepository() {
     _init();
   }
 
   Future<void> _init() async {
-    log("Initializing PodcastDiscoveryProvider", name: logName);
+    log("Initializing DiscoverViewModel", name: logName);
     _countryCode = await _settingsRepository.getCountryCode();
     _genreID = await _settingsRepository.getGenreID();
     await getCharts();

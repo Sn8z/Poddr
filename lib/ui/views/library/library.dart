@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/models/podcast.dart';
+import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
-import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/utils/gaps.dart';
+import 'package:poddr/ui/views/library/library_view_model.dart';
 import 'package:provider/provider.dart';
 
 class LibraryView extends StatelessWidget {
@@ -17,9 +18,16 @@ class LibraryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final subscriptionProvider = context.watch<SubscriptionProvider>();
+    return ChangeNotifierProxyProvider<SubscriptionProvider, LibraryViewModel>(
+      create: (context) => LibraryViewModel(
+        context.read<SubscriptionProvider>(),
+      ),
+      update: (_, subscription, previous) =>
+          previous ?? LibraryViewModel(subscription),
+      builder: (context, child) {
+        final viewModel = context.watch<LibraryViewModel>();
 
-    return Scaffold(
+        return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: CustomScrollView(
@@ -61,12 +69,12 @@ class LibraryView extends StatelessWidget {
                                 padding: const EdgeInsets.all(8.0),
                                 child: PoddrTextInput(
                                   hintText: "Input RSS",
-                                  onSubmit: (value) {
-                                    context
-                                        .read<SubscriptionProvider>()
-                                        .addSubscription(rss: value);
-                                    context.pop();
-                                  },
+                                      onSubmit: (value) {
+                                        context
+                                            .read<LibraryViewModel>()
+                                            .addSubscription(rss: value);
+                                        context.pop();
+                                      },
                                 ),
                               ),
                             ],
@@ -77,7 +85,7 @@ class LibraryView extends StatelessWidget {
               ],
             ),
             sliverGapH16,
-            if (subscriptionProvider.isLoading) ...[
+            if (viewModel.isLoading) ...[
               const SliverToBoxAdapter(
                 child: Center(
                   child: CircularProgressIndicator(),
@@ -88,7 +96,7 @@ class LibraryView extends StatelessWidget {
                   height: 100,
                 ),
               ),
-            ] else if (subscriptionProvider.subscriptions.isEmpty) ...[
+            ] else if (viewModel.subscriptions.isEmpty) ...[
               const SliverToBoxAdapter(
                 child: Center(
                   child: Text('Your library is empty'),
@@ -97,10 +105,10 @@ class LibraryView extends StatelessWidget {
             ] else ...[
               PoddrSliverBox(
                 sliver: SliverList.builder(
-                  itemCount: subscriptionProvider.subscriptions.length,
+                  itemCount: viewModel.subscriptions.length,
                   itemBuilder: (context, index) {
                     final Podcast podcast =
-                        subscriptionProvider.subscriptions[index];
+                        viewModel.subscriptions[index];
                     return PoddrListItem(
                       title: podcast.title ?? 'Missing Title',
                       subtitle: podcast.author ?? 'Missing Author',
@@ -133,6 +141,8 @@ class LibraryView extends StatelessWidget {
           ],
         ),
       ),
+    );
+      },
     );
   }
 }

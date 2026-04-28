@@ -6,6 +6,7 @@ import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/data/sync/drift_sync_repository.dart';
 import 'package:poddr/data/sync/sync_repository.dart';
+import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/podcast.dart';
 
 class SubscriptionProvider extends ChangeNotifier {
@@ -19,6 +20,14 @@ class SubscriptionProvider extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  static const int _maxEpisodes = 50;
+  List<PodcastEpisode> _latestEpisodes = [];
+  List<PodcastEpisode> get latestEpisodes => _latestEpisodes;
+
+  Set<String> _loadedFeeds = {};
+  bool _isLoadingLatest = false;
+  bool get isLoadingLatest => _isLoadingLatest;
 
   SubscriptionProvider({
     IPodcastRepository? podcastRepository,
@@ -37,6 +46,7 @@ class SubscriptionProvider extends ChangeNotifier {
       notifyListeners();
 
       _subscriptions = await _subscriptionRepository.getSubscriptions();
+      await _updateLatestEpisodes();
     } catch (error, stackTrace) {
       log(
         error.toString(),
@@ -176,4 +186,73 @@ class SubscriptionProvider extends ChangeNotifier {
       log("Finished removing $rss", name: logName);
     }
   }
+
+  Future<void> _updateLatestEpisodes() async {
+    final newSubs = _subscriptions;
+    final newRssSet = newSubs.map((p) => p.rss).whereType<String>().toSet();
+
+    if (newRssSet.isEmpty && _loadedFeeds.isNotEmpty) {
+      _latestEpisodes = [];
+      _loadedFeeds = {};
+      notifyListeners();
+      return;
+    }
+
+    final added = newRssSet.difference(_loadedFeeds);
+    final removed = _loadedFeeds.difference(newRssSet);
+
+    if (added.isEmpty && removed.isEmpty) return;
+
+    _isLoadingLatest = true;
+    notifyListeners();
+
+    if (removed.isNotEmpty) {
+      _latestEpisodes.removeWhere((ep) => removed.contains(ep.podcastRSS));
+      _loadedFeeds.removeAll(removed);
+    }
+
+    final results = await Future.wait(
+      added.map((rss) => _fetchFeed(rss)),
+    );
+
+    for (final result in results) {
+      if (result != null) {
+        _latestEpisodes.addAll(result.episodes);
+        _loadedFeeds.add(result.rss);
+      }
+    }
+
+    _sortAndLimit();
+
+    _isLoadingLatest = false;
+    notifyListeners();
+  }
+
+  Future<_FeedResult?> _fetchFeed(String rss) async {
+    try {
+      final fullPodcast = await _podcastRepository.getFeed(rss);
+      return _FeedResult(rss, fullPodcast.episodes);
+    } catch (e, st) {
+      log("Failed to fetch $rss", name: logName, error: e, stackTrace: st);
+      return null;
+    }
+  }
+
+  void _sortAndLimit() {
+    _latestEpisodes.sort((a, b) {
+      final dateA = a.publicationDate ?? DateTime.fromMillisecondsSinceEpoch(0);
+      final dateB = b.publicationDate ?? DateTime.fromMillisecondsSinceEpoch(0);
+      return dateB.compareTo(dateA);
+    });
+
+    if (_latestEpisodes.length > _maxEpisodes) {
+      _latestEpisodes = _latestEpisodes.take(_maxEpisodes).toList();
+    }
+  }
+}
+
+class _FeedResult {
+  final String rss;
+  final List<PodcastEpisode> episodes;
+  _FeedResult(this.rss, this.episodes);
 }

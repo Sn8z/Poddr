@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 // views
-import 'package:poddr/ui/views/base.dart';
+import 'package:poddr/ui/layouts/base.dart';
 import 'package:poddr/ui/views/player/player.dart';
-import 'package:poddr/ui/views/podcast/discover.dart';
+import 'package:poddr/ui/views/discover/discover.dart';
 import 'package:poddr/ui/views/podcast/podcast.dart';
 import 'package:poddr/ui/views/library/library.dart';
-import 'package:poddr/ui/views/library/downloads.dart';
+import 'package:poddr/ui/views/library/downloads/downloads.dart';
 import 'package:poddr/ui/views/library/latest/latest.dart';
 import 'package:poddr/ui/views/search/search.dart';
 import 'package:poddr/ui/views/settings/settings.dart';

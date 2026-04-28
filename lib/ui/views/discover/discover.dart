@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/services/history.dart';
-import 'package:poddr/services/latest_episodes.dart';
 import 'package:poddr/services/media/media_provider.dart';
+import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
-import 'package:poddr/services/podcast_discovery.dart';
+import 'package:poddr/ui/views/discover/discover_view_model.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
@@ -26,7 +26,7 @@ class PodcastDiscoveryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => PodcastDiscoveryProvider(),
+      create: (_) => DiscoverViewModel(),
       builder: (context, child) {
         return Scaffold(
           body: Padding(
@@ -40,10 +40,10 @@ class PodcastDiscoveryView extends StatelessWidget {
                   actions: [
                     IconButton(
                       icon: Text(
-                          context.watch<PodcastDiscoveryProvider>().country),
+                          context.watch<DiscoverViewModel>().country),
                       onPressed: () {
                         final discoveryProvider =
-                            context.read<PodcastDiscoveryProvider>();
+                            context.read<DiscoverViewModel>();
 
                         showDialog(
                           context: context,
@@ -67,10 +67,10 @@ class PodcastDiscoveryView extends StatelessWidget {
                     ),
                     IconButton(
                       icon:
-                          Text(context.watch<PodcastDiscoveryProvider>().genre),
+                           Text(context.watch<DiscoverViewModel>().genre),
                       onPressed: () {
                         final discoveryProvider =
-                            context.read<PodcastDiscoveryProvider>();
+                            context.read<DiscoverViewModel>();
 
                         showDialog(
                           context: context,
@@ -114,7 +114,7 @@ class LatestEpisodes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final latestEpisodesProvider = context.watch<LatestEpisodesProvider>();
+    final subscriptionProvider = context.watch<SubscriptionProvider>();
 
     return ContentBox(
       title: "Latest episodes",
@@ -127,7 +127,7 @@ class LatestEpisodes extends StatelessWidget {
         ),
       ],
       children: [
-        if (latestEpisodesProvider.isLoading)
+        if (subscriptionProvider.isLoadingLatest)
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -145,7 +145,7 @@ class LatestEpisodes extends StatelessWidget {
               ),
             ),
           )
-        else if (latestEpisodesProvider.episodes.isEmpty)
+        else if (subscriptionProvider.latestEpisodes.isEmpty)
           Text(
             "No episodes available",
             style: TextStyle(
@@ -158,7 +158,8 @@ class LatestEpisodes extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: latestEpisodesProvider.episodes.take(10).map((episode) {
+              children:
+                  subscriptionProvider.latestEpisodes.take(10).map((episode) {
                 return PoddrGridItem(
                   width: 200,
                   height: 140,
@@ -276,7 +277,7 @@ class TrendingPodcasts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final charts = context.watch<PodcastDiscoveryProvider>();
+                  final charts = context.watch<DiscoverViewModel>();
 
     final isMobile =
         MediaQuery.of(context).size.width < Breakpoints.mobileScreen;

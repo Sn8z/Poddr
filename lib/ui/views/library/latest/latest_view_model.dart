@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:poddr/models/episode.dart';
-import 'package:poddr/services/latest_episodes.dart';
+import 'package:poddr/services/subscriptions.dart';
 
 enum EpisodeSortField {
   publicationDate('Publication Date'),
@@ -20,7 +20,7 @@ enum SortDirection {
 }
 
 class LatestEpisodesViewModel extends ChangeNotifier {
-  final LatestEpisodesProvider _source;
+  final SubscriptionProvider _source;
 
   String _filter = '';
   String get filter => _filter;
@@ -36,7 +36,7 @@ class LatestEpisodesViewModel extends ChangeNotifier {
   }
 
   List<PodcastEpisode> get episodes {
-    var list = List<PodcastEpisode>.from(_source.episodes);
+    var list = List<PodcastEpisode>.from(_source.latestEpisodes);
 
     if (_filter.isNotEmpty) {
       final q = _filter.toLowerCase();

@@ -17,7 +17,7 @@ import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/services/media/media_provider.dart';
-import 'package:poddr/services/podcast.dart';
+import 'package:poddr/ui/views/podcast/podcast_view_model.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
@@ -31,9 +31,9 @@ class PodcastDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PodcastProvider(initialRss: rss),
+      create: (context) => PodcastViewModel(initialRss: rss),
       builder: (context, child) {
-        final podcastProvider = context.watch<PodcastProvider>();
+        final podcastProvider = context.watch<PodcastViewModel>();
 
         return Scaffold(
           body: Padding(
@@ -359,7 +359,7 @@ class Episode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final podcastProvider = context.read<PodcastProvider>();
+    final podcastProvider = context.read<PodcastViewModel>();
 
     final isCurrentEpisode =
         context.select<MediaProvider, bool>((mediaProvider) {

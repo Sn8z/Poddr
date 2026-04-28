@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:poddr/services/latest_episodes.dart';
 import 'package:poddr/services/media/media_provider.dart';
+import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
@@ -22,10 +22,10 @@ class LatestEpisodesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProxyProvider<LatestEpisodesProvider,
+    return ChangeNotifierProxyProvider<SubscriptionProvider,
         LatestEpisodesViewModel>(
       create: (context) => LatestEpisodesViewModel(
-        context.read<LatestEpisodesProvider>(),
+        context.read<SubscriptionProvider>(),
       ),
       update: (context, source, previous) =>
           previous ?? LatestEpisodesViewModel(source),

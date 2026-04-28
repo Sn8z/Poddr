@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
-class SearchProvider extends ChangeNotifier {
-  final logName = "SearchProvider";
+class SearchViewModel extends ChangeNotifier {
+  final logName = "SearchViewModel";
 
   final IPodcastRepository _podcastRepository;
 
@@ -14,7 +14,7 @@ class SearchProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  SearchProvider({IPodcastRepository? podcastRepository})
+  SearchViewModel({IPodcastRepository? podcastRepository})
       : _podcastRepository = podcastRepository ?? ITunesPodcastRepository();
 
   Future<void> searchPodcast(String query) async {

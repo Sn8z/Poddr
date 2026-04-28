@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:poddr/services/latest_episodes.dart';
 import 'package:poddr/services/offline.dart';
-import 'package:poddr/services/opml.dart';
 import 'package:poddr/shortcuts.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
@@ -50,17 +48,6 @@ void main() async {
           create: (_) => CollectionsProvider(),
         ),
 
-        // Latest Episodes
-        ChangeNotifierProxyProvider<SubscriptionProvider,
-            LatestEpisodesProvider>(
-          create: (_) => LatestEpisodesProvider(),
-          update: (_, subscription, prev) {
-            prev ??= LatestEpisodesProvider();
-            prev.update(subscription);
-            return prev;
-          },
-        ),
-
         // Sync Provider
         ChangeNotifierProxyProvider2<SubscriptionProvider, HistoryProvider,
             SyncProvider>(
@@ -79,16 +66,6 @@ void main() async {
           update: (_, history, offline, sync, prev) {
             prev ??= MediaProvider();
             prev.update(history, offline, sync);
-            return prev;
-          },
-        ),
-
-        // OPML
-        ChangeNotifierProxyProvider<SubscriptionProvider, OpmlProvider>(
-          create: (_) => OpmlProvider(),
-          update: (_, subscription, prev) {
-            prev ??= OpmlProvider();
-            prev.update(subscription);
             return prev;
           },
         ),

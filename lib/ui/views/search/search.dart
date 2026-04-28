@@ -7,7 +7,7 @@ import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
-import 'package:poddr/services/search.dart';
+import 'package:poddr/ui/views/search/search_view_model.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
 
@@ -17,9 +17,9 @@ class SearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => SearchProvider(),
+      create: (context) => SearchViewModel(),
       builder: (context, child) {
-        final searchProvider = context.watch<SearchProvider>();
+        final searchProvider = context.watch<SearchViewModel>();
 
         return Scaffold(
           body: Padding(
@@ -81,7 +81,7 @@ class ResultBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final searchResults = context.watch<SearchProvider>().searchResults;
+    final searchResults = context.watch<SearchViewModel>().searchResults;
 
     if (searchResults.isEmpty) {
       return const ContentBox(

@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:poddr/services/opml.dart';
 import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
+import 'package:poddr/ui/views/settings/opml/opml_settings.dart';
 
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
@@ -312,38 +312,4 @@ class ColorBox extends StatelessWidget {
   }
 }
 
-class OpmlSection extends StatelessWidget {
-  const OpmlSection({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final opmlProvider = context.watch<OpmlProvider>();
-    final isLoading = opmlProvider.isLoading;
-    final statusMessage = opmlProvider.statusMessage;
-
-    return Column(
-      children: [
-        ListTile(
-          leading: const Icon(Icons.arrow_circle_right_outlined),
-          title: const Text("Import"),
-          enabled: !isLoading,
-          onTap: () => opmlProvider.importOpml(),
-        ),
-        ListTile(
-          leading: const Icon(Icons.arrow_circle_left_outlined),
-          title: const Text("Export"),
-          enabled: !isLoading,
-          onTap: () => opmlProvider.exportOpml(),
-        ),
-        if (statusMessage != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              statusMessage,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
-      ],
-    );
-  }
-}

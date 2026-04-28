@@ -11,6 +11,7 @@ import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
+import 'package:poddr/ui/views/library/downloads/downloads_view_model.dart';
 import 'package:provider/provider.dart';
 
 class DownloadsView extends StatelessWidget {
@@ -18,10 +19,19 @@ class DownloadsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final offlineProvider = context.watch<OfflineProvider>();
-    final downloads = offlineProvider.downloads;
+    return ChangeNotifierProxyProvider2<OfflineProvider, MediaProvider,
+        DownloadsViewModel>(
+      create: (context) => DownloadsViewModel(
+        context.read<OfflineProvider>(),
+        context.read<MediaProvider>(),
+      ),
+      update: (_, offline, media, previous) =>
+          previous ?? DownloadsViewModel(offline, media),
+      builder: (context, child) {
+        final viewModel = context.watch<DownloadsViewModel>();
+        final downloads = viewModel.downloads;
 
-    return Scaffold(
+        return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: CustomScrollView(
@@ -32,7 +42,7 @@ class DownloadsView extends StatelessWidget {
                 if (downloads.isNotEmpty)
                   IconButton(
                     onPressed: () {
-                      _showClearAllDialog(context, offlineProvider);
+                      _showClearAllDialog(context, viewModel);
                     },
                     icon: const Icon(Icons.delete_sweep_rounded),
                     tooltip: 'Clear all downloads',
@@ -41,7 +51,7 @@ class DownloadsView extends StatelessWidget {
             ),
             PoddrAppBarOptions(),
             sliverGapH16,
-            if (offlineProvider.isLoading)
+            if (viewModel.isLoading)
               const SliverToBoxAdapter(
                 child: Center(
                   child: CircularProgressIndicator(),
@@ -93,7 +103,7 @@ class DownloadsView extends StatelessWidget {
                         child: PoddrImage(imageUrl: download.imageUrl),
                       ),
                       onTap: () {
-                        context.read<MediaProvider>().loadMedia(
+                        viewModel.loadMedia(
                               audioUrl: download.audioUrl,
                               episodeTitle: download.title,
                               podcastTitle: download.podcastTitle,
@@ -112,7 +122,7 @@ class DownloadsView extends StatelessWidget {
                         ),
                         EpisodeHistoryCircle(audioUrl: download.audioUrl),
                         DownloadButton(
-                          episode: offlineProvider.toPodcastEpisode(download)!,
+                          episode: viewModel.toPodcastEpisode(download)!,
                         ),
                       ],
                     ),
@@ -123,16 +133,18 @@ class DownloadsView extends StatelessWidget {
         ),
       ),
     );
+      },
+    );
   }
 
-  void _showClearAllDialog(BuildContext context, OfflineProvider provider) {
+  void _showClearAllDialog(BuildContext context, DownloadsViewModel viewModel) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Clear all downloads?'),
           content: Text(
-            'This will delete ${provider.downloads.length} downloaded episode(s).',
+            'This will delete ${viewModel.downloads.length} downloaded episode(s).',
           ),
           actions: [
             TextButton(
@@ -141,9 +153,7 @@ class DownloadsView extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                for (var download in provider.downloads) {
-                  provider.remove(download.audioUrl);
-                }
+                viewModel.clearAllDownloads();
                 Navigator.pop(context);
               },
               child: Text(

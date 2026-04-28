@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
-class PodcastProvider extends ChangeNotifier {
+class PodcastViewModel extends ChangeNotifier {
   final IPodcastRepository _podcastRepository;
 
   bool _isLoading = false;
@@ -14,7 +14,7 @@ class PodcastProvider extends ChangeNotifier {
   String? _currentRss;
   String? get currentRss => _currentRss;
 
-  PodcastProvider({
+  PodcastViewModel({
     IPodcastRepository? podcastRepository,
     String? initialRss,
   }) : _podcastRepository = podcastRepository ?? ITunesPodcastRepository() {
