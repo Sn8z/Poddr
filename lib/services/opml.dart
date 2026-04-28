@@ -39,7 +39,7 @@ class OpmlProvider extends ChangeNotifier {
       _setLoading(true);
       _setStatus("Selecting file...");
 
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['opml', 'xml'],
         withData: true,
@@ -70,10 +70,10 @@ class OpmlProvider extends ChangeNotifier {
         return;
       }
 
-      final existingRss = _subscriptionProvider!.subscriptions
-          .map((p) => p.rss)
-          .toSet();
-      final newRssUrls = rssUrls.where((rss) => !existingRss.contains(rss)).toList();
+      final existingRss =
+          _subscriptionProvider!.subscriptions.map((p) => p.rss).toSet();
+      final newRssUrls =
+          rssUrls.where((rss) => !existingRss.contains(rss)).toList();
 
       if (newRssUrls.isEmpty) {
         _setStatus("All feeds already subscribed");
@@ -85,7 +85,8 @@ class OpmlProvider extends ChangeNotifier {
 
       int successCount = 0;
       for (final rss in newRssUrls) {
-        final success = await _subscriptionProvider!.addSubscriptionSilent(rss: rss);
+        final success =
+            await _subscriptionProvider!.addSubscriptionSilent(rss: rss);
         if (success) successCount++;
       }
 
@@ -95,11 +96,14 @@ class OpmlProvider extends ChangeNotifier {
       final skippedCount = rssUrls.length - newRssUrls.length;
 
       if (failedCount > 0 && skippedCount > 0) {
-        _setStatus("Imported $successCount feeds ($failedCount failed, $skippedCount already subscribed)");
+        _setStatus(
+            "Imported $successCount feeds ($failedCount failed, $skippedCount already subscribed)");
       } else if (failedCount > 0) {
-        _setStatus("Imported $successCount of ${newRssUrls.length} feeds ($failedCount failed)");
+        _setStatus(
+            "Imported $successCount of ${newRssUrls.length} feeds ($failedCount failed)");
       } else if (skippedCount > 0) {
-        _setStatus("Imported $successCount feeds ($skippedCount already subscribed)");
+        _setStatus(
+            "Imported $successCount feeds ($skippedCount already subscribed)");
       } else {
         _setStatus("Imported $successCount feeds");
       }
@@ -133,7 +137,7 @@ class OpmlProvider extends ChangeNotifier {
       final bytes = Uint8List.fromList(opmlContent.codeUnits);
 
       if (kIsWeb) {
-        final result = await FilePicker.platform.saveFile(
+        final result = await FilePicker.saveFile(
           dialogTitle: 'Save OPML file',
           fileName: 'poddr_export.opml',
           type: FileType.custom,
@@ -147,7 +151,7 @@ class OpmlProvider extends ChangeNotifier {
           _setStatus(null);
         }
       } else {
-        final result = await FilePicker.platform.saveFile(
+        final result = await FilePicker.saveFile(
           dialogTitle: 'Save OPML file',
           fileName: 'poddr_export.opml',
           type: FileType.custom,
@@ -217,7 +221,8 @@ class OpmlProvider extends ChangeNotifier {
           urls.add(xmlUrl);
         } else if (xmlUrl != null && xmlUrl.startsWith('http')) {
           urls.add(xmlUrl);
-        } else if (url != null && url.contains('rss') || url != null && url.contains('feed')) {
+        } else if (url != null && url.contains('rss') ||
+            url != null && url.contains('feed')) {
           urls.add(url);
         }
       }
