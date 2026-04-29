@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/offline.dart';
-import 'package:poddr/ui/components/widgets/appbar.dart';
-import 'package:poddr/ui/components/widgets/appbar_options.dart';
-import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
+import 'package:poddr/ui/layouts/scrolling_page.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:poddr/ui/views/library/downloads/downloads_view_model.dart';
@@ -31,26 +29,19 @@ class DownloadsView extends StatelessWidget {
         final viewModel = context.watch<DownloadsViewModel>();
         final downloads = viewModel.downloads;
 
-        return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomScrollView(
-          slivers: [
-            PoddrAppBar(
-              title: 'Downloads',
-              actions: [
-                if (downloads.isNotEmpty)
-                  IconButton(
-                    onPressed: () {
-                      _showClearAllDialog(context, viewModel);
-                    },
-                    icon: const Icon(Icons.delete_sweep_rounded),
-                    tooltip: 'Clear all downloads',
-                  ),
-              ],
-            ),
-            PoddrAppBarOptions(),
-            sliverGapH16,
+        return ScrollingPageLayout(
+          title: 'Downloads',
+          appBarActions: [
+            if (downloads.isNotEmpty)
+              IconButton(
+                onPressed: () {
+                  _showClearAllDialog(context, viewModel);
+                },
+                icon: const Icon(Icons.delete_sweep_rounded),
+                tooltip: 'Clear all downloads',
+              ),
+          ],
+          children: [
             if (viewModel.isLoading)
               const SliverToBoxAdapter(
                 child: Center(
@@ -128,11 +119,8 @@ class DownloadsView extends StatelessWidget {
                     ),
                 ],
               ),
-            const BottomPaddingFix(),
           ],
-        ),
-      ),
-    );
+        );
       },
     );
   }

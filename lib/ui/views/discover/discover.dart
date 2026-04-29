@@ -4,9 +4,7 @@ import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
-import 'package:poddr/ui/components/widgets/appbar.dart';
-import 'package:poddr/ui/components/widgets/appbar_options.dart';
-import 'package:poddr/ui/components/widgets/bottom_padding.dart';
+import 'package:poddr/ui/layouts/scrolling_page.dart';
 import 'package:poddr/ui/views/discover/discover_view_model.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
@@ -28,81 +26,70 @@ class PodcastDiscoveryView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => DiscoverViewModel(),
       builder: (context, child) {
-        return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CustomScrollView(
-              slivers: [
-                PoddrAppBar(
-                  title: "Podcasts",
-                ),
-                PoddrAppBarOptions(
-                  actions: [
-                    IconButton(
-                      icon: Text(
-                          context.watch<DiscoverViewModel>().country),
-                      onPressed: () {
-                        final discoveryProvider =
-                            context.read<DiscoverViewModel>();
+        return ScrollingPageLayout(
+          title: "Podcasts",
+          optionsActions: [
+            IconButton(
+              icon: Text(
+                  context.watch<DiscoverViewModel>().country),
+              onPressed: () {
+                final discoveryProvider =
+                    context.read<DiscoverViewModel>();
 
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext dialogContext) {
-                            return PoddrDialog(
-                              children:
-                                  discoveryProvider.countries.map((country) {
-                                return SimpleDialogOption(
-                                  onPressed: () {
-                                    discoveryProvider
-                                        .setCountry(country['code'] ?? '');
-                                    Navigator.of(dialogContext).pop();
-                                  },
-                                  child: Text(country['name'] ?? ''),
-                                );
-                              }).toList(),
-                            );
+                showDialog(
+                  context: context,
+                  builder: (BuildContext dialogContext) {
+                    return PoddrDialog(
+                      children:
+                          discoveryProvider.countries.map((country) {
+                        return SimpleDialogOption(
+                          onPressed: () {
+                            discoveryProvider
+                                .setCountry(country['code'] ?? '');
+                            Navigator.of(dialogContext).pop();
                           },
+                          child: Text(country['name'] ?? ''),
                         );
-                      },
-                    ),
-                    IconButton(
-                      icon:
-                           Text(context.watch<DiscoverViewModel>().genre),
-                      onPressed: () {
-                        final discoveryProvider =
-                            context.read<DiscoverViewModel>();
-
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext dialogContext) {
-                            return PoddrDialog(
-                              children: discoveryProvider.genres.map((genre) {
-                                return SimpleDialogOption(
-                                  onPressed: () {
-                                    discoveryProvider
-                                        .setGenre(genre['id'] ?? '');
-                                    Navigator.of(dialogContext).pop();
-                                  },
-                                  child: Text(genre['genre'] ?? ''),
-                                );
-                              }).toList(),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                sliverGapH16,
-                const LatestEpisodes(),
-                sliverGapH16,
-                const RecentlyPlayedEpisodes(),
-                sliverGapH16,
-                const TrendingPodcasts(),
-                const BottomPaddingFix(),
-              ],
+                      }).toList(),
+                    );
+                  },
+                );
+              },
             ),
-          ),
+            IconButton(
+              icon:
+                   Text(context.watch<DiscoverViewModel>().genre),
+              onPressed: () {
+                final discoveryProvider =
+                    context.read<DiscoverViewModel>();
+
+                showDialog(
+                  context: context,
+                  builder: (BuildContext dialogContext) {
+                    return PoddrDialog(
+                      children: discoveryProvider.genres.map((genre) {
+                        return SimpleDialogOption(
+                          onPressed: () {
+                            discoveryProvider
+                                .setGenre(genre['id'] ?? '');
+                            Navigator.of(dialogContext).pop();
+                          },
+                          child: Text(genre['genre'] ?? ''),
+                        );
+                      }).toList(),
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+          children: [
+            const LatestEpisodes(),
+            sliverGapH16,
+            const RecentlyPlayedEpisodes(),
+            sliverGapH16,
+            const TrendingPodcasts(),
+          ],
         );
       },
     );
@@ -277,7 +264,7 @@ class TrendingPodcasts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-                  final charts = context.watch<DiscoverViewModel>();
+    final charts = context.watch<DiscoverViewModel>();
 
     final isMobile =
         MediaQuery.of(context).size.width < Breakpoints.mobileScreen;

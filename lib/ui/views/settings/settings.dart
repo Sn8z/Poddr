@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
 import 'package:poddr/ui/views/settings/opml/opml_settings.dart';
 
-import 'package:poddr/ui/components/widgets/appbar.dart';
-import 'package:poddr/ui/components/widgets/appbar_options.dart';
-import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/logo.dart';
+import 'package:poddr/ui/layouts/scrolling_page.dart';
 
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
@@ -23,118 +21,108 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomScrollView(
-          slivers: [
-            const PoddrAppBar(
-              title: "Settings",
-            ),
-            PoddrAppBarOptions(),
-            sliverGapH16,
-            const ContentBox(
-              title: "Appearance",
-              children: [
-                gapH32,
-                ThemeSelector(),
-                gapH32,
-                ColorSelector(),
-                gapH16,
-              ],
-            ),
-            sliverGapH16,
-            const ContentBox(
-              title: "Collections",
-              children: [
-                CollectionsSection(),
-              ],
-            ),
-            sliverGapH16,
-            ContentBox(title: "OPML", children: [
-              OpmlSection(),
-            ]),
-            sliverGapH16,
-            ContentBox(title: "gPodder sync", children: [
-              SyncSection(),
-            ]),
-            sliverGapH16,
-            ContentBox(
-              title: "Support",
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.monetization_on_outlined),
-                  title: const Text("GitHub Sponsor"),
-                  onTap: () async {
-                    try {
-                      await launchUrl(
-                          Uri.parse("https://github.com/sponsors/Sn8z"));
-                    } catch (e) {
-                      log('Error launching URL: $e');
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.open_in_browser_outlined),
-                  title: const Text("Paypal"),
-                  onTap: () {
-                    try {
-                      launchUrl(
-                          Uri.parse("https://www.paypal.com/paypalme/sn8z"));
-                    } catch (e) {
-                      log('Error launching URL: $e');
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.coffee_outlined),
-                  title: const Text("Ko-Fi"),
-                  onTap: () {
-                    try {
-                      launchUrl(Uri.parse("https://ko-fi.com/sneitz"));
-                    } catch (e) {
-                      log('Error launching URL: $e');
-                    }
-                  },
-                ),
-              ],
-            ),
-            sliverGapH16,
-            ContentBox(
-              title: "About",
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.bug_report_outlined),
-                  title: const Text("Issues"),
-                  onTap: () {
-                    try {
-                      launchUrl(
-                          Uri.parse("https://github.com/Sn8z/Poddr/issues"));
-                    } catch (e) {
-                      log('Error launching URL: $e');
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.info_outline),
-                  title: const Text('Licenses'),
-                  onTap: () {
-                    showAboutDialog(
-                      context: context,
-                      applicationName: "Poddr",
-                      applicationVersion: "3.0.0",
-                      applicationIcon: const PoddrLogo(
-                        size: 56,
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-            const BottomPaddingFix(),
+    return ScrollingPageLayout(
+      title: "Settings",
+      children: [
+        const ContentBox(
+          title: "Appearance",
+          children: [
+            gapH32,
+            ThemeSelector(),
+            gapH32,
+            ColorSelector(),
+            gapH16,
           ],
         ),
-      ),
+        sliverGapH16,
+        const ContentBox(
+          title: "Collections",
+          children: [
+            CollectionsSection(),
+          ],
+        ),
+        sliverGapH16,
+        ContentBox(title: "OPML", children: [
+          OpmlSection(),
+        ]),
+        sliverGapH16,
+        ContentBox(title: "gPodder sync", children: [
+          SyncSection(),
+        ]),
+        sliverGapH16,
+        ContentBox(
+          title: "Support",
+          children: [
+            ListTile(
+              leading: const Icon(Icons.monetization_on_outlined),
+              title: const Text("GitHub Sponsor"),
+              onTap: () async {
+                try {
+                  await launchUrl(
+                      Uri.parse("https://github.com/sponsors/Sn8z"));
+                } catch (e) {
+                  log('Error launching URL: $e');
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.open_in_browser_outlined),
+              title: const Text("Paypal"),
+              onTap: () {
+                try {
+                  launchUrl(
+                      Uri.parse("https://www.paypal.com/paypalme/sn8z"));
+                } catch (e) {
+                  log('Error launching URL: $e');
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.coffee_outlined),
+              title: const Text("Ko-Fi"),
+              onTap: () {
+                try {
+                  launchUrl(Uri.parse("https://ko-fi.com/sneitz"));
+                } catch (e) {
+                  log('Error launching URL: $e');
+                }
+              },
+            ),
+          ],
+        ),
+        sliverGapH16,
+        ContentBox(
+          title: "About",
+          children: [
+            ListTile(
+              leading: const Icon(Icons.bug_report_outlined),
+              title: const Text("Issues"),
+              onTap: () {
+                try {
+                  launchUrl(
+                      Uri.parse("https://github.com/Sn8z/Poddr/issues"));
+                } catch (e) {
+                  log('Error launching URL: $e');
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('Licenses'),
+              onTap: () {
+                showAboutDialog(
+                  context: context,
+                  applicationName: "Poddr",
+                  applicationVersion: "3.0.0",
+                  applicationIcon: const PoddrLogo(
+                    size: 56,
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -311,5 +299,3 @@ class ColorBox extends StatelessWidget {
     );
   }
 }
-
-

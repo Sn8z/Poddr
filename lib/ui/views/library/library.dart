@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/subscriptions.dart';
-import 'package:poddr/ui/components/widgets/appbar.dart';
-import 'package:poddr/ui/components/widgets/appbar_options.dart';
-import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
-import 'package:poddr/ui/utils/gaps.dart';
+import 'package:poddr/ui/layouts/scrolling_page.dart';
 import 'package:poddr/ui/views/library/library_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -27,64 +24,56 @@ class LibraryView extends StatelessWidget {
       builder: (context, child) {
         final viewModel = context.watch<LibraryViewModel>();
 
-        return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomScrollView(
-          slivers: [
-            const PoddrAppBar(
-              title: 'Library',
-            ),
-            PoddrAppBarOptions(
-              title: Row(
-                children: [
-                  ElevatedButton(
-                    child: Text("Latest Episodes"),
-                    onPressed: () => context.push("/library/latest"),
-                  ),
-                  ElevatedButton(
-                    child: Text("Downloads"),
-                    onPressed: () => context.push("/library/downloads"),
-                  ),
-                ],
+        return ScrollingPageLayout(
+          title: 'Library',
+          optionsTitle: Row(
+            children: [
+              ElevatedButton(
+                child: Text("Latest Episodes"),
+                onPressed: () => context.push("/library/latest"),
               ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (dialogContext) {
-                          return SimpleDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(16),
-                              ),
+              ElevatedButton(
+                child: Text("Downloads"),
+                onPressed: () => context.push("/library/downloads"),
+              ),
+            ],
+          ),
+          optionsActions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (dialogContext) {
+                      return SimpleDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(16),
+                          ),
+                        ),
+                        backgroundColor: Theme.of(dialogContext)
+                            .colorScheme
+                            .surfaceContainerLow,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: PoddrTextInput(
+                              hintText: "Input RSS",
+                              onSubmit: (value) {
+                                context
+                                    .read<LibraryViewModel>()
+                                    .addSubscription(rss: value);
+                                context.pop();
+                              },
                             ),
-                            backgroundColor: Theme.of(dialogContext)
-                                .colorScheme
-                                .surfaceContainerLow,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: PoddrTextInput(
-                                  hintText: "Input RSS",
-                                      onSubmit: (value) {
-                                        context
-                                            .read<LibraryViewModel>()
-                                            .addSubscription(rss: value);
-                                        context.pop();
-                                      },
-                                ),
-                              ),
-                            ],
-                          );
-                        });
-                  },
-                )
-              ],
-            ),
-            sliverGapH16,
+                          ),
+                        ],
+                      );
+                    });
+              },
+            )
+          ],
+          children: [
             if (viewModel.isLoading) ...[
               const SliverToBoxAdapter(
                 child: Center(
@@ -137,11 +126,8 @@ class LibraryView extends StatelessWidget {
                 ),
               ),
             ],
-            const BottomPaddingFix(),
           ],
-        ),
-      ),
-    );
+        );
       },
     );
   }
