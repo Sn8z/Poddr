@@ -42,6 +42,8 @@ class OfflineEpisodes extends Table {
   IntColumn get fileSize => integer()();
   DateTimeColumn get downloadedAt =>
       dateTime().withDefault(currentDateAndTime)();
+
+  DateTimeColumn get publicationDate => dateTime().nullable()();
 }
 
 class Collections extends Table {

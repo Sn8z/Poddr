@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/offline.dart';
-import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/models/episode.dart';
+import 'package:poddr/models/offline_episode.dart';
 
 class DownloadsViewModel extends ChangeNotifier {
   final OfflineProvider _offlineProvider;
@@ -16,6 +16,7 @@ class DownloadsViewModel extends ChangeNotifier {
   bool get isLoading => _offlineProvider.isLoading;
   Map<String, double> get downloadProgress => _offlineProvider.downloadProgress;
   Set<String> get downloading => _offlineProvider.downloading;
+  List<PodcastEpisode> get downloadQueue => _offlineProvider.downloadQueue;
 
   void loadMedia({
     required String audioUrl,
@@ -48,9 +49,11 @@ class DownloadsViewModel extends ChangeNotifier {
   }
 
   void clearAllDownloads() {
-    for (var download in _offlineProvider.downloads) {
-      _offlineProvider.remove(download.audioUrl);
-    }
+    _offlineProvider.clearAll();
+  }
+
+  int getQueuePosition(String audioUrl) {
+    return _offlineProvider.getQueuePosition(audioUrl);
   }
 
   @override

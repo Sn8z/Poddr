@@ -21,6 +21,9 @@ class DownloadButton extends StatelessWidget {
     final isDownloaded = offlineProvider.downloads.any(
       (d) => d.audioUrl == episode.audioUrl,
     );
+    final isQueued = offlineProvider.downloadQueue.any(
+      (e) => e.audioUrl == episode.audioUrl,
+    );
 
     if (isDownloading) {
       return SizedBox(
@@ -43,6 +46,45 @@ class DownloadButton extends StatelessWidget {
             ),
           ],
         ),
+      );
+    }
+
+    if (isQueued) {
+      final queuePosition = offlineProvider.getQueuePosition(episode.audioUrl);
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          IconButton(
+            onPressed: () {
+              offlineProvider.cancelDownload(episode.audioUrl);
+            },
+            icon: const Icon(Icons.schedule, size: 14),
+            tooltip: 'Queued (position $queuePosition) - tap to cancel',
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+          if (queuePosition > 0)
+            Positioned(
+              right: 0,
+              top: 0,
+              child: Container(
+                padding: const EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                constraints: const BoxConstraints(minWidth: 10, minHeight: 10),
+                child: Text(
+                  '$queuePosition',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 8,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+        ],
       );
     }
 

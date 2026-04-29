@@ -1015,6 +1015,12 @@ class $OfflineEpisodesTable extends OfflineEpisodes
       type: DriftSqlType.dateTime,
       requiredDuringInsert: false,
       defaultValue: currentDateAndTime);
+  static const VerificationMeta _publicationDateMeta =
+      const VerificationMeta('publicationDate');
+  @override
+  late final GeneratedColumn<DateTime> publicationDate =
+      GeneratedColumn<DateTime>('publication_date', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1027,7 +1033,8 @@ class $OfflineEpisodesTable extends OfflineEpisodes
         podcastRSS,
         duration,
         fileSize,
-        downloadedAt
+        downloadedAt,
+        publicationDate
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1108,6 +1115,12 @@ class $OfflineEpisodesTable extends OfflineEpisodes
           downloadedAt.isAcceptableOrUnknown(
               data['downloaded_at']!, _downloadedAtMeta));
     }
+    if (data.containsKey('publication_date')) {
+      context.handle(
+          _publicationDateMeta,
+          publicationDate.isAcceptableOrUnknown(
+              data['publication_date']!, _publicationDateMeta));
+    }
     return context;
   }
 
@@ -1139,6 +1152,8 @@ class $OfflineEpisodesTable extends OfflineEpisodes
           .read(DriftSqlType.int, data['${effectivePrefix}file_size'])!,
       downloadedAt: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}downloaded_at'])!,
+      publicationDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}publication_date']),
     );
   }
 
@@ -1160,6 +1175,7 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
   final int duration;
   final int fileSize;
   final DateTime downloadedAt;
+  final DateTime? publicationDate;
   const OfflineEpisode(
       {required this.id,
       required this.audioUrl,
@@ -1171,7 +1187,8 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       required this.podcastRSS,
       required this.duration,
       required this.fileSize,
-      required this.downloadedAt});
+      required this.downloadedAt,
+      this.publicationDate});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1186,6 +1203,9 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
     map['duration'] = Variable<int>(duration);
     map['file_size'] = Variable<int>(fileSize);
     map['downloaded_at'] = Variable<DateTime>(downloadedAt);
+    if (!nullToAbsent || publicationDate != null) {
+      map['publication_date'] = Variable<DateTime>(publicationDate);
+    }
     return map;
   }
 
@@ -1202,6 +1222,9 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       duration: Value(duration),
       fileSize: Value(fileSize),
       downloadedAt: Value(downloadedAt),
+      publicationDate: publicationDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(publicationDate),
     );
   }
 
@@ -1220,6 +1243,7 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       duration: serializer.fromJson<int>(json['duration']),
       fileSize: serializer.fromJson<int>(json['fileSize']),
       downloadedAt: serializer.fromJson<DateTime>(json['downloadedAt']),
+      publicationDate: serializer.fromJson<DateTime?>(json['publicationDate']),
     );
   }
   @override
@@ -1237,6 +1261,7 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       'duration': serializer.toJson<int>(duration),
       'fileSize': serializer.toJson<int>(fileSize),
       'downloadedAt': serializer.toJson<DateTime>(downloadedAt),
+      'publicationDate': serializer.toJson<DateTime?>(publicationDate),
     };
   }
 
@@ -1251,7 +1276,8 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
           String? podcastRSS,
           int? duration,
           int? fileSize,
-          DateTime? downloadedAt}) =>
+          DateTime? downloadedAt,
+          Value<DateTime?> publicationDate = const Value.absent()}) =>
       OfflineEpisode(
         id: id ?? this.id,
         audioUrl: audioUrl ?? this.audioUrl,
@@ -1264,6 +1290,9 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
         duration: duration ?? this.duration,
         fileSize: fileSize ?? this.fileSize,
         downloadedAt: downloadedAt ?? this.downloadedAt,
+        publicationDate: publicationDate.present
+            ? publicationDate.value
+            : this.publicationDate,
       );
   OfflineEpisode copyWithCompanion(OfflineEpisodesCompanion data) {
     return OfflineEpisode(
@@ -1284,6 +1313,9 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       downloadedAt: data.downloadedAt.present
           ? data.downloadedAt.value
           : this.downloadedAt,
+      publicationDate: data.publicationDate.present
+          ? data.publicationDate.value
+          : this.publicationDate,
     );
   }
 
@@ -1300,14 +1332,26 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
           ..write('podcastRSS: $podcastRSS, ')
           ..write('duration: $duration, ')
           ..write('fileSize: $fileSize, ')
-          ..write('downloadedAt: $downloadedAt')
+          ..write('downloadedAt: $downloadedAt, ')
+          ..write('publicationDate: $publicationDate')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, audioUrl, localPath, title, description,
-      imageUrl, podcastTitle, podcastRSS, duration, fileSize, downloadedAt);
+  int get hashCode => Object.hash(
+      id,
+      audioUrl,
+      localPath,
+      title,
+      description,
+      imageUrl,
+      podcastTitle,
+      podcastRSS,
+      duration,
+      fileSize,
+      downloadedAt,
+      publicationDate);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1322,7 +1366,8 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
           other.podcastRSS == this.podcastRSS &&
           other.duration == this.duration &&
           other.fileSize == this.fileSize &&
-          other.downloadedAt == this.downloadedAt);
+          other.downloadedAt == this.downloadedAt &&
+          other.publicationDate == this.publicationDate);
 }
 
 class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
@@ -1337,6 +1382,7 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
   final Value<int> duration;
   final Value<int> fileSize;
   final Value<DateTime> downloadedAt;
+  final Value<DateTime?> publicationDate;
   const OfflineEpisodesCompanion({
     this.id = const Value.absent(),
     this.audioUrl = const Value.absent(),
@@ -1349,6 +1395,7 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
     this.duration = const Value.absent(),
     this.fileSize = const Value.absent(),
     this.downloadedAt = const Value.absent(),
+    this.publicationDate = const Value.absent(),
   });
   OfflineEpisodesCompanion.insert({
     this.id = const Value.absent(),
@@ -1362,6 +1409,7 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
     required int duration,
     required int fileSize,
     this.downloadedAt = const Value.absent(),
+    this.publicationDate = const Value.absent(),
   })  : audioUrl = Value(audioUrl),
         localPath = Value(localPath),
         title = Value(title),
@@ -1383,6 +1431,7 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
     Expression<int>? duration,
     Expression<int>? fileSize,
     Expression<DateTime>? downloadedAt,
+    Expression<DateTime>? publicationDate,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1396,6 +1445,7 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
       if (duration != null) 'duration': duration,
       if (fileSize != null) 'file_size': fileSize,
       if (downloadedAt != null) 'downloaded_at': downloadedAt,
+      if (publicationDate != null) 'publication_date': publicationDate,
     });
   }
 
@@ -1410,7 +1460,8 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
       Value<String>? podcastRSS,
       Value<int>? duration,
       Value<int>? fileSize,
-      Value<DateTime>? downloadedAt}) {
+      Value<DateTime>? downloadedAt,
+      Value<DateTime?>? publicationDate}) {
     return OfflineEpisodesCompanion(
       id: id ?? this.id,
       audioUrl: audioUrl ?? this.audioUrl,
@@ -1423,6 +1474,7 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
       duration: duration ?? this.duration,
       fileSize: fileSize ?? this.fileSize,
       downloadedAt: downloadedAt ?? this.downloadedAt,
+      publicationDate: publicationDate ?? this.publicationDate,
     );
   }
 
@@ -1462,6 +1514,9 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
     if (downloadedAt.present) {
       map['downloaded_at'] = Variable<DateTime>(downloadedAt.value);
     }
+    if (publicationDate.present) {
+      map['publication_date'] = Variable<DateTime>(publicationDate.value);
+    }
     return map;
   }
 
@@ -1478,7 +1533,8 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
           ..write('podcastRSS: $podcastRSS, ')
           ..write('duration: $duration, ')
           ..write('fileSize: $fileSize, ')
-          ..write('downloadedAt: $downloadedAt')
+          ..write('downloadedAt: $downloadedAt, ')
+          ..write('publicationDate: $publicationDate')
           ..write(')'))
         .toString();
   }
@@ -3143,6 +3199,7 @@ typedef $$OfflineEpisodesTableCreateCompanionBuilder = OfflineEpisodesCompanion
   required int duration,
   required int fileSize,
   Value<DateTime> downloadedAt,
+  Value<DateTime?> publicationDate,
 });
 typedef $$OfflineEpisodesTableUpdateCompanionBuilder = OfflineEpisodesCompanion
     Function({
@@ -3157,6 +3214,7 @@ typedef $$OfflineEpisodesTableUpdateCompanionBuilder = OfflineEpisodesCompanion
   Value<int> duration,
   Value<int> fileSize,
   Value<DateTime> downloadedAt,
+  Value<DateTime?> publicationDate,
 });
 
 class $$OfflineEpisodesTableFilterComposer
@@ -3200,6 +3258,10 @@ class $$OfflineEpisodesTableFilterComposer
 
   ColumnFilters<DateTime> get downloadedAt => $composableBuilder(
       column: $table.downloadedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get publicationDate => $composableBuilder(
+      column: $table.publicationDate,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$OfflineEpisodesTableOrderingComposer
@@ -3245,6 +3307,10 @@ class $$OfflineEpisodesTableOrderingComposer
   ColumnOrderings<DateTime> get downloadedAt => $composableBuilder(
       column: $table.downloadedAt,
       builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get publicationDate => $composableBuilder(
+      column: $table.publicationDate,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$OfflineEpisodesTableAnnotationComposer
@@ -3288,6 +3354,9 @@ class $$OfflineEpisodesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get downloadedAt => $composableBuilder(
       column: $table.downloadedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get publicationDate => $composableBuilder(
+      column: $table.publicationDate, builder: (column) => column);
 }
 
 class $$OfflineEpisodesTableTableManager extends RootTableManager<
@@ -3328,6 +3397,7 @@ class $$OfflineEpisodesTableTableManager extends RootTableManager<
             Value<int> duration = const Value.absent(),
             Value<int> fileSize = const Value.absent(),
             Value<DateTime> downloadedAt = const Value.absent(),
+            Value<DateTime?> publicationDate = const Value.absent(),
           }) =>
               OfflineEpisodesCompanion(
             id: id,
@@ -3341,6 +3411,7 @@ class $$OfflineEpisodesTableTableManager extends RootTableManager<
             duration: duration,
             fileSize: fileSize,
             downloadedAt: downloadedAt,
+            publicationDate: publicationDate,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -3354,6 +3425,7 @@ class $$OfflineEpisodesTableTableManager extends RootTableManager<
             required int duration,
             required int fileSize,
             Value<DateTime> downloadedAt = const Value.absent(),
+            Value<DateTime?> publicationDate = const Value.absent(),
           }) =>
               OfflineEpisodesCompanion.insert(
             id: id,
@@ -3367,6 +3439,7 @@ class $$OfflineEpisodesTableTableManager extends RootTableManager<
             duration: duration,
             fileSize: fileSize,
             downloadedAt: downloadedAt,
+            publicationDate: publicationDate,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

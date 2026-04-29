@@ -22,3 +22,23 @@ class ServerErrorException extends ApiException {
 class NetworkException extends ApiException {
   NetworkException([String message = 'Network communication failure']) : super(message);
 }
+
+class DownloadException implements Exception {
+  final String message;
+  DownloadException(this.message);
+  @override
+  String toString() => 'DownloadException: $message';
+}
+
+class DownloadCancelledException extends DownloadException {
+  DownloadCancelledException([String message = 'Download was cancelled']) : super(message);
+}
+
+class DownloadFailedException extends DownloadException {
+  final int? statusCode;
+  DownloadFailedException(this.statusCode, [String message = 'Download failed']) : super(message);
+}
+
+class InsufficientSpaceException extends DownloadException {
+  InsufficientSpaceException([String message = 'Insufficient storage space']) : super(message);
+}
