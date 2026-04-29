@@ -159,6 +159,18 @@ class SyncSection extends StatelessWidget {
             ),
           ],
         ),
+        gapH12,
+        OutlinedButton.icon(
+          onPressed: sync.isLoading ? null : () => _showFullResyncDialog(context, sync),
+          icon: const Icon(Icons.sync, size: 18),
+          label: const Text('Full Re-Sync'),
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
         if (sync.errorMessage != null && sync.errorMessage!.isNotEmpty) ...[
           gapH16,
           PoddrStatusMessage(message: sync.errorMessage!, isError: true),
@@ -416,6 +428,53 @@ class SyncSection extends StatelessWidget {
 
     if (selected != null && context.mounted) {
       await sync.selectSyncDevice(selected);
+    }
+  }
+
+  Future<void> _showFullResyncDialog(BuildContext context, SyncProvider sync) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => PoddrDialog(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              'Full Re-Sync',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+          Text(
+            'This will:\n'
+            '• Clear all unsynced local changes\n'
+            '• Pull all current server subscriptions and episode history\n'
+            '• Preserve all local subscriptions\n'
+            '• Set sync timestamps to current time (only new data fetched next sync)',
+          ),
+          gapH20,
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+              ),
+              gapW12,
+              Expanded(
+                child: FilledButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Confirm'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      await sync.fullResync();
     }
   }
 }

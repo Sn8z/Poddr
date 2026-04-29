@@ -407,112 +407,13 @@ class SyncProvider extends ChangeNotifier {
     try {
       await _executeWithAuthRetry(() async {
         final lastSync = await _settings.getSyncLastSubscriptionSync();
-        final changes = await _client!.getSubscriptionChanges(since: lastSync);
-
-        final localSubscriptions = _subscriptionProvider?.subscriptions ?? [];
-        final localUrls = localSubscriptions
-            .map((s) => s.rss ?? '')
-            .where((url) => url.isNotEmpty)
-            .toSet();
 
         if (lastSync == 0) {
-          for (final url in localUrls) {
-            await _syncRepository.addPendingSubscriptionAction(url, 'add');
-          }
-        }
-
-        final remoteAdd = List<String>.from(changes['add'] ?? []);
-        final remoteRemove = List<String>.from(changes['remove'] ?? []);
-        final remoteTimestamp = changes['timestamp'] ??
-            (DateTime.now().millisecondsSinceEpoch ~/ 1000);
-
-        final actionMap = <String, Map<String, dynamic>>{};
-
-        for (final url in remoteAdd) {
-          actionMap[url] = {
-            'action': 'add',
-            'timestamp': remoteTimestamp,
-            'source': 'remote',
-          };
-        }
-        for (final url in remoteRemove) {
-          final existing = actionMap[url];
-          if (existing == null ||
-              remoteTimestamp > (existing['timestamp'] as int)) {
-            actionMap[url] = {
-              'action': 'remove',
-              'timestamp': remoteTimestamp,
-              'source': 'remote',
-            };
-          }
-        }
-
-        final pendingChanges =
-            await _syncRepository.getPendingSubscriptionActions();
-        for (final pending in pendingChanges) {
-          final url = pending['rss'] as String;
-          final action = pending['action'] as String;
-          final timestamp = pending['timestamp'] as int;
-          final existing = actionMap[url];
-          if (existing == null || timestamp > (existing['timestamp'] as int)) {
-            actionMap[url] = {
-              'action': action,
-              'timestamp': timestamp,
-              'source': 'local',
-            };
-          }
-        }
-
-        for (final entry in actionMap.entries) {
-          final url = entry.key;
-          final actionData = entry.value;
-          final action = actionData['action'] as String;
-
-          if (action == 'add' && !localUrls.contains(url)) {
-            await _subscriptionProvider?.addSubscription(
-                rss: url, fromSync: true);
-            localUrls.add(url);
-          } else if (action == 'remove' && localUrls.contains(url)) {
-            await _subscriptionProvider?.removeSubscription(url,
-                fromSync: true);
-            localUrls.remove(url);
-          }
-        }
-
-        final localPendingToUpload = <Map<String, dynamic>>[];
-        for (final pending in pendingChanges) {
-          final url = pending['rss'] as String;
-          final action = pending['action'] as String;
-          final timestamp = pending['timestamp'] as int;
-          final surviving = actionMap[url];
-          if (surviving != null &&
-              surviving['action'] == action &&
-              surviving['timestamp'] == timestamp) {
-            localPendingToUpload.add(pending);
-          }
-        }
-
-        final addsToUpload = localPendingToUpload
-            .where((a) => a['action'] == 'add')
-            .map((a) => a['rss'] as String)
-            .toList();
-        final removesToUpload = localPendingToUpload
-            .where((a) => a['action'] == 'remove')
-            .map((a) => a['rss'] as String)
-            .toList();
-
-        if (addsToUpload.isNotEmpty || removesToUpload.isNotEmpty) {
-          final uploadResult = await _client!.uploadSubscriptionChanges(
-              add: addsToUpload, remove: removesToUpload);
-          final newTimestamp = uploadResult['timestamp'] ??
-              (DateTime.now().millisecondsSinceEpoch ~/ 1000);
-          await _settings.setSyncLastSubscriptionSync(newTimestamp);
-          await _refreshLastSyncTime();
+          await _performFullSubscriptionSync();
         } else {
-          await _settings.setSyncLastSubscriptionSync(remoteTimestamp);
+          await _performDeltaSubscriptionSync(lastSync);
         }
 
-        await _syncRepository.clearPendingSubscriptionActions();
         return true;
       });
     } catch (e) {
@@ -522,6 +423,141 @@ class SyncProvider extends ChangeNotifier {
       _isSyncingSubscriptions = false;
       notifyListeners();
     }
+  }
+
+  Future<void> _performFullSubscriptionSync() async {
+    final serverUrls = await _client!.getAllSubscriptions();
+    final localSubscriptions = _subscriptionProvider?.subscriptions ?? [];
+    final localUrls = localSubscriptions
+        .map((s) => s.rss ?? '')
+        .where((url) => url.isNotEmpty)
+        .toSet();
+
+    for (final url in serverUrls) {
+      if (!localUrls.contains(url)) {
+        await _subscriptionProvider?.addSubscription(
+            rss: url, fromSync: true);
+      }
+    }
+
+    final localOnly =
+        localUrls.where((url) => !serverUrls.contains(url)).toList();
+    for (final url in localOnly) {
+      await _syncRepository.addPendingSubscriptionAction(url, 'add');
+    }
+
+    if (localOnly.isNotEmpty) {
+      await _client!.uploadSubscriptionChanges(
+          add: localOnly.toList(), remove: []);
+    }
+
+    final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    await _settings.setSyncLastSubscriptionSync(now);
+    await _refreshLastSyncTime();
+    await _syncRepository.clearPendingSubscriptionActions();
+  }
+
+  Future<void> _performDeltaSubscriptionSync(int lastSync) async {
+    final changes = await _client!.getSubscriptionChanges(since: lastSync);
+
+    final localSubscriptions = _subscriptionProvider?.subscriptions ?? [];
+    final localUrls = localSubscriptions
+        .map((s) => s.rss ?? '')
+        .where((url) => url.isNotEmpty)
+        .toSet();
+
+    final remoteAdd = List<String>.from(changes['add'] ?? []);
+    final remoteRemove = List<String>.from(changes['remove'] ?? []);
+    final remoteTimestamp = changes['timestamp'] ??
+        (DateTime.now().millisecondsSinceEpoch ~/ 1000);
+
+    final actionMap = <String, Map<String, dynamic>>{};
+
+    for (final url in remoteAdd) {
+      actionMap[url] = {
+        'action': 'add',
+        'timestamp': remoteTimestamp,
+        'source': 'remote',
+      };
+    }
+    for (final url in remoteRemove) {
+      final existing = actionMap[url];
+      if (existing == null ||
+          remoteTimestamp > (existing['timestamp'] as int)) {
+        actionMap[url] = {
+          'action': 'remove',
+          'timestamp': remoteTimestamp,
+          'source': 'remote',
+        };
+      }
+    }
+
+    final pendingChanges =
+        await _syncRepository.getPendingSubscriptionActions();
+    for (final pending in pendingChanges) {
+      final url = pending['rss'] as String;
+      final action = pending['action'] as String;
+      final timestamp = pending['timestamp'] as int;
+      final existing = actionMap[url];
+      if (existing == null || timestamp > (existing['timestamp'] as int)) {
+        actionMap[url] = {
+          'action': action,
+          'timestamp': timestamp,
+          'source': 'local',
+        };
+      }
+    }
+
+    for (final entry in actionMap.entries) {
+      final url = entry.key;
+      final actionData = entry.value;
+      final action = actionData['action'] as String;
+
+      if (action == 'add' && !localUrls.contains(url)) {
+        await _subscriptionProvider?.addSubscription(
+            rss: url, fromSync: true);
+        localUrls.add(url);
+      } else if (action == 'remove' && localUrls.contains(url)) {
+        await _subscriptionProvider?.removeSubscription(url,
+            fromSync: true);
+        localUrls.remove(url);
+      }
+    }
+
+    final localPendingToUpload = <Map<String, dynamic>>[];
+    for (final pending in pendingChanges) {
+      final url = pending['rss'] as String;
+      final action = pending['action'] as String;
+      final timestamp = pending['timestamp'] as int;
+      final surviving = actionMap[url];
+      if (surviving != null &&
+          surviving['action'] == action &&
+          surviving['timestamp'] == timestamp) {
+        localPendingToUpload.add(pending);
+      }
+    }
+
+    final addsToUpload = localPendingToUpload
+        .where((a) => a['action'] == 'add')
+        .map((a) => a['rss'] as String)
+        .toList();
+    final removesToUpload = localPendingToUpload
+        .where((a) => a['action'] == 'remove')
+        .map((a) => a['rss'] as String)
+        .toList();
+
+    if (addsToUpload.isNotEmpty || removesToUpload.isNotEmpty) {
+      final uploadResult = await _client!.uploadSubscriptionChanges(
+          add: addsToUpload, remove: removesToUpload);
+      final newTimestamp = uploadResult['timestamp'] ??
+          (DateTime.now().millisecondsSinceEpoch ~/ 1000);
+      await _settings.setSyncLastSubscriptionSync(newTimestamp);
+      await _refreshLastSyncTime();
+    } else {
+      await _settings.setSyncLastSubscriptionSync(remoteTimestamp);
+    }
+
+    await _syncRepository.clearPendingSubscriptionActions();
   }
 
   Future<void> syncEpisodes() async {
@@ -765,6 +801,29 @@ class SyncProvider extends ChangeNotifier {
 
     _statusMessage = 'Last sync: ${_lastSyncTimeCache?.toLocal() ?? 'Never'}';
     notifyListeners();
+  }
+
+  Future<void> fullResync() async {
+    if (_client == null) return;
+    _statusMessage = 'Full re-sync in progress...';
+    notifyListeners();
+
+    try {
+      await _executeWithAuthRetry(() async {
+        await _settings.setSyncLastSubscriptionSync(0);
+        await _settings.setSyncLastEpisodeSync(0);
+        await _syncRepository.clearPendingSubscriptionActions();
+        await _syncRepository.clearPendingEpisodeActions();
+        await syncAll();
+        _statusMessage = 'Full re-sync complete';
+        return true;
+      });
+    } catch (e) {
+      _errorMessage = 'Full re-sync failed: $e';
+      log(_errorMessage!, name: logName);
+    } finally {
+      notifyListeners();
+    }
   }
 
   Future<void> selectSyncDevice(String targetDeviceId) async {

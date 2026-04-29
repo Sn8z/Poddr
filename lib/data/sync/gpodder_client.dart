@@ -185,14 +185,6 @@ class GpodderClient {
   }
 
   // Subscriptions
-  Future<bool> uploadAllSubscriptions(List<String> urls) async {
-    log("Uploading all subscriptions: ${urls.length} URLs", name: logName);
-    final path = '/subscriptions/$_encodedUsername/$_deviceId.json';
-    await _sendRequest('PUT', path, body: urls);
-    log("All subscriptions uploaded successfully", name: logName);
-    return true;
-  }
-
   Future<Map<String, dynamic>> uploadSubscriptionChanges({
     required List<String> add,
     required List<String> remove,
@@ -224,7 +216,7 @@ class GpodderClient {
 
   Future<List<String>> getAllSubscriptions() async {
     log("Fetching all subscriptions from server", name: logName);
-    final path = '/subscriptions/$_deviceId.json';
+    final path = '/subscriptions/$_encodedUsername/$_deviceId.json';
     final result = await _sendRequest('GET', path);
     log("All subscriptions retrieved successfully", name: logName);
     return (result as List).cast<String>().toList();
