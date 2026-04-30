@@ -16,4 +16,15 @@ abstract class ISubscriptionRepository {
   Stream<int?> watchSubscriptionIdByRss(String rss);
 
   Future<void> removeSubscription(String rss);
+
+  Future<void> updateSubscription({
+    required String rss,
+    String? title,
+    String? description,
+    String? author,
+    String? imageUrl,
+    String? newRss,
+  });
+
+  Future<void> markAsBroken(String rss, {bool broken = true});
 }

@@ -55,9 +55,18 @@ class $PodcastSubscriptionTable extends PodcastSubscription
       type: DriftSqlType.dateTime,
       requiredDuringInsert: false,
       defaultValue: currentDateAndTime);
+  static const VerificationMeta _brokenMeta = const VerificationMeta('broken');
+  @override
+  late final GeneratedColumn<bool> broken = GeneratedColumn<bool>(
+      'broken', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("broken" IN (0, 1))'),
+      defaultValue: const Constant(false));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, rss, title, description, author, imageUrl, subscribedAt];
+      [id, rss, title, description, author, imageUrl, subscribedAt, broken];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -110,6 +119,10 @@ class $PodcastSubscriptionTable extends PodcastSubscription
           subscribedAt.isAcceptableOrUnknown(
               data['subscribed_at']!, _subscribedAtMeta));
     }
+    if (data.containsKey('broken')) {
+      context.handle(_brokenMeta,
+          broken.isAcceptableOrUnknown(data['broken']!, _brokenMeta));
+    }
     return context;
   }
 
@@ -134,6 +147,8 @@ class $PodcastSubscriptionTable extends PodcastSubscription
           .read(DriftSqlType.string, data['${effectivePrefix}image_url'])!,
       subscribedAt: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}subscribed_at'])!,
+      broken: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}broken'])!,
     );
   }
 
@@ -152,6 +167,7 @@ class PodcastSubscriptionData extends DataClass
   final String author;
   final String imageUrl;
   final DateTime subscribedAt;
+  final bool broken;
   const PodcastSubscriptionData(
       {required this.id,
       required this.rss,
@@ -159,7 +175,8 @@ class PodcastSubscriptionData extends DataClass
       required this.description,
       required this.author,
       required this.imageUrl,
-      required this.subscribedAt});
+      required this.subscribedAt,
+      required this.broken});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -170,6 +187,7 @@ class PodcastSubscriptionData extends DataClass
     map['author'] = Variable<String>(author);
     map['image_url'] = Variable<String>(imageUrl);
     map['subscribed_at'] = Variable<DateTime>(subscribedAt);
+    map['broken'] = Variable<bool>(broken);
     return map;
   }
 
@@ -182,6 +200,7 @@ class PodcastSubscriptionData extends DataClass
       author: Value(author),
       imageUrl: Value(imageUrl),
       subscribedAt: Value(subscribedAt),
+      broken: Value(broken),
     );
   }
 
@@ -196,6 +215,7 @@ class PodcastSubscriptionData extends DataClass
       author: serializer.fromJson<String>(json['author']),
       imageUrl: serializer.fromJson<String>(json['imageUrl']),
       subscribedAt: serializer.fromJson<DateTime>(json['subscribedAt']),
+      broken: serializer.fromJson<bool>(json['broken']),
     );
   }
   @override
@@ -209,6 +229,7 @@ class PodcastSubscriptionData extends DataClass
       'author': serializer.toJson<String>(author),
       'imageUrl': serializer.toJson<String>(imageUrl),
       'subscribedAt': serializer.toJson<DateTime>(subscribedAt),
+      'broken': serializer.toJson<bool>(broken),
     };
   }
 
@@ -219,7 +240,8 @@ class PodcastSubscriptionData extends DataClass
           String? description,
           String? author,
           String? imageUrl,
-          DateTime? subscribedAt}) =>
+          DateTime? subscribedAt,
+          bool? broken}) =>
       PodcastSubscriptionData(
         id: id ?? this.id,
         rss: rss ?? this.rss,
@@ -228,6 +250,7 @@ class PodcastSubscriptionData extends DataClass
         author: author ?? this.author,
         imageUrl: imageUrl ?? this.imageUrl,
         subscribedAt: subscribedAt ?? this.subscribedAt,
+        broken: broken ?? this.broken,
       );
   PodcastSubscriptionData copyWithCompanion(PodcastSubscriptionCompanion data) {
     return PodcastSubscriptionData(
@@ -241,6 +264,7 @@ class PodcastSubscriptionData extends DataClass
       subscribedAt: data.subscribedAt.present
           ? data.subscribedAt.value
           : this.subscribedAt,
+      broken: data.broken.present ? data.broken.value : this.broken,
     );
   }
 
@@ -253,14 +277,15 @@ class PodcastSubscriptionData extends DataClass
           ..write('description: $description, ')
           ..write('author: $author, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('subscribedAt: $subscribedAt')
+          ..write('subscribedAt: $subscribedAt, ')
+          ..write('broken: $broken')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, rss, title, description, author, imageUrl, subscribedAt);
+  int get hashCode => Object.hash(
+      id, rss, title, description, author, imageUrl, subscribedAt, broken);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -271,7 +296,8 @@ class PodcastSubscriptionData extends DataClass
           other.description == this.description &&
           other.author == this.author &&
           other.imageUrl == this.imageUrl &&
-          other.subscribedAt == this.subscribedAt);
+          other.subscribedAt == this.subscribedAt &&
+          other.broken == this.broken);
 }
 
 class PodcastSubscriptionCompanion
@@ -283,6 +309,7 @@ class PodcastSubscriptionCompanion
   final Value<String> author;
   final Value<String> imageUrl;
   final Value<DateTime> subscribedAt;
+  final Value<bool> broken;
   const PodcastSubscriptionCompanion({
     this.id = const Value.absent(),
     this.rss = const Value.absent(),
@@ -291,6 +318,7 @@ class PodcastSubscriptionCompanion
     this.author = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.subscribedAt = const Value.absent(),
+    this.broken = const Value.absent(),
   });
   PodcastSubscriptionCompanion.insert({
     this.id = const Value.absent(),
@@ -300,6 +328,7 @@ class PodcastSubscriptionCompanion
     required String author,
     required String imageUrl,
     this.subscribedAt = const Value.absent(),
+    this.broken = const Value.absent(),
   })  : rss = Value(rss),
         title = Value(title),
         description = Value(description),
@@ -313,6 +342,7 @@ class PodcastSubscriptionCompanion
     Expression<String>? author,
     Expression<String>? imageUrl,
     Expression<DateTime>? subscribedAt,
+    Expression<bool>? broken,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -322,6 +352,7 @@ class PodcastSubscriptionCompanion
       if (author != null) 'author': author,
       if (imageUrl != null) 'image_url': imageUrl,
       if (subscribedAt != null) 'subscribed_at': subscribedAt,
+      if (broken != null) 'broken': broken,
     });
   }
 
@@ -332,7 +363,8 @@ class PodcastSubscriptionCompanion
       Value<String>? description,
       Value<String>? author,
       Value<String>? imageUrl,
-      Value<DateTime>? subscribedAt}) {
+      Value<DateTime>? subscribedAt,
+      Value<bool>? broken}) {
     return PodcastSubscriptionCompanion(
       id: id ?? this.id,
       rss: rss ?? this.rss,
@@ -341,6 +373,7 @@ class PodcastSubscriptionCompanion
       author: author ?? this.author,
       imageUrl: imageUrl ?? this.imageUrl,
       subscribedAt: subscribedAt ?? this.subscribedAt,
+      broken: broken ?? this.broken,
     );
   }
 
@@ -368,6 +401,9 @@ class PodcastSubscriptionCompanion
     if (subscribedAt.present) {
       map['subscribed_at'] = Variable<DateTime>(subscribedAt.value);
     }
+    if (broken.present) {
+      map['broken'] = Variable<bool>(broken.value);
+    }
     return map;
   }
 
@@ -380,7 +416,8 @@ class PodcastSubscriptionCompanion
           ..write('description: $description, ')
           ..write('author: $author, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('subscribedAt: $subscribedAt')
+          ..write('subscribedAt: $subscribedAt, ')
+          ..write('broken: $broken')
           ..write(')'))
         .toString();
   }
@@ -2640,6 +2677,7 @@ typedef $$PodcastSubscriptionTableCreateCompanionBuilder
   required String author,
   required String imageUrl,
   Value<DateTime> subscribedAt,
+  Value<bool> broken,
 });
 typedef $$PodcastSubscriptionTableUpdateCompanionBuilder
     = PodcastSubscriptionCompanion Function({
@@ -2650,6 +2688,7 @@ typedef $$PodcastSubscriptionTableUpdateCompanionBuilder
   Value<String> author,
   Value<String> imageUrl,
   Value<DateTime> subscribedAt,
+  Value<bool> broken,
 });
 
 final class $$PodcastSubscriptionTableReferences extends BaseReferences<
@@ -2707,6 +2746,9 @@ class $$PodcastSubscriptionTableFilterComposer
   ColumnFilters<DateTime> get subscribedAt => $composableBuilder(
       column: $table.subscribedAt, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<bool> get broken => $composableBuilder(
+      column: $table.broken, builder: (column) => ColumnFilters(column));
+
   Expression<bool> subscriptionCollectionsRefs(
       Expression<bool> Function($$SubscriptionCollectionsTableFilterComposer f)
           f) {
@@ -2761,6 +2803,9 @@ class $$PodcastSubscriptionTableOrderingComposer
   ColumnOrderings<DateTime> get subscribedAt => $composableBuilder(
       column: $table.subscribedAt,
       builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get broken => $composableBuilder(
+      column: $table.broken, builder: (column) => ColumnOrderings(column));
 }
 
 class $$PodcastSubscriptionTableAnnotationComposer
@@ -2792,6 +2837,9 @@ class $$PodcastSubscriptionTableAnnotationComposer
 
   GeneratedColumn<DateTime> get subscribedAt => $composableBuilder(
       column: $table.subscribedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get broken =>
+      $composableBuilder(column: $table.broken, builder: (column) => column);
 
   Expression<T> subscriptionCollectionsRefs<T extends Object>(
       Expression<T> Function($$SubscriptionCollectionsTableAnnotationComposer a)
@@ -2850,6 +2898,7 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
             Value<String> author = const Value.absent(),
             Value<String> imageUrl = const Value.absent(),
             Value<DateTime> subscribedAt = const Value.absent(),
+            Value<bool> broken = const Value.absent(),
           }) =>
               PodcastSubscriptionCompanion(
             id: id,
@@ -2859,6 +2908,7 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
             author: author,
             imageUrl: imageUrl,
             subscribedAt: subscribedAt,
+            broken: broken,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -2868,6 +2918,7 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
             required String author,
             required String imageUrl,
             Value<DateTime> subscribedAt = const Value.absent(),
+            Value<bool> broken = const Value.absent(),
           }) =>
               PodcastSubscriptionCompanion.insert(
             id: id,
@@ -2877,6 +2928,7 @@ class $$PodcastSubscriptionTableTableManager extends RootTableManager<
             author: author,
             imageUrl: imageUrl,
             subscribedAt: subscribedAt,
+            broken: broken,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (

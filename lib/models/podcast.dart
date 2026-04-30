@@ -12,6 +12,7 @@ class Podcast {
   final String? copyright;
   final bool explicit;
   final List<PodcastEpisode> episodes;
+  final String? newFeedUrl;
 
   Podcast({
     this.title,
@@ -24,6 +25,7 @@ class Podcast {
     this.copyright,
     this.explicit = false,
     this.episodes = const [],
+    this.newFeedUrl,
   });
 
   factory Podcast.fromXml(String data, String rss) {
@@ -34,6 +36,12 @@ class Podcast {
     final image = _parseImage(channel);
     final title = _parseTitle(channel);
     final author = _parseAuthor(channel);
+
+    final newFeedUrl = channel
+        .findElements('itunes:new-feed-url')
+        .firstOrNull
+        ?.innerText
+        .trim();
 
     final feed = Podcast(
       title: title,
@@ -57,6 +65,7 @@ class Podcast {
             ),
           )
           .toList(),
+      newFeedUrl: newFeedUrl,
     );
 
     return feed;

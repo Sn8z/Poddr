@@ -53,6 +53,36 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
   }
 
   @override
+  Future<void> updateSubscription({
+    required String rss,
+    String? title,
+    String? description,
+    String? author,
+    String? imageUrl,
+    String? newRss,
+  }) async {
+    await (database.update(database.podcastSubscription)
+          ..where((sub) => sub.rss.equals(rss)))
+        .write(PodcastSubscriptionCompanion(
+          title: title != null ? Value(title) : const Value.absent(),
+          description: description != null ? Value(description) : const Value.absent(),
+          author: author != null ? Value(author) : const Value.absent(),
+          imageUrl: imageUrl != null ? Value(imageUrl) : const Value.absent(),
+          rss: newRss != null ? Value(newRss) : const Value.absent(),
+          broken: const Value(false),
+        ));
+  }
+
+  @override
+  Future<void> markAsBroken(String rss, {bool broken = true}) async {
+    await (database.update(database.podcastSubscription)
+          ..where((sub) => sub.rss.equals(rss)))
+        .write(PodcastSubscriptionCompanion(
+          broken: Value(broken),
+        ));
+  }
+
+  @override
   Future<int?> getSubscriptionIdByRss(String rss) async {
     final result = await (database.select(database.podcastSubscription)
           ..where((sub) => sub.rss.equals(rss)))

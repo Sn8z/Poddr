@@ -231,9 +231,27 @@ class SubscriptionProvider extends ChangeNotifier {
   Future<_FeedResult?> _fetchFeed(String rss) async {
     try {
       final fullPodcast = await _podcastRepository.getFeed(rss);
-      return _FeedResult(rss, fullPodcast.episodes);
+
+      String effectiveRss = rss;
+      final newFeedUrl = fullPodcast.newFeedUrl;
+
+      await _subscriptionRepository.updateSubscription(
+        rss: rss,
+        title: fullPodcast.title,
+        description: fullPodcast.description,
+        author: fullPodcast.author,
+        imageUrl: fullPodcast.image,
+        newRss: (newFeedUrl != null && newFeedUrl != rss) ? newFeedUrl : null,
+      );
+
+      if (newFeedUrl != null && newFeedUrl != rss) {
+        effectiveRss = newFeedUrl;
+      }
+
+      return _FeedResult(effectiveRss, fullPodcast.episodes);
     } catch (e, st) {
       log("Failed to fetch $rss", name: logName, error: e, stackTrace: st);
+      await _subscriptionRepository.markAsBroken(rss);
       return null;
     }
   }

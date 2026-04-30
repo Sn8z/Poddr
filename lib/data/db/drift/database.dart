@@ -15,6 +15,7 @@ class PodcastSubscription extends Table {
   TextColumn get imageUrl => text()();
   DateTimeColumn get subscribedAt =>
       dateTime().withDefault(currentDateAndTime)();
+  BoolColumn get broken => boolean().withDefault(const Constant(false))();
 }
 
 class ListeningHistory extends Table {
