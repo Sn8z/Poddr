@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:poddr/services/offline.dart';
-import 'package:poddr/shortcuts.dart';
+import 'package:poddr/core/shortcuts.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -14,7 +14,7 @@ import 'package:poddr/services/theme.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/sync.dart';
-import 'package:poddr/router.dart';
+import 'package:poddr/core/router.dart';
 
 void main() async {
   usePathUrlStrategy();

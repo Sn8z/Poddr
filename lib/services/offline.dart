@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:poddr/data/offline/drift_offline_repository.dart';
 import 'package:poddr/data/offline/offline_repository.dart';
-import 'package:poddr/data/exceptions.dart';
+import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/offline_episode.dart';
 

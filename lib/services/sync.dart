@@ -8,7 +8,7 @@ import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/sync/gpodder_client.dart';
 import 'package:poddr/data/sync/sync_repository.dart';
 import 'package:poddr/data/sync/drift_sync_repository.dart';
-import 'package:poddr/data/exceptions.dart';
+import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/services/history.dart';
 
