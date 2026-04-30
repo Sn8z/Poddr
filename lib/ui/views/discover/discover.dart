@@ -45,10 +45,10 @@ class PodcastDiscoveryView extends StatelessWidget {
                         return SimpleDialogOption(
                           onPressed: () {
                             discoveryProvider
-                                .setCountry(country['code'] ?? '');
+                                .setCountry(country.code);
                             Navigator.of(dialogContext).pop();
                           },
-                          child: Text(country['name'] ?? ''),
+                          child: Text(country.name),
                         );
                       }).toList(),
                     );
@@ -71,10 +71,10 @@ class PodcastDiscoveryView extends StatelessWidget {
                         return SimpleDialogOption(
                           onPressed: () {
                             discoveryProvider
-                                .setGenre(genre['id'] ?? '');
+                                .setGenre(genre.id);
                             Navigator.of(dialogContext).pop();
                           },
-                          child: Text(genre['genre'] ?? ''),
+                          child: Text(genre.name),
                         );
                       }).toList(),
                     );

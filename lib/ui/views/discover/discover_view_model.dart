@@ -4,15 +4,20 @@ import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 import 'package:poddr/models/podcast.dart';
-import 'package:poddr/data/itunes_countries.dart';
-import 'package:poddr/data/itunes_genres.dart';
+import 'package:poddr/models/country.dart';
+import 'package:poddr/models/genre.dart';
+import 'package:poddr/data/countries/country_repository.dart';
+import 'package:poddr/data/countries/itunes_country_repository.dart';
+import 'package:poddr/data/genres/genre_repository.dart';
+import 'package:poddr/data/genres/itunes_genre_repository.dart';
 
 class DiscoverViewModel extends ChangeNotifier {
   static const String logName = "DiscoverViewModel";
 
   final IPodcastRepository _podcastRepository;
-  final ISettingsRepository _settingsRepository =
-      SharedPrefSettingsRepository();
+  final ISettingsRepository _settingsRepository;
+  final ICountryRepository _countryRepository;
+  final IGenreRepository _genreRepository;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -20,31 +25,39 @@ class DiscoverViewModel extends ChangeNotifier {
   String _countryCode = '';
   String get countryCode => _countryCode;
   String get country {
-    final country = itunesCountries.firstWhere(
-      (element) => element['code'] == _countryCode,
-      orElse: () => {'code': 'us', 'name': 'United States'},
+    final country = _countryRepository.getCountries().firstWhere(
+      (element) => element.code == _countryCode,
+      orElse: () => const Country(code: 'us', name: 'United States'),
     );
-    return country['name'] ?? '';
+    return country.name;
   }
 
-  List<Map<String, String>> get countries => itunesCountries;
+  List<Country> get countries => _countryRepository.getCountries();
 
   String _genreID = '';
   String get genreID => _genreID;
   String get genre {
-    final genre = itunesGenres.firstWhere(
-      (element) => element['id'] == _genreID,
-      orElse: () => {'id': '', 'genre': 'All'},
+    final genre = _genreRepository.getGenres().firstWhere(
+      (element) => element.id == _genreID,
+      orElse: () => const Genre(id: '', name: 'All'),
     );
-    return genre['genre'] ?? '';
+    return genre.name;
   }
 
-  List<Map<String, String>> get genres => itunesGenres;
+  List<Genre> get genres => _genreRepository.getGenres();
 
   List<Podcast> charts = [];
 
-  DiscoverViewModel({IPodcastRepository? podcastRepository})
-      : _podcastRepository = podcastRepository ?? ITunesPodcastRepository() {
+  DiscoverViewModel({
+    IPodcastRepository? podcastRepository,
+    ISettingsRepository? settingsRepository,
+    ICountryRepository? countryRepository,
+    IGenreRepository? genreRepository,
+  })  : _podcastRepository = podcastRepository ?? ITunesPodcastRepository(),
+        _settingsRepository =
+            settingsRepository ?? SharedPrefSettingsRepository(),
+        _countryRepository = countryRepository ?? ItunesCountryRepository(),
+        _genreRepository = genreRepository ?? ItunesGenreRepository() {
     _init();
   }
 
