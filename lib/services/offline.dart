@@ -11,6 +11,17 @@ import 'package:poddr/models/offline_episode.dart';
 class OfflineProvider extends ChangeNotifier {
   final String logName = "OfflineProvider";
 
+  static const Map<String, String> _videoExtensions = {
+    'video/mp4': 'mp4',
+    'video/webm': 'webm',
+    'video/quicktime': 'mov',
+    'video/x-m4v': 'mp4',
+    'video/ogg': 'ogv',
+    'video avi': 'avi',
+    'video/mpeg': 'mpg',
+    'video/x-msvideo': 'avi',
+  };
+
   final IOfflineRepository _repository;
 
   List<OfflineEpisode> _downloads = [];
@@ -78,10 +89,30 @@ class OfflineProvider extends ChangeNotifier {
     return await _repository.getLocalPath(audioUrl);
   }
 
+  Future<String?> getVideoLocalPath(String audioUrl) async {
+    return await _repository.getVideoLocalPath(audioUrl);
+  }
+
+  String _getVideoExtension(String videoUrl) {
+    final uri = Uri.parse(videoUrl);
+    final path = uri.path.toLowerCase();
+    for (final entry in _videoExtensions.entries) {
+      if (path.endsWith('.${entry.value}')) {
+        return entry.value;
+      }
+    }
+    final ext = path.split('.').lastOrNull;
+    if (ext != null && _videoExtensions.values.contains(ext)) {
+      return ext;
+    }
+    return 'mp4';
+  }
+
   Future<void> download(PodcastEpisode episode) async {
     if (_downloading.contains(episode.audioUrl)) return;
 
-    final queuedIndex = _downloadQueue.indexWhere((e) => e.audioUrl == episode.audioUrl);
+    final queuedIndex =
+        _downloadQueue.indexWhere((e) => e.audioUrl == episode.audioUrl);
     if (queuedIndex != -1) {
       _downloadQueue.removeAt(queuedIndex);
       notifyListeners();
@@ -114,11 +145,16 @@ class OfflineProvider extends ChangeNotifier {
     _activeClients[episode.audioUrl] = client;
 
     String? localPath;
-    File? file;
+    String? videoLocalPath;
+    File? audioFile;
+    File? videoFile;
+    int downloadedBytes = 0;
+    int totalBytes = 0;
+    int audioSize = 0;
 
     try {
       localPath = await _repository.getLocalPathForDownload(episode.audioUrl);
-      file = File(localPath);
+      audioFile = File(localPath);
 
       log('Starting download for: ${episode.title}', name: logName);
 
@@ -133,39 +169,129 @@ class OfflineProvider extends ChangeNotifier {
         );
       }
 
-      final contentLength = response.contentLength ?? 0;
-      int downloadedBytes = 0;
+      audioSize = response.contentLength ?? 0;
+      totalBytes = audioSize;
+
+      // If video available, get video size and add to total
+      int? videoSize;
+      if (episode.hasVideo && episode.videoUrl != null) {
+        try {
+          final videoHead =
+              await client.head(Uri.parse(episode.videoUrl!));
+          videoSize =
+              int.tryParse(videoHead.headers['content-length'] ?? '0');
+          if (videoSize != null && videoSize > 0) {
+            totalBytes += videoSize;
+          }
+        } catch (e) {
+          log('Failed to get video size: $e', name: logName);
+        }
+      }
+
       int lastLoggedPercent = 0;
 
-      final sink = file.openWrite();
+      final audioSink = audioFile.openWrite();
 
       try {
         await for (final chunk in response.stream) {
-          sink.add(chunk);
+          audioSink.add(chunk);
           downloadedBytes += chunk.length;
 
-          if (contentLength > 0) {
-            final progress = downloadedBytes / contentLength;
+          if (totalBytes > 0) {
+            final progress = downloadedBytes / totalBytes;
             _downloadProgress[episode.audioUrl] = progress;
             final percent = (progress * 100).round();
             if (percent >= lastLoggedPercent + 25 && percent <= 100) {
-              log('Download progress: ${episode.title} - $percent%', name: logName);
+              log('Download progress: ${episode.title} - $percent%',
+                  name: logName);
               lastLoggedPercent = percent;
             }
             notifyListeners();
           }
         }
 
-        await sink.flush();
-        await sink.close();
+        await audioSink.flush();
+        await audioSink.close();
       } catch (e) {
-        await sink.close();
+        await audioSink.close();
         rethrow;
       }
 
       final savedFile = File(localPath);
-      if (!await savedFile.exists() || await savedFile.length() != downloadedBytes) {
+      if (!await savedFile.exists() ||
+          await savedFile.length() != downloadedBytes) {
         throw DownloadException('Downloaded file validation failed');
+      }
+
+      // Download video if available
+      if (episode.hasVideo && episode.videoUrl != null) {
+        log('Starting video download for: ${episode.title}', name: logName);
+
+        videoLocalPath =
+            await _repository.getLocalPathForDownload(episode.videoUrl!);
+        final videoExtension = _getVideoExtension(episode.videoUrl!);
+        videoLocalPath =
+            videoLocalPath.replaceAll(RegExp(r'\.[^.]+$'), '.$videoExtension');
+        videoFile = File(videoLocalPath);
+
+        final videoClient = http.Client();
+        try {
+          final videoResponse = await videoClient.send(
+            http.Request('GET', Uri.parse(episode.videoUrl!)),
+          );
+
+          if (videoResponse.statusCode != 200) {
+            throw DownloadFailedException(
+              videoResponse.statusCode,
+              'Failed to download video: ${videoResponse.statusCode}',
+            );
+          }
+
+          final videoSink = videoFile.openWrite();
+          try {
+            await for (final chunk in videoResponse.stream) {
+              videoSink.add(chunk);
+              downloadedBytes += chunk.length;
+
+              if (totalBytes > 0) {
+                final progress = downloadedBytes / totalBytes;
+                _downloadProgress[episode.audioUrl] = progress;
+                final percent = (progress * 100).round();
+                if (percent >= lastLoggedPercent + 25 &&
+                    percent <= 100) {
+                  log('Download progress (video): ${episode.title} - $percent%',
+                      name: logName);
+                  lastLoggedPercent = percent;
+                }
+                notifyListeners();
+              }
+            }
+
+            await videoSink.flush();
+            await videoSink.close();
+          } catch (e) {
+            await videoSink.close();
+            rethrow;
+          }
+
+          log('Video download completed: ${episode.title}', name: logName);
+        } catch (videoError, videoStackTrace) {
+          // FULL FAILURE: Delete audio, cleanup, rethrow
+          log('Video download failed - rolling back',
+              name: logName, error: videoError, stackTrace: videoStackTrace);
+
+          if (await savedFile.exists()) {
+            await savedFile.delete();
+          }
+          if (await videoFile.exists()) {
+            await videoFile.delete();
+          }
+          await _repository.remove(episode.audioUrl);
+
+          rethrow;
+        } finally {
+          videoClient.close();
+        }
       }
 
       await _repository.addEpisode(
@@ -179,6 +305,11 @@ class OfflineProvider extends ChangeNotifier {
         duration: episode.duration?.inSeconds ?? 0,
         fileSize: downloadedBytes,
         publicationDate: episode.publicationDate,
+        videoUrl: episode.videoUrl,
+        videoLocalPath: videoLocalPath,
+        videoFileSize: videoLocalPath != null
+            ? downloadedBytes - audioSize
+            : null,
       );
 
       log(
@@ -207,7 +338,8 @@ class OfflineProvider extends ChangeNotifier {
               log('Cleaned up partial file: $localPath', name: logName);
             }
           } catch (cleanupError) {
-            log('Failed to clean up partial file', name: logName, error: cleanupError);
+            log('Failed to clean up partial file',
+                name: logName, error: cleanupError);
           }
         }
       }
@@ -335,6 +467,7 @@ class OfflineProvider extends ChangeNotifier {
       title: data.title,
       description: data.description,
       audioUrl: data.audioUrl,
+      videoUrl: data.videoUrl,
       imageUrl: data.imageUrl,
       podcastTitle: data.podcastTitle,
       podcastRSS: data.podcastRSS,

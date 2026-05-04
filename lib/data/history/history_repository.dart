@@ -10,6 +10,7 @@ abstract class IHistoryRepository {
     String podcastTitle,
     String podcastRSS,
     int duration,
+    String? videoUrl,
   );
 
   Future<List<PodcastEpisode>> getHistory();

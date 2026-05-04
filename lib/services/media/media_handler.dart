@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math' hide log;
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart' hide AudioDevice;
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poddr/data/media/media_repository.dart';
 import 'package:poddr/data/media/prefs_media_repository.dart';
 import 'package:poddr/models/episode.dart';
@@ -35,6 +36,8 @@ class PoddrMediaHandler extends BaseAudioHandler
   late final StreamSubscription<String> _errorSub;
 
   Stream<double> get volume => _player.player.stream.volume;
+
+  VideoController? get videoController => _player.videoController;
 
   final IMediaRepository _mediaRepository;
 
@@ -69,7 +72,8 @@ class PoddrMediaHandler extends BaseAudioHandler
       final audioUrl = await _mediaRepository.getAudioUrl();
       if (audioUrl.isNotEmpty) {
         loadMedia(
-          audioUrl: await _mediaRepository.getAudioUrl(),
+          audioUrl: audioUrl,
+          videoUrl: await _mediaRepository.getVideoUrl(),
           episodeTitle: await _mediaRepository.getEpisodeTitle(),
           podcastTitle: await _mediaRepository.getPodcastTitle(),
           podcastRSS: await _mediaRepository.getRSS(),
@@ -147,6 +151,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   void _handleMediaItemChange(MediaItem? media) {
     if (media == null || media.id.isEmpty) return;
     _mediaRepository.setAudioUrl(media.id);
+    _mediaRepository.setVideoUrl(media.extras?['videoUrl'] as String?);
     _mediaRepository.setEpisodeTitle(media.title);
     _mediaRepository.setPodcastTitle(media.artist ?? "");
     _mediaRepository.setRSS(media.extras?["podcastRSS"] ?? "");
@@ -268,6 +273,7 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   Future<void> loadMedia({
     String? audioUrl,
+    String? videoUrl,
     String? podcastTitle,
     String? podcastRSS,
     String? episodeTitle,
@@ -280,6 +286,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   }) async {
     log("Loading media", name: logName);
     log("AudioUrl: $audioUrl", name: logName);
+    log("VideoUrl: $videoUrl", name: logName);
     log("PodcastTitle: $podcastTitle", name: logName);
     log("PodcastRSS: $podcastRSS", name: logName);
     log("EpisodeTitle: $episodeTitle", name: logName);
@@ -294,6 +301,10 @@ class PoddrMediaHandler extends BaseAudioHandler
 
     _emit(AudioEvent.mediaItemChanged);
 
+    final playbackUrl = (videoUrl != null && videoUrl.isNotEmpty)
+        ? videoUrl
+        : audioUrl;
+
     final media = MediaItem(
       id: audioUrl,
       title: episodeTitle ?? "Missing title",
@@ -301,16 +312,21 @@ class PoddrMediaHandler extends BaseAudioHandler
       displayDescription: description ?? "Missing description",
       artist: artist ?? podcastTitle,
       artUri: Uri.parse(artUri ?? ""),
-      extras: {"podcastRSS": podcastRSS},
+      extras: {
+        "podcastRSS": podcastRSS,
+        "videoUrl": videoUrl,
+      },
     );
 
-    mediaItem.add(media);
-
+    // Open media FIRST so VideoController is ready when UI rebuilds
     await _player.open(
-      media.id,
+      playbackUrl,
       startPosition: startPosition,
       autoplay: autoplay,
     );
+
+    // Then notify UI (VideoController is ready)
+    mediaItem.add(media);
   }
 
   @override
@@ -400,15 +416,17 @@ class PoddrMediaHandler extends BaseAudioHandler
     }
 
     final media = _mediaQueue[index];
+    final videoUrl = media.extras?['videoUrl'] as String?;
 
     await loadMedia(
       audioUrl: media.id,
-      episodeTitle: media.title,
+      videoUrl: videoUrl,
       podcastTitle: media.artist,
+      podcastRSS: media.extras?["podcastRSS"],
+      episodeTitle: media.title,
       album: media.album,
       description: media.displayDescription,
       artist: media.artist,
-      podcastRSS: media.extras?["podcastRSS"],
       artUri: media.artUri.toString(),
       startPosition: Duration.zero,
       autoplay: true,
@@ -437,6 +455,7 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   Future<void> addToQueue({
     String? audioUrl,
+    String? videoUrl,
     String? podcastTitle,
     String? podcastRSS,
     String? episodeTitle,
@@ -447,6 +466,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   }) async {
     log("Adding to queue", name: logName);
     log("AudioUrl: $audioUrl", name: logName);
+    log("VideoUrl: $videoUrl", name: logName);
     log("PodcastTitle: $podcastTitle", name: logName);
     log("PodcastRSS: $podcastRSS", name: logName);
     log("EpisodeTitle: $episodeTitle", name: logName);
@@ -464,7 +484,10 @@ class PoddrMediaHandler extends BaseAudioHandler
       displayDescription: description ?? "Missing description",
       artist: artist ?? podcastTitle,
       artUri: Uri.parse(artUri ?? ""),
-      extras: {"podcastRSS": podcastRSS},
+      extras: {
+        "podcastRSS": podcastRSS,
+        "videoUrl": videoUrl,
+      },
     );
 
     await addQueueItem(media);

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poddr/ui/utils/platform.dart';
 
 class PoddrMediaPlayer {
@@ -7,6 +8,11 @@ class PoddrMediaPlayer {
 
   late final Player _player;
   Player get player => _player;
+  VideoController? _videoController;
+  VideoController? get videoController {
+    _videoController ??= VideoController(_player);
+    return _videoController;
+  }
 
   PoddrMediaPlayer() {
     _player = Player(
@@ -53,6 +59,7 @@ class PoddrMediaPlayer {
     bool autoplay = true,
   }) async {
     log("Opening: $url", name: logName);
+
     await _player.open(
       Media(url, start: startPosition),
       play: autoplay,
@@ -94,6 +101,7 @@ class PoddrMediaPlayer {
 
   Future<void> dispose() async {
     log("Disposing player", name: logName);
+    _videoController = null;
     await _player.dispose();
   }
 }

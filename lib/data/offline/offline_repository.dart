@@ -16,6 +16,10 @@ abstract class IOfflineRepository {
     required int duration,
     required int fileSize,
     DateTime? publicationDate,
+    // Video support
+    String? videoUrl,
+    String? videoLocalPath,
+    int? videoFileSize,
   });
 
   Future<void> remove(String audioUrl);
@@ -27,4 +31,7 @@ abstract class IOfflineRepository {
   Future<String> getLocalPathForDownload(String audioUrl);
 
   Future<String?> getLocalPath(String audioUrl);
+
+  // Video support
+  Future<String?> getVideoLocalPath(String audioUrl);
 }

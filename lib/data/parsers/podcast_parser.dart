@@ -167,6 +167,7 @@ class PoddrPodcastParser {
       podcastTitle: podcastTitle,
       author: author ?? _findElementText(entry, ['atom:author', 'author']),
       audioUrl: _parseAtomLink(entry, 'enclosure') ?? '',
+      videoUrl: _parseVideoUrl(entry),
       duration: _parseDuration(entry),
       publicationDate: _parseAtomPublished(entry),
       imageUrl: _parseEpisodeImageUrl(entry),
@@ -243,6 +244,7 @@ class PoddrPodcastParser {
       podcastTitle: podcastTitle,
       author: author,
       audioUrl: _parseAudioUrl(item) ?? '',
+      videoUrl: _parseVideoUrl(item),
       duration: _parseDuration(item),
       publicationDate: _parsePubDate(item),
       imageUrl: _parseEpisodeImageUrl(item) ?? image,
@@ -424,6 +426,51 @@ class PoddrPodcastParser {
       'itunes:subtitle',
       'podcast:description',
     ]);
+  }
+
+  static String? _parseVideoUrl(XmlElement item) {
+    // Check RSS enclosure tags for video type
+    for (final enclosure in item.findElements('enclosure')) {
+      final type = enclosure.getAttribute('type')?.toLowerCase() ?? '';
+      if (type.startsWith('video/')) {
+        final url = enclosure.getAttribute('url');
+        if (url != null && url.isNotEmpty) return url;
+      }
+    }
+
+    // Check media:content tags for video type
+    for (final media in item.findElements('media:content')) {
+      final type = media.getAttribute('type')?.toLowerCase() ?? '';
+      if (type.startsWith('video/')) {
+        final url = media.getAttribute('url');
+        if (url != null && url.isNotEmpty) return url;
+      }
+    }
+
+    // Check Atom link tags (rel="enclosure") for video type
+    for (final link in item.findElements('link')) {
+      if (link.getAttribute('rel') == 'enclosure') {
+        final type = link.getAttribute('type')?.toLowerCase() ?? '';
+        if (type.startsWith('video/')) {
+          final href = link.getAttribute('href');
+          if (href != null && href.isNotEmpty) return href;
+        }
+      }
+    }
+
+    // Check podcast:alternateEnclosure for video type
+    for (final altEnclosure in item.findElements('podcast:alternateEnclosure')) {
+      final type = altEnclosure.getAttribute('type')?.toLowerCase() ?? '';
+      if (type.startsWith('video/')) {
+        final source = altEnclosure
+            .findElements('podcast:source')
+            .firstOrNull
+            ?.getAttribute('url');
+        if (source != null && source.isNotEmpty) return source;
+      }
+    }
+
+    return null;
   }
 
   static String? _parseAudioUrl(XmlElement item) {

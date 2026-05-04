@@ -49,6 +49,9 @@ class DriftOfflineRepository implements IOfflineRepository {
       fileSize: drift.fileSize,
       downloadedAt: drift.downloadedAt,
       publicationDate: drift.publicationDate,
+      videoUrl: drift.videoUrl,
+      videoLocalPath: drift.videoLocalPath,
+      videoFileSize: drift.videoFileSize,
     );
   }
 
@@ -85,6 +88,10 @@ class DriftOfflineRepository implements IOfflineRepository {
     required int duration,
     required int fileSize,
     DateTime? publicationDate,
+    // Video support
+    String? videoUrl,
+    String? videoLocalPath,
+    int? videoFileSize,
   }) async {
     await database.into(database.offlineEpisodes).insert(
           drift.OfflineEpisodesCompanion.insert(
@@ -98,6 +105,9 @@ class DriftOfflineRepository implements IOfflineRepository {
             duration: duration,
             fileSize: fileSize,
             publicationDate: Value(publicationDate),
+            videoUrl: Value(videoUrl),
+            videoLocalPath: Value(videoLocalPath),
+            videoFileSize: Value(videoFileSize),
           ),
         );
   }
@@ -106,13 +116,20 @@ class DriftOfflineRepository implements IOfflineRepository {
   Future<void> remove(String audioUrl) async {
     final episode = await getByAudioUrl(audioUrl);
     if (episode != null) {
-      final file = File(episode.localPath);
-      if (await file.exists()) {
-        await file.delete();
+      final audioFile = File(episode.localPath);
+      if (await audioFile.exists()) {
+        await audioFile.delete();
+      }
+      // Delete video file if exists
+      if (episode.videoLocalPath != null) {
+        final videoFile = File(episode.videoLocalPath!);
+        if (await videoFile.exists()) {
+          await videoFile.delete();
+        }
       }
     }
     await (database.delete(database.offlineEpisodes)
-          ..where((t) => t.audioUrl.equals(audioUrl)))
+        ..where((t) => t.audioUrl.equals(audioUrl)))
         .go();
   }
 
@@ -123,6 +140,17 @@ class DriftOfflineRepository implements IOfflineRepository {
     final file = File(episode.localPath);
     if (await file.exists()) {
       return episode.localPath;
+    }
+    return null;
+  }
+
+  @override
+  Future<String?> getVideoLocalPath(String audioUrl) async {
+    final episode = await getByAudioUrl(audioUrl);
+    if (episode == null || episode.videoLocalPath == null) return null;
+    final file = File(episode.videoLocalPath!);
+    if (await file.exists()) {
+      return episode.videoLocalPath;
     }
     return null;
   }

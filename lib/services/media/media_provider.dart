@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_handler.dart';
@@ -34,6 +35,11 @@ class MediaProvider extends ChangeNotifier {
 
   String _audioUrl = "";
   String get audioUrl => _audioUrl;
+
+  String? _videoUrl;
+  String? get videoUrl => _videoUrl;
+  bool get hasVideo => _videoUrl != null && _videoUrl!.isNotEmpty;
+  VideoController? get videoController => _mediaHandler.videoController;
 
   double _volume = 56.0;
   double get volume => _volume;
@@ -91,6 +97,7 @@ class MediaProvider extends ChangeNotifier {
       _podcastRSS = mediaItem.extras?["podcastRSS"] ?? "";
       _duration = mediaItem.duration ?? Duration.zero;
       _artwork = mediaItem.artUri?.toString() ?? "";
+      _videoUrl = mediaItem.extras?['videoUrl'] as String?;
 
       notifyListeners();
     });
@@ -192,6 +199,7 @@ class MediaProvider extends ChangeNotifier {
 
   void addToQueue({
     String? audioUrl,
+    String? videoUrl,
     String? podcastTitle,
     String? podcastRSS,
     String? episodeTitle,
@@ -202,6 +210,7 @@ class MediaProvider extends ChangeNotifier {
   }) async {
     log("Adding to queue", name: logName);
     log("AudioUrl: $audioUrl", name: logName);
+    log("VideoUrl: $videoUrl", name: logName);
     log("PodcastTitle: $podcastTitle", name: logName);
     log("PodcastRSS: $podcastRSS", name: logName);
     log("EpisodeTitle: $episodeTitle", name: logName);
@@ -219,7 +228,7 @@ class MediaProvider extends ChangeNotifier {
       displayDescription: description ?? "Missing description",
       artist: artist ?? podcastTitle,
       artUri: Uri.parse(artUri ?? ""),
-      extras: {"podcastRSS": podcastRSS},
+      extras: {"podcastRSS": podcastRSS, "videoUrl": videoUrl},
     );
 
     await _mediaHandler.addQueueItem(media);
@@ -252,6 +261,7 @@ class MediaProvider extends ChangeNotifier {
 
   Future<void> loadMedia({
     String? audioUrl,
+    String? videoUrl,
     String? episodeTitle,
     String? podcastTitle,
     String? podcastRSS,
@@ -270,16 +280,29 @@ class MediaProvider extends ChangeNotifier {
     }
 
     String playUrl = audioUrl;
+    String? playVideoUrl = videoUrl;
+
     if (_offlineProvider != null) {
       final localPath = await _offlineProvider!.getLocalPath(audioUrl);
       if (localPath != null) {
         playUrl = localPath;
-        log("Playing from local file: $localPath", name: logName);
+        log("Playing audio from local file: $localPath", name: logName);
+      }
+
+      // Check for local video
+      if (videoUrl != null) {
+        final localVideoPath =
+            await _offlineProvider!.getVideoLocalPath(audioUrl);
+        if (localVideoPath != null) {
+          playVideoUrl = localVideoPath;
+          log("Playing video from local file: $localVideoPath", name: logName);
+        }
       }
     }
 
     await _mediaHandler.loadMedia(
       audioUrl: playUrl,
+      videoUrl: playVideoUrl,
       podcastTitle: podcastTitle,
       podcastRSS: podcastRSS,
       episodeTitle: episodeTitle,
@@ -299,6 +322,7 @@ class MediaProvider extends ChangeNotifier {
         podcastTitle ?? "",
         podcastRSS ?? "",
         _duration.inSeconds,
+        playVideoUrl,
       );
     }
   }

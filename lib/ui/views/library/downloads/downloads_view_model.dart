@@ -27,9 +27,11 @@ class DownloadsViewModel extends ChangeNotifier {
     String? artUri,
     String? album,
     String? artist,
+    String? videoUrl,
   }) {
     _mediaProvider.loadMedia(
       audioUrl: audioUrl,
+      videoUrl: videoUrl,
       episodeTitle: episodeTitle,
       podcastTitle: podcastTitle,
       podcastRSS: podcastRSS,

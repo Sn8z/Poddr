@@ -73,6 +73,25 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   }
 
   @override
+  Future<void> setVideoUrl(String? url) async {
+    final prefs = await SharedPreferences.getInstance();
+    log("Saving video url: $url", name: logName);
+    if (url == null) {
+      await prefs.remove("videoUrl");
+    } else {
+      prefs.setString("videoUrl", url);
+    }
+  }
+
+  @override
+  Future<String?> getVideoUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? url = prefs.getString("videoUrl");
+    log("Loading video url $url", name: logName);
+    return url;
+  }
+
+  @override
   Future<void> setRSS(String rss) async {
     final prefs = await SharedPreferences.getInstance();
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class FullscreenButton extends StatelessWidget {
+class PlayerViewButton extends StatelessWidget {
   final double size;
-  const FullscreenButton({
+  const PlayerViewButton({
     super.key,
     this.size = 26,
   });
@@ -15,7 +15,7 @@ class FullscreenButton extends StatelessWidget {
         context.push('/player');
       },
       icon: Icon(
-        Icons.fullscreen_rounded,
+        Icons.ondemand_video_rounded,
         color: Theme.of(context).colorScheme.onSurface,
         size: size,
       ),

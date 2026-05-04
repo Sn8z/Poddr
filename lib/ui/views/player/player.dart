@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:poddr/ui/components/audio/artwork.dart';
+import 'package:poddr/ui/components/audio/media_display.dart';
 import 'package:poddr/ui/components/audio/duration_text.dart';
 import 'package:poddr/ui/components/audio/episode_title.dart';
 import 'package:poddr/ui/components/audio/media_title.dart';
@@ -33,7 +33,7 @@ class PlayerView extends StatelessWidget {
           Expanded(
             child: SizedBox(
               width: double.infinity,
-              child: Artwork(),
+              child: MediaDisplay(),
             ),
           ),
           const MediaProgressSlider(),

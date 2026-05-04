@@ -165,15 +165,16 @@ class LatestEpisodes extends StatelessWidget {
                   data: EpisodeHistory(audioUrl: episode.audioUrl),
                   onTap: () {
                     context.read<MediaProvider>().loadMedia(
-                          audioUrl: episode.audioUrl,
-                          episodeTitle: episode.title,
-                          podcastTitle: episode.podcastTitle,
-                          podcastRSS: episode.podcastRSS,
-                          artUri: episode.imageUrl,
-                          artist: episode.podcastTitle,
-                          album: episode.podcastTitle,
-                          description: episode.description,
-                        );
+                            audioUrl: episode.audioUrl,
+                            videoUrl: episode.videoUrl,
+                            episodeTitle: episode.title,
+                            podcastTitle: episode.podcastTitle,
+                            podcastRSS: episode.podcastRSS,
+                            artUri: episode.imageUrl,
+                            artist: episode.podcastTitle,
+                            album: episode.podcastTitle,
+                            description: episode.description,
+                          );
                   },
                 );
               }).toList(),
@@ -241,6 +242,7 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
                       onTap: () {
                         context.read<MediaProvider>().loadMedia(
                               audioUrl: history.audioUrl,
+                              videoUrl: history.videoUrl,
                               episodeTitle: history.title,
                               podcastTitle: history.podcastTitle,
                               podcastRSS: history.podcastRSS,

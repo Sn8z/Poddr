@@ -4,6 +4,7 @@ class PodcastEpisode {
   final String? title;
   final String? description;
   final String audioUrl;
+  final String? videoUrl;
   final String? podcastTitle;
   final String? podcastRSS;
   final String? author;
@@ -27,10 +28,13 @@ class PodcastEpisode {
   final Map<String, dynamic>? value;
   final List<Map<String, String>> music;
 
+  bool get hasVideo => videoUrl != null && videoUrl!.isNotEmpty;
+
   PodcastEpisode({
     this.title,
     this.description,
     required this.audioUrl,
+    this.videoUrl,
     this.podcastTitle,
     this.podcastRSS,
     this.author,
@@ -58,7 +62,8 @@ class PodcastEpisode {
       podcastRSS: mediaItem.extras?['podcastRSS'],
       podcastTitle: mediaItem.artist,
       author: mediaItem.album,
-      audioUrl: mediaItem.id,
+      audioUrl: mediaItem.extras?['audioUrl'] ?? mediaItem.id,
+      videoUrl: mediaItem.extras?['videoUrl'],
       duration: mediaItem.duration,
       publicationDate: mediaItem.extras?['publicationDate'] != null
           ? DateTime.tryParse(mediaItem.extras?['publicationDate'])
@@ -69,6 +74,6 @@ class PodcastEpisode {
 
   @override
   String toString() {
-    return 'PodcastEpisode{title: $title, description: $description, audioUrl: $audioUrl, podcastTitle: $podcastTitle, podcastRSS: $podcastRSS, author: $author, duration: $duration, publicationDate: $publicationDate, imageUrl: $imageUrl}';
+    return 'PodcastEpisode{title: $title, description: $description, audioUrl: $audioUrl, videoUrl: $videoUrl, podcastTitle: $podcastTitle, podcastRSS: $podcastRSS, author: $author, duration: $duration, publicationDate: $publicationDate, imageUrl: $imageUrl}';
   }
 }

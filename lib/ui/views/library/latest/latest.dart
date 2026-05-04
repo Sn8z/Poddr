@@ -139,6 +139,7 @@ class LatestEpisodesView extends StatelessWidget {
                               artist: episode.author,
                               description: episode.description,
                               audioUrl: episode.audioUrl,
+                              videoUrl: episode.videoUrl,
                               podcastRSS: episode.podcastRSS,
                               artUri: episode.imageUrl,
                             );

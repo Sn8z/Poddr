@@ -43,6 +43,7 @@ class HistoryProvider extends ChangeNotifier {
     String podcastTitle,
     String podcastRSS,
     int duration,
+    String? videoUrl,
   ) async {
     try {
       final newItem = await _historyRepository.addHistory(
@@ -53,6 +54,7 @@ class HistoryProvider extends ChangeNotifier {
         podcastTitle,
         podcastRSS,
         duration,
+        videoUrl,
       );
       if (newItem != null) {
         _history.insert(0, newItem);

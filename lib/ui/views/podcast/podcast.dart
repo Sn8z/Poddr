@@ -416,6 +416,7 @@ class Episode extends StatelessWidget {
           onPressed: () {
             context.read<MediaProvider>().addToQueue(
                   audioUrl: episode.audioUrl,
+                  videoUrl: episode.videoUrl,
                   episodeTitle: episode.title,
                   podcastTitle: episode.podcastTitle,
                   podcastRSS: podcastProvider.podcast!.rss ?? "Missing RSS",
@@ -439,6 +440,7 @@ class Episode extends StatelessWidget {
       onTap: () {
         context.read<MediaProvider>().loadMedia(
               audioUrl: episode.audioUrl,
+              videoUrl: episode.videoUrl,
               episodeTitle: episode.title,
               podcastTitle: episode.podcastTitle,
               podcastRSS: podcastProvider.podcast!.rss ?? "Missing RSS",

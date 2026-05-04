@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
 
@@ -16,15 +17,28 @@ class EpisodeTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     String? title =
         context.select<MediaProvider, String?>((e) => e.episodeTitle);
+    String? rss = context.select<MediaProvider, String?>((e) => e.podcastRSS);
 
-    return Text(
-      title ?? "Title",
-      style: TextStyle(
-        color: color ?? Theme.of(context).colorScheme.primary,
-        fontWeight: FontWeight.bold,
-        fontSize: size,
+    final encodedRSS = rss != null && rss.isNotEmpty 
+        ? Uri.encodeComponent(rss) 
+        : null;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: encodedRSS != null
+            ? () => context.push("/podcasts/$encodedRSS")
+            : null,
+        child: Text(
+          title ?? "Title",
+          style: TextStyle(
+            color: color ?? Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold,
+            fontSize: size,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
-      overflow: TextOverflow.ellipsis,
     );
   }
 }

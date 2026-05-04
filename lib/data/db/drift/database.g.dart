@@ -507,6 +507,12 @@ class $ListeningHistoryTable extends ListeningHistory
       type: DriftSqlType.dateTime,
       requiredDuringInsert: false,
       defaultValue: currentDateAndTime);
+  static const VerificationMeta _videoUrlMeta =
+      const VerificationMeta('videoUrl');
+  @override
+  late final GeneratedColumn<String> videoUrl = GeneratedColumn<String>(
+      'video_url', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -519,7 +525,8 @@ class $ListeningHistoryTable extends ListeningHistory
         position,
         duration,
         isFinished,
-        listenedAt
+        listenedAt,
+        videoUrl
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -599,6 +606,10 @@ class $ListeningHistoryTable extends ListeningHistory
           listenedAt.isAcceptableOrUnknown(
               data['listened_at']!, _listenedAtMeta));
     }
+    if (data.containsKey('video_url')) {
+      context.handle(_videoUrlMeta,
+          videoUrl.isAcceptableOrUnknown(data['video_url']!, _videoUrlMeta));
+    }
     return context;
   }
 
@@ -630,6 +641,8 @@ class $ListeningHistoryTable extends ListeningHistory
           .read(DriftSqlType.bool, data['${effectivePrefix}is_finished'])!,
       listenedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}listened_at'])!,
+      videoUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}video_url']),
     );
   }
 
@@ -652,6 +665,7 @@ class ListeningHistoryData extends DataClass
   final int duration;
   final bool isFinished;
   final DateTime listenedAt;
+  final String? videoUrl;
   const ListeningHistoryData(
       {required this.id,
       required this.audioUrl,
@@ -663,7 +677,8 @@ class ListeningHistoryData extends DataClass
       required this.position,
       required this.duration,
       required this.isFinished,
-      required this.listenedAt});
+      required this.listenedAt,
+      this.videoUrl});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -678,6 +693,9 @@ class ListeningHistoryData extends DataClass
     map['duration'] = Variable<int>(duration);
     map['is_finished'] = Variable<bool>(isFinished);
     map['listened_at'] = Variable<DateTime>(listenedAt);
+    if (!nullToAbsent || videoUrl != null) {
+      map['video_url'] = Variable<String>(videoUrl);
+    }
     return map;
   }
 
@@ -694,6 +712,9 @@ class ListeningHistoryData extends DataClass
       duration: Value(duration),
       isFinished: Value(isFinished),
       listenedAt: Value(listenedAt),
+      videoUrl: videoUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(videoUrl),
     );
   }
 
@@ -712,6 +733,7 @@ class ListeningHistoryData extends DataClass
       duration: serializer.fromJson<int>(json['duration']),
       isFinished: serializer.fromJson<bool>(json['isFinished']),
       listenedAt: serializer.fromJson<DateTime>(json['listenedAt']),
+      videoUrl: serializer.fromJson<String?>(json['videoUrl']),
     );
   }
   @override
@@ -729,6 +751,7 @@ class ListeningHistoryData extends DataClass
       'duration': serializer.toJson<int>(duration),
       'isFinished': serializer.toJson<bool>(isFinished),
       'listenedAt': serializer.toJson<DateTime>(listenedAt),
+      'videoUrl': serializer.toJson<String?>(videoUrl),
     };
   }
 
@@ -743,7 +766,8 @@ class ListeningHistoryData extends DataClass
           int? position,
           int? duration,
           bool? isFinished,
-          DateTime? listenedAt}) =>
+          DateTime? listenedAt,
+          Value<String?> videoUrl = const Value.absent()}) =>
       ListeningHistoryData(
         id: id ?? this.id,
         audioUrl: audioUrl ?? this.audioUrl,
@@ -756,6 +780,7 @@ class ListeningHistoryData extends DataClass
         duration: duration ?? this.duration,
         isFinished: isFinished ?? this.isFinished,
         listenedAt: listenedAt ?? this.listenedAt,
+        videoUrl: videoUrl.present ? videoUrl.value : this.videoUrl,
       );
   ListeningHistoryData copyWithCompanion(ListeningHistoryCompanion data) {
     return ListeningHistoryData(
@@ -776,6 +801,7 @@ class ListeningHistoryData extends DataClass
           data.isFinished.present ? data.isFinished.value : this.isFinished,
       listenedAt:
           data.listenedAt.present ? data.listenedAt.value : this.listenedAt,
+      videoUrl: data.videoUrl.present ? data.videoUrl.value : this.videoUrl,
     );
   }
 
@@ -792,14 +818,26 @@ class ListeningHistoryData extends DataClass
           ..write('position: $position, ')
           ..write('duration: $duration, ')
           ..write('isFinished: $isFinished, ')
-          ..write('listenedAt: $listenedAt')
+          ..write('listenedAt: $listenedAt, ')
+          ..write('videoUrl: $videoUrl')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, audioUrl, title, description, imageUrl,
-      podcastTitle, podcastRSS, position, duration, isFinished, listenedAt);
+  int get hashCode => Object.hash(
+      id,
+      audioUrl,
+      title,
+      description,
+      imageUrl,
+      podcastTitle,
+      podcastRSS,
+      position,
+      duration,
+      isFinished,
+      listenedAt,
+      videoUrl);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -814,7 +852,8 @@ class ListeningHistoryData extends DataClass
           other.position == this.position &&
           other.duration == this.duration &&
           other.isFinished == this.isFinished &&
-          other.listenedAt == this.listenedAt);
+          other.listenedAt == this.listenedAt &&
+          other.videoUrl == this.videoUrl);
 }
 
 class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
@@ -829,6 +868,7 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
   final Value<int> duration;
   final Value<bool> isFinished;
   final Value<DateTime> listenedAt;
+  final Value<String?> videoUrl;
   const ListeningHistoryCompanion({
     this.id = const Value.absent(),
     this.audioUrl = const Value.absent(),
@@ -841,6 +881,7 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
     this.duration = const Value.absent(),
     this.isFinished = const Value.absent(),
     this.listenedAt = const Value.absent(),
+    this.videoUrl = const Value.absent(),
   });
   ListeningHistoryCompanion.insert({
     this.id = const Value.absent(),
@@ -854,6 +895,7 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
     required int duration,
     this.isFinished = const Value.absent(),
     this.listenedAt = const Value.absent(),
+    this.videoUrl = const Value.absent(),
   })  : audioUrl = Value(audioUrl),
         title = Value(title),
         description = Value(description),
@@ -873,6 +915,7 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
     Expression<int>? duration,
     Expression<bool>? isFinished,
     Expression<DateTime>? listenedAt,
+    Expression<String>? videoUrl,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -886,6 +929,7 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
       if (duration != null) 'duration': duration,
       if (isFinished != null) 'is_finished': isFinished,
       if (listenedAt != null) 'listened_at': listenedAt,
+      if (videoUrl != null) 'video_url': videoUrl,
     });
   }
 
@@ -900,7 +944,8 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
       Value<int>? position,
       Value<int>? duration,
       Value<bool>? isFinished,
-      Value<DateTime>? listenedAt}) {
+      Value<DateTime>? listenedAt,
+      Value<String?>? videoUrl}) {
     return ListeningHistoryCompanion(
       id: id ?? this.id,
       audioUrl: audioUrl ?? this.audioUrl,
@@ -913,6 +958,7 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
       duration: duration ?? this.duration,
       isFinished: isFinished ?? this.isFinished,
       listenedAt: listenedAt ?? this.listenedAt,
+      videoUrl: videoUrl ?? this.videoUrl,
     );
   }
 
@@ -952,6 +998,9 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
     if (listenedAt.present) {
       map['listened_at'] = Variable<DateTime>(listenedAt.value);
     }
+    if (videoUrl.present) {
+      map['video_url'] = Variable<String>(videoUrl.value);
+    }
     return map;
   }
 
@@ -968,7 +1017,8 @@ class ListeningHistoryCompanion extends UpdateCompanion<ListeningHistoryData> {
           ..write('position: $position, ')
           ..write('duration: $duration, ')
           ..write('isFinished: $isFinished, ')
-          ..write('listenedAt: $listenedAt')
+          ..write('listenedAt: $listenedAt, ')
+          ..write('videoUrl: $videoUrl')
           ..write(')'))
         .toString();
   }
@@ -1058,6 +1108,24 @@ class $OfflineEpisodesTable extends OfflineEpisodes
   late final GeneratedColumn<DateTime> publicationDate =
       GeneratedColumn<DateTime>('publication_date', aliasedName, true,
           type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _videoUrlMeta =
+      const VerificationMeta('videoUrl');
+  @override
+  late final GeneratedColumn<String> videoUrl = GeneratedColumn<String>(
+      'video_url', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _videoLocalPathMeta =
+      const VerificationMeta('videoLocalPath');
+  @override
+  late final GeneratedColumn<String> videoLocalPath = GeneratedColumn<String>(
+      'video_local_path', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _videoFileSizeMeta =
+      const VerificationMeta('videoFileSize');
+  @override
+  late final GeneratedColumn<int> videoFileSize = GeneratedColumn<int>(
+      'video_file_size', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1071,7 +1139,10 @@ class $OfflineEpisodesTable extends OfflineEpisodes
         duration,
         fileSize,
         downloadedAt,
-        publicationDate
+        publicationDate,
+        videoUrl,
+        videoLocalPath,
+        videoFileSize
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1158,6 +1229,22 @@ class $OfflineEpisodesTable extends OfflineEpisodes
           publicationDate.isAcceptableOrUnknown(
               data['publication_date']!, _publicationDateMeta));
     }
+    if (data.containsKey('video_url')) {
+      context.handle(_videoUrlMeta,
+          videoUrl.isAcceptableOrUnknown(data['video_url']!, _videoUrlMeta));
+    }
+    if (data.containsKey('video_local_path')) {
+      context.handle(
+          _videoLocalPathMeta,
+          videoLocalPath.isAcceptableOrUnknown(
+              data['video_local_path']!, _videoLocalPathMeta));
+    }
+    if (data.containsKey('video_file_size')) {
+      context.handle(
+          _videoFileSizeMeta,
+          videoFileSize.isAcceptableOrUnknown(
+              data['video_file_size']!, _videoFileSizeMeta));
+    }
     return context;
   }
 
@@ -1191,6 +1278,12 @@ class $OfflineEpisodesTable extends OfflineEpisodes
           DriftSqlType.dateTime, data['${effectivePrefix}downloaded_at'])!,
       publicationDate: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}publication_date']),
+      videoUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}video_url']),
+      videoLocalPath: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}video_local_path']),
+      videoFileSize: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}video_file_size']),
     );
   }
 
@@ -1213,6 +1306,9 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
   final int fileSize;
   final DateTime downloadedAt;
   final DateTime? publicationDate;
+  final String? videoUrl;
+  final String? videoLocalPath;
+  final int? videoFileSize;
   const OfflineEpisode(
       {required this.id,
       required this.audioUrl,
@@ -1225,7 +1321,10 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       required this.duration,
       required this.fileSize,
       required this.downloadedAt,
-      this.publicationDate});
+      this.publicationDate,
+      this.videoUrl,
+      this.videoLocalPath,
+      this.videoFileSize});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1242,6 +1341,15 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
     map['downloaded_at'] = Variable<DateTime>(downloadedAt);
     if (!nullToAbsent || publicationDate != null) {
       map['publication_date'] = Variable<DateTime>(publicationDate);
+    }
+    if (!nullToAbsent || videoUrl != null) {
+      map['video_url'] = Variable<String>(videoUrl);
+    }
+    if (!nullToAbsent || videoLocalPath != null) {
+      map['video_local_path'] = Variable<String>(videoLocalPath);
+    }
+    if (!nullToAbsent || videoFileSize != null) {
+      map['video_file_size'] = Variable<int>(videoFileSize);
     }
     return map;
   }
@@ -1262,6 +1370,15 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       publicationDate: publicationDate == null && nullToAbsent
           ? const Value.absent()
           : Value(publicationDate),
+      videoUrl: videoUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(videoUrl),
+      videoLocalPath: videoLocalPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(videoLocalPath),
+      videoFileSize: videoFileSize == null && nullToAbsent
+          ? const Value.absent()
+          : Value(videoFileSize),
     );
   }
 
@@ -1281,6 +1398,9 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       fileSize: serializer.fromJson<int>(json['fileSize']),
       downloadedAt: serializer.fromJson<DateTime>(json['downloadedAt']),
       publicationDate: serializer.fromJson<DateTime?>(json['publicationDate']),
+      videoUrl: serializer.fromJson<String?>(json['videoUrl']),
+      videoLocalPath: serializer.fromJson<String?>(json['videoLocalPath']),
+      videoFileSize: serializer.fromJson<int?>(json['videoFileSize']),
     );
   }
   @override
@@ -1299,6 +1419,9 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       'fileSize': serializer.toJson<int>(fileSize),
       'downloadedAt': serializer.toJson<DateTime>(downloadedAt),
       'publicationDate': serializer.toJson<DateTime?>(publicationDate),
+      'videoUrl': serializer.toJson<String?>(videoUrl),
+      'videoLocalPath': serializer.toJson<String?>(videoLocalPath),
+      'videoFileSize': serializer.toJson<int?>(videoFileSize),
     };
   }
 
@@ -1314,7 +1437,10 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
           int? duration,
           int? fileSize,
           DateTime? downloadedAt,
-          Value<DateTime?> publicationDate = const Value.absent()}) =>
+          Value<DateTime?> publicationDate = const Value.absent(),
+          Value<String?> videoUrl = const Value.absent(),
+          Value<String?> videoLocalPath = const Value.absent(),
+          Value<int?> videoFileSize = const Value.absent()}) =>
       OfflineEpisode(
         id: id ?? this.id,
         audioUrl: audioUrl ?? this.audioUrl,
@@ -1330,6 +1456,11 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
         publicationDate: publicationDate.present
             ? publicationDate.value
             : this.publicationDate,
+        videoUrl: videoUrl.present ? videoUrl.value : this.videoUrl,
+        videoLocalPath:
+            videoLocalPath.present ? videoLocalPath.value : this.videoLocalPath,
+        videoFileSize:
+            videoFileSize.present ? videoFileSize.value : this.videoFileSize,
       );
   OfflineEpisode copyWithCompanion(OfflineEpisodesCompanion data) {
     return OfflineEpisode(
@@ -1353,6 +1484,13 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       publicationDate: data.publicationDate.present
           ? data.publicationDate.value
           : this.publicationDate,
+      videoUrl: data.videoUrl.present ? data.videoUrl.value : this.videoUrl,
+      videoLocalPath: data.videoLocalPath.present
+          ? data.videoLocalPath.value
+          : this.videoLocalPath,
+      videoFileSize: data.videoFileSize.present
+          ? data.videoFileSize.value
+          : this.videoFileSize,
     );
   }
 
@@ -1370,7 +1508,10 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
           ..write('duration: $duration, ')
           ..write('fileSize: $fileSize, ')
           ..write('downloadedAt: $downloadedAt, ')
-          ..write('publicationDate: $publicationDate')
+          ..write('publicationDate: $publicationDate, ')
+          ..write('videoUrl: $videoUrl, ')
+          ..write('videoLocalPath: $videoLocalPath, ')
+          ..write('videoFileSize: $videoFileSize')
           ..write(')'))
         .toString();
   }
@@ -1388,7 +1529,10 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
       duration,
       fileSize,
       downloadedAt,
-      publicationDate);
+      publicationDate,
+      videoUrl,
+      videoLocalPath,
+      videoFileSize);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1404,7 +1548,10 @@ class OfflineEpisode extends DataClass implements Insertable<OfflineEpisode> {
           other.duration == this.duration &&
           other.fileSize == this.fileSize &&
           other.downloadedAt == this.downloadedAt &&
-          other.publicationDate == this.publicationDate);
+          other.publicationDate == this.publicationDate &&
+          other.videoUrl == this.videoUrl &&
+          other.videoLocalPath == this.videoLocalPath &&
+          other.videoFileSize == this.videoFileSize);
 }
 
 class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
@@ -1420,6 +1567,9 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
   final Value<int> fileSize;
   final Value<DateTime> downloadedAt;
   final Value<DateTime?> publicationDate;
+  final Value<String?> videoUrl;
+  final Value<String?> videoLocalPath;
+  final Value<int?> videoFileSize;
   const OfflineEpisodesCompanion({
     this.id = const Value.absent(),
     this.audioUrl = const Value.absent(),
@@ -1433,6 +1583,9 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
     this.fileSize = const Value.absent(),
     this.downloadedAt = const Value.absent(),
     this.publicationDate = const Value.absent(),
+    this.videoUrl = const Value.absent(),
+    this.videoLocalPath = const Value.absent(),
+    this.videoFileSize = const Value.absent(),
   });
   OfflineEpisodesCompanion.insert({
     this.id = const Value.absent(),
@@ -1447,6 +1600,9 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
     required int fileSize,
     this.downloadedAt = const Value.absent(),
     this.publicationDate = const Value.absent(),
+    this.videoUrl = const Value.absent(),
+    this.videoLocalPath = const Value.absent(),
+    this.videoFileSize = const Value.absent(),
   })  : audioUrl = Value(audioUrl),
         localPath = Value(localPath),
         title = Value(title),
@@ -1469,6 +1625,9 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
     Expression<int>? fileSize,
     Expression<DateTime>? downloadedAt,
     Expression<DateTime>? publicationDate,
+    Expression<String>? videoUrl,
+    Expression<String>? videoLocalPath,
+    Expression<int>? videoFileSize,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1483,6 +1642,9 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
       if (fileSize != null) 'file_size': fileSize,
       if (downloadedAt != null) 'downloaded_at': downloadedAt,
       if (publicationDate != null) 'publication_date': publicationDate,
+      if (videoUrl != null) 'video_url': videoUrl,
+      if (videoLocalPath != null) 'video_local_path': videoLocalPath,
+      if (videoFileSize != null) 'video_file_size': videoFileSize,
     });
   }
 
@@ -1498,7 +1660,10 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
       Value<int>? duration,
       Value<int>? fileSize,
       Value<DateTime>? downloadedAt,
-      Value<DateTime?>? publicationDate}) {
+      Value<DateTime?>? publicationDate,
+      Value<String?>? videoUrl,
+      Value<String?>? videoLocalPath,
+      Value<int?>? videoFileSize}) {
     return OfflineEpisodesCompanion(
       id: id ?? this.id,
       audioUrl: audioUrl ?? this.audioUrl,
@@ -1512,6 +1677,9 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
       fileSize: fileSize ?? this.fileSize,
       downloadedAt: downloadedAt ?? this.downloadedAt,
       publicationDate: publicationDate ?? this.publicationDate,
+      videoUrl: videoUrl ?? this.videoUrl,
+      videoLocalPath: videoLocalPath ?? this.videoLocalPath,
+      videoFileSize: videoFileSize ?? this.videoFileSize,
     );
   }
 
@@ -1554,6 +1722,15 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
     if (publicationDate.present) {
       map['publication_date'] = Variable<DateTime>(publicationDate.value);
     }
+    if (videoUrl.present) {
+      map['video_url'] = Variable<String>(videoUrl.value);
+    }
+    if (videoLocalPath.present) {
+      map['video_local_path'] = Variable<String>(videoLocalPath.value);
+    }
+    if (videoFileSize.present) {
+      map['video_file_size'] = Variable<int>(videoFileSize.value);
+    }
     return map;
   }
 
@@ -1571,7 +1748,10 @@ class OfflineEpisodesCompanion extends UpdateCompanion<OfflineEpisode> {
           ..write('duration: $duration, ')
           ..write('fileSize: $fileSize, ')
           ..write('downloadedAt: $downloadedAt, ')
-          ..write('publicationDate: $publicationDate')
+          ..write('publicationDate: $publicationDate, ')
+          ..write('videoUrl: $videoUrl, ')
+          ..write('videoLocalPath: $videoLocalPath, ')
+          ..write('videoFileSize: $videoFileSize')
           ..write(')'))
         .toString();
   }
@@ -2990,6 +3170,7 @@ typedef $$ListeningHistoryTableCreateCompanionBuilder
   required int duration,
   Value<bool> isFinished,
   Value<DateTime> listenedAt,
+  Value<String?> videoUrl,
 });
 typedef $$ListeningHistoryTableUpdateCompanionBuilder
     = ListeningHistoryCompanion Function({
@@ -3004,6 +3185,7 @@ typedef $$ListeningHistoryTableUpdateCompanionBuilder
   Value<int> duration,
   Value<bool> isFinished,
   Value<DateTime> listenedAt,
+  Value<String?> videoUrl,
 });
 
 class $$ListeningHistoryTableFilterComposer
@@ -3047,6 +3229,9 @@ class $$ListeningHistoryTableFilterComposer
 
   ColumnFilters<DateTime> get listenedAt => $composableBuilder(
       column: $table.listenedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get videoUrl => $composableBuilder(
+      column: $table.videoUrl, builder: (column) => ColumnFilters(column));
 }
 
 class $$ListeningHistoryTableOrderingComposer
@@ -3091,6 +3276,9 @@ class $$ListeningHistoryTableOrderingComposer
 
   ColumnOrderings<DateTime> get listenedAt => $composableBuilder(
       column: $table.listenedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get videoUrl => $composableBuilder(
+      column: $table.videoUrl, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ListeningHistoryTableAnnotationComposer
@@ -3134,6 +3322,9 @@ class $$ListeningHistoryTableAnnotationComposer
 
   GeneratedColumn<DateTime> get listenedAt => $composableBuilder(
       column: $table.listenedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get videoUrl =>
+      $composableBuilder(column: $table.videoUrl, builder: (column) => column);
 }
 
 class $$ListeningHistoryTableTableManager extends RootTableManager<
@@ -3175,6 +3366,7 @@ class $$ListeningHistoryTableTableManager extends RootTableManager<
             Value<int> duration = const Value.absent(),
             Value<bool> isFinished = const Value.absent(),
             Value<DateTime> listenedAt = const Value.absent(),
+            Value<String?> videoUrl = const Value.absent(),
           }) =>
               ListeningHistoryCompanion(
             id: id,
@@ -3188,6 +3380,7 @@ class $$ListeningHistoryTableTableManager extends RootTableManager<
             duration: duration,
             isFinished: isFinished,
             listenedAt: listenedAt,
+            videoUrl: videoUrl,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -3201,6 +3394,7 @@ class $$ListeningHistoryTableTableManager extends RootTableManager<
             required int duration,
             Value<bool> isFinished = const Value.absent(),
             Value<DateTime> listenedAt = const Value.absent(),
+            Value<String?> videoUrl = const Value.absent(),
           }) =>
               ListeningHistoryCompanion.insert(
             id: id,
@@ -3214,6 +3408,7 @@ class $$ListeningHistoryTableTableManager extends RootTableManager<
             duration: duration,
             isFinished: isFinished,
             listenedAt: listenedAt,
+            videoUrl: videoUrl,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -3252,6 +3447,9 @@ typedef $$OfflineEpisodesTableCreateCompanionBuilder = OfflineEpisodesCompanion
   required int fileSize,
   Value<DateTime> downloadedAt,
   Value<DateTime?> publicationDate,
+  Value<String?> videoUrl,
+  Value<String?> videoLocalPath,
+  Value<int?> videoFileSize,
 });
 typedef $$OfflineEpisodesTableUpdateCompanionBuilder = OfflineEpisodesCompanion
     Function({
@@ -3267,6 +3465,9 @@ typedef $$OfflineEpisodesTableUpdateCompanionBuilder = OfflineEpisodesCompanion
   Value<int> fileSize,
   Value<DateTime> downloadedAt,
   Value<DateTime?> publicationDate,
+  Value<String?> videoUrl,
+  Value<String?> videoLocalPath,
+  Value<int?> videoFileSize,
 });
 
 class $$OfflineEpisodesTableFilterComposer
@@ -3314,6 +3515,16 @@ class $$OfflineEpisodesTableFilterComposer
   ColumnFilters<DateTime> get publicationDate => $composableBuilder(
       column: $table.publicationDate,
       builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get videoUrl => $composableBuilder(
+      column: $table.videoUrl, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get videoLocalPath => $composableBuilder(
+      column: $table.videoLocalPath,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get videoFileSize => $composableBuilder(
+      column: $table.videoFileSize, builder: (column) => ColumnFilters(column));
 }
 
 class $$OfflineEpisodesTableOrderingComposer
@@ -3363,6 +3574,17 @@ class $$OfflineEpisodesTableOrderingComposer
   ColumnOrderings<DateTime> get publicationDate => $composableBuilder(
       column: $table.publicationDate,
       builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get videoUrl => $composableBuilder(
+      column: $table.videoUrl, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get videoLocalPath => $composableBuilder(
+      column: $table.videoLocalPath,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get videoFileSize => $composableBuilder(
+      column: $table.videoFileSize,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$OfflineEpisodesTableAnnotationComposer
@@ -3409,6 +3631,15 @@ class $$OfflineEpisodesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get publicationDate => $composableBuilder(
       column: $table.publicationDate, builder: (column) => column);
+
+  GeneratedColumn<String> get videoUrl =>
+      $composableBuilder(column: $table.videoUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get videoLocalPath => $composableBuilder(
+      column: $table.videoLocalPath, builder: (column) => column);
+
+  GeneratedColumn<int> get videoFileSize => $composableBuilder(
+      column: $table.videoFileSize, builder: (column) => column);
 }
 
 class $$OfflineEpisodesTableTableManager extends RootTableManager<
@@ -3450,6 +3681,9 @@ class $$OfflineEpisodesTableTableManager extends RootTableManager<
             Value<int> fileSize = const Value.absent(),
             Value<DateTime> downloadedAt = const Value.absent(),
             Value<DateTime?> publicationDate = const Value.absent(),
+            Value<String?> videoUrl = const Value.absent(),
+            Value<String?> videoLocalPath = const Value.absent(),
+            Value<int?> videoFileSize = const Value.absent(),
           }) =>
               OfflineEpisodesCompanion(
             id: id,
@@ -3464,6 +3698,9 @@ class $$OfflineEpisodesTableTableManager extends RootTableManager<
             fileSize: fileSize,
             downloadedAt: downloadedAt,
             publicationDate: publicationDate,
+            videoUrl: videoUrl,
+            videoLocalPath: videoLocalPath,
+            videoFileSize: videoFileSize,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
@@ -3478,6 +3715,9 @@ class $$OfflineEpisodesTableTableManager extends RootTableManager<
             required int fileSize,
             Value<DateTime> downloadedAt = const Value.absent(),
             Value<DateTime?> publicationDate = const Value.absent(),
+            Value<String?> videoUrl = const Value.absent(),
+            Value<String?> videoLocalPath = const Value.absent(),
+            Value<int?> videoFileSize = const Value.absent(),
           }) =>
               OfflineEpisodesCompanion.insert(
             id: id,
@@ -3492,6 +3732,9 @@ class $$OfflineEpisodesTableTableManager extends RootTableManager<
             fileSize: fileSize,
             downloadedAt: downloadedAt,
             publicationDate: publicationDate,
+            videoUrl: videoUrl,
+            videoLocalPath: videoLocalPath,
+            videoFileSize: videoFileSize,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

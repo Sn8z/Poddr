@@ -17,6 +17,7 @@ class DriftHistoryRepository implements IHistoryRepository {
     String podcastTitle,
     String podcastRSS,
     int duration,
+    String? videoUrl,
   ) async {
     final id = await database.into(database.listeningHistory).insert(
           ListeningHistoryCompanion.insert(
@@ -27,6 +28,7 @@ class DriftHistoryRepository implements IHistoryRepository {
             podcastTitle: podcastTitle,
             podcastRSS: podcastRSS,
             duration: duration,
+            videoUrl: Value(videoUrl),
           ),
         );
 
@@ -42,6 +44,7 @@ class DriftHistoryRepository implements IHistoryRepository {
       podcastRSS: inserted.podcastRSS,
       description: inserted.description,
       audioUrl: inserted.audioUrl,
+      videoUrl: inserted.videoUrl,
       duration: Duration(seconds: inserted.duration),
       publicationDate: null,
       imageUrl: inserted.imageUrl,
@@ -66,6 +69,7 @@ class DriftHistoryRepository implements IHistoryRepository {
         podcastRSS: episode.podcastRSS,
         description: episode.description,
         audioUrl: episode.audioUrl,
+        videoUrl: episode.videoUrl,
         duration: Duration(seconds: episode.duration),
         publicationDate: null,
         imageUrl: episode.imageUrl,
@@ -105,6 +109,7 @@ class DriftHistoryRepository implements IHistoryRepository {
         'title': history.title,
         'description': history.description,
         'audioUrl': history.audioUrl,
+        'videoUrl': history.videoUrl,
         'imageUrl': history.imageUrl,
         'podcastTitle': history.podcastTitle,
         'podcastRSS': history.podcastRSS,

@@ -14,7 +14,7 @@ import 'package:poddr/ui/components/audio/shuffle_button.dart';
 import 'package:poddr/ui/components/audio/next_button.dart';
 import 'package:poddr/ui/components/audio/speed_button.dart';
 import 'package:poddr/ui/components/audio/volume.dart';
-import 'package:poddr/ui/components/navigation/fullscreen_button.dart';
+import 'package:poddr/ui/components/navigation/player_view_button.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
 class LargePlayer extends StatelessWidget {
@@ -95,7 +95,7 @@ class LargePlayer extends StatelessWidget {
                                   children: [
                                     const QueueButton(),
                                     const SpeedButton(),
-                                    const FullscreenButton(),
+                                    const PlayerViewButton(),
                                     const VolumeSlider(),
                                   ],
                                 ),

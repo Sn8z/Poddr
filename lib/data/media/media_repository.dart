@@ -11,6 +11,9 @@ abstract class IMediaRepository {
   Future<void> setAudioUrl(String url);
   Future<String> getAudioUrl();
 
+  Future<void> setVideoUrl(String? url);
+  Future<String?> getVideoUrl();
+
   Future<void> setRSS(String rss);
   Future<String> getRSS();
 

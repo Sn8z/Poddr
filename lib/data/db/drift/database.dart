@@ -30,6 +30,9 @@ class ListeningHistory extends Table {
   IntColumn get duration => integer()();
   BoolColumn get isFinished => boolean().withDefault(const Constant(false))();
   DateTimeColumn get listenedAt => dateTime().withDefault(currentDateAndTime)();
+
+  // Video support
+  TextColumn get videoUrl => text().nullable()();
 }
 
 class OfflineEpisodes extends Table {
@@ -43,10 +46,14 @@ class OfflineEpisodes extends Table {
   TextColumn get podcastRSS => text()();
   IntColumn get duration => integer()();
   IntColumn get fileSize => integer()();
-  DateTimeColumn get downloadedAt =>
-      dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get downloadedAt => dateTime().withDefault(currentDateAndTime)();
 
   DateTimeColumn get publicationDate => dateTime().nullable()();
+
+  // Video support
+  TextColumn get videoUrl => text().nullable()();
+  TextColumn get videoLocalPath => text().nullable()();
+  IntColumn get videoFileSize => integer().nullable()();
 }
 
 class Collections extends Table {
@@ -112,25 +119,6 @@ class PoddrDatabase extends _$PoddrDatabase {
     return MigrationStrategy(
       onCreate: (Migrator m) async {
         await m.createAll();
-        try {
-          await ElectronMigration.migrateSubscriptions(
-            (rss, title, imageUrl, subscribedAt) async {
-              await into(podcastSubscription).insert(
-                PodcastSubscriptionCompanion.insert(
-                  rss: rss,
-                  title: title,
-                  description: '',
-                  author: '',
-                  imageUrl: imageUrl,
-                  subscribedAt: Value(subscribedAt),
-                ),
-              );
-            },
-          );
-        } catch (error, stackTrace) {
-          log('Failed to migrate subscriptions: $error');
-          log('Stack trace: $stackTrace');
-        }
       },
       onUpgrade: (Migrator m, int from, int to) async {},
     );

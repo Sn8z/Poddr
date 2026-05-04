@@ -12,6 +12,11 @@ class OfflineEpisode {
   final DateTime downloadedAt;
   final DateTime? publicationDate;
 
+  // Video support
+  final String? videoUrl;
+  final String? videoLocalPath;
+  final int? videoFileSize;
+
   const OfflineEpisode({
     required this.id,
     required this.audioUrl,
@@ -25,5 +30,8 @@ class OfflineEpisode {
     required this.fileSize,
     required this.downloadedAt,
     this.publicationDate,
+    this.videoUrl,
+    this.videoLocalPath,
+    this.videoFileSize,
   });
 }

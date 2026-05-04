@@ -95,15 +95,16 @@ class DownloadsView extends StatelessWidget {
                       ),
                       onTap: () {
                         viewModel.loadMedia(
-                              audioUrl: download.audioUrl,
-                              episodeTitle: download.title,
-                              podcastTitle: download.podcastTitle,
-                              podcastRSS: download.podcastRSS,
-                              description: download.description,
-                              artUri: download.imageUrl,
-                              album: download.title,
-                              artist: download.podcastTitle,
-                            );
+                                audioUrl: download.audioUrl,
+                                videoUrl: download.videoUrl,
+                                episodeTitle: download.title,
+                                podcastTitle: download.podcastTitle,
+                                podcastRSS: download.podcastRSS,
+                                description: download.description,
+                                artUri: download.imageUrl,
+                                album: download.title,
+                                artist: download.podcastTitle,
+                              );
                       },
                       actions: [
                         Text(
