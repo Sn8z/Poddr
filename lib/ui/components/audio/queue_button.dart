@@ -62,7 +62,7 @@ class QueueButton extends StatelessWidget {
                                 final episode = queue[index];
                                 return ListTile(
                                   title: Text(
-                                    episode.title,
+                                    episode.title ?? '',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Theme.of(context)

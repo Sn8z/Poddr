@@ -171,8 +171,8 @@ class OfflineProvider extends ChangeNotifier {
       await _repository.addEpisode(
         audioUrl: episode.audioUrl,
         localPath: localPath,
-        title: episode.title,
-        description: episode.description,
+        title: episode.title ?? '',
+        description: episode.description ?? '',
         imageUrl: episode.imageUrl ?? '',
         podcastTitle: episode.podcastTitle ?? '',
         podcastRSS: episode.podcastRSS ?? '',

@@ -48,10 +48,10 @@ class LatestEpisodesViewModel extends ChangeNotifier {
   }
 
   bool _matchesFilter(PodcastEpisode e, String q) {
-    return e.title.toLowerCase().contains(q) ||
+    return (e.title ?? '').toLowerCase().contains(q) ||
         (e.author ?? '').toLowerCase().contains(q) ||
         (e.podcastTitle ?? '').toLowerCase().contains(q) ||
-        (e.description).toLowerCase().contains(q);
+        (e.description ?? '').toLowerCase().contains(q);
   }
 
   void setFilter(String value) {
@@ -87,7 +87,7 @@ class LatestEpisodesViewModel extends ChangeNotifier {
         break;
 
       case EpisodeSortField.title:
-        result = a.title.compareTo(b.title);
+        result = (a.title ?? '').compareTo(b.title ?? '');
         break;
 
       case EpisodeSortField.duration:

@@ -1,7 +1,14 @@
 import 'dart:developer';
 import 'dart:convert';
+import 'dart:isolate';
 import 'package:http/http.dart' as http;
 import 'package:poddr/models/podcast.dart';
+import 'package:poddr/data/parsers/podcast_parser.dart';
+
+// Top-level function for isolate usage
+Podcast _parsePodcastFeed(String xmlString, String rssUrl) {
+  return PoddrPodcastParser.parse(xmlString, rssUrl);
+}
 
 abstract class IPodcastRepository {
   Future<List<Podcast>> search(String query);
@@ -111,7 +118,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
       final cached = _feedCache[rss];
       if (cached != null && !cached.isExpired) {
         log("Using cached feed for $rss", name: logName);
-        return Podcast.fromXml(cached.content, rss);
+        return await Isolate.run(() => _parsePodcastFeed(cached.content, rss));
       }
 
       final headers = <String, String>{};
@@ -128,7 +135,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
       if (response.statusCode == 304) {
         log("Feed not modified (304), using cache for $rss", name: logName);
         if (cached != null) {
-          return Podcast.fromXml(cached.content, rss);
+          return await Isolate.run(() => _parsePodcastFeed(cached.content, rss));
         }
       }
 
@@ -142,7 +149,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
           lastModified: response.headers['last-modified'],
         );
 
-        return Podcast.fromXml(content, rss);
+        return await Isolate.run(() => _parsePodcastFeed(content, rss));
       } else {
         log("Feed return code ${response.statusCode}", name: logName);
         throw Exception("Could not get feed");

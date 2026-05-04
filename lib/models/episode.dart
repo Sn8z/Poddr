@@ -1,11 +1,8 @@
-import 'dart:io';
 import 'package:audio_service/audio_service.dart';
-import 'package:intl/intl.dart';
-import 'package:xml/xml.dart';
 
 class PodcastEpisode {
-  final String title;
-  final String description;
+  final String? title;
+  final String? description;
   final String audioUrl;
   final String? podcastTitle;
   final String? podcastRSS;
@@ -14,37 +11,45 @@ class PodcastEpisode {
   final DateTime? publicationDate;
   final String? imageUrl;
 
+  // Podcast 2.0 fields
+  final List<Map<String, String>> transcripts;
+  final List<Map<String, String>> soundbites;
+  final List<Map<String, String>> persons;
+  final String? season;
+  final String? episodeNumber;
+  final bool isTrailer;
+  final String? license;
+  final Map<String, String>? location;
+
+  // Additional fields
+  final String? contentEncoded;
+  final bool block;
+  final Map<String, dynamic>? value;
+  final List<Map<String, String>> music;
+
   PodcastEpisode({
-    required this.title,
-    required this.description,
+    this.title,
+    this.description,
     required this.audioUrl,
     this.podcastTitle,
     this.podcastRSS,
     this.author,
-    this.duration = Duration.zero,
+    this.duration,
     this.publicationDate,
     this.imageUrl,
+    this.transcripts = const [],
+    this.soundbites = const [],
+    this.persons = const [],
+    this.season,
+    this.episodeNumber,
+    this.isTrailer = false,
+    this.license,
+    this.location,
+    this.contentEncoded,
+    this.block = false,
+    this.value,
+    this.music = const [],
   });
-
-  factory PodcastEpisode.fromXml({
-    required XmlElement episode,
-    String? image,
-    String? podcastTitle,
-    String? podcastRSS,
-    String? author,
-  }) {
-    return PodcastEpisode(
-      title: _parseTitle(episode) ?? '',
-      description: _parseDescription(episode) ?? '',
-      podcastRSS: podcastRSS,
-      podcastTitle: podcastTitle,
-      author: author,
-      audioUrl: _parseAudioUrl(episode) ?? '',
-      duration: _parseDuration(episode),
-      publicationDate: _parsePubDate(episode),
-      imageUrl: _parseImageUrl(episode) ?? image,
-    );
-  }
 
   factory PodcastEpisode.fromMediaItem({required MediaItem mediaItem}) {
     return PodcastEpisode(
@@ -54,7 +59,7 @@ class PodcastEpisode {
       podcastTitle: mediaItem.artist,
       author: mediaItem.album,
       audioUrl: mediaItem.id,
-      duration: mediaItem.duration ?? Duration.zero,
+      duration: mediaItem.duration,
       publicationDate: mediaItem.extras?['publicationDate'] != null
           ? DateTime.tryParse(mediaItem.extras?['publicationDate'])
           : null,
@@ -66,64 +71,4 @@ class PodcastEpisode {
   String toString() {
     return 'PodcastEpisode{title: $title, description: $description, audioUrl: $audioUrl, podcastTitle: $podcastTitle, podcastRSS: $podcastRSS, author: $author, duration: $duration, publicationDate: $publicationDate, imageUrl: $imageUrl}';
   }
-}
-
-String? _parseTitle(XmlElement episode) {
-  final title = episode.findElements('title').firstOrNull;
-  return title?.innerText.trim();
-}
-
-String? _parseDescription(XmlElement episode) {
-  final description = episode.findElements('description').firstOrNull;
-  final itunesDescription = episode.findElements('itunes:summary').firstOrNull;
-  final itunesSubtitle = episode.findElements('itunes:subtitle').firstOrNull;
-  return description?.innerText.trim() ??
-      itunesDescription?.innerText.trim() ??
-      itunesSubtitle?.innerText.trim();
-}
-
-String? _parseAudioUrl(XmlElement episode) {
-  final audioUrl = episode.findElements('enclosure').firstOrNull;
-  return audioUrl?.getAttribute('url');
-}
-
-Duration _parseDuration(XmlElement episode) {
-  final duration = episode.findElements('itunes:duration').firstOrNull;
-  final durationText = duration?.innerText;
-  if (durationText == null) return Duration.zero;
-
-  List<String> parts = durationText.split(':').reversed.toList();
-  int seconds = 0;
-
-  if (parts.isNotEmpty) seconds += int.tryParse(parts[0]) ?? 0;
-  if (parts.length > 1) seconds += (int.tryParse(parts[1]) ?? 0) * 60;
-  if (parts.length > 2) seconds += (int.tryParse(parts[2]) ?? 0) * 3600;
-
-  return Duration(seconds: seconds);
-}
-
-DateTime? _parsePubDate(XmlElement episode) {
-  final pubDate = episode.findElements('pubDate').firstOrNull;
-  final pubDateText = pubDate?.innerText;
-  if (pubDateText == null || pubDateText.isEmpty) return null;
-
-  try {
-    final dateFormat = DateFormat('EEE, dd MMM yyyy HH:mm:ss Z');
-    return dateFormat.parse(pubDateText);
-  } catch (_) {
-    try {
-      return DateTime.parse(pubDateText);
-    } catch (_) {
-      try {
-        return HttpDate.parse(pubDateText);
-      } catch (_) {
-        return null;
-      }
-    }
-  }
-}
-
-String? _parseImageUrl(XmlElement episode) {
-  final image = episode.findElements('itunes:image').firstOrNull;
-  return image?.getAttribute('href');
 }

@@ -397,7 +397,7 @@ class Episode extends StatelessWidget {
                 return PoddrDialog(
                   children: [
                     Text(
-                      episode.title,
+                      episode.title ?? '',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -405,7 +405,7 @@ class Episode extends StatelessWidget {
                       ),
                     ),
                     gapH16,
-                    PoddrHTML(html: episode.description),
+                    PoddrHTML(html: episode.description ?? ''),
                   ],
                 );
               },
