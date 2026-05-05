@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'dart:convert';
 import 'dart:isolate';
-import 'package:http/http.dart' as http;
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/data/parsers/podcast_parser.dart';
+import 'package:poddr/core/poddr_http_client.dart';
 
 // Top-level function for isolate usage
 Podcast _parsePodcastFeed(String xmlString, String rssUrl) {
@@ -19,7 +19,7 @@ abstract class IPodcastRepository {
 class ITunesPodcastRepository implements IPodcastRepository {
   final String logName = "ItunesPodcastRepository";
   final String baseUrl = "https://itunes.apple.com";
-  final http.Client _http = http.Client();
+  final PoddrHttpClient _http = PoddrHttpClient();
   final Map<String, _CachedFeed> _feedCache = {};
 
   ITunesPodcastRepository();

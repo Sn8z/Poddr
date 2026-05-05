@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
+import 'package:poddr/core/poddr_http_client.dart';
 
 class PoddrImage extends StatelessWidget {
   const PoddrImage({
@@ -22,6 +23,7 @@ class PoddrImage extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: imageUrl,
       fit: fit,
+      httpHeaders: {'User-Agent': PoddrHttpClient.userAgent},
       maxHeightDiskCache: 800,
       fadeInDuration: const Duration(milliseconds: 300),
       fadeOutDuration: const Duration(milliseconds: 300),

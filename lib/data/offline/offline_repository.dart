@@ -1,4 +1,5 @@
 import 'package:poddr/models/offline_episode.dart';
+import 'package:poddr/models/episode.dart';
 
 abstract class IOfflineRepository {
   Future<List<OfflineEpisode>> getAll();
@@ -34,4 +35,11 @@ abstract class IOfflineRepository {
 
   // Video support
   Future<String?> getVideoLocalPath(String audioUrl);
+
+  Future<void> downloadEpisode(
+    PodcastEpisode episode, {
+    required Function(double) onProgress,
+    required Function() onCancel,
+    required PoddrHttpClient client,
+  });
 }

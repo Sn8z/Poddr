@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:poddr/core/exceptions.dart';
+import 'package:poddr/core/poddr_http_client.dart';
 
 class GpodderClient {
   // Constants
   static const String logName = "gPodderClient";
-  static const Duration _timeout = Duration(seconds: 30);
 
   // Fields
   String _serverUrl;
@@ -51,22 +50,18 @@ class GpodderClient {
       http.Response response;
       switch (method.toUpperCase()) {
         case 'GET':
-          response =
-              await _httpClient.get(uri, headers: headers).timeout(_timeout);
+          response = await _httpClient.get(uri, headers: headers);
           break;
         case 'POST':
           response = await _httpClient
-              .post(uri, headers: headers, body: encodedBody)
-              .timeout(_timeout);
+              .post(uri, headers: headers, body: encodedBody);
           break;
         case 'PUT':
           response = await _httpClient
-              .put(uri, headers: headers, body: encodedBody)
-              .timeout(_timeout);
+              .put(uri, headers: headers, body: encodedBody);
           break;
         case 'DELETE':
-          response =
-              await _httpClient.delete(uri, headers: headers).timeout(_timeout);
+          response = await _httpClient.delete(uri, headers: headers);
           break;
         default:
           throw ApiException('Unsupported HTTP method: $method');
@@ -89,12 +84,9 @@ class GpodderClient {
       } else {
         throw ApiException('HTTP request failed with status $statusCode: $res');
       }
-    } on TimeoutException {
-      throw NetworkException('Request timed out');
-    } on http.ClientException catch (e) {
-      throw NetworkException(e.message);
     } catch (e) {
       if (e is ApiException) rethrow;
+      if (e is NetworkException) rethrow;
       throw ApiException('Unexpected error: $e');
     }
   }
@@ -113,7 +105,7 @@ class GpodderClient {
         _password = password,
         _deviceId = deviceId,
         _deviceName = deviceName,
-        _httpClient = httpClient ?? http.Client();
+        _httpClient = httpClient ?? PoddrHttpClient();
 
   void updateCredentials({
     String? serverUrl,
@@ -140,9 +132,8 @@ class GpodderClient {
       log("Attempting login to $_serverUrl", name: logName);
 
       final String url = '$_baseUrl/api/2/auth/$_encodedUsername/login.json';
-      final res = await _httpClient
-          .post(Uri.parse(url), headers: _authHeaders)
-          .timeout(_timeout);
+       final res = await _httpClient
+           .post(Uri.parse(url), headers: _authHeaders);
 
       if (res.statusCode == 200) {
         final cookies = res.headers['set-cookie'];
