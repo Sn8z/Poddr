@@ -167,7 +167,7 @@ class DriftOfflineRepository implements IOfflineRepository {
   }
 
   @override
-  Stream<List<OfflineEpisode>> watchAll() {
+  Stream<List<OfflineEpisode>> watchAllEpisodes() {
     return (database.select(database.offlineEpisodes)
           ..orderBy([
             (t) => OrderingTerm(

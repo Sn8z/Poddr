@@ -15,6 +15,8 @@ abstract class ISubscriptionRepository {
 
   Stream<int?> watchSubscriptionIdByRss(String rss);
 
+  Stream<List<Podcast>> watchAllSubscriptions();
+
   Future<void> removeSubscription(String rss);
 
   Future<void> updateSubscription({

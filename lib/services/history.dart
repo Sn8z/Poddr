@@ -87,9 +87,9 @@ class HistoryProvider extends ChangeNotifier {
     }
   }
 
-  Stream<ListeningHistoryData?> getProgressStream(String audioUrl) {
+  Stream<ListeningHistoryData?> watchProgressByAudioUrl(String audioUrl) {
     try {
-      return _historyRepository.getProgressStream(audioUrl);
+      return _historyRepository.watchProgressByAudioUrl(audioUrl);
     } catch (e, stackTrace) {
       log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return const Stream.empty();

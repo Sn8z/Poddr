@@ -19,7 +19,11 @@ abstract class IHistoryRepository {
 
   Future<Map<String, dynamic>?> getProgress(String audioUrl);
 
-  Stream<ListeningHistoryData?> getProgressStream(String audioUrl);
+  Stream<ListeningHistoryData?> watchProgressByAudioUrl(String audioUrl);
+
+  Stream<List<PodcastEpisode>> watchAllHistory();
+
+  Stream<List<PodcastEpisode>> watchHistoryForPodcast(String podcastRSS);
 
   Future<void> removeHistory(String audioUrl);
 }

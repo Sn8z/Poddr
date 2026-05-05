@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/data/collections/collections_repository.dart';
 import 'package:poddr/models/collection.dart';
+import 'package:poddr/models/podcast.dart';
 import 'package:poddr/ui/utils/colors.dart';
 
 class DriftCollectionsRepository implements ICollectionsRepository {
@@ -136,5 +137,29 @@ class DriftCollectionsRepository implements ICollectionsRepository {
                 color: collection.color);
           }).toList(),
         );
+  }
+
+  @override
+  Stream<List<Podcast>> watchSubscriptionsForCollection(int collectionId) {
+    final query = database.select(database.podcastSubscription).join([
+      innerJoin(
+        database.subscriptionCollections,
+        database.subscriptionCollections.subscriptionId
+            .equalsExp(database.podcastSubscription.id),
+      ),
+    ])
+      ..where(database.subscriptionCollections.collectionId
+          .equals(collectionId));
+
+    return query.watch().map((rows) => rows.map((row) {
+          final sub = row.readTable(database.podcastSubscription);
+          return Podcast(
+            title: sub.title,
+            rss: sub.rss,
+            description: sub.description,
+            author: sub.author,
+            image: sub.imageUrl,
+          );
+        }).toList());
   }
 }

@@ -1,4 +1,5 @@
 import 'package:poddr/models/collection.dart';
+import 'package:poddr/models/podcast.dart';
 
 abstract class ICollectionsRepository {
   Future<PodcastCollection> createCollection(String name, {int? color});
@@ -12,4 +13,6 @@ abstract class ICollectionsRepository {
 
   Stream<List<PodcastCollection>> watchAllCollections();
   Stream<List<PodcastCollection>> watchCollectionsForSubscription(int subscriptionId);
+
+  Stream<List<Podcast>> watchSubscriptionsForCollection(int collectionId);
 }

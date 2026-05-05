@@ -97,4 +97,17 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
         .watchSingleOrNull()
         .map((row) => row?.id);
   }
+
+  @override
+  Stream<List<Podcast>> watchAllSubscriptions() {
+    return database.select(database.podcastSubscription)
+        .watch()
+        .map((subs) => subs.map((sub) => Podcast(
+              title: sub.title,
+              rss: sub.rss,
+              description: sub.description,
+              author: sub.author,
+              image: sub.imageUrl,
+            )).toList());
+  }
 }

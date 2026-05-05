@@ -21,7 +21,7 @@ class EpisodeHistory extends StatelessWidget {
       height: height,
       width: width ?? double.infinity,
       child: StreamBuilder<ListeningHistoryData?>(
-        stream: context.read<HistoryProvider>().getProgressStream(audioUrl),
+        stream: context.read<HistoryProvider>().watchProgressByAudioUrl(audioUrl),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox();
@@ -70,7 +70,7 @@ class EpisodeHistoryCircle extends StatelessWidget {
       width: size,
       height: size,
       child: StreamBuilder<ListeningHistoryData?>(
-        stream: context.read<HistoryProvider>().getProgressStream(audioUrl),
+        stream: context.read<HistoryProvider>().watchProgressByAudioUrl(audioUrl),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox();

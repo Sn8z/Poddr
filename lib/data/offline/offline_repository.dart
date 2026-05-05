@@ -1,5 +1,6 @@
 import 'package:poddr/models/offline_episode.dart';
 import 'package:poddr/models/episode.dart';
+import 'package:poddr/core/poddr_http_client.dart';
 
 abstract class IOfflineRepository {
   Future<List<OfflineEpisode>> getAll();
@@ -27,7 +28,7 @@ abstract class IOfflineRepository {
 
   Future<void> clearAll();
 
-  Stream<List<OfflineEpisode>> watchAll();
+  Stream<List<OfflineEpisode>> watchAllEpisodes();
 
   Future<String> getLocalPathForDownload(String audioUrl);
 
