@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:poddr/core/exceptions.dart';
+import 'package:poddr/core/log.dart';
 
 class PoddrHttpClient extends http.BaseClient {
   static const String _appName = 'Poddr';
@@ -16,6 +17,10 @@ class PoddrHttpClient extends http.BaseClient {
 
   final Map<String, _CacheEntry> _cache = {};
   final Duration _cacheTtl;
+  int _currentCacheSize = 0;
+
+  static const int _maxCacheEntries = 200;
+  static const int _maxCacheSizeBytes = 50 * 1024 * 1024; // 50MB
 
   PoddrHttpClient({Duration? cacheTtl}) : _cacheTtl = cacheTtl ?? _defaultCacheTtl;
 
@@ -29,8 +34,13 @@ class PoddrHttpClient extends http.BaseClient {
   }
 
   @override
-  Future<http.Response> get(Uri url, {Map<String, String>? headers}) async {
+  Future<http.Response> get(Uri url, {Map<String, String>? headers, bool skipCache = false}) async {
     final urlKey = url.toString();
+
+    if (skipCache) {
+      final response = await super.get(url, headers: headers);
+      return response;
+    }
 
     _CacheEntry? cached = _cache[urlKey];
     if (cached != null && cached.isExpired(_cacheTtl)) {
@@ -64,7 +74,20 @@ class PoddrHttpClient extends http.BaseClient {
         }
 
         if (response.statusCode == 200) {
-          _cache[urlKey] = _CacheEntry.fromResponse(response);
+          final entry = _CacheEntry.fromResponse(response);
+          _cache[urlKey] = entry;
+          _currentCacheSize += entry.body.length;
+
+          while ((_cache.length > _maxCacheEntries ||
+                  _currentCacheSize > _maxCacheSizeBytes) &&
+              _cache.isNotEmpty) {
+            final oldestKey = _cache.keys.reduce((a, b) =>
+                _cache[a]!.timestamp.isBefore(_cache[b]!.timestamp)
+                    ? a
+                    : b);
+            _currentCacheSize -= _cache[oldestKey]!.body.length;
+            _cache.remove(oldestKey);
+          }
         }
 
         if (response.statusCode >= 500 && attempt < _maxRetries - 1) {
@@ -91,7 +114,8 @@ class PoddrHttpClient extends http.BaseClient {
           attempt++;
           continue;
         }
-        throw ApiException('Unexpected error: $e');
+        error('Unexpected error in GET $url: $e', name: 'PoddrHttpClient');
+        throw ApiException('Network error occurred');
       }
     }
     throw NetworkException('Max retries exceeded for GET $url');
