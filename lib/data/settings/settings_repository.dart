@@ -19,12 +19,6 @@ abstract class ISettingsRepository {
   Future<void> setSyncEnabled(bool enabled);
   Future<bool> getSyncEnabled();
 
-  Future<void> setSyncServerUrl(String url);
-  Future<String> getSyncServerUrl();
-
-  Future<void> setSyncUsername(String username);
-  Future<String> getSyncUsername();
-
   Future<void> setSyncDeviceId(String deviceId);
   Future<String> getSyncDeviceId();
 

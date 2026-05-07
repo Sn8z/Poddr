@@ -91,8 +91,6 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   }
 
   static const String _syncEnabledKey = "syncEnabled";
-  static const String _syncServerUrlKey = "syncServerUrl";
-  static const String _syncUsernameKey = "syncUsername";
   static const String _syncDeviceIdKey = "syncDeviceId";
   static const String _syncDeviceNameKey = "syncDeviceName";
   static const String _syncLastSubscriptionSyncKey = "syncLastSubscriptionSync";
@@ -111,36 +109,6 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
     final bool enabled = prefs.getBool(_syncEnabledKey) ?? false;
     debug("Loading sync enabled: $enabled", name: logName);
     return enabled;
-  }
-
-  @override
-  Future<void> setSyncServerUrl(String url) async {
-    final prefs = await SharedPreferences.getInstance();
-    debug("Saving sync server URL: $url", name: logName);
-    prefs.setString(_syncServerUrlKey, url);
-  }
-
-  @override
-  Future<String> getSyncServerUrl() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String url = prefs.getString(_syncServerUrlKey) ?? '';
-    debug("Loading sync server URL: $url", name: logName);
-    return url;
-  }
-
-  @override
-  Future<void> setSyncUsername(String username) async {
-    final prefs = await SharedPreferences.getInstance();
-    debug("Saving sync username: $username", name: logName);
-    prefs.setString(_syncUsernameKey, username);
-  }
-
-  @override
-  Future<String> getSyncUsername() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String username = prefs.getString(_syncUsernameKey) ?? '';
-    debug("Loading sync username: $username", name: logName);
-    return username;
   }
 
   @override

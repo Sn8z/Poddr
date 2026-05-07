@@ -11,6 +11,7 @@ import 'package:poddr/data/sync/drift_sync_repository.dart';
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/services/history.dart';
+import 'package:poddr/core/validators.dart';
 
 class SyncProvider extends ChangeNotifier {
   static const String logName = "SyncProvider";
@@ -120,11 +121,11 @@ class SyncProvider extends ChangeNotifier {
   }
 
   Future<void> _setupClient() async {
-    _serverUrl = await _settings.getSyncServerUrl();
-    _username = await _settings.getSyncUsername();
+    _serverUrl = await _secureSettings.getSyncServerUrl();
+    _username = await _secureSettings.getSyncUsername();
     final password = await _secureSettings.getSyncPassword();
 
-    if (serverUrl.isEmpty || username.isEmpty || password.isEmpty) return;
+    if (_serverUrl!.isEmpty || _username!.isEmpty || password.isEmpty) return;
 
     _deviceId = await _settings.getSyncDeviceId();
     if (_deviceId!.isEmpty) {
@@ -170,8 +171,8 @@ class SyncProvider extends ChangeNotifier {
       }
     } catch (e) {
       _isConfigured = false;
-      _errorMessage = 'Failed to configure sync: $e';
-      error(_errorMessage!, name: logName);
+      _errorMessage = 'Failed to configure sync';
+      error('Failed to configure sync: $e', name: logName);
     } finally {
       notifyListeners();
     }
@@ -317,6 +318,12 @@ class SyncProvider extends ChangeNotifier {
       return;
     }
 
+    if (!isValidUrl(serverUrl, requireHttps: true)) {
+      _errorMessage = 'Sync server must use HTTPS';
+      notifyListeners();
+      return;
+    }
+
     _statusMessage = '';
     notifyListeners();
 
@@ -337,9 +344,8 @@ class SyncProvider extends ChangeNotifier {
     required String deviceName,
   }) async {
     try {
-      await _settings.setSyncServerUrl(serverUrl);
-      await _settings.setSyncUsername(username);
-      await _settings.setSyncDeviceName(deviceName);
+      await _secureSettings.setSyncServerUrl(serverUrl);
+      await _secureSettings.setSyncUsername(username);
       await _secureSettings.setSyncPassword(password);
       await _settings.setSyncEnabled(true);
       _syncEnabled = true;
@@ -413,8 +419,8 @@ class SyncProvider extends ChangeNotifier {
         return true;
       });
     } catch (e) {
-      _errorMessage = 'Subscription sync failed: $e';
-      error(_errorMessage!, name: logName);
+      _errorMessage = 'Subscription sync failed';
+      error('Subscription sync failed: $e', name: logName);
     } finally {
       _isSyncingSubscriptions = false;
       notifyListeners();
@@ -588,8 +594,8 @@ class SyncProvider extends ChangeNotifier {
         return true;
       });
     } catch (e) {
-      _errorMessage = 'Episode sync failed: $e';
-      error(_errorMessage!, name: logName);
+      _errorMessage = 'Episode sync failed';
+      error('Episode sync failed: $e', name: logName);
     } finally {
       _isSyncingEpisodes = false;
       notifyListeners();
