@@ -49,6 +49,52 @@ class Podcast {
     this.categories,
   });
 
+  Podcast copyWith({
+    String? title,
+    String? description,
+    String? image,
+    String? author,
+    String? rss,
+    String? link,
+    String? language,
+    String? copyright,
+    bool? explicit,
+    List<PodcastEpisode>? episodes,
+    String? newFeedUrl,
+    bool? locked,
+    List<Map<String, String>>? funding,
+    Map<String, String>? chapters,
+    List<Map<String, String>>? persons,
+    Map<String, String>? location,
+    String? podcastGuid,
+    String? medium,
+    bool? block,
+    List<Map<String, dynamic>>? categories,
+  }) {
+    return Podcast(
+      title: title ?? this.title,
+      description: description ?? this.description,
+      image: image ?? this.image,
+      author: author ?? this.author,
+      rss: rss ?? this.rss,
+      link: link ?? this.link,
+      language: language ?? this.language,
+      copyright: copyright ?? this.copyright,
+      explicit: explicit ?? this.explicit,
+      episodes: episodes ?? this.episodes,
+      newFeedUrl: newFeedUrl ?? this.newFeedUrl,
+      locked: locked ?? this.locked,
+      funding: funding ?? this.funding,
+      chapters: chapters ?? this.chapters,
+      persons: persons ?? this.persons,
+      location: location ?? this.location,
+      podcastGuid: podcastGuid ?? this.podcastGuid,
+      medium: medium ?? this.medium,
+      block: block ?? this.block,
+      categories: categories ?? this.categories,
+    );
+  }
+
   @override
   String toString() {
     return 'Podcast{title: $title, author: $author, episodes: ${episodes.length}, locked: $locked, funding: ${funding.length}}';

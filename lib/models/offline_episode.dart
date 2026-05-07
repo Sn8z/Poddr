@@ -34,4 +34,40 @@ class OfflineEpisode {
     this.videoLocalPath,
     this.videoFileSize,
   });
+
+  OfflineEpisode copyWith({
+    int? id,
+    String? audioUrl,
+    String? localPath,
+    String? title,
+    String? description,
+    String? imageUrl,
+    String? podcastTitle,
+    String? podcastRSS,
+    int? duration,
+    int? fileSize,
+    DateTime? downloadedAt,
+    DateTime? publicationDate,
+    String? videoUrl,
+    String? videoLocalPath,
+    int? videoFileSize,
+  }) {
+    return OfflineEpisode(
+      id: id ?? this.id,
+      audioUrl: audioUrl ?? this.audioUrl,
+      localPath: localPath ?? this.localPath,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      podcastTitle: podcastTitle ?? this.podcastTitle,
+      podcastRSS: podcastRSS ?? this.podcastRSS,
+      duration: duration ?? this.duration,
+      fileSize: fileSize ?? this.fileSize,
+      downloadedAt: downloadedAt ?? this.downloadedAt,
+      publicationDate: publicationDate ?? this.publicationDate,
+      videoUrl: videoUrl ?? this.videoUrl,
+      videoLocalPath: videoLocalPath ?? this.videoLocalPath,
+      videoFileSize: videoFileSize ?? this.videoFileSize,
+    );
+  }
 }

@@ -55,6 +55,56 @@ class PodcastEpisode {
     this.music = const [],
   });
 
+  PodcastEpisode copyWith({
+    String? title,
+    String? description,
+    String? audioUrl,
+    String? videoUrl,
+    String? podcastTitle,
+    String? podcastRSS,
+    String? author,
+    Duration? duration,
+    DateTime? publicationDate,
+    String? imageUrl,
+    List<Map<String, String>>? transcripts,
+    List<Map<String, String>>? soundbites,
+    List<Map<String, String>>? persons,
+    String? season,
+    String? episodeNumber,
+    bool? isTrailer,
+    String? license,
+    Map<String, String>? location,
+    String? contentEncoded,
+    bool? block,
+    Map<String, dynamic>? value,
+    List<Map<String, String>>? music,
+  }) {
+    return PodcastEpisode(
+      title: title ?? this.title,
+      description: description ?? this.description,
+      audioUrl: audioUrl ?? this.audioUrl,
+      videoUrl: videoUrl ?? this.videoUrl,
+      podcastTitle: podcastTitle ?? this.podcastTitle,
+      podcastRSS: podcastRSS ?? this.podcastRSS,
+      author: author ?? this.author,
+      duration: duration ?? this.duration,
+      publicationDate: publicationDate ?? this.publicationDate,
+      imageUrl: imageUrl ?? this.imageUrl,
+      transcripts: transcripts ?? this.transcripts,
+      soundbites: soundbites ?? this.soundbites,
+      persons: persons ?? this.persons,
+      season: season ?? this.season,
+      episodeNumber: episodeNumber ?? this.episodeNumber,
+      isTrailer: isTrailer ?? this.isTrailer,
+      license: license ?? this.license,
+      location: location ?? this.location,
+      contentEncoded: contentEncoded ?? this.contentEncoded,
+      block: block ?? this.block,
+      value: value ?? this.value,
+      music: music ?? this.music,
+    );
+  }
+
   factory PodcastEpisode.fromMediaItem({required MediaItem mediaItem}) {
     return PodcastEpisode(
       title: mediaItem.title,
