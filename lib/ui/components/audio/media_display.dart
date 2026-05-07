@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:poddr/ui/components/audio/position_text.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
