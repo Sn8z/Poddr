@@ -5,7 +5,7 @@ import 'package:poddr/data/collections/collections_repository.dart';
 import 'package:poddr/models/collection.dart';
 
 class CollectionsProvider extends ChangeNotifier {
-  final String logName = "CollectionsProvider";
+  static const String logName = "CollectionsProvider";
   final ICollectionsRepository _repository;
 
   List<PodcastCollection> _collections = [];
@@ -14,9 +14,11 @@ class CollectionsProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  Stream<List<PodcastCollection>> get collectionsStream => _repository.watchAllCollections();
+  Stream<List<PodcastCollection>> get collectionsStream =>
+      _repository.watchAllCollections();
 
-  Stream<List<PodcastCollection>> watchCollectionsForSubscription(int subscriptionId) {
+  Stream<List<PodcastCollection>> watchCollectionsForSubscription(
+      int subscriptionId) {
     return _repository.watchCollectionsForSubscription(subscriptionId);
   }
 
@@ -32,8 +34,7 @@ class CollectionsProvider extends ChangeNotifier {
 
       _collections = await _repository.getAllCollections();
     } catch (e, stackTrace) {
-      error(e.toString(),
-          name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -45,8 +46,7 @@ class CollectionsProvider extends ChangeNotifier {
       final collection = await _repository.createCollection(name, color: color);
       return collection;
     } catch (e, stackTrace) {
-      error(e.toString(),
-          name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return null;
     }
   }
@@ -56,8 +56,7 @@ class CollectionsProvider extends ChangeNotifier {
       await _repository.updateCollectionName(id, name);
       return true;
     } catch (e, stackTrace) {
-      error(e.toString(),
-          name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -67,8 +66,7 @@ class CollectionsProvider extends ChangeNotifier {
       await _repository.updateCollectionColor(id, color);
       return true;
     } catch (e, stackTrace) {
-      error(e.toString(),
-          name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -78,30 +76,31 @@ class CollectionsProvider extends ChangeNotifier {
       await _repository.deleteCollection(id);
       return true;
     } catch (e, stackTrace) {
-      error(e.toString(),
-          name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }
 
-  Future<bool> addSubscriptionToCollection(int subscriptionId, int collectionId) async {
+  Future<bool> addSubscriptionToCollection(
+      int subscriptionId, int collectionId) async {
     try {
-      await _repository.linkCollectionToSubscription(collectionId, subscriptionId);
+      await _repository.linkCollectionToSubscription(
+          collectionId, subscriptionId);
       return true;
     } catch (e, stackTrace) {
-      error(e.toString(),
-          name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }
 
-  Future<bool> removeSubscriptionFromCollection(int subscriptionId, int collectionId) async {
+  Future<bool> removeSubscriptionFromCollection(
+      int subscriptionId, int collectionId) async {
     try {
-      await _repository.unlinkCollectionFromSubscription(collectionId, subscriptionId);
+      await _repository.unlinkCollectionFromSubscription(
+          collectionId, subscriptionId);
       return true;
     } catch (e, stackTrace) {
-      error(e.toString(),
-          name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }

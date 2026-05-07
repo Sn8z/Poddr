@@ -1,6 +1,6 @@
 import 'package:poddr/models/offline_episode.dart';
 import 'package:poddr/models/episode.dart';
-import 'package:poddr/core/poddr_http_client.dart';
+import 'package:poddr/core/http_client.dart';
 
 abstract class IOfflineRepository {
   Future<List<OfflineEpisode>> getAll();
@@ -18,7 +18,6 @@ abstract class IOfflineRepository {
     required int duration,
     required int fileSize,
     DateTime? publicationDate,
-    // Video support
     String? videoUrl,
     String? videoLocalPath,
     int? videoFileSize,
@@ -34,7 +33,6 @@ abstract class IOfflineRepository {
 
   Future<String?> getLocalPath(String audioUrl);
 
-  // Video support
   Future<String?> getVideoLocalPath(String audioUrl);
 
   Future<void> downloadEpisode(

@@ -2,13 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/exceptions.dart';
-import 'package:poddr/core/poddr_http_client.dart';
+import 'package:poddr/core/http_client.dart';
 
 class GpodderClient {
-  // Constants
   static const String logName = "gPodderClient";
 
-  // Fields
   String _serverUrl;
   String _username;
   String _password;
@@ -16,7 +14,7 @@ class GpodderClient {
   String _deviceName;
   String? _sessionId;
 
-  final http.Client _httpClient;
+  final PoddrHttpClient _httpClient;
 
   String get _baseUrl => _serverUrl;
 
@@ -53,12 +51,12 @@ class GpodderClient {
           response = await _httpClient.get(uri, headers: headers);
           break;
         case 'POST':
-          response = await _httpClient
-              .post(uri, headers: headers, body: encodedBody);
+          response =
+              await _httpClient.post(uri, headers: headers, body: encodedBody);
           break;
         case 'PUT':
-          response = await _httpClient
-              .put(uri, headers: headers, body: encodedBody);
+          response =
+              await _httpClient.put(uri, headers: headers, body: encodedBody);
           break;
         case 'DELETE':
           response = await _httpClient.delete(uri, headers: headers);
@@ -97,7 +95,7 @@ class GpodderClient {
     required String password,
     required String deviceId,
     required String deviceName,
-    http.Client? httpClient,
+    PoddrHttpClient? httpClient,
   })  : _serverUrl = serverUrl.endsWith('/')
             ? serverUrl.substring(0, serverUrl.length - 1)
             : serverUrl,
@@ -132,17 +130,17 @@ class GpodderClient {
       debug("Attempting login to $_serverUrl", name: logName);
 
       final String url = '$_baseUrl/api/2/auth/$_encodedUsername/login.json';
-       final res = await _httpClient
-           .post(Uri.parse(url), headers: _authHeaders);
+      final res = await _httpClient.post(Uri.parse(url), headers: _authHeaders);
 
       if (res.statusCode == 200) {
         final cookies = res.headers['set-cookie'];
         if (cookies != null) {
           final sessionMatch = RegExp(r'sessionid=([^;]+)').firstMatch(cookies);
-            if (sessionMatch != null) {
+          if (sessionMatch != null) {
             _sessionId = sessionMatch.group(1);
-            info("Login successful, session ID: ${_sessionId!.substring(0, 8)}...",
-                    name: logName);
+            info(
+                "Login successful, session ID: ${_sessionId!.substring(0, 8)}...",
+                name: logName);
             return true;
           }
         }
@@ -291,7 +289,8 @@ class GpodderClient {
     required List<List<String>> synchronized,
     required List<String> notSynchronized,
   }) async {
-    debug("Updating sync devices: ${synchronized.length} synchronized, ${notSynchronized.length} not synchronized",
+    debug(
+        "Updating sync devices: ${synchronized.length} synchronized, ${notSynchronized.length} not synchronized",
         name: logName);
 
     final path = '/api/2/sync-devices/$_encodedUsername.json';

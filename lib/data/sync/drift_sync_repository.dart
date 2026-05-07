@@ -5,8 +5,6 @@ import 'package:poddr/data/sync/sync_repository.dart';
 class DriftSyncRepository implements ISyncRepository {
   final PoddrDatabase _db = PoddrDatabase();
 
-  DriftSyncRepository();
-
   @override
   Future<void> addPendingEpisodeAction({
     required String podcastRss,

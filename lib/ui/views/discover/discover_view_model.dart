@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
+import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
 import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 import 'package:poddr/models/podcast.dart';

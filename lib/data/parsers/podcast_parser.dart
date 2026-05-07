@@ -429,7 +429,6 @@ class PoddrPodcastParser {
   }
 
   static String? _parseVideoUrl(XmlElement item) {
-    // Check RSS enclosure tags for video type
     for (final enclosure in item.findElements('enclosure')) {
       final type = enclosure.getAttribute('type')?.toLowerCase() ?? '';
       if (type.startsWith('video/')) {
@@ -438,7 +437,6 @@ class PoddrPodcastParser {
       }
     }
 
-    // Check media:content tags for video type
     for (final media in item.findElements('media:content')) {
       final type = media.getAttribute('type')?.toLowerCase() ?? '';
       if (type.startsWith('video/')) {
@@ -447,7 +445,6 @@ class PoddrPodcastParser {
       }
     }
 
-    // Check Atom link tags (rel="enclosure") for video type
     for (final link in item.findElements('link')) {
       if (link.getAttribute('rel') == 'enclosure') {
         final type = link.getAttribute('type')?.toLowerCase() ?? '';
@@ -458,7 +455,6 @@ class PoddrPodcastParser {
       }
     }
 
-    // Check podcast:alternateEnclosure for video type
     for (final altEnclosure in item.findElements('podcast:alternateEnclosure')) {
       final type = altEnclosure.getAttribute('type')?.toLowerCase() ?? '';
       if (type.startsWith('video/')) {
@@ -553,7 +549,6 @@ class PoddrPodcastParser {
         item.findElements('podcast:image').firstOrNull?.getAttribute('href');
     if (podcastImg != null && podcastImg.isNotEmpty) return podcastImg;
 
-    // Try media:content with medium="image" (including nested in media:group)
     for (final content in item.findElements('media:content')) {
       if (content.getAttribute('medium') == 'image') {
         final url = content.getAttribute('url');

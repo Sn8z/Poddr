@@ -10,10 +10,11 @@ import 'package:poddr/data/db/drift/database.dart' as drift;
 import 'package:poddr/data/offline/offline_repository.dart';
 import 'package:poddr/models/offline_episode.dart';
 import 'package:poddr/models/episode.dart';
-import 'package:poddr/core/poddr_http_client.dart';
+import 'package:poddr/core/http_client.dart';
 import 'package:poddr/core/exceptions.dart';
 
 class DriftOfflineRepository implements IOfflineRepository {
+  static const String logName = "DriftOfflineRepository";
   final drift.PoddrDatabase database = drift.PoddrDatabase();
 
   DriftOfflineRepository();
@@ -247,7 +248,7 @@ class DriftOfflineRepository implements IOfflineRepository {
             totalBytes += videoSize;
           }
         } catch (e) {
-          error('Failed to get video size: $e', name: 'DriftOfflineRepository');
+          error('Failed to get video size: $e', name: logName);
         }
       }
 
@@ -265,7 +266,7 @@ class DriftOfflineRepository implements IOfflineRepository {
             final percent = (progress * 100).round();
             if (percent >= lastLoggedPercent + 25 && percent <= 100) {
               debug('Download progress: ${episode.title} - $percent%',
-                  name: 'DriftOfflineRepository');
+                  name: logName);
               lastLoggedPercent = percent;
             }
           }
@@ -286,7 +287,7 @@ class DriftOfflineRepository implements IOfflineRepository {
 
       if (episode.hasVideo && episode.videoUrl != null) {
         debug('Starting video download for: ${episode.title}',
-            name: 'DriftOfflineRepository');
+            name: logName);
 
         videoLocalPath =
             await getLocalPathForDownload(episode.videoUrl!);
@@ -319,7 +320,7 @@ class DriftOfflineRepository implements IOfflineRepository {
               if (percent >= lastLoggedPercent + 25 &&
                   percent <= 100) {
                 debug('Download progress (video): ${episode.title} - $percent%',
-                    name: 'DriftOfflineRepository');
+                    name: logName);
                 lastLoggedPercent = percent;
               }
             }
@@ -333,7 +334,7 @@ class DriftOfflineRepository implements IOfflineRepository {
         }
 
         info('Video download completed: ${episode.title}',
-            name: 'DriftOfflineRepository');
+            name: logName);
       }
 
       await addEpisode(
@@ -356,9 +357,9 @@ class DriftOfflineRepository implements IOfflineRepository {
     } catch (e) {
       if (e is DownloadCancelledException) {
         info('Download cancelled: ${episode.title}',
-            name: 'DriftOfflineRepository');
+            name: logName);
       } else {
-        error('Download failed: $e', name: 'DriftOfflineRepository');
+        error('Download failed: $e', name: logName);
         if (localPath != null) {
           final file = File(localPath);
           if (await file.exists()) await file.delete();

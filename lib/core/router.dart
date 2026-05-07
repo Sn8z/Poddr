@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-// views
 import 'package:poddr/ui/layouts/base.dart';
 import 'package:poddr/ui/views/player/player.dart';
 import 'package:poddr/ui/views/discover/discover.dart';

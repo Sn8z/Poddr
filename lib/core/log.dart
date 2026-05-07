@@ -7,7 +7,7 @@ enum LogLevel { debug, info, warning, error }
 
 const String _logFileName = 'poddr.log';
 const String _oldLogFileName = 'poddr.log.old';
-const int _maxFileSizeBytes = 5 * 1024 * 1024; // 5MB
+const int _maxFileSizeBytes = 5 * 1024 * 1024;
 
 File? _logFile;
 bool _initialized = false;
@@ -68,7 +68,8 @@ void _log(LogLevel level, String message,
     return;
   }
 
-  developer.log(message, name: name ?? 'Poddr', error: error, stackTrace: stackTrace);
+  developer.log(message,
+      name: name ?? 'Poddr', error: error, stackTrace: stackTrace);
 
   if (level != LogLevel.debug) {
     _init().then((_) => _writeToFile(formatted));

@@ -6,7 +6,7 @@ import 'package:poddr/data/history/history_repository.dart';
 import 'package:poddr/models/episode.dart';
 
 class HistoryProvider extends ChangeNotifier {
-  final logName = "HistoryProvider";
+  static const String logName = "HistoryProvider";
 
   final IHistoryRepository _historyRepository;
 

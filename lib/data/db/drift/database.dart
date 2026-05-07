@@ -30,8 +30,6 @@ class ListeningHistory extends Table {
   IntColumn get duration => integer()();
   BoolColumn get isFinished => boolean().withDefault(const Constant(false))();
   DateTimeColumn get listenedAt => dateTime().withDefault(currentDateAndTime)();
-
-  // Video support
   TextColumn get videoUrl => text().nullable()();
 }
 
@@ -46,11 +44,9 @@ class OfflineEpisodes extends Table {
   TextColumn get podcastRSS => text()();
   IntColumn get duration => integer()();
   IntColumn get fileSize => integer()();
-  DateTimeColumn get downloadedAt => dateTime().withDefault(currentDateAndTime)();
-
+  DateTimeColumn get downloadedAt =>
+      dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get publicationDate => dateTime().nullable()();
-
-  // Video support
   TextColumn get videoUrl => text().nullable()();
   TextColumn get videoLocalPath => text().nullable()();
   IntColumn get videoFileSize => integer().nullable()();

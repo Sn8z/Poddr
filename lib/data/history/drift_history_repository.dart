@@ -131,38 +131,48 @@ class DriftHistoryRepository implements IHistoryRepository {
   @override
   Stream<List<PodcastEpisode>> watchAllHistory() {
     return (database.select(database.listeningHistory)
-          ..orderBy([(t) => OrderingTerm(expression: t.listenedAt, mode: OrderingMode.desc)]))
+          ..orderBy([
+            (t) =>
+                OrderingTerm(expression: t.listenedAt, mode: OrderingMode.desc)
+          ]))
         .watch()
-        .map((history) => history.map((ep) => PodcastEpisode(
-              title: ep.title,
-              podcastTitle: ep.podcastTitle,
-              podcastRSS: ep.podcastRSS,
-              description: ep.description,
-              audioUrl: ep.audioUrl,
-              videoUrl: ep.videoUrl,
-              duration: Duration(seconds: ep.duration),
-              publicationDate: null,
-              imageUrl: ep.imageUrl,
-            )).toList());
+        .map((history) => history
+            .map((ep) => PodcastEpisode(
+                  title: ep.title,
+                  podcastTitle: ep.podcastTitle,
+                  podcastRSS: ep.podcastRSS,
+                  description: ep.description,
+                  audioUrl: ep.audioUrl,
+                  videoUrl: ep.videoUrl,
+                  duration: Duration(seconds: ep.duration),
+                  publicationDate: null,
+                  imageUrl: ep.imageUrl,
+                ))
+            .toList());
   }
 
   @override
   Stream<List<PodcastEpisode>> watchHistoryForPodcast(String podcastRSS) {
     return (database.select(database.listeningHistory)
           ..where((tbl) => tbl.podcastRSS.equals(podcastRSS))
-          ..orderBy([(t) => OrderingTerm(expression: t.listenedAt, mode: OrderingMode.desc)]))
+          ..orderBy([
+            (t) =>
+                OrderingTerm(expression: t.listenedAt, mode: OrderingMode.desc)
+          ]))
         .watch()
-        .map((history) => history.map((ep) => PodcastEpisode(
-              title: ep.title,
-              podcastTitle: ep.podcastTitle,
-              podcastRSS: ep.podcastRSS,
-              description: ep.description,
-              audioUrl: ep.audioUrl,
-              videoUrl: ep.videoUrl,
-              duration: Duration(seconds: ep.duration),
-              publicationDate: null,
-              imageUrl: ep.imageUrl,
-            )).toList());
+        .map((history) => history
+            .map((ep) => PodcastEpisode(
+                  title: ep.title,
+                  podcastTitle: ep.podcastTitle,
+                  podcastRSS: ep.podcastRSS,
+                  description: ep.description,
+                  audioUrl: ep.audioUrl,
+                  videoUrl: ep.videoUrl,
+                  duration: Duration(seconds: ep.duration),
+                  publicationDate: null,
+                  imageUrl: ep.imageUrl,
+                ))
+            .toList());
   }
 
   @override

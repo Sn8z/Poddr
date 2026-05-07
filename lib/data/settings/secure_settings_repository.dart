@@ -7,7 +7,7 @@ class SecureSettingsRepository {
   static const String _syncPasswordKey = "syncPassword";
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(),
     lOptions: LinuxOptions(),
     wOptions: WindowsOptions(),
   );

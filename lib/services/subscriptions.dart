@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
+import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
 import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/data/sync/drift_sync_repository.dart';
@@ -10,7 +11,8 @@ import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/podcast.dart';
 
 class SubscriptionProvider extends ChangeNotifier {
-  final String logName = "SubscriptionProvider";
+  static const String logName = "SubscriptionProvider";
+
   final IPodcastRepository _podcastRepository;
   final ISubscriptionRepository _subscriptionRepository;
   final ISyncRepository _syncRepository;

@@ -13,7 +13,7 @@ enum AudioEvent { play, pause, seek, stop, mediaItemChanged }
 
 class PoddrMediaHandler extends BaseAudioHandler
     with QueueHandler, SeekHandler {
-  final String logName = "PoddrMediaHandler";
+  static const String logName = "PoddrMediaHandler";
 
   late final PoddrMediaPlayer _player = PoddrMediaPlayer();
 
@@ -85,8 +85,7 @@ class PoddrMediaHandler extends BaseAudioHandler
         debug("No media to load", name: logName);
       }
     } catch (e, stackTrace) {
-      error(e.toString(),
-          name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }
   }
 
@@ -187,7 +186,8 @@ class PoddrMediaHandler extends BaseAudioHandler
         case AudioServiceRepeatMode.all:
           if (_mediaQueue.isNotEmpty) {
             if (_currentIndex >= _mediaQueue.length - 1) {
-              debug("Repeat all: restarting queue from beginning", name: logName);
+              debug("Repeat all: restarting queue from beginning",
+                  name: logName);
               skipToQueueItem(0);
             } else {
               debug("Repeat all: playing next track", name: logName);
@@ -216,7 +216,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   }
 
   void _handlePositionChange(Duration value) {
-    //log("Position: $value", name: logName);
+    debug("Position: $value", name: logName);
     playbackState.add(playbackState.value.copyWith(
       updatePosition: value,
     ));
@@ -243,7 +243,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   }
 
   void _handleBufferChange(Duration value) {
-    //log("Buffer: $value", name: logName);
+    debug("Buffer: $value", name: logName);
     playbackState.add(playbackState.value.copyWith(
       bufferedPosition: value,
     ));
@@ -281,9 +281,8 @@ class PoddrMediaHandler extends BaseAudioHandler
 
     _emit(AudioEvent.mediaItemChanged);
 
-    final playbackUrl = (videoUrl != null && videoUrl.isNotEmpty)
-        ? videoUrl
-        : audioUrl;
+    final playbackUrl =
+        (videoUrl != null && videoUrl.isNotEmpty) ? videoUrl : audioUrl;
 
     final media = MediaItem(
       id: audioUrl,
@@ -298,14 +297,12 @@ class PoddrMediaHandler extends BaseAudioHandler
       },
     );
 
-    // Open media FIRST so VideoController is ready when UI rebuilds
     await _player.open(
       playbackUrl,
       startPosition: startPosition,
       autoplay: autoplay,
     );
 
-    // Then notify UI (VideoController is ready)
     mediaItem.add(media);
   }
 

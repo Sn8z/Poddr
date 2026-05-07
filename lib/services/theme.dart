@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 
 class ThemeProvider extends ChangeNotifier {
+  static const String logName = "ThemeProvider";
   final ISettingsRepository _settingsRepository;
 
   Color _color = const Color.fromRGBO(0xFF, 0xA5, 0x00, 1);
@@ -24,8 +26,10 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   Future<void> _loadTheme() async {
+    debug("Loading theme settings", name: logName);
     _themeMode = await _settingsRepository.getThemeMode();
     _color = await _settingsRepository.getColor();
+    debug("Loaded theme: mode=$_themeMode, color=$_color", name: logName);
     _updateThemes();
     notifyListeners();
   }
@@ -86,16 +90,20 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   Future<void> setColor(Color color) async {
+    debug("Setting color to $color", name: logName);
     _color = color;
     _updateThemes();
     notifyListeners();
     await _settingsRepository.setColor(_color);
+    info("Color updated", name: logName);
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
+    debug("Setting theme mode to $mode", name: logName);
     _themeMode = mode;
     _updateThemes();
     notifyListeners();
     await _settingsRepository.setThemeMode(_themeMode);
+    info("Theme mode updated to $mode", name: logName);
   }
 }

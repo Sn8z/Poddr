@@ -2,14 +2,17 @@ import 'package:drift/drift.dart';
 import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/models/podcast.dart';
+import 'package:poddr/core/log.dart';
 
 class DriftSubscriptionRepository implements ISubscriptionRepository {
+  static const String logName = "DriftSubscriptionRepository";
   final PoddrDatabase database = PoddrDatabase();
 
   DriftSubscriptionRepository();
 
   @override
   Future<List<Podcast>> getSubscriptions() async {
+    debug("Getting subscriptions", name: logName);
     final subscriptions =
         await database.select(database.podcastSubscription).get();
 
@@ -32,6 +35,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
     String? author,
     String? image,
   ) async {
+    info("Adding subscription: $rss", name: logName);
     final id = await database.into(database.podcastSubscription).insert(
           PodcastSubscriptionCompanion.insert(
             title: title ?? '',
@@ -47,6 +51,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
 
   @override
   Future<void> removeSubscription(String rss) async {
+    info("Removing subscription: $rss", name: logName);
     await (database.delete(database.podcastSubscription)
           ..where((sub) => sub.rss.equals(rss)))
         .go();
@@ -61,6 +66,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
     String? imageUrl,
     String? newRss,
   }) async {
+    debug("Updating subscription: $rss", name: logName);
     await (database.update(database.podcastSubscription)
           ..where((sub) => sub.rss.equals(rss)))
         .write(PodcastSubscriptionCompanion(
@@ -75,6 +81,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
 
   @override
   Future<void> markAsBroken(String rss, {bool broken = true}) async {
+    info("Marking $rss as broken=$broken", name: logName);
     await (database.update(database.podcastSubscription)
           ..where((sub) => sub.rss.equals(rss)))
         .write(PodcastSubscriptionCompanion(
@@ -84,6 +91,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
 
   @override
   Future<int?> getSubscriptionIdByRss(String rss) async {
+    debug("Getting subscription ID for $rss", name: logName);
     final result = await (database.select(database.podcastSubscription)
           ..where((sub) => sub.rss.equals(rss)))
         .getSingleOrNull();
@@ -92,6 +100,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
 
   @override
   Stream<int?> watchSubscriptionIdByRss(String rss) {
+    debug("Watching subscription ID for $rss", name: logName);
     return (database.select(database.podcastSubscription)
           ..where((sub) => sub.rss.equals(rss)))
         .watchSingleOrNull()
@@ -100,6 +109,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
 
   @override
   Stream<List<Podcast>> watchAllSubscriptions() {
+    debug("Watching all subscriptions", name: logName);
     return database.select(database.podcastSubscription)
         .watch()
         .map((subs) => subs.map((sub) => Podcast(

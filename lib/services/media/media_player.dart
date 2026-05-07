@@ -4,7 +4,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poddr/ui/utils/platform.dart';
 
 class PoddrMediaPlayer {
-  final String logName = "PoddrMediaPlayer";
+  static const String logName = "PoddrMediaPlayer";
 
   late final Player _player;
   Player get player => _player;

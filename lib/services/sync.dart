@@ -14,8 +14,6 @@ import 'package:poddr/services/history.dart';
 
 class SyncProvider extends ChangeNotifier {
   static const String logName = "SyncProvider";
-
-  // Constants
   static const Duration _subscriptionSyncInterval = Duration(minutes: 30);
   static const Duration _episodeSyncInterval = Duration(minutes: 5);
   static const Duration _initialLoginDelay = Duration(seconds: 2);
@@ -23,16 +21,13 @@ class SyncProvider extends ChangeNotifier {
   static const int _initialRetryAttempts = 5;
   static const int _episodeBatchSize = 30;
 
-  // Repositories
   final ISettingsRepository _settings;
   final SecureSettingsRepository _secureSettings;
   final ISyncRepository _syncRepository;
 
-  // Providers
   SubscriptionProvider? _subscriptionProvider;
   HistoryProvider? _historyProvider;
 
-  // Client, timers and state
   GpodderClient? _client;
   Timer? _subscriptionSyncTimer;
   Timer? _episodeSyncTimer;
@@ -206,28 +201,28 @@ class SyncProvider extends ChangeNotifier {
 
     for (int attempt = 0;; attempt++) {
       if (!_syncEnabled) {
-         debug('Sync disabled, stopping login attempts', name: logName);
+        debug('Sync disabled, stopping login attempts', name: logName);
         return false;
       }
 
       try {
         final success = await _client!.login();
         if (success) {
-           info(
+          info(
               'Login successful after $attempt attempt${attempt == 1 ? '' : 's'}',
               name: logName);
           return true;
         }
       } on UnauthorizedException {
-         error('Login failed: Invalid credentials, stopping retry loop',
+        error('Login failed: Invalid credentials, stopping retry loop',
             name: logName);
         return false;
       } catch (e) {
-         error('Login failed: ${e.toString()}, will retry', name: logName);
+        error('Login failed: ${e.toString()}, will retry', name: logName);
       }
 
       if (attempt >= _initialRetryAttempts && attempt % 5 == 0) {
-         debug('Login failed, still retrying... (attempt $attempt)',
+        debug('Login failed, still retrying... (attempt $attempt)',
             name: logName);
         _errorMessage = 'Login failed, retrying in ${delay.inSeconds}s...';
         notifyListeners();
@@ -436,8 +431,7 @@ class SyncProvider extends ChangeNotifier {
 
     for (final url in serverUrls) {
       if (!localUrls.contains(url)) {
-        await _subscriptionProvider?.addSubscription(
-            rss: url, fromSync: true);
+        await _subscriptionProvider?.addSubscription(rss: url, fromSync: true);
       }
     }
 
@@ -448,8 +442,8 @@ class SyncProvider extends ChangeNotifier {
     }
 
     if (localOnly.isNotEmpty) {
-      await _client!.uploadSubscriptionChanges(
-          add: localOnly.toList(), remove: []);
+      await _client!
+          .uploadSubscriptionChanges(add: localOnly.toList(), remove: []);
     }
 
     final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
@@ -469,8 +463,8 @@ class SyncProvider extends ChangeNotifier {
 
     final remoteAdd = List<String>.from(changes['add'] ?? []);
     final remoteRemove = List<String>.from(changes['remove'] ?? []);
-    final remoteTimestamp = changes['timestamp'] ??
-        (DateTime.now().millisecondsSinceEpoch ~/ 1000);
+    final remoteTimestamp =
+        changes['timestamp'] ?? (DateTime.now().millisecondsSinceEpoch ~/ 1000);
 
     final actionMap = <String, Map<String, dynamic>>{};
 
@@ -515,12 +509,10 @@ class SyncProvider extends ChangeNotifier {
       final action = actionData['action'] as String;
 
       if (action == 'add' && !localUrls.contains(url)) {
-        await _subscriptionProvider?.addSubscription(
-            rss: url, fromSync: true);
+        await _subscriptionProvider?.addSubscription(rss: url, fromSync: true);
         localUrls.add(url);
       } else if (action == 'remove' && localUrls.contains(url)) {
-        await _subscriptionProvider?.removeSubscription(url,
-            fromSync: true);
+        await _subscriptionProvider?.removeSubscription(url, fromSync: true);
         localUrls.remove(url);
       }
     }

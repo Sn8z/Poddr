@@ -10,7 +10,7 @@ import 'package:poddr/services/offline.dart';
 import 'package:poddr/services/sync.dart';
 
 class MediaProvider extends ChangeNotifier {
-  final String logName = "MediaProvider";
+  static const String logName = "MediaProvider";
 
   final PoddrMediaHandler _mediaHandler = PoddrMediaHandler();
 
@@ -130,7 +130,6 @@ class MediaProvider extends ChangeNotifier {
           state.processingState == AudioProcessingState.buffering;
       notifyListeners();
 
-      // Periodic progress save while playing (debounced, no timer)
       final now = DateTime.now();
       if (_isPlaying &&
           (_lastProgressSave == null ||
@@ -280,7 +279,6 @@ class MediaProvider extends ChangeNotifier {
         info("Playing audio from local file: $localPath", name: logName);
       }
 
-      // Check for local video
       if (videoUrl != null) {
         final localVideoPath =
             await _offlineProvider!.getVideoLocalPath(audioUrl);
