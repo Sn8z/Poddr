@@ -1,36 +1,50 @@
 import 'package:xml/xml.dart';
 import 'package:intl/intl.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/models/episode.dart';
 
 class PoddrPodcastParser {
+  static const String logName = "PoddrPodcastParser";
   static final _dateFormat = DateFormat('EEE, dd MMM yyyy HH:mm:ss Z');
 
   static Podcast parse(String xmlString, String rssUrl) {
     try {
-      final doc = XmlDocument.parse(xmlString);
+      info("Parsing podcast feed: $rssUrl", name: logName);
+
+      final sanitizedXml = xmlString.replaceAll(
+        RegExp(r'<!DOCTYPE[^>]*>', multiLine: true),
+        '',
+      );
+      final doc = XmlDocument.parse(sanitizedXml);
 
       final root = doc.rootElement;
 
       final channel = root.findElements('channel').firstOrNull;
       if (channel != null) {
+        debug("Detected RSS feed", name: logName);
         return _parsePodcast(channel, rssUrl);
       }
 
       if (root.name.local == 'feed') {
+        debug("Detected Atom feed (root)", name: logName);
         return _parseAtomFeed(root, rssUrl);
       }
 
       final feed = root.findElements('feed').firstOrNull;
       if (feed != null) {
+        debug("Detected Atom feed", name: logName);
         return _parseAtomFeed(feed, rssUrl);
       }
 
+      error("Invalid feed format: $rssUrl", name: logName);
       throw Exception("$rssUrl is not a valid RSS or Atom feed");
-    } on XmlParserException catch (e) {
-      throw Exception("Failed to parse XML from $rssUrl: ${e.message}");
-    } catch (e) {
-      throw Exception("Failed to parse podcast from $rssUrl: $e");
+    } on XmlParserException {
+      error("XML parse error for $rssUrl", name: logName);
+      throw Exception("Failed to parse podcast feed");
+    } catch (_) {
+      error("Failed to parse podcast feed: $rssUrl", name: logName);
+      throw Exception("Failed to parse podcast feed");
     }
   }
 
@@ -56,6 +70,7 @@ class PoddrPodcastParser {
       return fallbackFormat.parse(noDayString);
     } catch (_) {}
 
+    warning("Failed to parse date: $trimmedDate", name: logName);
     return null;
   }
 
@@ -113,6 +128,12 @@ class PoddrPodcastParser {
     final title = _findElementText(feed, ['atom:title', 'title']);
     final author = _findElementText(feed, ['atom:author', 'author']);
 
+    if (title == null || title.isEmpty) {
+      warning("Atom feed missing title", name: logName);
+    } else {
+      debug("Parsing Atom feed: $title", name: logName);
+    }
+
     return Podcast(
       title: title,
       description: _findElementText(
@@ -154,8 +175,21 @@ class PoddrPodcastParser {
     String? podcastRSS,
     String? author,
   }) {
+    final title = _findElementText(entry, ['atom:title', 'title']);
+    final audioUrl = _parseAtomLink(entry, 'enclosure');
+
+    if (title == null || title.isEmpty) {
+      warning("Atom entry missing title", name: logName);
+    } else {
+      debug("Parsing Atom entry: $title", name: logName);
+    }
+
+    if (audioUrl == null || audioUrl.isEmpty) {
+      warning("Atom entry missing audio URL", name: logName);
+    }
+
     return PodcastEpisode(
-      title: _findElementText(entry, ['atom:title', 'title']),
+      title: title,
       description: _findElementText(entry, [
         'atom:summary',
         'atom:content',
@@ -166,7 +200,7 @@ class PoddrPodcastParser {
       podcastRSS: podcastRSS,
       podcastTitle: podcastTitle,
       author: author ?? _findElementText(entry, ['atom:author', 'author']),
-      audioUrl: _parseAtomLink(entry, 'enclosure') ?? '',
+      audioUrl: audioUrl ?? '',
       videoUrl: _parseVideoUrl(entry),
       duration: _parseDuration(entry),
       publicationDate: _parseAtomPublished(entry),
@@ -196,6 +230,12 @@ class PoddrPodcastParser {
     final image = _parseImage(channel);
     final title = _parseTitle(channel);
     final author = _parseAuthor(channel);
+
+    if (title == null || title.isEmpty) {
+      warning("Podcast missing title", name: logName);
+    } else {
+      debug("Parsing podcast: $title", name: logName);
+    }
 
     return Podcast(
       title: title,
@@ -237,13 +277,26 @@ class PoddrPodcastParser {
     String? podcastRSS,
     String? author,
   }) {
+    final title = _parseEpisodeTitle(item);
+    final audioUrl = _parseAudioUrl(item);
+
+    if (title == null || title.isEmpty) {
+      warning("Episode missing title", name: logName);
+    } else {
+      debug("Parsing episode: $title", name: logName);
+    }
+
+    if (audioUrl == null || audioUrl.isEmpty) {
+      warning("Episode missing audio URL", name: logName);
+    }
+
     return PodcastEpisode(
-      title: _parseEpisodeTitle(item),
+      title: title,
       description: _parseEpisodeDescription(item),
       podcastRSS: podcastRSS,
       podcastTitle: podcastTitle,
       author: author,
-      audioUrl: _parseAudioUrl(item) ?? '',
+      audioUrl: audioUrl ?? '',
       videoUrl: _parseVideoUrl(item),
       duration: _parseDuration(item),
       publicationDate: _parsePubDate(item),
@@ -455,7 +508,8 @@ class PoddrPodcastParser {
       }
     }
 
-    for (final altEnclosure in item.findElements('podcast:alternateEnclosure')) {
+    for (final altEnclosure
+        in item.findElements('podcast:alternateEnclosure')) {
       final type = altEnclosure.getAttribute('type')?.toLowerCase() ?? '';
       if (type.startsWith('video/')) {
         final source = altEnclosure

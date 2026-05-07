@@ -48,7 +48,7 @@ class GpodderClient {
       http.Response response;
       switch (method.toUpperCase()) {
         case 'GET':
-          response = await _httpClient.get(uri, headers: headers);
+          response = await _httpClient.get(uri, headers: headers, skipCache: true);
           break;
         case 'POST':
           response =
@@ -80,7 +80,8 @@ class GpodderClient {
       } else if (statusCode >= 500) {
         throw ServerErrorException(statusCode);
       } else {
-        throw ApiException('HTTP request failed with status $statusCode: $res');
+        error("HTTP $statusCode for $path: $res", name: logName);
+        throw ApiException('Server returned error (code $statusCode)');
       }
     } catch (e) {
       if (e is ApiException) rethrow;

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:poddr/services/offline.dart';
 import 'package:poddr/core/shortcuts.dart';
+import 'package:poddr/core/log.dart';
 import 'package:provider/provider.dart';
-// ignore: depend_on_referenced_packages
-import 'package:flutter_web_plugins/url_strategy.dart';
 
 // Providers
 import 'package:poddr/services/subscriptions.dart';
@@ -17,9 +17,27 @@ import 'package:poddr/services/sync.dart';
 import 'package:poddr/core/router.dart';
 
 void main() async {
-  usePathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
+
+  FlutterError.onError = (details) {
+    error(
+      'Flutter error',
+      name: 'FlutterError',
+      error: details.exception,
+      stackTrace: details.stack,
+    );
+  };
+
+  PlatformDispatcher.instance.onError = (err, stackTrace) {
+    error(
+      'Uncaught error',
+      name: 'UncaughtError',
+      error: err,
+      stackTrace: stackTrace,
+    );
+    return true;
+  };
 
   final GoRouter router = PoddrRouter.router;
 
