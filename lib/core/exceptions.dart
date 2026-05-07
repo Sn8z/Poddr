@@ -7,20 +7,21 @@ class ApiException implements Exception {
 }
 
 class UnauthorizedException extends ApiException {
-  UnauthorizedException([String message = 'Unauthorized access']) : super(message);
+  UnauthorizedException([super.message = 'Unauthorized access']);
 }
 
 class NotFoundException extends ApiException {
-  NotFoundException([String message = 'Resource not found']) : super(message);
+  NotFoundException([super.message = 'Resource not found']);
 }
 
 class ServerErrorException extends ApiException {
   final int statusCode;
-  ServerErrorException(this.statusCode, [String message = 'Internal server error']) : super(message);
+  ServerErrorException(this.statusCode,
+      [super.message = 'Internal server error']);
 }
 
 class NetworkException extends ApiException {
-  NetworkException([String message = 'Network communication failure']) : super(message);
+  NetworkException([super.message = 'Network communication failure']);
 }
 
 class DownloadException implements Exception {
@@ -31,14 +32,14 @@ class DownloadException implements Exception {
 }
 
 class DownloadCancelledException extends DownloadException {
-  DownloadCancelledException([String message = 'Download was cancelled']) : super(message);
+  DownloadCancelledException([super.message = 'Download was cancelled']);
 }
 
 class DownloadFailedException extends DownloadException {
   final int? statusCode;
-  DownloadFailedException(this.statusCode, [String message = 'Download failed']) : super(message);
+  DownloadFailedException(this.statusCode, [super.message = 'Download failed']);
 }
 
 class InsufficientSpaceException extends DownloadException {
-  InsufficientSpaceException([String message = 'Insufficient storage space']) : super(message);
+  InsufficientSpaceException([super.message = 'Insufficient storage space']);
 }
