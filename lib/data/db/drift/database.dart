@@ -135,7 +135,15 @@ class PoddrDatabase extends _$PoddrDatabase {
               name: 'PoddrDatabase', error: e, stackTrace: stackTrace);
         }
       },
-      onUpgrade: (Migrator m, int from, int to) async {},
+      onUpgrade: (Migrator m, int from, int to) async {
+        for (var version = from + 1; version <= to; version++) {
+          switch (version) {
+            case 2:
+              // Placeholder for version 2 migration
+              break;
+          }
+        }
+      },
     );
   }
 }
