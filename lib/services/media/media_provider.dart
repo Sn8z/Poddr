@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:audio_service/audio_service.dart';
+import 'package:poddr/core/log.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/history.dart';
@@ -208,16 +208,7 @@ class MediaProvider extends ChangeNotifier {
     String? artist,
     String? artUri,
   }) async {
-    log("Adding to queue", name: logName);
-    log("AudioUrl: $audioUrl", name: logName);
-    log("VideoUrl: $videoUrl", name: logName);
-    log("PodcastTitle: $podcastTitle", name: logName);
-    log("PodcastRSS: $podcastRSS", name: logName);
-    log("EpisodeTitle: $episodeTitle", name: logName);
-    log("Album: $album", name: logName);
-    log("Description: $description", name: logName);
-    log("Artist: $artist", name: logName);
-    log("ArtUri: $artUri", name: logName);
+    debug("Adding to queue", name: logName);
 
     if (audioUrl == null) return;
 
@@ -286,7 +277,7 @@ class MediaProvider extends ChangeNotifier {
       final localPath = await _offlineProvider!.getLocalPath(audioUrl);
       if (localPath != null) {
         playUrl = localPath;
-        log("Playing audio from local file: $localPath", name: logName);
+        info("Playing audio from local file: $localPath", name: logName);
       }
 
       // Check for local video
@@ -295,7 +286,7 @@ class MediaProvider extends ChangeNotifier {
             await _offlineProvider!.getVideoLocalPath(audioUrl);
         if (localVideoPath != null) {
           playVideoUrl = localVideoPath;
-          log("Playing video from local file: $localVideoPath", name: logName);
+          info("Playing video from local file: $localVideoPath", name: logName);
         }
       }
     }

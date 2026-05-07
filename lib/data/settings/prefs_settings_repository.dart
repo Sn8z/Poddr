@@ -1,6 +1,6 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 
 class SharedPrefSettingsRepository implements ISettingsRepository {
@@ -18,7 +18,7 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<void> setColor(Color color) async {
     final prefs = await SharedPreferences.getInstance();
     final int colorInt = color.toARGB32();
-    log("Saving color: $colorInt", name: logName);
+    debug("Saving color: $colorInt", name: logName);
     prefs.setInt(_colorKey, colorInt);
   }
 
@@ -26,14 +26,14 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<Color> getColor() async {
     final prefs = await SharedPreferences.getInstance();
     final color = prefs.getInt(_colorKey) ?? 4294940190;
-    log("Loading color: $color", name: logName);
+    debug("Loading color: $color", name: logName);
     return Color(color);
   }
 
   @override
   Future<void> setThemeMode(ThemeMode mode) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving theme mode: $mode", name: logName);
+    debug("Saving theme mode: $mode", name: logName);
     prefs.setInt(_themeModeKey, mode.index);
   }
 
@@ -41,14 +41,14 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<ThemeMode> getThemeMode() async {
     final prefs = await SharedPreferences.getInstance();
     final themeMode = prefs.getInt(_themeModeKey) ?? 0;
-    log("Loading theme mode: $themeMode", name: logName);
+    debug("Loading theme mode: $themeMode", name: logName);
     return ThemeMode.values[themeMode];
   }
 
   @override
   Future<void> saveActiveProfile(int profileId) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving active profile: $profileId", name: logName);
+    debug("Saving active profile: $profileId", name: logName);
     prefs.setInt(_profileKey, profileId);
   }
 
@@ -56,14 +56,14 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<int> getActiveProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final int profile = prefs.getInt(_profileKey) ?? 0;
-    log("Loading active profile: $profile", name: logName);
+    debug("Loading active profile: $profile", name: logName);
     return profile;
   }
 
   @override
   Future<void> saveCountryCode(String countryCode) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving country code: $countryCode", name: logName);
+    debug("Saving country code: $countryCode", name: logName);
     prefs.setString(_countryCodeKey, countryCode);
   }
 
@@ -71,14 +71,14 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<String> getCountryCode() async {
     final prefs = await SharedPreferences.getInstance();
     final String countryCode = prefs.getString(_countryCodeKey) ?? 'us';
-    log("Loading country code: $countryCode", name: logName);
+    debug("Loading country code: $countryCode", name: logName);
     return countryCode;
   }
 
   @override
   Future<void> saveGenreID(String genreID) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving genre ID: $genreID", name: logName);
+    debug("Saving genre ID: $genreID", name: logName);
     prefs.setString(_genreIDKey, genreID);
   }
 
@@ -86,7 +86,7 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<String> getGenreID() async {
     final prefs = await SharedPreferences.getInstance();
     final String genreID = prefs.getString(_genreIDKey) ?? '';
-    log("Loading genre ID: $genreID", name: logName);
+    debug("Loading genre ID: $genreID", name: logName);
     return genreID;
   }
 
@@ -101,7 +101,7 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   @override
   Future<void> setSyncEnabled(bool enabled) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving sync enabled: $enabled", name: logName);
+    debug("Saving sync enabled: $enabled", name: logName);
     prefs.setBool(_syncEnabledKey, enabled);
   }
 
@@ -109,14 +109,14 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<bool> getSyncEnabled() async {
     final prefs = await SharedPreferences.getInstance();
     final bool enabled = prefs.getBool(_syncEnabledKey) ?? false;
-    log("Loading sync enabled: $enabled", name: logName);
+    debug("Loading sync enabled: $enabled", name: logName);
     return enabled;
   }
 
   @override
   Future<void> setSyncServerUrl(String url) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving sync server URL: $url", name: logName);
+    debug("Saving sync server URL: $url", name: logName);
     prefs.setString(_syncServerUrlKey, url);
   }
 
@@ -124,14 +124,14 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<String> getSyncServerUrl() async {
     final prefs = await SharedPreferences.getInstance();
     final String url = prefs.getString(_syncServerUrlKey) ?? '';
-    log("Loading sync server URL: $url", name: logName);
+    debug("Loading sync server URL: $url", name: logName);
     return url;
   }
 
   @override
   Future<void> setSyncUsername(String username) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving sync username: $username", name: logName);
+    debug("Saving sync username: $username", name: logName);
     prefs.setString(_syncUsernameKey, username);
   }
 
@@ -139,14 +139,14 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<String> getSyncUsername() async {
     final prefs = await SharedPreferences.getInstance();
     final String username = prefs.getString(_syncUsernameKey) ?? '';
-    log("Loading sync username: $username", name: logName);
+    debug("Loading sync username: $username", name: logName);
     return username;
   }
 
   @override
   Future<void> setSyncDeviceId(String deviceId) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving sync device ID: $deviceId", name: logName);
+    debug("Saving sync device ID: $deviceId", name: logName);
     prefs.setString(_syncDeviceIdKey, deviceId);
   }
 
@@ -154,14 +154,14 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<String> getSyncDeviceId() async {
     final prefs = await SharedPreferences.getInstance();
     final String deviceId = prefs.getString(_syncDeviceIdKey) ?? '';
-    log("Loading sync device ID: $deviceId", name: logName);
+    debug("Loading sync device ID: $deviceId", name: logName);
     return deviceId;
   }
 
   @override
   Future<void> setSyncDeviceName(String deviceName) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving sync device name: $deviceName", name: logName);
+    debug("Saving sync device name: $deviceName", name: logName);
     prefs.setString(_syncDeviceNameKey, deviceName);
   }
 
@@ -169,14 +169,14 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<String> getSyncDeviceName() async {
     final prefs = await SharedPreferences.getInstance();
     final String deviceName = prefs.getString(_syncDeviceNameKey) ?? 'Poddr';
-    log("Loading sync device name: $deviceName", name: logName);
+    debug("Loading sync device name: $deviceName", name: logName);
     return deviceName;
   }
 
   @override
   Future<void> setSyncLastSubscriptionSync(int timestamp) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving last subscription sync: $timestamp", name: logName);
+    debug("Saving last subscription sync: $timestamp", name: logName);
     prefs.setInt(_syncLastSubscriptionSyncKey, timestamp);
   }
 
@@ -184,14 +184,14 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<int> getSyncLastSubscriptionSync() async {
     final prefs = await SharedPreferences.getInstance();
     final int timestamp = prefs.getInt(_syncLastSubscriptionSyncKey) ?? 0;
-    log("Loading last subscription sync: $timestamp", name: logName);
+    debug("Loading last subscription sync: $timestamp", name: logName);
     return timestamp;
   }
 
   @override
   Future<void> setSyncLastEpisodeSync(int timestamp) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving last episode sync: $timestamp", name: logName);
+    debug("Saving last episode sync: $timestamp", name: logName);
     prefs.setInt(_syncLastEpisodeSyncKey, timestamp);
   }
 
@@ -199,7 +199,7 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   Future<int> getSyncLastEpisodeSync() async {
     final prefs = await SharedPreferences.getInstance();
     final int timestamp = prefs.getInt(_syncLastEpisodeSyncKey) ?? 0;
-    log("Loading last episode sync: $timestamp", name: logName);
+    debug("Loading last episode sync: $timestamp", name: logName);
     return timestamp;
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:flutter/foundation.dart';
+import 'package:poddr/core/log.dart';
 import 'package:uuid/uuid.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 import 'package:poddr/data/settings/secure_settings_repository.dart';
@@ -171,12 +171,12 @@ class SyncProvider extends ChangeNotifier {
         _isConfigured = false;
         _errorMessage =
             'Failed to connect to sync server after multiple attempts';
-        log(_errorMessage!, name: logName);
+        error(_errorMessage!, name: logName);
       }
     } catch (e) {
       _isConfigured = false;
-      _errorMessage = 'Failed to connect to sync server: $e';
-      log(_errorMessage!, name: logName);
+      _errorMessage = 'Failed to configure sync: $e';
+      error(_errorMessage!, name: logName);
     } finally {
       notifyListeners();
     }
@@ -188,7 +188,7 @@ class SyncProvider extends ChangeNotifier {
     if (!_syncEnabled) return false;
 
     if (_loginFuture != null) {
-      log('Login already in progress, awaiting existing future...',
+      debug('Login already in progress, awaiting existing future...',
           name: logName);
       return await _loginFuture!;
     }
@@ -206,27 +206,28 @@ class SyncProvider extends ChangeNotifier {
 
     for (int attempt = 0;; attempt++) {
       if (!_syncEnabled) {
-        log('Sync disabled, stopping login attempts', name: logName);
+         debug('Sync disabled, stopping login attempts', name: logName);
         return false;
       }
 
       try {
         final success = await _client!.login();
         if (success) {
-          log('Login successful after $attempt attempt${attempt == 1 ? '' : 's'}',
+           info(
+              'Login successful after $attempt attempt${attempt == 1 ? '' : 's'}',
               name: logName);
           return true;
         }
       } on UnauthorizedException {
-        log('Login failed: Invalid credentials, stopping retry loop',
+         error('Login failed: Invalid credentials, stopping retry loop',
             name: logName);
         return false;
       } catch (e) {
-        log('Login failed: ${e.toString()}, will retry', name: logName);
+         error('Login failed: ${e.toString()}, will retry', name: logName);
       }
 
       if (attempt >= _initialRetryAttempts && attempt % 5 == 0) {
-        log('Login failed, still retrying... (attempt $attempt)',
+         debug('Login failed, still retrying... (attempt $attempt)',
             name: logName);
         _errorMessage = 'Login failed, retrying in ${delay.inSeconds}s...';
         notifyListeners();
@@ -244,13 +245,13 @@ class SyncProvider extends ChangeNotifier {
     try {
       return await operation();
     } on UnauthorizedException {
-      log('Operation unauthorized, attempting re-login...', name: logName);
+      debug('Operation unauthorized, attempting re-login...', name: logName);
       final loginSuccess = await _loginWithRetry();
       if (loginSuccess) {
         try {
           return await operation();
         } catch (e) {
-          log('Operation failed again after login: $e', name: logName);
+          error('Operation failed again after login: $e', name: logName);
           return null;
         }
       }
@@ -258,7 +259,7 @@ class SyncProvider extends ChangeNotifier {
       notifyListeners();
       return null;
     } catch (e) {
-      log('Operation failed: $e', name: logName);
+      error('Operation failed: $e', name: logName);
       return null;
     }
   }
@@ -303,7 +304,7 @@ class SyncProvider extends ChangeNotifier {
         }
       }
     } catch (e) {
-      log('Failed to load devices: $e', name: logName);
+      error('Failed to load devices: $e', name: logName);
     } finally {
       notifyListeners();
     }
@@ -354,7 +355,7 @@ class SyncProvider extends ChangeNotifier {
     } catch (e) {
       _errorMessage = 'Failed to configure sync: $e';
       _isConfigured = false;
-      log(_errorMessage!, name: logName);
+      error(_errorMessage!, name: logName);
     }
   }
 
@@ -365,13 +366,13 @@ class SyncProvider extends ChangeNotifier {
     _subscriptionSyncTimer?.cancel();
     _subscriptionSyncTimer = Timer.periodic(_subscriptionSyncInterval, (_) {
       syncSubscriptions().catchError(
-          (e) => log("Periodic sub sync failed: $e", name: logName));
+          (e) => error("Periodic sub sync failed: $e", name: logName));
     });
 
     _episodeSyncTimer?.cancel();
     _episodeSyncTimer = Timer.periodic(_episodeSyncInterval, (_) {
       syncEpisodes().catchError(
-          (e) => log("Periodic episode sync failed: $e", name: logName));
+          (e) => error("Periodic episode sync failed: $e", name: logName));
     });
   }
 
@@ -418,7 +419,7 @@ class SyncProvider extends ChangeNotifier {
       });
     } catch (e) {
       _errorMessage = 'Subscription sync failed: $e';
-      log(_errorMessage!, name: logName);
+      error(_errorMessage!, name: logName);
     } finally {
       _isSyncingSubscriptions = false;
       notifyListeners();
@@ -596,7 +597,7 @@ class SyncProvider extends ChangeNotifier {
       });
     } catch (e) {
       _errorMessage = 'Episode sync failed: $e';
-      log(_errorMessage!, name: logName);
+      error(_errorMessage!, name: logName);
     } finally {
       _isSyncingEpisodes = false;
       notifyListeners();
@@ -628,7 +629,7 @@ class SyncProvider extends ChangeNotifier {
   }
 
   Future<void> _fetchAndApplyRemoteHistory(List<dynamic> actions) async {
-    log("Applying remote episode actions", name: logName);
+    debug("Applying remote episode actions", name: logName);
 
     final remoteHistory = <String, Map<String, dynamic>>{};
 
@@ -667,7 +668,8 @@ class SyncProvider extends ChangeNotifier {
     int position = 0,
   }) async {
     if (!_syncEnabled) return;
-    log("Recording episode action: $action for $episodeUrl at position $position",
+    debug(
+        "Recording episode action: $action for $episodeUrl at position $position",
         name: logName);
 
     await _syncRepository.addPendingEpisodeAction(
@@ -820,7 +822,7 @@ class SyncProvider extends ChangeNotifier {
       });
     } catch (e) {
       _errorMessage = 'Full re-sync failed: $e';
-      log(_errorMessage!, name: logName);
+      error(_errorMessage!, name: logName);
     } finally {
       notifyListeners();
     }

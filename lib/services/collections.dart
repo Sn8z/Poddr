@@ -1,5 +1,5 @@
-import 'dart:developer';
 import 'package:flutter/foundation.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/data/collections/drift_collections_repository.dart';
 import 'package:poddr/data/collections/collections_repository.dart';
 import 'package:poddr/models/collection.dart';
@@ -31,13 +31,9 @@ class CollectionsProvider extends ChangeNotifier {
       notifyListeners();
 
       _collections = await _repository.getAllCollections();
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -48,13 +44,9 @@ class CollectionsProvider extends ChangeNotifier {
     try {
       final collection = await _repository.createCollection(name, color: color);
       return collection;
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
       return null;
     }
   }
@@ -63,13 +55,9 @@ class CollectionsProvider extends ChangeNotifier {
     try {
       await _repository.updateCollectionName(id, name);
       return true;
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -78,13 +66,9 @@ class CollectionsProvider extends ChangeNotifier {
     try {
       await _repository.updateCollectionColor(id, color);
       return true;
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -93,13 +77,9 @@ class CollectionsProvider extends ChangeNotifier {
     try {
       await _repository.deleteCollection(id);
       return true;
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -108,13 +88,9 @@ class CollectionsProvider extends ChangeNotifier {
     try {
       await _repository.linkCollectionToSubscription(collectionId, subscriptionId);
       return true;
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -123,13 +99,9 @@ class CollectionsProvider extends ChangeNotifier {
     try {
       await _repository.unlinkCollectionFromSubscription(collectionId, subscriptionId);
       return true;
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }

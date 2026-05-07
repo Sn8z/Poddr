@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+﻿import 'package:poddr/core/log.dart';
 import 'package:poddr/data/media/media_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,7 +8,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   @override
   Future<void> setRate(double rate) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving rate: $rate", name: logName);
+    debug("Saving rate: $rate", name: logName);
     prefs.setDouble("rate", rate);
   }
 
@@ -18,7 +17,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
     final prefs = await SharedPreferences.getInstance();
 
     final double rate = prefs.getDouble("rate") ?? 1.0;
-    log("Loading rate $rate", name: logName);
+    debug("Loading rate $rate", name: logName);
     return rate;
   }
 
@@ -26,7 +25,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   Future<void> setVolume(double volume) async {
     final prefs = await SharedPreferences.getInstance();
 
-    log("Saving volume: $volume", name: logName);
+    debug("Saving volume: $volume", name: logName);
     prefs.setDouble("volume", volume);
   }
 
@@ -35,7 +34,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
     final prefs = await SharedPreferences.getInstance();
 
     final double volume = prefs.getDouble("volume") ?? 50;
-    log("Loading volume $volume", name: logName);
+    debug("Loading volume $volume", name: logName);
     return volume;
   }
 
@@ -43,7 +42,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   Future<void> setPosition(Duration position) async {
     final prefs = await SharedPreferences.getInstance();
 
-    log("Saving position: $position", name: logName);
+    debug("Saving position: $position", name: logName);
     prefs.setInt("position", position.inSeconds);
   }
 
@@ -52,14 +51,14 @@ class SharedPrefsMediaRepository implements IMediaRepository {
     final prefs = await SharedPreferences.getInstance();
 
     final Duration position = Duration(seconds: prefs.getInt("position") ?? 0);
-    log("Loading position $position", name: logName);
+    debug("Loading position $position", name: logName);
     return position;
   }
 
   @override
   Future<void> setAudioUrl(String url) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving audio url: $url", name: logName);
+    debug("Saving audio url: $url", name: logName);
     prefs.setString("audioUrl", url);
   }
 
@@ -68,14 +67,14 @@ class SharedPrefsMediaRepository implements IMediaRepository {
     final prefs = await SharedPreferences.getInstance();
 
     final String url = prefs.getString("audioUrl") ?? "";
-    log("Loading audio url $url", name: logName);
+    debug("Loading audio url $url", name: logName);
     return url;
   }
 
   @override
   Future<void> setVideoUrl(String? url) async {
     final prefs = await SharedPreferences.getInstance();
-    log("Saving video url: $url", name: logName);
+    debug("Saving video url: $url", name: logName);
     if (url == null) {
       await prefs.remove("videoUrl");
     } else {
@@ -87,7 +86,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   Future<String?> getVideoUrl() async {
     final prefs = await SharedPreferences.getInstance();
     final String? url = prefs.getString("videoUrl");
-    log("Loading video url $url", name: logName);
+    debug("Loading video url $url", name: logName);
     return url;
   }
 
@@ -95,7 +94,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   Future<void> setRSS(String rss) async {
     final prefs = await SharedPreferences.getInstance();
 
-    log("Saving rss: $rss", name: logName);
+    debug("Saving rss: $rss", name: logName);
     prefs.setString("rss", rss);
   }
 
@@ -104,7 +103,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
     final prefs = await SharedPreferences.getInstance();
 
     final String rss = prefs.getString("rss") ?? "";
-    log("Loading rss $rss", name: logName);
+    debug("Loading rss $rss", name: logName);
     return rss;
   }
 
@@ -112,7 +111,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   Future<void> setPodcastTitle(String title) async {
     final prefs = await SharedPreferences.getInstance();
 
-    log("Saving podcast title: $title", name: logName);
+    debug("Saving podcast title: $title", name: logName);
     prefs.setString("podcastTitle", title);
   }
 
@@ -121,7 +120,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
     final prefs = await SharedPreferences.getInstance();
 
     final String title = prefs.getString("podcastTitle") ?? "";
-    log("Loading podcast title $title", name: logName);
+    debug("Loading podcast title $title", name: logName);
     return title;
   }
 
@@ -129,7 +128,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   Future<void> setEpisodeTitle(String title) async {
     final prefs = await SharedPreferences.getInstance();
 
-    log("Saving episode title: $title", name: logName);
+    debug("Saving episode title: $title", name: logName);
     prefs.setString("episodeTitle", title);
   }
 
@@ -138,7 +137,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
     final prefs = await SharedPreferences.getInstance();
 
     final String title = prefs.getString("episodeTitle") ?? "";
-    log("Loading episode title $title", name: logName);
+    debug("Loading episode title $title", name: logName);
     return title;
   }
 
@@ -146,7 +145,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   Future<void> setAuthor(String author) async {
     final prefs = await SharedPreferences.getInstance();
 
-    log("Saving author: $author", name: logName);
+    debug("Saving author: $author", name: logName);
     prefs.setString("author", author);
   }
 
@@ -155,7 +154,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
     final prefs = await SharedPreferences.getInstance();
 
     final String author = prefs.getString("author") ?? "";
-    log("Loading author $author", name: logName);
+    debug("Loading author $author", name: logName);
     return author;
   }
 
@@ -163,7 +162,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
   Future<void> setArtwork(String uri) async {
     final prefs = await SharedPreferences.getInstance();
 
-    log("Saving artwork: $uri", name: logName);
+    debug("Saving artwork: $uri", name: logName);
     prefs.setString("artwork", uri);
   }
 
@@ -172,7 +171,7 @@ class SharedPrefsMediaRepository implements IMediaRepository {
     final prefs = await SharedPreferences.getInstance();
 
     final String artwork = prefs.getString("artwork") ?? "";
-    log("Loading artwork $artwork", name: logName);
+    debug("Loading artwork $artwork", name: logName);
     return artwork;
   }
 }

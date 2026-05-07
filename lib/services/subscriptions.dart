@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:flutter/foundation.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
@@ -47,13 +47,8 @@ class SubscriptionProvider extends ChangeNotifier {
 
       _subscriptions = await _subscriptionRepository.getSubscriptions();
       await _updateLatestEpisodes();
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -80,15 +75,10 @@ class SubscriptionProvider extends ChangeNotifier {
       }
 
       await _getSubscriptions();
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     } finally {
-      log("Added subscription $rss", name: logName);
+      info("Added subscription $rss", name: logName);
     }
   }
 
@@ -107,13 +97,8 @@ class SubscriptionProvider extends ChangeNotifier {
         image: podcast.image,
         fromSync: fromSync,
       );
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -141,13 +126,8 @@ class SubscriptionProvider extends ChangeNotifier {
 
       await _getSubscriptions();
       return true;
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return false;
     }
   }
@@ -166,7 +146,7 @@ class SubscriptionProvider extends ChangeNotifier {
 
   Future<void> removeSubscription(String rss, {bool fromSync = false}) async {
     try {
-      log("Removing $rss", name: logName);
+      info("Removing $rss", name: logName);
 
       await _subscriptionRepository.removeSubscription(rss);
 
@@ -175,15 +155,10 @@ class SubscriptionProvider extends ChangeNotifier {
       }
 
       await _getSubscriptions();
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     } finally {
-      log("Finished removing $rss", name: logName);
+      info("Finished removing $rss", name: logName);
     }
   }
 
@@ -250,7 +225,7 @@ class SubscriptionProvider extends ChangeNotifier {
 
       return _FeedResult(effectiveRss, fullPodcast.episodes);
     } catch (e, st) {
-      log("Failed to fetch $rss", name: logName, error: e, stackTrace: st);
+      error("Failed to fetch $rss", name: logName, error: e, stackTrace: st);
       await _subscriptionRepository.markAsBroken(rss);
       return null;
     }

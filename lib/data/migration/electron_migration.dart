@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:poddr/core/log.dart';
 import 'dart:io';
 import 'dart:convert';
 
@@ -10,6 +10,8 @@ typedef SubscriptionInsert = Future<void> Function(
 );
 
 class ElectronMigration {
+  static const String logName = "ElectronMigration";
+
   static Future<void> migrateSubscriptions(SubscriptionInsert insert) async {
     final favourites = await _readFavourites();
     if (favourites.isEmpty) return;
@@ -30,9 +32,9 @@ class ElectronMigration {
           data['img'] ?? '',
           subscribedAt,
         );
-      } catch (error, stackTrace) {
-        log('Failed to migrate subscription for $rss: $error');
-        log('Stack trace: $stackTrace');
+      } catch (e, stackTrace) {
+        error('Failed to migrate subscription for $rss: $e',
+            name: logName, error: e, stackTrace: stackTrace);
       }
     }
   }
@@ -50,9 +52,9 @@ class ElectronMigration {
       if (decoded is Map<String, dynamic>) {
         return decoded;
       }
-    } catch (error, stackTrace) {
-      log('Failed to read favourites: $error');
-      log('Stack trace: $stackTrace');
+    } catch (e, stackTrace) {
+      error('Failed to read favourites: $e',
+          name: logName, error: e, stackTrace: stackTrace);
     }
     return {};
   }

@@ -1,5 +1,5 @@
-import 'dart:developer';
 import 'package:flutter/foundation.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
@@ -62,7 +62,7 @@ class DiscoverViewModel extends ChangeNotifier {
   }
 
   Future<void> _init() async {
-    log("Initializing DiscoverViewModel", name: logName);
+    debug("Initializing DiscoverViewModel", name: logName);
     _countryCode = await _settingsRepository.getCountryCode();
     _genreID = await _settingsRepository.getGenreID();
     await getCharts();
@@ -72,18 +72,19 @@ class DiscoverViewModel extends ChangeNotifier {
     _countryCode = code;
     await getCharts();
     await _settingsRepository.saveCountryCode(code);
-    log("Set country to: $code", name: logName);
+    info("Set country to: $code", name: logName);
   }
 
   void setGenre(String genre) async {
     _genreID = genre;
     await getCharts();
     await _settingsRepository.saveGenreID(genre);
-    log("Set genre to: $genre", name: logName);
+    info("Set genre to: $genre", name: logName);
   }
 
   Future<void> getCharts() async {
-    log("Fetching charts for country: $_countryCode and genre: $_genreID",
+    debug(
+        "Fetching charts for country: $_countryCode and genre: $_genreID",
         name: logName);
     _isLoading = true;
     notifyListeners();

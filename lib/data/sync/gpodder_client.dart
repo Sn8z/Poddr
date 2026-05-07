@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:poddr/core/log.dart';
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/poddr_http_client.dart';
 
@@ -129,7 +129,7 @@ class GpodderClient {
 
   Future<bool> login() async {
     try {
-      log("Attempting login to $_serverUrl", name: logName);
+      debug("Attempting login to $_serverUrl", name: logName);
 
       final String url = '$_baseUrl/api/2/auth/$_encodedUsername/login.json';
        final res = await _httpClient
@@ -139,24 +139,24 @@ class GpodderClient {
         final cookies = res.headers['set-cookie'];
         if (cookies != null) {
           final sessionMatch = RegExp(r'sessionid=([^;]+)').firstMatch(cookies);
-          if (sessionMatch != null) {
+            if (sessionMatch != null) {
             _sessionId = sessionMatch.group(1);
-            log("Login successful, session ID: ${_sessionId!.substring(0, 8)}...",
-                name: logName);
+            info("Login successful, session ID: ${_sessionId!.substring(0, 8)}...",
+                    name: logName);
             return true;
           }
         }
-        log("Login successful but no session cookie found", name: logName);
+        info("Login successful but no session cookie found", name: logName);
         return true;
       } else if (res.statusCode == 401) {
-        log("Login failed: Invalid credentials", name: logName);
+        error("Login failed: Invalid credentials", name: logName);
         throw UnauthorizedException();
       } else {
-        log("Login failed with status: ${res.statusCode}", name: logName);
+        error("Login failed with status: ${res.statusCode}", name: logName);
         return false;
       }
     } catch (e) {
-      log("Login error: $e", name: logName);
+      error("Login error: $e", name: logName);
       return false;
     }
   }
@@ -166,10 +166,10 @@ class GpodderClient {
       final path = '/api/2/auth/$_encodedUsername/logout.json';
       await _sendRequest('POST', path);
       _sessionId = null;
-      log("Logged out", name: logName);
+      info("Logged out", name: logName);
       return true;
     } catch (e) {
-      log("Logout error: $e", name: logName);
+      error("Logout error: $e", name: logName);
       _sessionId = null;
       return false;
     }
@@ -180,7 +180,8 @@ class GpodderClient {
     required List<String> add,
     required List<String> remove,
   }) async {
-    log("Uploading subscription changes: add=${add.length}, remove=${remove.length}",
+    debug(
+        "Uploading subscription changes: add=${add.length}, remove=${remove.length}",
         name: logName);
 
     if (add.isEmpty && remove.isEmpty) {
@@ -192,34 +193,34 @@ class GpodderClient {
     final path = '/api/2/subscriptions/$_encodedUsername/$_deviceId.json';
     final result =
         await _sendRequest('POST', path, body: {'add': add, 'remove': remove});
-    log("Subscription changes uploaded successfully", name: logName);
+    info("Subscription changes uploaded successfully", name: logName);
     return result as Map<String, dynamic>;
   }
 
   Future<Map<String, dynamic>> getSubscriptionChanges({int since = 0}) async {
-    log("Fetching subscription changes since $since", name: logName);
+    debug("Fetching subscription changes since $since", name: logName);
     final path = '/api/2/subscriptions/$_encodedUsername/$_deviceId.json';
     final result = await _sendRequest('GET', path,
         queryParams: {'since': since.toString()});
-    log("Subscription changes retrieved successfully", name: logName);
+    debug("Subscription changes retrieved successfully", name: logName);
     return result as Map<String, dynamic>;
   }
 
   Future<List<String>> getAllSubscriptions() async {
-    log("Fetching all subscriptions from server", name: logName);
+    debug("Fetching all subscriptions from server", name: logName);
     final path = '/subscriptions/$_encodedUsername/$_deviceId.json';
     final result = await _sendRequest('GET', path);
-    log("All subscriptions retrieved successfully", name: logName);
+    debug("All subscriptions retrieved successfully", name: logName);
     return (result as List).cast<String>().toList();
   }
 
   // Episode actions
   Future<Map<String, dynamic>> uploadEpisodeActions(
       List<Map<String, dynamic>> actions) async {
-    log("Uploading ${actions.length} episode actions", name: logName);
+    debug("Uploading ${actions.length} episode actions", name: logName);
 
     if (actions.isEmpty) {
-      log("No episode actions to upload", name: logName);
+      debug("No episode actions to upload", name: logName);
       return {
         'timestamp': DateTime.now().millisecondsSinceEpoch ~/ 1000,
         'update_urls': []
@@ -242,7 +243,7 @@ class GpodderClient {
 
     final path = '/api/2/episodes/$_encodedUsername.json';
     final result = await _sendRequest('POST', path, body: formattedActions);
-    log("Episode actions uploaded successfully", name: logName);
+    info("Episode actions uploaded successfully", name: logName);
     return result as Map<String, dynamic>;
   }
 
@@ -250,37 +251,37 @@ class GpodderClient {
     final path = '/api/2/episodes/$_encodedUsername.json';
     final result = await _sendRequest('GET', path,
         queryParams: {'since': since.toString()});
-    log('getEpisodeActions response retrieved', name: logName);
+    debug('getEpisodeActions response retrieved', name: logName);
     return result as Map<String, dynamic>;
   }
 
   // Device management
   Future<Map<String, dynamic>> getDeviceUpdates() async {
-    log("Fetching device updates for device ID: $_deviceId", name: logName);
+    debug("Fetching device updates for device ID: $_deviceId", name: logName);
     final path = '/api/2/updates/$_encodedUsername/$_deviceId.json';
     final result = await _sendRequest('GET', path);
-    log("Device updates retrieved successfully", name: logName);
+    debug("Device updates retrieved successfully", name: logName);
     return result as Map<String, dynamic>;
   }
 
   Future<bool> registerDevice() async {
-    log("Registering device with name: $_deviceName at $_baseUrl",
+    debug("Registering device with name: $_deviceName at $_baseUrl",
         name: logName);
     final path = '/api/2/devices/$_encodedUsername/$_deviceId.json';
     await _sendRequest('POST', path, body: {'caption': _deviceName});
-    log("Device info updated: $_deviceName", name: logName);
+    info("Device info updated: $_deviceName", name: logName);
     return true;
   }
 
   Future<List<Map<String, dynamic>>> getDevices() async {
-    log("Fetching devices for user $_username", name: logName);
+    debug("Fetching devices for user $_username", name: logName);
     final path = '/api/2/devices/$_encodedUsername.json';
     final result = await _sendRequest('GET', path);
     return (result as List).cast<Map<String, dynamic>>();
   }
 
   Future<Map<String, dynamic>> getSyncDevices() async {
-    log("Fetching sync devices for user $_username", name: logName);
+    debug("Fetching sync devices for user $_username", name: logName);
     final path = '/api/2/sync-devices/$_encodedUsername.json';
     final result = await _sendRequest('GET', path);
     return result as Map<String, dynamic>;
@@ -290,7 +291,7 @@ class GpodderClient {
     required List<List<String>> synchronized,
     required List<String> notSynchronized,
   }) async {
-    log("Updating sync devices: ${synchronized.length} synchronized, ${notSynchronized.length} not synchronized",
+    debug("Updating sync devices: ${synchronized.length} synchronized, ${notSynchronized.length} not synchronized",
         name: logName);
 
     final path = '/api/2/sync-devices/$_encodedUsername.json';
@@ -298,7 +299,7 @@ class GpodderClient {
       'synchronize': synchronized,
       'stop-synchronize': notSynchronized,
     });
-    log("Sync devices updated successfully", name: logName);
+    info("Sync devices updated successfully", name: logName);
     return true;
   }
 

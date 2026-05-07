@@ -1,6 +1,6 @@
-import 'dart:developer';
 import 'dart:async';
 import 'dart:math' hide log;
+import 'package:poddr/core/log.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart' hide AudioDevice;
 import 'package:media_kit_video/media_kit_video.dart';
@@ -82,16 +82,11 @@ class PoddrMediaHandler extends BaseAudioHandler
           autoplay: false,
         );
       } else {
-        log("No media to load", name: logName);
+        debug("No media to load", name: logName);
       }
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        time: DateTime.now(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
     }
   }
 
@@ -101,13 +96,13 @@ class PoddrMediaHandler extends BaseAudioHandler
     audioSession.setActive(true);
 
     audioSession.becomingNoisyEventStream.listen((_) {
-      log("Headphones disconnected", name: logName);
+      info("Headphones disconnected", name: logName);
       _player.pause();
     });
 
     audioSession.devicesChangedEventStream.listen((event) {
-      log('Devices added: ${event.devicesAdded}', name: logName);
-      log('Devices removed: ${event.devicesRemoved}', name: logName);
+      debug('Devices added: ${event.devicesAdded}', name: logName);
+      debug('Devices removed: ${event.devicesRemoved}', name: logName);
     });
 
     await AudioService.init(
@@ -135,12 +130,8 @@ class PoddrMediaHandler extends BaseAudioHandler
     _bufferingSub = player.stream.buffering.listen(_handleBufferingState);
     _volumeSub = player.stream.volume.listen(_handleVolumeChange);
 
-    _errorSub = player.stream.error.listen((String error) {
-      log(
-        error,
-        name: logName,
-        error: error,
-      );
+    _errorSub = player.stream.error.listen((String err) {
+      error(err, name: logName, error: err);
     });
   }
 
@@ -159,7 +150,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   }
 
   void _handlePlayingState(bool value) {
-    log(value ? "Playing" : "Paused", name: logName);
+    debug(value ? "Playing" : "Paused", name: logName);
     playbackState.add(playbackState.value.copyWith(
       playing: value,
       controls: [
@@ -183,12 +174,12 @@ class PoddrMediaHandler extends BaseAudioHandler
   }
 
   void _handleCompletion(bool isCompleted) {
-    log("Completed: $isCompleted", name: logName);
+    debug("Completed: $isCompleted", name: logName);
 
     if (isCompleted) {
       switch (_repeatMode) {
         case AudioServiceRepeatMode.one:
-          log("Repeat one: restarting current track", name: logName);
+          debug("Repeat one: restarting current track", name: logName);
           seek(Duration.zero);
           play();
           return;
@@ -196,10 +187,10 @@ class PoddrMediaHandler extends BaseAudioHandler
         case AudioServiceRepeatMode.all:
           if (_mediaQueue.isNotEmpty) {
             if (_currentIndex >= _mediaQueue.length - 1) {
-              log("Repeat all: restarting queue from beginning", name: logName);
+              debug("Repeat all: restarting queue from beginning", name: logName);
               skipToQueueItem(0);
             } else {
-              log("Repeat all: playing next track", name: logName);
+              debug("Repeat all: playing next track", name: logName);
               skipToNext();
             }
             return;
@@ -208,11 +199,11 @@ class PoddrMediaHandler extends BaseAudioHandler
 
         default:
           if (_currentIndex < _mediaQueue.length - 1) {
-            log("No repeat: playing next track", name: logName);
+            debug("No repeat: playing next track", name: logName);
             skipToNext();
             return;
           } else {
-            log("No repeat: queue completed, stopping", name: logName);
+            debug("No repeat: queue completed, stopping", name: logName);
             pause();
           }
           break;
@@ -239,12 +230,12 @@ class PoddrMediaHandler extends BaseAudioHandler
   }
 
   void _handleDurationChange(Duration value) {
-    log("Duration: $value", name: logName);
+    debug("Duration: $value", name: logName);
     mediaItem.add(mediaItem.value?.copyWith(duration: value));
   }
 
   void _handleRateChange(double value) {
-    log("Playback rate: $value", name: logName);
+    debug("Playback rate: $value", name: logName);
     playbackState.add(playbackState.value.copyWith(
       speed: value,
     ));
@@ -259,7 +250,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   }
 
   void _handleBufferingState(bool value) {
-    log(value ? "Buffering" : "Done buffering", name: logName);
+    debug(value ? "Buffering" : "Done buffering", name: logName);
     playbackState.add(playbackState.value.copyWith(
       processingState:
           value ? AudioProcessingState.buffering : AudioProcessingState.ready,
@@ -267,7 +258,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   }
 
   void _handleVolumeChange(double value) {
-    log("Volume: $value", name: logName);
+    debug("Volume: $value", name: logName);
     _mediaRepository.setVolume(value);
   }
 
@@ -284,18 +275,7 @@ class PoddrMediaHandler extends BaseAudioHandler
     Duration startPosition = Duration.zero,
     bool autoplay = true,
   }) async {
-    log("Loading media", name: logName);
-    log("AudioUrl: $audioUrl", name: logName);
-    log("VideoUrl: $videoUrl", name: logName);
-    log("PodcastTitle: $podcastTitle", name: logName);
-    log("PodcastRSS: $podcastRSS", name: logName);
-    log("EpisodeTitle: $episodeTitle", name: logName);
-    log("Album: $album", name: logName);
-    log("Description: $description", name: logName);
-    log("Artist: $artist", name: logName);
-    log("ArtUri: $artUri", name: logName);
-    log("StartPosition: $startPosition", name: logName);
-    log("Autoplay: $autoplay", name: logName);
+    debug("Loading media", name: logName);
 
     if (audioUrl == null) return;
 
@@ -373,12 +353,12 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   @override
   Future<void> skipToNext() async {
-    log("Skipping to next", name: logName);
+    debug("Skipping to next", name: logName);
 
     final queueLength = _mediaQueue.length;
     if (_isShuffling) {
       if (queueLength <= 1) {
-        log("No items to shuffle", name: logName);
+        debug("No items to shuffle", name: logName);
         return;
       }
       int newIndex;
@@ -391,7 +371,7 @@ class PoddrMediaHandler extends BaseAudioHandler
       final nextIndex = _currentIndex + 1;
       await skipToQueueItem(nextIndex);
     } else {
-      log("No next item in queue", name: logName);
+      debug("No next item in queue", name: logName);
       await _player.pause();
     }
   }
@@ -399,10 +379,10 @@ class PoddrMediaHandler extends BaseAudioHandler
   @override
   Future<void> skipToPrevious() async {
     if (_currentIndex <= 0) {
-      log("No previous item in queue", name: logName);
+      debug("No previous item in queue", name: logName);
       return;
     } else {
-      log("Skipped to previous", name: logName);
+      debug("Skipped to previous", name: logName);
       final prevIndex = _currentIndex - 1;
       await skipToQueueItem(prevIndex);
     }
@@ -411,7 +391,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   @override
   Future<void> skipToQueueItem(int index) async {
     if (index < 0 || index >= _mediaQueue.length) {
-      log("Index out of bounds: $index", name: logName);
+      debug("Index out of bounds: $index", name: logName);
       return;
     }
 
@@ -434,21 +414,21 @@ class PoddrMediaHandler extends BaseAudioHandler
 
     _currentIndex = index;
 
-    log("Skipped to queue item $index", name: logName);
+    debug("Skipped to queue item $index", name: logName);
   }
 
   @override
   Future<void> addQueueItem(MediaItem mediaItem) async {
     _mediaQueue.add(mediaItem);
     queue.add(_mediaQueue);
-    log("Added to queue: ${mediaItem.id}", name: logName);
+    debug("Added to queue: ${mediaItem.id}", name: logName);
   }
 
   @override
   Future<void> addQueueItems(List<MediaItem> mediaItems) async {
     for (var item in mediaItems) {
       _mediaQueue.add(item);
-      log("Added to queue: ${item.id}", name: logName);
+      debug("Added to queue: ${item.id}", name: logName);
     }
     queue.add(_mediaQueue);
   }
@@ -464,16 +444,7 @@ class PoddrMediaHandler extends BaseAudioHandler
     String? artist,
     String? artUri,
   }) async {
-    log("Adding to queue", name: logName);
-    log("AudioUrl: $audioUrl", name: logName);
-    log("VideoUrl: $videoUrl", name: logName);
-    log("PodcastTitle: $podcastTitle", name: logName);
-    log("PodcastRSS: $podcastRSS", name: logName);
-    log("EpisodeTitle: $episodeTitle", name: logName);
-    log("Album: $album", name: logName);
-    log("Description: $description", name: logName);
-    log("Artist: $artist", name: logName);
-    log("ArtUri: $artUri", name: logName);
+    debug("Adding to queue", name: logName);
 
     if (audioUrl == null) return;
 
@@ -496,7 +467,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   @override
   Future<void> removeQueueItemAt(int index) async {
     if (index < 0 || index >= _mediaQueue.length) {
-      log("Index out of bounds: $index", name: logName);
+      debug("Index out of bounds: $index", name: logName);
       return;
     }
     _mediaQueue.removeAt(index);
@@ -506,20 +477,20 @@ class PoddrMediaHandler extends BaseAudioHandler
       _currentIndex--;
     }
 
-    log("Removed from queue: index $index", name: logName);
+    debug("Removed from queue: index $index", name: logName);
   }
 
   Future<void> clearQueue() async {
     _mediaQueue.clear();
     queue.add(_mediaQueue);
-    log("Cleared queue", name: logName);
+    debug("Cleared queue", name: logName);
   }
 
   @override
   Future<void> removeQueueItem(MediaItem mediaItem) async {
     final index = _mediaQueue.indexOf(mediaItem);
     if (index == -1) {
-      log("Item not found in queue", name: logName);
+      debug("Item not found in queue", name: logName);
       return;
     }
     await removeQueueItemAt(index);
@@ -527,7 +498,7 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   @override
   Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) async {
-    log("Setting repeat mode: $repeatMode", name: logName);
+    debug("Setting repeat mode: $repeatMode", name: logName);
 
     _repeatMode = repeatMode;
 
@@ -536,7 +507,7 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   @override
   Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {
-    log("Shuffle mode: $shuffleMode", name: logName);
+    debug("Shuffle mode: $shuffleMode", name: logName);
 
     _isShuffling = shuffleMode == AudioServiceShuffleMode.all;
 
@@ -545,13 +516,13 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   @override
   Future<void> onTaskRemoved() async {
-    log("Task removed, saving position", name: logName);
+    debug("Task removed, saving position", name: logName);
     _mediaRepository.setPosition(playbackState.value.updatePosition);
     await stop();
   }
 
   Future<void> dispose() async {
-    log("Disposing media", name: logName);
+    debug("Disposing media", name: logName);
     await _mediaItemSub.cancel();
     await _playingSub.cancel();
     await _completedSub.cancel();

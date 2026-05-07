@@ -1,6 +1,6 @@
-import 'dart:developer';
 import 'dart:convert';
 import 'dart:isolate';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/data/parsers/podcast_parser.dart';
 import 'package:poddr/core/poddr_http_client.dart';
@@ -29,7 +29,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
     final List<Podcast> feeds = [];
     try {
       final searchUrl = "$baseUrl/search?term=$query&media=podcast";
-      log("Searching for $searchUrl", name: logName);
+      debug("Searching for $searchUrl", name: logName);
       final response = await _http.get(Uri.parse(searchUrl));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -46,24 +46,19 @@ class ITunesPodcastRepository implements IPodcastRepository {
       } else {
         throw Exception("Search return code ${response.statusCode}");
       }
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
       return [];
     }
   }
 
-  @override
   Future<List<Podcast>> getCharts(String country, String genre) async {
     final List<Podcast> feeds = [];
     try {
       final chartsUrl =
           "$baseUrl/$country/rss/toppodcasts/limit=50/explicit=true/genre=$genre/json";
-      log("Checking charts for $chartsUrl", name: logName);
+      debug("Checking charts for $chartsUrl", name: logName);
       final response = await _http.get(Uri.parse(chartsUrl));
 
       if (response.statusCode == 200) {
@@ -99,25 +94,20 @@ class ITunesPodcastRepository implements IPodcastRepository {
       } else {
         throw Exception("Could not get charts");
       }
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
       return [];
     }
   }
 
-  @override
   Future<Podcast> getFeed(String rss) async {
     try {
-      log("Getting feed $rss", name: logName);
+      debug("Getting feed $rss", name: logName);
 
       final cached = _feedCache[rss];
       if (cached != null && !cached.isExpired) {
-        log("Using cached feed for $rss", name: logName);
+        debug("Using cached feed for $rss", name: logName);
         return await Isolate.run(() => _parsePodcastFeed(cached.content, rss));
       }
 
@@ -130,10 +120,10 @@ class ITunesPodcastRepository implements IPodcastRepository {
       }
 
       final response = await _http.get(Uri.parse(rss), headers: headers);
-      log("Feed return code ${response.statusCode}", name: logName);
+      debug("Feed return code ${response.statusCode}", name: logName);
 
       if (response.statusCode == 304) {
-        log("Feed not modified (304), using cache for $rss", name: logName);
+        debug("Feed not modified (304), using cache for $rss", name: logName);
         if (cached != null) {
           return await Isolate.run(() => _parsePodcastFeed(cached.content, rss));
         }
@@ -151,16 +141,12 @@ class ITunesPodcastRepository implements IPodcastRepository {
 
         return await Isolate.run(() => _parsePodcastFeed(content, rss));
       } else {
-        log("Feed return code ${response.statusCode}", name: logName);
+        error("Feed return code ${response.statusCode}", name: logName);
         throw Exception("Could not get feed");
       }
-    } catch (error, stackTrace) {
-      log(
-        error.toString(),
-        name: logName,
-        error: error,
-        stackTrace: stackTrace,
-      );
+    } catch (e, stackTrace) {
+      error(e.toString(),
+          name: logName, error: e, stackTrace: stackTrace);
       throw Exception("Something went wrong when getting the feed");
     }
   }

@@ -1,5 +1,5 @@
-import 'dart:developer';
 import 'package:media_kit/media_kit.dart';
+import 'package:poddr/core/log.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poddr/ui/utils/platform.dart';
 
@@ -18,7 +18,7 @@ class PoddrMediaPlayer {
     _player = Player(
       configuration: PlayerConfiguration(
         title: "Poddr",
-        ready: () => log("AudioPlayer ready", name: "AudioPlayer"),
+        ready: () => debug("AudioPlayer ready", name: "AudioPlayer"),
         logLevel: MPVLogLevel.info,
       ),
     );
@@ -41,13 +41,12 @@ class PoddrMediaPlayer {
         await _player.setAudioDevice(AudioDevice.auto());
       }
 
-      log("Player initialized", name: logName);
-    } catch (error, stackTrace) {
-      log(
+      info("Player initialized", name: logName);
+    } catch (e, stackTrace) {
+      error(
         "Error initializing player",
-        time: DateTime.now(),
         name: logName,
-        error: error,
+        error: e,
         stackTrace: stackTrace,
       );
     }
@@ -58,7 +57,7 @@ class PoddrMediaPlayer {
     Duration startPosition = Duration.zero,
     bool autoplay = true,
   }) async {
-    log("Opening: $url", name: logName);
+    debug("Opening: $url", name: logName);
 
     await _player.open(
       Media(url, start: startPosition),
@@ -100,7 +99,7 @@ class PoddrMediaPlayer {
   }
 
   Future<void> dispose() async {
-    log("Disposing player", name: logName);
+    debug("Disposing player", name: logName);
     _videoController = null;
     await _player.dispose();
   }

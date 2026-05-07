@@ -1,6 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/data/offline/drift_offline_repository.dart';
 import 'package:poddr/data/offline/offline_repository.dart';
 import 'package:poddr/core/poddr_http_client.dart';
@@ -33,7 +33,7 @@ class OfflineProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   String? _error;
-  String? get error => _error;
+  String? get errorMessage => _error;
 
   OfflineProvider({IOfflineRepository? repository})
       : _repository = repository ?? DriftOfflineRepository() {
@@ -56,12 +56,8 @@ class OfflineProvider extends ChangeNotifier {
 
       _downloads = await _repository.getAll();
     } catch (e, stackTrace) {
-      log(
-        'Failed to get downloads',
-        name: logName,
-        error: e,
-        stackTrace: stackTrace,
-      );
+      error('Failed to get downloads',
+          name: logName, error: e, stackTrace: stackTrace);
       _error = e.toString();
     } finally {
       _isLoading = false;
@@ -95,7 +91,8 @@ class OfflineProvider extends ChangeNotifier {
     if (_downloading.length >= _maxConcurrentDownloads) {
       if (!_downloadQueue.any((e) => e.audioUrl == episode.audioUrl)) {
         _downloadQueue.add(episode);
-        log('Added to download queue: ${episode.title}', name: logName);
+        info('Added to download queue: ${episode.title}',
+            name: logName);
         notifyListeners();
       }
       return;
@@ -105,7 +102,9 @@ class OfflineProvider extends ChangeNotifier {
     if (existing != null) {
       final localFile = File(existing.localPath);
       if (await localFile.exists()) {
-        log('Episode already downloaded: ${episode.title}', name: logName);
+        info(
+            'Episode already downloaded: ${episode.title}',
+            name: logName);
         return;
       }
       await _repository.remove(episode.audioUrl);
@@ -125,7 +124,8 @@ class OfflineProvider extends ChangeNotifier {
           _downloadProgress[episode.audioUrl] = progress;
           final percent = (progress * 100).round();
           if (percent % 25 == 0 && percent <= 100) {
-            log('Download progress: ${episode.title} - $percent%',
+            debug(
+                'Download progress: ${episode.title} - $percent%',
                 name: logName);
           }
           notifyListeners();
@@ -134,20 +134,18 @@ class OfflineProvider extends ChangeNotifier {
         client: client,
       );
 
-      log('Download completed: ${episode.title}', name: logName);
+      info('Download completed: ${episode.title}',
+          name: logName);
       await getDownloads();
     } on DownloadCancelledException {
-      log('Download cancelled: ${episode.title}', name: logName);
+      info('Download cancelled: ${episode.title}',
+          name: logName);
     } catch (e, stackTrace) {
       if (_cancelling.contains(episode.audioUrl)) {
-        log('Download cancelled: ${episode.title}', name: logName);
+        info('Download cancelled: ${episode.title}', name: logName);
       } else {
-        log(
-          'Failed to download episode',
-          name: logName,
-          error: e,
-          stackTrace: stackTrace,
-        );
+        error('Failed to download episode',
+            name: logName, error: e, stackTrace: stackTrace);
         _error = e.toString();
       }
       notifyListeners();
@@ -169,8 +167,8 @@ class OfflineProvider extends ChangeNotifier {
     final queuedIndex = _downloadQueue.indexWhere((e) => e.audioUrl == audioUrl);
     if (queuedIndex != -1) {
       _downloadQueue.removeAt(queuedIndex);
-      log('Removed from queue: $audioUrl', name: logName);
-      notifyListeners();
+        info('Removed from queue: $audioUrl', name: logName);
+        notifyListeners();
       return;
     }
 
@@ -191,11 +189,8 @@ class OfflineProvider extends ChangeNotifier {
         await _repository.remove(audioUrl);
       }
     } catch (e) {
-      log(
-        'Failed to clean up cancelled download',
-        name: logName,
-        error: e,
-      );
+      error('Failed to clean up cancelled download',
+          name: logName, error: e);
     } finally {
       _cancelling.remove(audioUrl);
     }
@@ -207,8 +202,8 @@ class OfflineProvider extends ChangeNotifier {
   Future<void> _processQueue() async {
     while (_downloadQueue.isNotEmpty && _downloading.length < _maxConcurrentDownloads) {
       final episode = _downloadQueue.removeAt(0);
-      log('Processing queued download: ${episode.title}', name: logName);
-      download(episode);
+        info('Processing queued download: ${episode.title}', name: logName);
+        download(episode);
     }
     notifyListeners();
   }
@@ -218,12 +213,8 @@ class OfflineProvider extends ChangeNotifier {
       await _repository.remove(audioUrl);
       await getDownloads();
     } catch (e, stackTrace) {
-      log(
-        'Failed to remove download',
-        name: logName,
-        error: e,
-        stackTrace: stackTrace,
-      );
+      error('Failed to remove download',
+          name: logName, error: e, stackTrace: stackTrace);
       _error = e.toString();
       notifyListeners();
       rethrow;
@@ -245,9 +236,9 @@ class OfflineProvider extends ChangeNotifier {
         await remove(download.audioUrl);
       }
 
-      log('Cleared all downloads', name: logName);
+      info('Cleared all downloads', name: logName);
     } catch (e, stackTrace) {
-      log('Failed to clear all downloads', name: logName, error: e, stackTrace: stackTrace);
+      error('Failed to clear all downloads', name: logName, error: e, stackTrace: stackTrace);
       _error = e.toString();
     } finally {
       _isLoading = false;

@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:poddr/core/log.dart';
 
 class PoddrHTML extends StatelessWidget {
   static const String logName = "PoddrHTML";
@@ -64,7 +63,7 @@ class PoddrHTML extends StatelessWidget {
         try {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         } catch (e) {
-          log(e.toString(), name: "PoddrHTML", error: e);
+          error(e.toString(), name: "PoddrHTML", error: e);
         }
       },
     );

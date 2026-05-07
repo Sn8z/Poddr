@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
 import 'package:poddr/ui/views/settings/opml/opml_settings.dart';
 
@@ -61,7 +60,7 @@ class SettingsView extends StatelessWidget {
                   await launchUrl(
                       Uri.parse("https://github.com/sponsors/Sn8z"));
                 } catch (e) {
-                  log('Error launching URL: $e');
+                  error('Error launching URL: $e', name: 'SettingsView');
                 }
               },
             ),
@@ -73,7 +72,7 @@ class SettingsView extends StatelessWidget {
                   launchUrl(
                       Uri.parse("https://www.paypal.com/paypalme/sn8z"));
                 } catch (e) {
-                  log('Error launching URL: $e');
+                  error('Error launching URL: $e', name: 'SettingsView');
                 }
               },
             ),
@@ -84,7 +83,7 @@ class SettingsView extends StatelessWidget {
                 try {
                   launchUrl(Uri.parse("https://ko-fi.com/sneitz"));
                 } catch (e) {
-                  log('Error launching URL: $e');
+                  error('Error launching URL: $e', name: 'SettingsView');
                 }
               },
             ),
@@ -102,7 +101,7 @@ class SettingsView extends StatelessWidget {
                   launchUrl(
                       Uri.parse("https://github.com/Sn8z/Poddr/issues"));
                 } catch (e) {
-                  log('Error launching URL: $e');
+                  error('Error launching URL: $e', name: 'SettingsView');
                 }
               },
             ),

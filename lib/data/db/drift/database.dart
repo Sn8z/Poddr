@@ -1,8 +1,8 @@
-import 'dart:developer';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:poddr/data/migration/electron_migration.dart';
+import 'package:poddr/core/log.dart';
 
 part 'database.g.dart';
 
@@ -119,6 +119,25 @@ class PoddrDatabase extends _$PoddrDatabase {
     return MigrationStrategy(
       onCreate: (Migrator m) async {
         await m.createAll();
+        try {
+          await ElectronMigration.migrateSubscriptions(
+            (rss, title, imageUrl, subscribedAt) async {
+              await into(podcastSubscription).insert(
+                PodcastSubscriptionCompanion.insert(
+                  rss: rss,
+                  title: title,
+                  description: '',
+                  author: '',
+                  imageUrl: imageUrl,
+                  subscribedAt: Value(subscribedAt),
+                ),
+              );
+            },
+          );
+        } catch (e, stackTrace) {
+          error('Failed to migrate subscriptions: $e',
+              name: 'PoddrDatabase', error: e, stackTrace: stackTrace);
+        }
       },
       onUpgrade: (Migrator m, int from, int to) async {},
     );

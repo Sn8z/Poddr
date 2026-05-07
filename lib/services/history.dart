@@ -1,5 +1,5 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/data/history/drift_history_repository.dart';
 import 'package:poddr/data/history/history_repository.dart';
@@ -28,7 +28,7 @@ class HistoryProvider extends ChangeNotifier {
 
       _history = await _historyRepository.getHistory();
     } catch (e, stackTrace) {
-      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -61,7 +61,7 @@ class HistoryProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e, stackTrace) {
-      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }
   }
 
@@ -74,7 +74,7 @@ class HistoryProvider extends ChangeNotifier {
         duration,
       );
     } catch (e, stackTrace) {
-      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }
   }
 
@@ -82,7 +82,7 @@ class HistoryProvider extends ChangeNotifier {
     try {
       return await _historyRepository.getProgress(audioUrl);
     } catch (e, stackTrace) {
-      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return null;
     }
   }
@@ -91,7 +91,7 @@ class HistoryProvider extends ChangeNotifier {
     try {
       return _historyRepository.watchProgressByAudioUrl(audioUrl);
     } catch (e, stackTrace) {
-      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
       return const Stream.empty();
     }
   }
@@ -102,7 +102,7 @@ class HistoryProvider extends ChangeNotifier {
       _history.removeWhere((ep) => ep.audioUrl == audioUrl);
       notifyListeners();
     } catch (e, stackTrace) {
-      log(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     }
   }
 }
