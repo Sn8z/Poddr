@@ -20,4 +20,7 @@ class PodcastCollection {
       color: color ?? this.color,
     );
   }
+
+  @override
+  String toString() => 'PodcastCollection{id: $id, name: $name, color: $color}';
 }

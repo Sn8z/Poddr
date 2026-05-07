@@ -12,4 +12,7 @@ class Country {
       name: name ?? this.name,
     );
   }
+
+  @override
+  String toString() => 'Country{code: $code, name: $name}';
 }

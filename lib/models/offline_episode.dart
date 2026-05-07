@@ -70,4 +70,13 @@ class OfflineEpisode {
       videoFileSize: videoFileSize ?? this.videoFileSize,
     );
   }
+
+  @override
+  String toString() {
+    return 'OfflineEpisode{id: $id, title: $title, podcastTitle: $podcastTitle, '
+        'audioUrl: $audioUrl, localPath: $localPath, duration: $duration, '
+        'fileSize: $fileSize, downloadedAt: $downloadedAt, '
+        'videoUrl: $videoUrl, videoLocalPath: $videoLocalPath, '
+        'videoFileSize: $videoFileSize}';
+  }
 }

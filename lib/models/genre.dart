@@ -12,4 +12,7 @@ class Genre {
       name: name ?? this.name,
     );
   }
+
+  @override
+  String toString() => 'Genre{id: $id, name: $name}';
 }
