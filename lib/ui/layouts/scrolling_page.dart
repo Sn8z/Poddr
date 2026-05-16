@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
@@ -22,24 +22,22 @@ class ScrollingPageLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomScrollView(
-          slivers: [
-            PoddrAppBar(
-              title: title,
-              actions: appBarActions,
-            ),
-            PoddrAppBarOptions(
-              title: optionsTitle,
-              actions: optionsActions ?? const [],
-            ),
-            sliverGapH16,
-            ...children,
-            const BottomPaddingFix(),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: CustomScrollView(
+        slivers: [
+          PoddrAppBar(
+            title: title,
+            actions: appBarActions,
+          ),
+          PoddrAppBarOptions(
+            title: optionsTitle,
+            actions: optionsActions ?? const [],
+          ),
+          sliverGapH16,
+          ...children,
+          const BottomPaddingFix(),
+        ],
       ),
     );
   }
