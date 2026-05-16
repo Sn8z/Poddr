@@ -1,7 +1,10 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/offline.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
+import 'package:poddr/ui/components/widgets/poddr_progress.dart';
 import 'package:provider/provider.dart';
 
 class DownloadButton extends StatelessWidget {
@@ -33,17 +36,16 @@ class DownloadButton extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            CircularProgressIndicator(
-              value: progress,
-              strokeWidth: 2,
+            PoddrLinearProgress(
+              value: progress ?? 0,
+              height: 2,
             ),
-            IconButton(
+            PoddrIconButton(
               onPressed: () {
                 offlineProvider.cancelDownload(episode.audioUrl);
               },
-              icon: const Icon(Icons.close, size: 14),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
+              icon: const Icon(LucideIcons.x, size: 14),
+              size: 14,
             ),
           ],
         ),
@@ -55,14 +57,12 @@ class DownloadButton extends StatelessWidget {
       return Stack(
         alignment: Alignment.center,
         children: [
-          IconButton(
+          PoddrIconButton(
             onPressed: () {
               offlineProvider.cancelDownload(episode.audioUrl);
             },
-            icon: const Icon(Icons.schedule, size: 14),
-            tooltip: 'Queued (position $queuePosition) - tap to cancel',
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
+            icon: const Icon(LucideIcons.clock, size: 14),
+            size: 14,
           ),
           if (queuePosition > 0)
             Positioned(
@@ -90,27 +90,27 @@ class DownloadButton extends StatelessWidget {
     }
 
     if (isDownloaded) {
-      return IconButton(
+      return PoddrIconButton(
         onPressed: () {
           offlineProvider.remove(episode.audioUrl);
         },
         icon: Icon(
-          Icons.delete_outline_rounded,
+          LucideIcons.trash,
           size: iconSize,
         ),
-        tooltip: 'Remove download',
+        size: iconSize,
       );
     }
 
-    return IconButton(
+    return PoddrIconButton(
       onPressed: () {
         offlineProvider.download(episode);
       },
       icon: Icon(
-        Icons.download_outlined,
+        LucideIcons.download,
         size: iconSize,
       ),
-      tooltip: 'Download for offline',
+      size: iconSize,
     );
   }
 }

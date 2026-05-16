@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/info_row.dart';
 import 'package:poddr/ui/components/widgets/status_message.dart';
@@ -6,7 +7,12 @@ import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/sync.dart';
-import 'package:poddr/ui/components/widgets/dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
+import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
+import 'package:poddr/ui/components/widgets/poddr_progress.dart';
+import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/views/settings/sync/sync_settings_view_model.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 
@@ -70,7 +76,7 @@ class SyncSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.cloud_done_outlined,
+                  LucideIcons.cloud,
                   color: theme.primary,
                   size: 28,
                 ),
@@ -97,29 +103,22 @@ class SyncSection extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.refresh, size: 20),
+              PoddrIconButton(
+                icon: const Icon(LucideIcons.refreshCw, size: 20),
                 onPressed: sync.isLoading ? null : () => sync.syncNow(),
-                tooltip: 'Sync Now',
-                style: IconButton.styleFrom(
-                  backgroundColor: theme.surface,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
               ),
             ],
           ),
         ),
         gapH32,
         PoddrInfoRow(
-          icon: Icons.devices_outlined,
+          icon: LucideIcons.monitor,
           label: 'Device Name',
           value: setup.deviceName,
         ),
         gapH16,
         PoddrInfoRow(
-          icon: Icons.sync_alt_outlined,
+          icon: LucideIcons.arrowLeftRight,
           label: 'Syncing With',
           value: sync.targetSyncDeviceName.isEmpty
               ? 'No device selected'
@@ -127,7 +126,7 @@ class SyncSection extends StatelessWidget {
           onTap:
               sync.isLoading ? null : () => _showDeviceSelection(context, sync),
           action: Icon(
-            Icons.chevron_right,
+            LucideIcons.chevronRight,
             size: 18,
             color: theme.primary,
           ),
@@ -135,7 +134,7 @@ class SyncSection extends StatelessWidget {
         if (sync.lastSyncTime != null) ...[
           gapH16,
           PoddrInfoRow(
-            icon: Icons.access_time_outlined,
+            icon: LucideIcons.clock,
             label: 'Last Sync',
             value: convertDateToTimeAgo(sync.lastSyncTime!),
           ),
@@ -144,32 +143,32 @@ class SyncSection extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: OutlinedButton.icon(
+              child: PoddrOutlinedButton(
                 onPressed: sync.isLoading ? null : () => sync.disconnectUi(),
-                icon: const Icon(Icons.link_off, size: 18),
-                label: const Text('Disconnect'),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  foregroundColor: Colors.red,
-                  side: const BorderSide(color: Colors.red),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                borderColor: context.theme.error,
+                foregroundColor: context.theme.error,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(LucideIcons.link2Off, size: 18),
+                    SizedBox(width: 8),
+                    Text('Disconnect'),
+                  ],
                 ),
               ),
             ),
           ],
         ),
         gapH12,
-        OutlinedButton.icon(
+        PoddrOutlinedButton(
           onPressed: sync.isLoading ? null : () => _showFullResyncDialog(context, sync),
-          icon: const Icon(Icons.sync, size: 18),
-          label: const Text('Full Re-Sync'),
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(LucideIcons.refreshCw, size: 18),
+              SizedBox(width: 8),
+              Text('Full Re-Sync'),
+            ],
           ),
         ),
         if (sync.errorMessage != null && sync.errorMessage!.isNotEmpty) ...[
@@ -196,7 +195,7 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateServer(value),
           labelText: 'Server URL',
           hintText: 'https://gpodder.net',
-          prefixIcon: Icon(Icons.link),
+          prefixIcon: Icon(LucideIcons.link),
         ),
         gapH24,
         PoddrTextInput(
@@ -204,7 +203,7 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateUsername(value),
           labelText: 'Username',
           hintText: 'Enter your username',
-          prefixIcon: Icon(Icons.person_outline),
+          prefixIcon: Icon(LucideIcons.user),
         ),
         gapH24,
         PoddrTextInput(
@@ -212,11 +211,11 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updatePassword(value),
           labelText: 'Password',
           hintText: 'Enter your password',
-          prefixIcon: Icon(Icons.lock_outline),
+          prefixIcon: Icon(LucideIcons.lock),
           obscure: !setup.showPassword,
-          suffixIcon: IconButton(
+          suffixIcon: PoddrIconButton(
             icon: Icon(
-              setup.showPassword ? Icons.visibility_off : Icons.visibility,
+              setup.showPassword ? LucideIcons.eyeOff : LucideIcons.eye,
               color: theme.primary,
             ),
             onPressed: () => setup.togglePasswordVisibility(),
@@ -228,10 +227,10 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateDeviceName(value),
           labelText: 'Device Name',
           hintText: 'Poddr',
-          prefixIcon: Icon(Icons.phone_android_outlined),
+          prefixIcon: Icon(LucideIcons.smartphone),
         ),
         gapH24,
-        FilledButton.icon(
+        PoddrFilledButton(
           onPressed: sync.isLoading
               ? null
               : () => sync.connect(
@@ -242,26 +241,25 @@ class SyncSection extends StatelessWidget {
                         ? 'Poddr'
                         : setup.deviceName.trim(),
                   ),
-          icon: sync.isLoading
-              ? const SizedBox(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (sync.isLoading) ...[
+                SizedBox(
                   width: 18,
                   height: 18,
-                  child: CircularProgressIndicator(
+                  child: PoddrSpinner(
+                    size: 18,
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    color: const Color(0xFFFFFFFF),
                   ),
-                )
-              : const Icon(Icons.link, size: 18),
-          label: Text(sync.isLoading ? 'Connecting...' : 'Connect'),
-          style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            textStyle: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+                ),
+                const SizedBox(width: 8),
+              ] else
+                const Icon(LucideIcons.link, size: 18),
+              if (sync.isLoading) const SizedBox(width: 8),
+              Text(sync.isLoading ? 'Connecting...' : 'Connect'),
+            ],
           ),
         ),
         if (sync.errorMessage != null && sync.errorMessage!.isNotEmpty) ...[
@@ -332,98 +330,107 @@ class SyncSection extends StatelessWidget {
 
     if (!context.mounted) return;
 
-    final selected = await showDialog<String>(
+    final selected = await showPoddrDialog<String>(
       context: context,
-      builder: (context) => PoddrDialog(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              'Sync With',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: context.theme.onSurface,
-              ),
-            ),
-          ),
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context, ''),
-            child: Row(
-              children: [
-                Icon(
-                  groupedDevices.isEmpty
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_off_outlined,
-                  size: 20,
-                  color: context.theme.primary,
-                ),
-                gapW12,
-                const Text('None (don\'t sync)'),
-              ],
-            ),
-          ),
-          for (var i = 0; i < groupedDevices.length; i++) ...[
-            const Divider(),
+      builder: (dialogContext) => PoddrDialog(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              padding: const EdgeInsets.only(bottom: 12),
               child: Text(
-                'Sync Group ${i + 1}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: context.theme.primary,
-                  fontWeight: FontWeight.w500,
+                'Sync With',
+                style: context.theme.textTheme.titleMedium,
+              ),
+            ),
+            GestureDetector(
+              onTap: () => Navigator.pop(dialogContext, ''),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  children: [
+                    Icon(
+                      groupedDevices.isEmpty
+                          ? LucideIcons.checkCircle
+                          : LucideIcons.circle,
+                      size: 20,
+                      color: context.theme.primary,
+                    ),
+                    gapW12,
+                    const Text('None (don\'t sync)'),
+                  ],
                 ),
               ),
             ),
-            ...groupedDevices[i].map((device) => SimpleDialogOption(
-                  onPressed: () =>
-                      Navigator.pop(context, device['id'] as String),
-                  child: Row(
-                    children: [
-                      Icon(
-                        device['id'] == sync.targetSyncDeviceId
-                            ? Icons.radio_button_checked
-                            : Icons.radio_button_off_outlined,
-                        size: 20,
-                        color: context.theme.primary,
-                      ),
-                      gapW12,
-                      Text(device['caption'] ?? device['id'] ?? 'Unknown'),
-                    ],
+            for (var i = 0; i < groupedDevices.length; i++) ...[
+              const PoddrDivider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Text(
+                  'Sync Group ${i + 1}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: context.theme.primary,
+                    fontWeight: FontWeight.w500,
                   ),
-                )),
-          ],
-          if (unsyncedDevices.isNotEmpty) ...[
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Text(
-                'Unsynced Devices',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: context.theme.onSurfaceVariant,
-                  fontWeight: FontWeight.w500,
                 ),
               ),
-            ),
-            ...unsyncedDevices.map((device) => SimpleDialogOption(
-                  onPressed: () =>
-                      Navigator.pop(context, device['id'] as String),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.radio_button_off_outlined,
-                        size: 20,
-                        color: context.theme.onSurfaceVariant,
+              ...groupedDevices[i].map((device) => GestureDetector(
+                    onTap: () =>
+                        Navigator.pop(dialogContext, device['id'] as String),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        children: [
+                          Icon(
+                            device['id'] == sync.targetSyncDeviceId
+                                ? LucideIcons.checkCircle
+                                : LucideIcons.circle,
+                            size: 20,
+                            color: context.theme.primary,
+                          ),
+                          gapW12,
+                          Text(device['caption'] ?? device['id'] ?? 'Unknown'),
+                        ],
                       ),
-                      gapW12,
-                      Text(device['caption'] ?? device['id'] ?? 'Unknown'),
-                    ],
+                    ),
+                  )),
+            ],
+            if (unsyncedDevices.isNotEmpty) ...[
+              const PoddrDivider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Text(
+                  'Unsynced Devices',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: context.theme.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
                   ),
-                )),
+                ),
+              ),
+              ...unsyncedDevices.map((device) => GestureDetector(
+                    onTap: () =>
+                        Navigator.pop(dialogContext, device['id'] as String),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        children: [
+                          Icon(
+                            LucideIcons.circle,
+                            size: 20,
+                            color: context.theme.onSurfaceVariant,
+                          ),
+                          gapW12,
+                          Text(device['caption'] ?? device['id'] ?? 'Unknown'),
+                        ],
+                      ),
+                    ),
+                  )),
+            ],
           ],
-        ],
+        ),
       ),
     );
 
@@ -433,45 +440,47 @@ class SyncSection extends StatelessWidget {
   }
 
   Future<void> _showFullResyncDialog(BuildContext context, SyncProvider sync) async {
-    final confirmed = await showDialog<bool>(
+    final confirmed = await showPoddrDialog<bool>(
       context: context,
-      builder: (context) => PoddrDialog(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
+      builder: (dialogContext) => PoddrDialog(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
               'Full Re-Sync',
               style: context.theme.textTheme.titleMedium.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
-          ),
-          Text(
-            'This will:\n'
-            '• Clear all unsynced local changes\n'
-            '• Pull all current server subscriptions and episode history\n'
-            '• Preserve all local subscriptions\n'
-            '• Set sync timestamps to current time (only new data fetched next sync)',
-          ),
-          gapH20,
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Cancel'),
+            gapH16,
+            Text(
+              'This will:\n'
+              '• Clear all unsynced local changes\n'
+              '• Pull all current server subscriptions and episode history\n'
+              '• Preserve all local subscriptions\n'
+              '• Set sync timestamps to current time (only new data fetched next sync)',
+            ),
+            gapH20,
+            Row(
+              children: [
+                Expanded(
+                  child: PoddrOutlinedButton(
+                    onPressed: () => Navigator.pop(dialogContext, false),
+                    child: const Text('Cancel'),
+                  ),
                 ),
-              ),
-              gapW12,
-              Expanded(
-                child: FilledButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: const Text('Confirm'),
+                gapW12,
+                Expanded(
+                  child: PoddrFilledButton(
+                    onPressed: () => Navigator.pop(dialogContext, true),
+                    child: const Text('Confirm'),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
     if (confirmed == true && context.mounted) {

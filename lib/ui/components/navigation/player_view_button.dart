@@ -1,6 +1,7 @@
-﻿import 'package:flutter/material.dart';
-import 'package:poddr/core/theme/poddr_theme.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 
 class PlayerViewButton extends StatelessWidget {
   final double size;
@@ -11,15 +12,15 @@ class PlayerViewButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return PoddrIconButton(
       onPressed: () {
         context.push('/player');
       },
       icon: Icon(
-        Icons.ondemand_video_rounded,
-        color: context.theme.onSurface,
+        LucideIcons.monitor,
         size: size,
       ),
+      size: size,
     );
   }
 }

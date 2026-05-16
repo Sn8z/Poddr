@@ -1,10 +1,16 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/models/collection.dart';
 import 'package:poddr/ui/views/settings/collections/collections_view_model.dart';
-import 'package:poddr/ui/components/widgets/dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
+import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_confirm_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
+import 'package:poddr/ui/components/widgets/poddr_progress.dart';
 import 'package:poddr/ui/components/widgets/color_picker.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
@@ -42,7 +48,7 @@ class _CollectionsView extends StatelessWidget {
             !snapshot.hasData) {
           return const Padding(
             padding: EdgeInsets.all(16),
-            child: Center(child: CircularProgressIndicator()),
+            child: Center(child: PoddrSpinner()),
           );
         }
 
@@ -102,22 +108,13 @@ class _CollectionsView extends StatelessWidget {
 
   Future<void> _showDeleteConfirmation(BuildContext context,
       PodcastCollection collection, CollectionsViewModel viewModel) async {
-    final confirmed = await showDialog<bool>(
+    final confirmed = await showPoddrDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Collection'),
-        content: Text('Are you sure you want to delete "${collection.name}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
+      builder: (dialogContext) => PoddrConfirmDialog(
+        title: 'Delete Collection',
+        message: 'Are you sure you want to delete "${collection.name}"?',
+        confirmLabel: 'Delete',
+        onConfirm: () => Navigator.of(dialogContext).pop(true),
       ),
     );
 
@@ -151,12 +148,12 @@ class _CollectionListItem extends StatelessWidget {
       ),
       title: collection.name,
       actions: [
-        IconButton(
-          icon: const Icon(Icons.edit_outlined),
+        PoddrIconButton(
+          icon: const Icon(LucideIcons.pencil),
           onPressed: onEdit,
         ),
-        IconButton(
-          icon: const Icon(Icons.delete_outline),
+        PoddrIconButton(
+          icon: const Icon(LucideIcons.trash),
           onPressed: onDelete,
         ),
       ],
@@ -202,49 +199,47 @@ class _AddCollectionRow extends StatelessWidget {
           ),
         ),
         gapW12,
-        FilledButton(
+        PoddrFilledButton(
           onPressed: () => viewModel.submitNewCollection(),
-          child: const Icon(Icons.add),
+          child: const Icon(LucideIcons.plus, size: 20),
         ),
       ],
     );
   }
 
   void _showColorPicker(BuildContext context) {
-    showDialog(
+    showPoddrDialog(
       context: context,
-      builder: (context) => PoddrDialog(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Select Color',
-                  style: context.theme.textTheme.titleMedium,
-                ),
-                gapH16,
-                Consumer<CollectionsViewModel>(
-                  builder: (context, vm, child) {
-                    return HsvColorPicker(
-                      initialColor: Color(vm.newCollectionColor),
-                      onColorChanged: (color) {
-                        vm.setNewCollectionColor(color.toARGB32());
-                      },
-                    );
-                  },
-                ),
-                gapH24,
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Done'),
-                ),
-              ],
-            ),
+      builder: (dialogContext) => PoddrDialog(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Select Color',
+                style: context.theme.textTheme.titleMedium,
+              ),
+              gapH16,
+              Consumer<CollectionsViewModel>(
+                builder: (context, vm, child) {
+                  return HsvColorPicker(
+                    initialColor: Color(vm.newCollectionColor),
+                    onColorChanged: (color) {
+                      vm.setNewCollectionColor(color.toARGB32());
+                    },
+                  );
+                },
+              ),
+              gapH24,
+              PoddrTextButton(
+                label: 'Done',
+                onPressed: () => Navigator.of(dialogContext).pop(),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -260,9 +255,9 @@ class CollectionDialog extends StatefulWidget {
 
   static Future<(String, int)?> show(BuildContext context,
       {PodcastCollection? collection}) {
-    return showDialog<(String, int)>(
+    return showPoddrDialog<(String, int)>(
       context: context,
-      builder: (context) => CollectionDialog(collection: collection),
+      builder: (dialogContext) => CollectionDialog(collection: collection),
     );
   }
 
@@ -306,77 +301,72 @@ class _CollectionDialogState extends State<CollectionDialog> {
   @override
   Widget build(BuildContext context) {
     return PoddrDialog(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    isEditing ? 'Edit Collection' : 'New Collection',
-                    style: context.theme.textTheme.headlineSmall,
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(null),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              // Name field
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Collection Name',
-                  border: const OutlineInputBorder(),
-                  errorText: _error.isNotEmpty ? _error : null,
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  isEditing ? 'Edit Collection' : 'New Collection',
+                  style: context.theme.textTheme.headlineSmall,
                 ),
-                autofocus: true,
-                textCapitalization: TextCapitalization.words,
-                onChanged: (_) {
-                  if (_error.isNotEmpty) setState(() => _error = '');
-                },
-              ),
-              const SizedBox(height: 24),
+                PoddrIconButton(
+                  onPressed: () => Navigator.of(context).pop(null),
+                  icon: const Icon(LucideIcons.x),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
 
-              // Color picker
-              Flexible(
-                child: SingleChildScrollView(
-                  child: HsvColorPicker(
-                    initialColor: _selectedColor,
-                    onColorChanged: (color) {
-                      setState(() => _selectedColor = color);
-                    },
-                  ),
+            // Name field
+            PoddrTextInput(
+              controller: _nameController,
+              labelText: 'Collection Name',
+              hintText: 'Enter name...',
+              errorText: _error.isNotEmpty ? _error : null,
+              autofocus: true,
+              onChanged: (_) {
+                if (_error.isNotEmpty) setState(() => _error = '');
+              },
+            ),
+            const SizedBox(height: 24),
+
+            // Color picker
+            Flexible(
+              child: SingleChildScrollView(
+                child: HsvColorPicker(
+                  initialColor: _selectedColor,
+                  onColorChanged: (color) {
+                    setState(() => _selectedColor = color);
+                  },
                 ),
               ),
-              const SizedBox(height: 24),
+            ),
+            const SizedBox(height: 24),
 
-              // Actions
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(null),
-                    child: const Text('Cancel'),
-                  ),
-                  const SizedBox(width: 8),
-                  FilledButton(
-                    onPressed: _save,
-                    child: Text(isEditing ? 'Save' : 'Create'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            // Actions
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                PoddrTextButton(
+                  label: 'Cancel',
+                  onPressed: () => Navigator.of(context).pop(null),
+                ),
+                const SizedBox(width: 8),
+                PoddrFilledButton(
+                  onPressed: _save,
+                  child: Text(isEditing ? 'Save' : 'Create'),
+                ),
+              ],
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

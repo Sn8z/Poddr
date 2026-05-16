@@ -1,7 +1,9 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
+import 'package:poddr/ui/components/widgets/poddr_progress.dart';
 
 class PlayButton extends StatelessWidget {
   final double size;
@@ -49,13 +51,12 @@ class PlayButton extends StatelessWidget {
               ),
               Center(
                 child: isLoading
-                    ? SizedBox(
-                        width: size * 0.4,
-                        height: size * 0.4,
-                        child: const CircularProgressIndicator(strokeWidth: 2),
+                    ? PoddrSpinner(
+                        size: size * 0.4,
+                        strokeWidth: 2,
                       )
                     : Icon(
-                        isPlaying ? Icons.pause : Icons.play_arrow,
+                        isPlaying ? LucideIcons.pause : LucideIcons.play,
                         color: context.theme.onSurface,
                         size: size * 0.5,
                       ),

@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,7 @@ class SkipButton extends StatelessWidget {
             children: [
               Center(
                 child: Icon(
-                  Icons.skip_next_rounded,
+                  LucideIcons.skipForward,
                   size: size * 0.8,
                   color: canGoNext
                       ? context.theme.primary

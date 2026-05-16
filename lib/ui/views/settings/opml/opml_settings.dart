@@ -1,8 +1,10 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/ui/views/settings/opml/opml_view_model.dart';
+import 'package:poddr/ui/components/widgets/list_item.dart';
 
 class OpmlSection extends StatelessWidget {
   const OpmlSection({super.key});
@@ -31,26 +33,24 @@ class _OpmlView extends StatelessWidget {
 
     return Column(
       children: [
-        ListTile(
-          leading: const Icon(Icons.arrow_circle_right_outlined),
-          title: const Text('Import'),
-          enabled: !isLoading,
-          onTap: () => viewModel.importOpml(),
+        PoddrListItem(
+          leading: const Icon(LucideIcons.arrowRightCircle),
+          title: 'Import',
+          onTap: isLoading ? null : () => viewModel.importOpml(),
         ),
-        ListTile(
-          leading: const Icon(Icons.arrow_circle_left_outlined),
-          title: const Text('Export'),
-          enabled: !isLoading,
-          onTap: () => viewModel.exportOpml(),
+        PoddrListItem(
+          leading: const Icon(LucideIcons.arrowLeftCircle),
+          title: 'Export',
+          onTap: isLoading ? null : () => viewModel.exportOpml(),
         ),
-    if (statusMessage != null)
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Text(
-          statusMessage,
-          style: context.theme.textTheme.bodySmall,
-        ),
-      ),
+        if (statusMessage != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              statusMessage,
+              style: context.theme.textTheme.bodySmall,
+            ),
+          ),
       ],
     );
   }

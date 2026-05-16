@@ -1,5 +1,6 @@
 ﻿import 'package:audio_service/audio_service.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
@@ -20,16 +21,16 @@ class RepeatButton extends StatelessWidget {
     IconData icon;
     switch (repeatMode) {
       case AudioServiceRepeatMode.none:
-        icon = Icons.repeat_sharp;
+        icon = LucideIcons.repeat;
         break;
       case AudioServiceRepeatMode.one:
-        icon = Icons.repeat_one_rounded;
+        icon = LucideIcons.repeat;
         break;
       case AudioServiceRepeatMode.all:
-        icon = Icons.repeat_rounded;
+        icon = LucideIcons.repeat;
         break;
       default:
-        icon = Icons.repeat_sharp;
+        icon = LucideIcons.repeat;
         break;
     }
 

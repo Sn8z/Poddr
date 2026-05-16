@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
+import 'package:poddr/ui/components/widgets/poddr_progress.dart';
 
 class MediaProgressBar extends StatelessWidget {
   const MediaProgressBar({super.key});
@@ -12,9 +13,9 @@ class MediaProgressBar extends StatelessWidget {
     Duration position =
         context.select<MediaProvider, Duration>((e) => e.position);
 
-    return LinearProgressIndicator(
+    return PoddrLinearProgress(
       value: _calcProgress(position, duration),
-      minHeight: 4,
+      height: 4,
     );
   }
 

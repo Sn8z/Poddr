@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
+import 'package:poddr/ui/components/widgets/poddr_slider.dart';
 
 class HsvColorPicker extends StatefulWidget {
   final Color initialColor;
@@ -54,7 +55,7 @@ class _HsvColorPickerState extends State<HsvColorPicker> {
             child: Text(
               hexString,
               style: TextStyle(
-                color: _value > 0.5 ? Colors.black : Colors.white,
+                color: _value > 0.5 ? context.theme.onSurface : context.theme.surface,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
@@ -116,7 +117,7 @@ class _HsvColorPickerState extends State<HsvColorPicker> {
           },
           gradient: LinearGradient(
             colors: [
-              Colors.black,
+              const Color(0xFF000000),
               HSVColor.fromAHSV(1.0, _hue, _saturation, 1.0).toColor(),
             ],
           ),
@@ -170,22 +171,12 @@ class _SliderRow extends StatelessWidget {
             gradient: gradient,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: SliderTheme(
-            data: SliderThemeData(
-              trackHeight: 24,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-              overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
-              activeTrackColor: Colors.transparent,
-              inactiveTrackColor: Colors.transparent,
-              thumbColor: activeColor,
-              overlayColor: activeColor.withValues(alpha: 0.2),
-            ),
-            child: Slider(
-              value: value,
-              min: min,
-              max: max,
-              onChanged: onChanged,
-            ),
+          child: PoddrSlider(
+            value: value,
+            min: min,
+            max: max,
+            onChanged: onChanged,
+            height: 24,
           ),
         ),
       ],

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:provider/provider.dart';
@@ -29,16 +30,20 @@ class MediaDisplay extends StatelessWidget {
                     Positioned(
                       bottom: 16,
                       left: 16,
-                      child: IconButton(
-                        icon: const Icon(Icons.fullscreen, color: Colors.white),
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.black54,
-                          shape: RoundedRectangleBorder(
+                      child: GestureDetector(
+                        onTap: () => enterFullscreen(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0x8A000000),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          padding: const EdgeInsets.all(8),
+                          child: const Icon(
+                            LucideIcons.maximize,
+                            color: Color(0xFFFFFFFF),
+                            size: 20,
+                          ),
                         ),
-                        onPressed: () => enterFullscreen(context),
                       ),
                     ),
                   ],

@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 
 class PoddrStatusMessage extends StatelessWidget {
@@ -33,7 +34,7 @@ class PoddrStatusMessage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
-            isError ? Icons.error_outline : Icons.info_outline,
+            isError ? LucideIcons.alertCircle : LucideIcons.info,
             size: 18,
             color: isError ? theme.error : theme.primary,
           ),

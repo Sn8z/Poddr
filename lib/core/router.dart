@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:poddr/ui/layouts/base.dart';
@@ -10,6 +11,7 @@ import 'package:poddr/ui/views/library/downloads/downloads.dart';
 import 'package:poddr/ui/views/library/latest/latest.dart';
 import 'package:poddr/ui/views/search/search.dart';
 import 'package:poddr/ui/views/settings/settings.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 
 final _rootNavKey = GlobalKey<NavigatorState>(debugLabel: 'Root navigation');
 final _podcastNavKey =
@@ -33,16 +35,17 @@ abstract class PoddrRouter {
       return null;
     },
     errorBuilder: (context, state) {
-      return Scaffold(
-        body: Center(
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline, size: 64),
+              const Icon(LucideIcons.alertCircle, size: 64),
               const SizedBox(height: 16),
               Text('Page not found: ${state.uri.path}'),
               const SizedBox(height: 16),
-              ElevatedButton(
+              PoddrFilledButton(
                 onPressed: () => context.go('/podcasts'),
                 child: const Text('Go Home'),
               ),

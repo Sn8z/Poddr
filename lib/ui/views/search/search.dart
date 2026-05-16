@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
@@ -8,6 +8,7 @@ import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
+import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/views/search/search_view_model.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
@@ -22,42 +23,59 @@ class SearchView extends StatelessWidget {
       builder: (context, child) {
         final searchProvider = context.watch<SearchViewModel>();
 
-        return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  floating: false,
-                  pinned: true,
-                  snap: false,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  toolbarHeight: 82,
-                  backgroundColor:
-                      context.theme.surfaceContainerHigh,
-                  foregroundColor: context.theme.onSurface,
-                  surfaceTintColor: context.theme.primary,
-                  title: PoddrTextInput(
-                    hintText: 'Search',
-                    onSubmit: (value) {
-                      searchProvider.searchPodcast(value);
-                    },
-                  ),
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _SearchAppBarDelegate(
+                  onSearch: (value) {
+                    searchProvider.searchPodcast(value);
+                  },
                 ),
-                sliverGapH16,
-                searchProvider.isLoading
-                    ? const LoadingBox()
-                    : const ResultBox(),
-                const BottomPaddingFix(),
-              ],
-            ),
+              ),
+              sliverGapH16,
+              searchProvider.isLoading
+                  ? const LoadingBox()
+                  : const ResultBox(),
+              const BottomPaddingFix(),
+            ],
           ),
         );
       },
     );
   }
+}
+
+class _SearchAppBarDelegate extends SliverPersistentHeaderDelegate {
+  final ValueChanged<String> onSearch;
+
+  _SearchAppBarDelegate({required this.onSearch});
+
+  @override
+  Widget build(context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.theme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      padding: const EdgeInsets.all(8),
+      child: PoddrTextInput(
+        hintText: 'Search',
+        onSubmit: onSearch,
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => 82;
+
+  @override
+  double get minExtent => 82;
+
+  @override
+  bool shouldRebuild(_SearchAppBarDelegate oldDelegate) => false;
 }
 
 class LoadingBox extends StatelessWidget {
@@ -87,8 +105,7 @@ class ResultBox extends StatelessWidget {
     if (searchResults.isEmpty) {
       return const ContentBox(
         children: [
-          ListTile(
-            title: Text("No results"),
+          PoddrListTile(title: "No results",
           ),
         ],
       );

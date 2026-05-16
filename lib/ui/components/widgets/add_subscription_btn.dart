@@ -1,6 +1,8 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/subscriptions.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:provider/provider.dart';
 
 class PoddrAddSubscriptionBtn extends StatelessWidget {
@@ -20,9 +22,9 @@ class PoddrAddSubscriptionBtn extends StatelessWidget {
         context.select((SubscriptionProvider p) => p.subscriptions);
     final isSubscription = subcriptions.any((podcast) => podcast.rss == rss);
 
-    return IconButton(
+    return PoddrIconButton(
       icon: Icon(
-        isSubscription ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+        isSubscription ? LucideIcons.heart : LucideIcons.heart,
         size: size,
         color: isSubscription
             ? context.theme.primary
@@ -39,6 +41,7 @@ class PoddrAddSubscriptionBtn extends StatelessWidget {
           subscriptionProvider.addSubscription(rss: rss!);
         }
       },
+      size: size,
     );
   }
 }

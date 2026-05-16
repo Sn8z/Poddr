@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class NavItem {
   String label;
@@ -17,26 +18,26 @@ class NavItem {
 final List<NavItem> destinations = [
   NavItem(
     label: 'Podcasts',
-    icon: Icons.podcasts_outlined,
-    selectedIcon: Icons.podcasts_rounded,
+    icon: LucideIcons.podcast,
+    selectedIcon: LucideIcons.podcast,
     route: '/podcasts',
   ),
   NavItem(
     label: 'Library',
-    icon: Icons.library_music_outlined,
-    selectedIcon: Icons.library_music_rounded,
+    icon: LucideIcons.library,
+    selectedIcon: LucideIcons.library,
     route: '/library',
   ),
   NavItem(
     label: 'Search',
-    icon: Icons.search_outlined,
-    selectedIcon: Icons.search_rounded,
+    icon: LucideIcons.search,
+    selectedIcon: LucideIcons.search,
     route: '/search',
   ),
   NavItem(
     label: 'Settings',
-    icon: Icons.settings_outlined,
-    selectedIcon: Icons.settings_rounded,
+    icon: LucideIcons.settings,
+    selectedIcon: LucideIcons.settings,
     route: '/settings',
   ),
 ];

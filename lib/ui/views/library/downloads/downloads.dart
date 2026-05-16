@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/offline.dart';
@@ -7,6 +8,10 @@ import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
+import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
+import 'package:poddr/ui/components/widgets/poddr_confirm_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
+import 'package:poddr/ui/components/widgets/poddr_progress.dart';
 import 'package:poddr/ui/layouts/scrolling_page.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
@@ -34,19 +39,18 @@ class DownloadsView extends StatelessWidget {
           title: 'Downloads',
           appBarActions: [
             if (downloads.isNotEmpty)
-              IconButton(
+              PoddrIconButton(
                 onPressed: () {
                   _showClearAllDialog(context, viewModel);
                 },
-                icon: const Icon(Icons.delete_sweep_rounded),
-                tooltip: 'Clear all downloads',
+                icon: const Icon(LucideIcons.trash),
               ),
           ],
           children: [
             if (viewModel.isLoading)
               const SliverToBoxAdapter(
                 child: Center(
-                  child: CircularProgressIndicator(),
+                  child: PoddrSpinner(),
                 ),
               )
             else if (downloads.isEmpty)
@@ -56,7 +60,7 @@ class DownloadsView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.download_outlined,
+                        LucideIcons.download,
                         size: 64,
                         color: context.theme.outline,
                       ),
@@ -128,32 +132,17 @@ class DownloadsView extends StatelessWidget {
   }
 
   void _showClearAllDialog(BuildContext context, DownloadsViewModel viewModel) {
-    showDialog(
+    showPoddrDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Clear all downloads?'),
-          content: Text(
-            'This will delete ${viewModel.downloads.length} downloaded episode(s).',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                viewModel.clearAllDownloads();
-                Navigator.pop(context);
-              },
-              child: Text(
-                'Delete all',
-                style: TextStyle(
-                  color: context.theme.error,
-                ),
-              ),
-            ),
-          ],
+      builder: (dialogContext) {
+        return PoddrConfirmDialog(
+          title: 'Clear all downloads?',
+          message: 'This will delete ${viewModel.downloads.length} downloaded episode(s).',
+          confirmLabel: 'Delete all',
+          onConfirm: () {
+            viewModel.clearAllDownloads();
+            Navigator.pop(dialogContext);
+          },
         );
       },
     );

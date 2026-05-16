@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/services/history.dart';
@@ -8,13 +9,15 @@ import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/layouts/scrolling_page.dart';
 import 'package:poddr/ui/views/discover/discover_view_model.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
-import 'package:poddr/ui/components/widgets/dialog.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/grid_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/sliver_box.dart';
+import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
+import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
@@ -30,54 +33,66 @@ class PodcastDiscoveryView extends StatelessWidget {
         return ScrollingPageLayout(
           title: "Podcasts",
           optionsActions: [
-            IconButton(
+            PoddrIconButton(
               icon: Text(
                   context.watch<DiscoverViewModel>().country),
               onPressed: () {
                 final discoveryProvider =
                     context.read<DiscoverViewModel>();
 
-                showDialog(
+                showPoddrDialog(
                   context: context,
-                  builder: (BuildContext dialogContext) {
+                  builder: (dialogContext) {
                     return PoddrDialog(
-                      children:
-                          discoveryProvider.countries.map((country) {
-                        return SimpleDialogOption(
-                          onPressed: () {
-                            discoveryProvider
-                                .setCountry(country.code);
-                            Navigator.of(dialogContext).pop();
-                          },
-                          child: Text(country.name),
-                        );
-                      }).toList(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children:
+                            discoveryProvider.countries.map((country) {
+                          return GestureDetector(
+                            onTap: () {
+                              discoveryProvider
+                                  .setCountry(country.code);
+                              Navigator.of(dialogContext).pop();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(country.name),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     );
                   },
                 );
               },
             ),
-            IconButton(
+            PoddrIconButton(
               icon:
                    Text(context.watch<DiscoverViewModel>().genre),
               onPressed: () {
                 final discoveryProvider =
                     context.read<DiscoverViewModel>();
 
-                showDialog(
+                showPoddrDialog(
                   context: context,
-                  builder: (BuildContext dialogContext) {
+                  builder: (dialogContext) {
                     return PoddrDialog(
-                      children: discoveryProvider.genres.map((genre) {
-                        return SimpleDialogOption(
-                          onPressed: () {
-                            discoveryProvider
-                                .setGenre(genre.id);
-                            Navigator.of(dialogContext).pop();
-                          },
-                          child: Text(genre.name),
-                        );
-                      }).toList(),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: discoveryProvider.genres.map((genre) {
+                          return GestureDetector(
+                            onTap: () {
+                              discoveryProvider
+                                  .setGenre(genre.id);
+                              Navigator.of(dialogContext).pop();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(genre.name),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     );
                   },
                 );
@@ -107,8 +122,8 @@ class LatestEpisodes extends StatelessWidget {
     return ContentBox(
       title: "Latest episodes",
       actions: [
-        IconButton(
-          icon: const Icon(Icons.chevron_right_rounded),
+        PoddrIconButton(
+          icon: const Icon(LucideIcons.chevronRight),
           onPressed: () {
             context.push('/library/latest');
           },
@@ -284,8 +299,8 @@ class TrendingPodcasts extends StatelessWidget {
           ...List.generate(
             5,
             (index) {
-              return const ListTile(
-                title: ShimmerBox(
+              return const PoddrListItem(
+                data: ShimmerBox(
                   height: 28,
                 ),
               );

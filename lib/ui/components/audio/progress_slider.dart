@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
+import 'package:poddr/ui/components/widgets/poddr_slider.dart';
 
 class MediaProgressSlider extends StatelessWidget {
   const MediaProgressSlider({super.key});
@@ -21,33 +22,18 @@ class MediaProgressSlider extends StatelessWidget {
     currentValue = currentValue.clamp(0, maxValue);
     bufferedValue = bufferedValue.clamp(0, maxValue);
 
-    return SliderTheme(
-      data: SliderTheme.of(context).copyWith(
-        thumbShape: SliderComponentShape.noThumb,
-        overlayShape: SliderComponentShape.noOverlay,
-        trackShape: const RectangularSliderTrackShape(),
-        trackHeight: 12,
-      ),
-      child: Slider(
-        allowedInteraction: SliderInteraction.tapAndSlide,
-        min: 0,
-        max: maxValue,
-        value: currentValue,
-        secondaryTrackValue: bufferedValue,
-        onChangeStart: (_) {
-          context.read<MediaProvider>().pause();
-        },
-        onChangeEnd: (_) {
-          context.read<MediaProvider>().play();
-        },
-        onChanged: (double value) {
-          context.read<MediaProvider>().seek(
-                Duration(
-                  seconds: value.toInt(),
-                ),
-              );
-        },
-      ),
+    return PoddrSlider(
+      value: currentValue,
+      min: 0,
+      max: maxValue,
+      height: 12,
+      onChanged: (double value) {
+        context.read<MediaProvider>().seek(
+              Duration(
+                seconds: value.toInt(),
+              ),
+            );
+      },
     );
   }
 }

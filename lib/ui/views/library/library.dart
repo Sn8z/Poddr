@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/subscriptions.dart';
@@ -6,6 +7,11 @@ import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
+import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
+import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
+import 'package:poddr/ui/components/widgets/poddr_progress.dart';
 import 'package:poddr/ui/layouts/scrolling_page.dart';
 import 'package:poddr/ui/views/library/library_view_model.dart';
 import 'package:provider/provider.dart';
@@ -28,46 +34,36 @@ class LibraryView extends StatelessWidget {
           title: 'Library',
           optionsTitle: Row(
             children: [
-              ElevatedButton(
-                child: Text("Latest Episodes"),
+              PoddrElevatedButton(
+                child: const Text("Latest Episodes"),
                 onPressed: () => context.push("/library/latest"),
               ),
-              ElevatedButton(
-                child: Text("Downloads"),
+              PoddrElevatedButton(
+                child: const Text("Downloads"),
                 onPressed: () => context.push("/library/downloads"),
               ),
             ],
           ),
           optionsActions: [
-            IconButton(
-              icon: const Icon(Icons.add),
+            PoddrIconButton(
+              icon: const Icon(LucideIcons.plus),
               onPressed: () {
-                showDialog(
+                showPoddrDialog(
                     context: context,
                     builder: (dialogContext) {
-                      return SimpleDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(16),
+                      return PoddrDialog(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: PoddrTextInput(
+                            hintText: "Input RSS",
+                            onSubmit: (value) {
+                              context
+                                  .read<LibraryViewModel>()
+                                  .addSubscription(rss: value);
+                              context.pop();
+                            },
                           ),
                         ),
-                        backgroundColor: Theme.of(dialogContext)
-                            .colorScheme
-                            .surfaceContainerLow,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: PoddrTextInput(
-                              hintText: "Input RSS",
-                              onSubmit: (value) {
-                                context
-                                    .read<LibraryViewModel>()
-                                    .addSubscription(rss: value);
-                                context.pop();
-                              },
-                            ),
-                          ),
-                        ],
                       );
                     });
               },
@@ -77,7 +73,7 @@ class LibraryView extends StatelessWidget {
             if (viewModel.isLoading) ...[
               const SliverToBoxAdapter(
                 child: Center(
-                  child: CircularProgressIndicator(),
+                  child: PoddrSpinner(),
                 ),
               ),
               const SliverToBoxAdapter(
@@ -116,9 +112,9 @@ class LibraryView extends StatelessWidget {
                         ),
                       ),
                       actions: [
-                        IconButton(
+                        PoddrIconButton(
                           onPressed: () {},
-                          icon: const Icon(Icons.more_vert_rounded),
+                          icon: Icon(LucideIcons.moreVertical),
                         ),
                       ],
                     );

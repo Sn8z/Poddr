@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/audio/media_thumbnail.dart';
@@ -122,13 +122,13 @@ class PoddrSideBarItem extends StatelessWidget {
               left: BorderSide(
                 color: status == SideBarItemStatus.selected
                     ? context.theme.primary
-                    : Colors.transparent,
+                    : const Color(0x00000000),
                 width: 4,
               ),
             ),
             color: status == SideBarItemStatus.selected
                 ? context.theme.surfaceContainerHigh
-                : Colors.transparent,
+                : const Color(0x00000000),
           ),
           child: Row(
             mainAxisAlignment: shouldExpand

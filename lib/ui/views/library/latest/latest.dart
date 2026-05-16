@@ -1,14 +1,19 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
-import 'package:poddr/ui/components/widgets/dialog.dart';
 import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
+import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
+import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
+import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/layouts/scrolling_page.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:poddr/ui/views/library/latest/latest_view_model.dart';
@@ -40,31 +45,30 @@ class LatestEpisodesView extends StatelessWidget {
                   onChanged: (value) {
                     viewModel.setFilter(value);
                   },
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear_rounded),
+                  suffixIcon: PoddrIconButton(
+                    icon: const Icon(LucideIcons.x),
+                    size: 20,
                     onPressed: () {
                       viewModel.setFilter('');
                     },
                   ),
                 );
               } else {
-                return IconButton(
-                  icon: const Icon(Icons.search_rounded),
+                return PoddrIconButton(
+                  icon: const Icon(LucideIcons.search),
                   onPressed: () {
-                    showDialog(
+                    showPoddrDialog(
                       context: context,
-                      builder: (context) {
+                      builder: (dialogContext) {
                         return PoddrDialog(
-                          children: [
-                            PoddrTextInput(
-                              labelText: "Filter",
-                              hintText: "Type to filter episodes...",
-                              onSubmit: (value) {
-                                viewModel.setFilter(value);
-                                context.pop();
-                              },
-                            ),
-                          ],
+                          child: PoddrTextInput(
+                            labelText: "Filter",
+                            hintText: "Type to filter episodes...",
+                            onSubmit: (value) {
+                              viewModel.setFilter(value);
+                              context.pop();
+                            },
+                          ),
                         );
                       },
                     );
@@ -74,32 +78,34 @@ class LatestEpisodesView extends StatelessWidget {
             },
           ),
           optionsActions: [
-            ElevatedButton(
+            PoddrElevatedButton(
               child: Text(viewModel.sortField),
               onPressed: () {
-                showDialog(
+                showPoddrDialog(
                   context: context,
-                  builder: (context) {
+                  builder: (dialogContext) {
                     return PoddrDialog(
-                      children: [
-                        for (var field in EpisodeSortField.values)
-                          ListTile(
-                            title: Text(field.label),
-                            onTap: () {
-                              viewModel.setSort(field: field);
-                              context.pop();
-                            },
-                          ),
-                      ],
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (var field in EpisodeSortField.values)
+                            PoddrListTile(title: field.label,
+                              onTap: () {
+                                viewModel.setSort(field: field);
+                                context.pop();
+                              },
+                            ),
+                        ],
+                      ),
                     );
                   },
                 );
               },
             ),
-            IconButton(
+            PoddrIconButton(
               icon: viewModel.sortDirection == "Ascending"
-                  ? const Icon(Icons.arrow_upward_rounded)
-                  : const Icon(Icons.arrow_downward_rounded),
+                  ? const Icon(LucideIcons.arrowUp)
+                  : const Icon(LucideIcons.arrowDown),
               onPressed: () {
                 viewModel.setSort(
                   direction: viewModel.sortDirection == "Ascending"

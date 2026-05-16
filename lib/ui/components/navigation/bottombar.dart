@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/navigation/destinations.dart';
@@ -84,13 +84,13 @@ class PoddrBottomBarItem extends StatelessWidget {
               bottom: BorderSide(
                 color: status == BottomBarItemStatus.selected
                     ? context.theme.primary
-                    : Colors.transparent,
+                    : const Color(0x00000000),
                 width: 4,
               ),
             ),
             color: status == BottomBarItemStatus.selected
                 ? context.theme.surfaceContainerHigh
-                : Colors.transparent,
+                : const Color(0x00000000),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -1,8 +1,10 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
+import 'package:poddr/ui/components/widgets/poddr_slider.dart';
 
 class VolumeSlider extends StatelessWidget {
   final double size;
@@ -34,9 +36,9 @@ class VolumeSlider extends StatelessWidget {
   }
 
   IconData _getVolumeIcon(double volume) {
-    if (volume == 0) return Icons.volume_off;
-    if (volume <= 50) return Icons.volume_down;
-    return Icons.volume_up;
+    if (volume == 0) return LucideIcons.micOff;
+    if (volume <= 50) return LucideIcons.music;
+    return LucideIcons.music;
   }
 }
 
@@ -51,30 +53,23 @@ class _VolumeControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliderTheme(
-      data: SliderTheme.of(context).copyWith(
-        trackHeight: 4,
-        inactiveTrackColor: context.theme.onSurfaceVariant
-            .withAlpha(50),
-      ),
-      child: SizedBox(
-        width: 160,
-        child: Listener(
-          onPointerSignal: (event) {
-            if (event is PointerScrollEvent) {
-              if (event.scrollDelta.dy < 0) {
-                mediaProvider.increaseVolume();
-              } else {
-                mediaProvider.decreaseVolume();
-              }
+    return SizedBox(
+      width: 160,
+      child: Listener(
+        onPointerSignal: (event) {
+          if (event is PointerScrollEvent) {
+            if (event.scrollDelta.dy < 0) {
+              mediaProvider.increaseVolume();
+            } else {
+              mediaProvider.decreaseVolume();
             }
-          },
-          child: Slider(
-            value: volume,
-            min: 0.0,
-            max: 100.0,
-            onChanged: mediaProvider.setVolume,
-          ),
+          }
+        },
+        child: PoddrSlider(
+          value: volume,
+          min: 0.0,
+          max: 100.0,
+          onChanged: mediaProvider.setVolume,
         ),
       ),
     );

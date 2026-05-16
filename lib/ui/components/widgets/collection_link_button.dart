@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/ui/components/dialogs/poddr_collection_selection_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
+import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 
 class PoddrCollectionLinkButton extends StatelessWidget {
   const PoddrCollectionLinkButton({super.key, required this.subscriptionId});
@@ -7,16 +11,18 @@ class PoddrCollectionLinkButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
+    return PoddrFilledButton(
       onPressed: () {
-        showDialog(
+        showPoddrDialog(
           context: context,
-          builder: (context) => PoddrCollectionSelectionDialog(
-            subscriptionId: subscriptionId,
+          builder: (context) => PoddrDialog(
+            child: PoddrCollectionSelectionDialog(
+              subscriptionId: subscriptionId,
+            ),
           ),
         );
       },
-      child: const Icon(Icons.add),
+      child: const Icon(LucideIcons.plus, size: 20),
     );
   }
 }

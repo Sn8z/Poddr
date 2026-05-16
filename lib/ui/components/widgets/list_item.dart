@@ -1,6 +1,6 @@
-﻿import 'package:flutter/material.dart';
-import 'package:poddr/core/theme/poddr_theme.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 
 class PoddrListItem extends StatefulWidget {
   const PoddrListItem({
@@ -75,7 +75,7 @@ class _PoddrListItemState extends State<PoddrListItem> {
                     width: 8,
                     color: widget.isActive
                         ? context.theme.primary
-                        : Colors.transparent),
+                        : const Color(0x00000000)),
               ),
             ),
             child: Row(

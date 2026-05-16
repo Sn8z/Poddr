@@ -1,7 +1,10 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
-import 'package:poddr/ui/components/widgets/dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
+import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
+import 'package:poddr/ui/components/widgets/poddr_slider.dart';
 import 'package:provider/provider.dart';
 
 class SpeedButton extends StatelessWidget {
@@ -25,51 +28,47 @@ class SpeedButton extends StatelessWidget {
       2.0,
     ];
 
-    return IconButton(
+    return PoddrIconButton(
       onPressed: () {
-        showDialog(
+        showPoddrDialog(
           context: context,
           builder: (context) {
             return PoddrDialog(
-              children: [
-                Selector<MediaProvider, double>(
-                  selector: (_, mediaProvider) => mediaProvider.speed,
-                  builder: (context, speed, child) {
-                    double currentStep = speedSteps.firstWhere(
-                      (step) => (step - speed).abs() < 0.125,
-                      orElse: () => 1.0,
-                    );
+              child: Selector<MediaProvider, double>(
+                selector: (_, mediaProvider) => mediaProvider.speed,
+                builder: (context, speed, child) {
+                  double currentStep = speedSteps.firstWhere(
+                    (step) => (step - speed).abs() < 0.125,
+                    orElse: () => 1.0,
+                  );
 
-                    int currentIndex = speedSteps.indexOf(currentStep);
+                  int currentIndex = speedSteps.indexOf(currentStep);
 
-                    return Column(
-                      children: [
-                        Text(
-                          "${speedSteps[currentIndex.clamp(0, speedSteps.length - 1)]}x",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color:
-                                context.theme.onSurfaceVariant,
-                            fontWeight: FontWeight.w500,
-                          ),
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "${speedSteps[currentIndex.clamp(0, speedSteps.length - 1)]}x",
+                        style: context.theme.textTheme.titleMedium.copyWith(
+                          color: context.theme.onSurfaceVariant,
                         ),
-                        Slider(
-                          value: currentIndex.toDouble(),
-                          min: 0,
-                          max: (speedSteps.length - 1).toDouble(),
-                          divisions: speedSteps.length - 1,
-                          onChanged: (double value) {
-                            int index = value.round();
-                            context
-                                .read<MediaProvider>()
-                                .setSpeed(speedSteps[index]);
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
+                      ),
+                      PoddrSlider(
+                        value: currentIndex.toDouble(),
+                        min: 0,
+                        max: (speedSteps.length - 1).toDouble(),
+                        divisions: speedSteps.length - 1,
+                        onChanged: (double value) {
+                          int index = value.round();
+                          context
+                              .read<MediaProvider>()
+                              .setSpeed(speedSteps[index]);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
             );
           },
         );
@@ -84,7 +83,7 @@ class SpeedButton extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      iconSize: size,
+      size: size,
     );
   }
 }

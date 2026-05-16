@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/theme/poddr_theme_mode.dart';
@@ -6,7 +7,6 @@ import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
 import 'package:poddr/ui/views/settings/opml/opml_settings.dart';
 
 import 'package:poddr/ui/components/widgets/content_box.dart';
-import 'package:poddr/ui/components/widgets/logo.dart';
 import 'package:poddr/ui/layouts/scrolling_page.dart';
 
 import 'package:poddr/services/theme.dart';
@@ -16,6 +16,9 @@ import 'package:poddr/data/theme/theme_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:poddr/ui/views/settings/sync/sync_settings.dart';
+import 'package:poddr/ui/components/widgets/list_item.dart';
+import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -54,9 +57,9 @@ class SettingsView extends StatelessWidget {
         ContentBox(
           title: "Support",
           children: [
-            ListTile(
-              leading: const Icon(Icons.monetization_on_outlined),
-              title: const Text("GitHub Sponsor"),
+            PoddrListItem(
+              leading: const Icon(LucideIcons.heart),
+              title: "GitHub Sponsor",
               onTap: () async {
                 try {
                   await launchUrl(
@@ -66,9 +69,9 @@ class SettingsView extends StatelessWidget {
                 }
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.open_in_browser_outlined),
-              title: const Text("Paypal"),
+            PoddrListItem(
+              leading: const Icon(LucideIcons.externalLink),
+              title: "Paypal",
               onTap: () {
                 try {
                   launchUrl(
@@ -78,9 +81,9 @@ class SettingsView extends StatelessWidget {
                 }
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.coffee_outlined),
-              title: const Text("Ko-Fi"),
+            PoddrListItem(
+              leading: const Icon(LucideIcons.coffee),
+              title: "Ko-Fi",
               onTap: () {
                 try {
                   launchUrl(Uri.parse("https://ko-fi.com/sneitz"));
@@ -95,9 +98,9 @@ class SettingsView extends StatelessWidget {
         ContentBox(
           title: "About",
           children: [
-            ListTile(
-              leading: const Icon(Icons.bug_report_outlined),
-              title: const Text("Issues"),
+            PoddrListItem(
+              leading: const Icon(LucideIcons.bug),
+              title: "Issues",
               onTap: () {
                 try {
                   launchUrl(
@@ -107,23 +110,49 @@ class SettingsView extends StatelessWidget {
                 }
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.info_outline),
-              title: const Text('Licenses'),
+            PoddrListItem(
+              leading: const Icon(LucideIcons.info),
+              title: 'Licenses',
               onTap: () {
-                showAboutDialog(
-                  context: context,
-                  applicationName: "Poddr",
-                  applicationVersion: "3.0.0",
-                  applicationIcon: const PoddrLogo(
-                    size: 56,
-                  ),
-                );
+                showAboutDialog(context);
               },
             ),
           ],
         ),
       ],
+    );
+  }
+
+  void showAboutDialog(BuildContext context) {
+    showPoddrDialog(
+      context: context,
+      builder: (dialogContext) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Poddr",
+            style: dialogContext.theme.textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Version 3.0.0",
+            style: dialogContext.theme.textTheme.bodyMedium.copyWith(
+              color: dialogContext.theme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              PoddrTextButton(
+                label: "Close",
+                onPressed: () => Navigator.of(dialogContext).pop(),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -139,23 +168,23 @@ class ThemeSelector extends StatelessWidget {
         ThemeBox(
           title: 'System',
           mode: PoddrThemeMode.system,
-          color: Colors.grey,
-          icon: Icons.brightness_auto_outlined,
-          iconColor: Colors.white,
+          color: Color(0xFF808080),
+          icon: LucideIcons.monitor,
+          iconColor: Color(0xFFFFFFFF),
         ),
         ThemeBox(
           title: 'Light',
           mode: PoddrThemeMode.light,
-          color: Colors.white,
-          icon: Icons.light_mode_outlined,
-          iconColor: Colors.black,
+          color: Color(0xFFFFFFFF),
+          icon: LucideIcons.sun,
+          iconColor: Color(0xFF000000),
         ),
         ThemeBox(
           title: 'Dark',
           mode: PoddrThemeMode.dark,
-          color: Colors.black,
-          icon: Icons.dark_mode_outlined,
-          iconColor: Colors.white,
+          color: Color(0xFF000000),
+          icon: LucideIcons.moon,
+          iconColor: Color(0xFFFFFFFF),
         ),
       ],
     );
@@ -196,7 +225,7 @@ class ThemeBox extends StatelessWidget {
             border: Border.all(
               color: isSelected
                   ? context.theme.primary
-                  : Colors.transparent,
+                  : const Color(0x00000000),
               width: isSelected ? 4 : 0,
             ),
           ),
@@ -288,12 +317,12 @@ class ColorBox extends StatelessWidget {
             border: Border.all(
               color: isSelected
                   ? context.theme.onSurface
-                  : Colors.transparent,
+                  : const Color(0x00000000),
               width: isSelected ? 4 : 0,
             ),
           ),
           child: isSelected
-              ? const Icon(Icons.check_circle_outline_rounded)
+              ? const Icon(LucideIcons.badgeCheck)
               : null,
         ),
       ),
