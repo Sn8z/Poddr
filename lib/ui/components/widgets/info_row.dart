@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
 class PoddrInfoRow extends StatelessWidget {
@@ -19,22 +20,22 @@ class PoddrInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = context.theme;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLow,
+          color: theme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: colorScheme.outline.withAlpha(30),
+            color: theme.outline.withAlpha(30),
           ),
         ),
         child: Row(
           children: [
-            Icon(icon, size: 20, color: colorScheme.primary),
+            Icon(icon, size: 20, color: theme.primary),
             gapW12,
             Expanded(
               child: Column(
@@ -42,17 +43,17 @@ class PoddrInfoRow extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
+                    style: context.theme.textTheme.bodySmall.copyWith(
+                          color: theme.onSurfaceVariant,
                           fontWeight: FontWeight.w500,
                         ),
                   ),
                   gapH4,
                   Text(
                     value,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    style: context.theme.textTheme.bodyMedium.copyWith(
                           fontWeight: FontWeight.w500,
-                          color: colorScheme.onSurface,
+                          color: theme.onSurface,
                         ),
                   ),
                 ],

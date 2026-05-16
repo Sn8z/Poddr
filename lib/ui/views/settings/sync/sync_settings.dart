@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/info_row.dart';
 import 'package:poddr/ui/components/widgets/status_message.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
@@ -37,7 +38,7 @@ class SyncSection extends StatelessWidget {
 
   Widget _buildConfiguredView(
       BuildContext context, SyncProvider sync, SyncSetupProvider setup) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = context.theme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -47,15 +48,15 @@ class SyncSection extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                colorScheme.primary.withAlpha(20),
-                colorScheme.primary.withAlpha(10),
+                theme.primary.withAlpha(20),
+                theme.primary.withAlpha(10),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: colorScheme.primary.withAlpha(50),
+              color: theme.primary.withAlpha(50),
               width: 1,
             ),
           ),
@@ -65,12 +66,12 @@ class SyncSection extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withAlpha(40),
+                  color: theme.primary.withAlpha(40),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.cloud_done_outlined,
-                  color: colorScheme.primary,
+                  color: theme.primary,
                   size: 28,
                 ),
               ),
@@ -81,16 +82,16 @@ class SyncSection extends StatelessWidget {
                   children: [
                     Text(
                       'Connected',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      style: context.theme.textTheme.titleMedium.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: colorScheme.primary,
+                            color: theme.primary,
                           ),
                     ),
                     gapH4,
                     Text(
                       '${setup.username} @ ${setup.server}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
+                      style: context.theme.textTheme.bodyMedium.copyWith(
+                            color: theme.onSurfaceVariant,
                           ),
                     ),
                   ],
@@ -101,7 +102,7 @@ class SyncSection extends StatelessWidget {
                 onPressed: sync.isLoading ? null : () => sync.syncNow(),
                 tooltip: 'Sync Now',
                 style: IconButton.styleFrom(
-                  backgroundColor: colorScheme.surface,
+                  backgroundColor: theme.surface,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -128,7 +129,7 @@ class SyncSection extends StatelessWidget {
           action: Icon(
             Icons.chevron_right,
             size: 18,
-            color: colorScheme.primary,
+            color: theme.primary,
           ),
         ),
         if (sync.lastSyncTime != null) ...[
@@ -185,7 +186,7 @@ class SyncSection extends StatelessWidget {
 
   Widget _buildSetupView(
       BuildContext context, SyncProvider sync, SyncSetupProvider setup) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = context.theme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -216,7 +217,7 @@ class SyncSection extends StatelessWidget {
           suffixIcon: IconButton(
             icon: Icon(
               setup.showPassword ? Icons.visibility_off : Icons.visibility,
-              color: colorScheme.primary,
+              color: theme.primary,
             ),
             onPressed: () => setup.togglePasswordVisibility(),
           ),
@@ -342,7 +343,7 @@ class SyncSection extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onSurface,
+                color: context.theme.onSurface,
               ),
             ),
           ),
@@ -355,7 +356,7 @@ class SyncSection extends StatelessWidget {
                       ? Icons.radio_button_checked
                       : Icons.radio_button_off_outlined,
                   size: 20,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.theme.primary,
                 ),
                 gapW12,
                 const Text('None (don\'t sync)'),
@@ -370,7 +371,7 @@ class SyncSection extends StatelessWidget {
                 'Sync Group ${i + 1}',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.theme.primary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -385,7 +386,7 @@ class SyncSection extends StatelessWidget {
                             ? Icons.radio_button_checked
                             : Icons.radio_button_off_outlined,
                         size: 20,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: context.theme.primary,
                       ),
                       gapW12,
                       Text(device['caption'] ?? device['id'] ?? 'Unknown'),
@@ -401,7 +402,7 @@ class SyncSection extends StatelessWidget {
                 'Unsynced Devices',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  color: context.theme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -414,7 +415,7 @@ class SyncSection extends StatelessWidget {
                       Icon(
                         Icons.radio_button_off_outlined,
                         size: 20,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: context.theme.onSurfaceVariant,
                       ),
                       gapW12,
                       Text(device['caption'] ?? device['id'] ?? 'Unknown'),
@@ -440,7 +441,7 @@ class SyncSection extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
               'Full Re-Sync',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              style: context.theme.textTheme.titleMedium.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),

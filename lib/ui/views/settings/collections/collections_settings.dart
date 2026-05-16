@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/models/collection.dart';
@@ -65,7 +66,7 @@ class _CollectionsView extends StatelessWidget {
                   'No collections yet. Create one to organize your podcasts!',
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    color: context.theme.onSurfaceVariant,
                   ),
                 ),
               )
@@ -192,7 +193,7 @@ class _AddCollectionRow extends StatelessWidget {
                   color: Color(vm.newCollectionColor),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Theme.of(context).colorScheme.outline,
+                    color: context.theme.outline,
                     width: 1,
                   ),
                 ),
@@ -222,7 +223,7 @@ class _AddCollectionRow extends StatelessWidget {
               children: [
                 Text(
                   'Select Color',
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: context.theme.textTheme.titleMedium,
                 ),
                 gapH16,
                 Consumer<CollectionsViewModel>(
@@ -299,7 +300,7 @@ class _CollectionDialogState extends State<CollectionDialog> {
       return;
     }
 
-    Navigator.of(context).pop((name, _selectedColor.value));
+    Navigator.of(context).pop((name, _selectedColor.toARGB32()));
   }
 
   @override
@@ -318,7 +319,7 @@ class _CollectionDialogState extends State<CollectionDialog> {
                 children: [
                   Text(
                     isEditing ? 'Edit Collection' : 'New Collection',
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    style: context.theme.textTheme.headlineSmall,
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(null),

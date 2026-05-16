@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 
 class PoddrSliverBox extends StatelessWidget {
   final Widget sliver;
@@ -11,7 +12,7 @@ class PoddrSliverBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedSliver(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        color: context.theme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
       ),
       position: DecorationPosition.background,

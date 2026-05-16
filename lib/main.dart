@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:poddr/services/offline.dart';
 import 'package:poddr/core/shortcuts.dart';
 import 'package:poddr/core/log.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:provider/provider.dart';
 
 // Providers
@@ -101,16 +102,19 @@ class Poddr extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeProvider themeProvider = context.watch<ThemeProvider>();
     return SafeArea(
-      child: MaterialApp.router(
+      child: WidgetsApp.router(
         title: "Poddr",
-        themeMode: themeProvider.themeMode,
-        theme: themeProvider.lightTheme,
-        darkTheme: themeProvider.darkTheme,
+        color: themeProvider.color,
         routerConfig: router,
         builder: (context, child) {
-          return PoddrShortcuts(
-            router: router,
-            child: child!,
+          final systemBrightness = MediaQuery.platformBrightnessOf(context);
+          final themeData = themeProvider.resolveTheme(systemBrightness);
+          return PoddrTheme(
+            data: themeData,
+            child: PoddrShortcuts(
+              router: router,
+              child: child!,
+            ),
           );
         },
       ),

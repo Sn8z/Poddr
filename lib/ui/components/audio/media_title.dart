@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -28,7 +29,7 @@ class MediaTitle extends StatelessWidget {
         child: Text(
           artist ?? "Artist",
           style: TextStyle(
-            color: color ?? Theme.of(context).colorScheme.onSurface,
+            color: color ?? context.theme.onSurface,
             fontSize: size,
           ),
           overflow: TextOverflow.ellipsis,

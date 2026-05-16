@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
 class ContentBox extends StatelessWidget {
@@ -21,7 +22,7 @@ class ContentBox extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          color: context.theme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -42,7 +43,7 @@ class ContentBox extends StatelessWidget {
                         Text(
                           title ?? '',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
+                            color: context.theme.primary,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -52,7 +53,7 @@ class ContentBox extends StatelessWidget {
                           subtitle ?? '',
                           style: TextStyle(
                             color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                                context.theme.onSurfaceVariant,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -93,7 +94,7 @@ class SearchBox extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         margin: const EdgeInsets.only(top: 8.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          color: context.theme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -103,8 +104,8 @@ class SearchBox extends StatelessWidget {
             if (title != null)
               Text(
                 title ?? '',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
+                style: context.theme.textTheme.titleMedium.copyWith(
+                      color: context.theme.primary,
                       fontWeight: FontWeight.bold,
                     ),
               ),

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 
 class ShimmerBox extends StatefulWidget {
   final double? height;
@@ -50,9 +51,9 @@ class _ShimmerBoxState extends State<ShimmerBox>
                 _controller.value + 0.1,
               ],
               colors: [
-                Theme.of(context).colorScheme.surfaceContainer,
-                Theme.of(context).colorScheme.surfaceContainerHigh,
-                Theme.of(context).colorScheme.surfaceContainer,
+                context.theme.surfaceContainer,
+                context.theme.surfaceContainerHigh,
+                context.theme.surfaceContainer,
               ],
             ),
             borderRadius: BorderRadius.circular(widget.radius ?? 16),

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/navigation/destinations.dart';
 
@@ -20,7 +21,7 @@ class PoddrBottomBar extends StatelessWidget {
       width: double.infinity,
       height: 56,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainer,
+        color: context.theme.surfaceContainer,
       ),
       clipBehavior: Clip.antiAlias,
       child: Row(
@@ -82,13 +83,13 @@ class PoddrBottomBarItem extends StatelessWidget {
             border: Border(
               bottom: BorderSide(
                 color: status == BottomBarItemStatus.selected
-                    ? Theme.of(context).colorScheme.primary
+                    ? context.theme.primary
                     : Colors.transparent,
                 width: 4,
               ),
             ),
             color: status == BottomBarItemStatus.selected
-                ? Theme.of(context).colorScheme.surfaceContainerHigh
+                ? context.theme.surfaceContainerHigh
                 : Colors.transparent,
           ),
           child: Row(
@@ -98,8 +99,8 @@ class PoddrBottomBarItem extends StatelessWidget {
               Icon(
                 status == BottomBarItemStatus.selected ? selectedIcon : icon,
                 color: status == BottomBarItemStatus.selected
-                    ? Theme.of(context).colorScheme.onSurfaceVariant
-                    : Theme.of(context).colorScheme.onSurface,
+                    ? context.theme.onSurfaceVariant
+                    : context.theme.onSurface,
               ),
             ],
           ),

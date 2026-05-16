@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/core/log.dart';
+import 'package:poddr/core/theme/poddr_theme_mode.dart';
 import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
 import 'package:poddr/ui/views/settings/opml/opml_settings.dart';
 
@@ -136,21 +138,21 @@ class ThemeSelector extends StatelessWidget {
       children: [
         ThemeBox(
           title: 'System',
-          mode: ThemeMode.system,
+          mode: PoddrThemeMode.system,
           color: Colors.grey,
           icon: Icons.brightness_auto_outlined,
           iconColor: Colors.white,
         ),
         ThemeBox(
           title: 'Light',
-          mode: ThemeMode.light,
+          mode: PoddrThemeMode.light,
           color: Colors.white,
           icon: Icons.light_mode_outlined,
           iconColor: Colors.black,
         ),
         ThemeBox(
           title: 'Dark',
-          mode: ThemeMode.dark,
+          mode: PoddrThemeMode.dark,
           color: Colors.black,
           icon: Icons.dark_mode_outlined,
           iconColor: Colors.white,
@@ -162,7 +164,7 @@ class ThemeSelector extends StatelessWidget {
 
 class ThemeBox extends StatelessWidget {
   final String title;
-  final ThemeMode mode;
+  final PoddrThemeMode mode;
   final Color color;
   final IconData icon;
   final Color iconColor;
@@ -193,7 +195,7 @@ class ThemeBox extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: isSelected
-                  ? Theme.of(context).colorScheme.primary
+                  ? context.theme.primary
                   : Colors.transparent,
               width: isSelected ? 4 : 0,
             ),
@@ -285,7 +287,7 @@ class ColorBox extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: isSelected
-                  ? Theme.of(context).colorScheme.onSurface
+                  ? context.theme.onSurface
                   : Colors.transparent,
               width: isSelected ? 4 : 0,
             ),

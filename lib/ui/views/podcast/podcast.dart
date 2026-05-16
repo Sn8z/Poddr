@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/collection.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
@@ -50,9 +51,9 @@ class PodcastDetailsView extends StatelessWidget {
                     ),
                   ),
                   backgroundColor:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Theme.of(context).colorScheme.surfaceContainerLow
-                          : Theme.of(context).colorScheme.primaryContainer,
+                      context.theme.brightness == Brightness.dark
+                          ? context.theme.surfaceContainerLow
+                          : context.theme.primaryContainer,
                   flexibleSpace: FlexibleSpaceBar(
                     background: LayoutBuilder(
                       builder: (context, constraints) {
@@ -72,12 +73,8 @@ class PodcastDetailsView extends StatelessWidget {
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                     colors: [
-                                      Theme.of(context)
-                                          .colorScheme
-                                          .surfaceContainer,
-                                      Theme.of(context)
-                                          .colorScheme
-                                          .surfaceContainerLow,
+                                      context.theme.surfaceContainer,
+                                      context.theme.surfaceContainerLow,
                                     ],
                                   ),
                                 ),
@@ -116,9 +113,7 @@ class PodcastDetailsView extends StatelessWidget {
                                             overflow: TextOverflow.ellipsis,
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
+                                            color: context.theme.primary,
                                           ),
                                         ),
                                         gapH8,
@@ -128,9 +123,7 @@ class PodcastDetailsView extends StatelessWidget {
                                             overflow: TextOverflow.ellipsis,
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurfaceVariant,
+                                            color: context.theme.onSurfaceVariant,
                                           ),
                                         ),
                                       ],
@@ -173,9 +166,7 @@ class PodcastDetailsView extends StatelessWidget {
                                                       TextOverflow.ellipsis,
                                                   fontSize: 56,
                                                   fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary,
+                                                  color: context.theme.primary,
                                                 ),
                                               ),
                                               gapH8,
@@ -188,9 +179,7 @@ class PodcastDetailsView extends StatelessWidget {
                                                       TextOverflow.ellipsis,
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.w500,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onSurfaceVariant,
+                                                  color: context.theme.onSurfaceVariant,
                                                 ),
                                               ),
                                               gapH8,
@@ -201,9 +190,7 @@ class PodcastDetailsView extends StatelessWidget {
                                                       TextOverflow.ellipsis,
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .secondary,
+                                                  color: context.theme.secondary,
                                                 ),
                                               ),
                                             ],
@@ -262,7 +249,7 @@ class PodcastDetailsView extends StatelessWidget {
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color:
-                                        Theme.of(context).colorScheme.onSurface,
+                                        context.theme.onSurface,
                                   ),
                                 ),
                                 PoddrHTML(
@@ -378,8 +365,8 @@ class Episode extends StatelessWidget {
           maxLines: 1,
           style: TextStyle(
             color: isCurrentEpisode
-                ? Theme.of(context).colorScheme.onSurface
-                : Theme.of(context).colorScheme.onSurfaceVariant,
+                ? context.theme.onSurface
+                : context.theme.onSurfaceVariant,
             fontSize: 12,
             fontWeight: FontWeight.w500,
             overflow: TextOverflow.ellipsis,
@@ -401,7 +388,7 @@ class Episode extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
+                        color: context.theme.onSurface,
                       ),
                     ),
                     gapH16,

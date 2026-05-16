@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -21,7 +22,7 @@ class VolumeSlider extends StatelessWidget {
       children: [
         Icon(
           _getVolumeIcon(volume),
-          color: Theme.of(context).colorScheme.onSurface,
+          color: context.theme.onSurface,
           size: size,
         ),
         _VolumeControl(
@@ -53,9 +54,7 @@ class _VolumeControl extends StatelessWidget {
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
         trackHeight: 4,
-        inactiveTrackColor: Theme.of(context)
-            .colorScheme
-            .onSurfaceVariant
+        inactiveTrackColor: context.theme.onSurfaceVariant
             .withAlpha(50),
       ),
       child: SizedBox(

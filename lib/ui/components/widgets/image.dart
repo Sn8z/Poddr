@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/core/http_client.dart';
@@ -15,7 +16,7 @@ class PoddrImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final bool isDark = context.theme.brightness == Brightness.dark;
     final String errorImage = isDark
         ? 'assets/images/logo_dark_bg.png'
         : 'assets/images/logo_light_bg.png';

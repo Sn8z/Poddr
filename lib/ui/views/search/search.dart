@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
@@ -35,9 +36,9 @@ class SearchView extends StatelessWidget {
                   ),
                   toolbarHeight: 82,
                   backgroundColor:
-                      Theme.of(context).colorScheme.surfaceContainerHigh,
-                  foregroundColor: Theme.of(context).colorScheme.onSurface,
-                  surfaceTintColor: Theme.of(context).colorScheme.primary,
+                      context.theme.surfaceContainerHigh,
+                  foregroundColor: context.theme.onSurface,
+                  surfaceTintColor: context.theme.primary,
                   title: PoddrTextInput(
                     hintText: 'Search',
                     onSubmit: (value) {
@@ -95,7 +96,7 @@ class ResultBox extends StatelessWidget {
 
     return DecoratedSliver(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        color: context.theme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
       ),
       sliver: SliverList.builder(

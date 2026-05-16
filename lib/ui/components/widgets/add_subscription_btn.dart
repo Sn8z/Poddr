@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:provider/provider.dart';
 
@@ -24,8 +25,8 @@ class PoddrAddSubscriptionBtn extends StatelessWidget {
         isSubscription ? Icons.favorite_rounded : Icons.favorite_border_rounded,
         size: size,
         color: isSubscription
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.onSurfaceVariant,
+            ? context.theme.primary
+            : context.theme.onSurfaceVariant,
       ),
       onPressed: () {
         final subscriptionProvider = context.read<SubscriptionProvider>();

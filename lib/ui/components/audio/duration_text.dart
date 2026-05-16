@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -13,7 +14,7 @@ class DurationText extends StatelessWidget {
     return Text(
       convertDurationToString(duration),
       style: TextStyle(
-        color: Theme.of(context).colorScheme.onSurface,
+        color: context.theme.onSurface,
         fontSize: 14,
       ),
     );

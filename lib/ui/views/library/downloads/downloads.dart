@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/offline.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
@@ -57,21 +58,21 @@ class DownloadsView extends StatelessWidget {
                       Icon(
                         Icons.download_outlined,
                         size: 64,
-                        color: Theme.of(context).colorScheme.outline,
+                        color: context.theme.outline,
                       ),
                       gapH16,
                       Text(
                         'No downloads yet',
                         style: TextStyle(
                           fontSize: 18,
-                          color: Theme.of(context).colorScheme.outline,
+                          color: context.theme.outline,
                         ),
                       ),
                       gapH8,
                       Text(
                         'Download episodes to listen offline',
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.outline,
+                          color: context.theme.outline,
                         ),
                       ),
                     ],
@@ -148,7 +149,7 @@ class DownloadsView extends StatelessWidget {
               child: Text(
                 'Delete all',
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
+                  color: context.theme.error,
                 ),
               ),
             ),

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/offline.dart';
 import 'package:provider/provider.dart';
@@ -70,14 +71,14 @@ class DownloadButton extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(1),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.theme.primary,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 constraints: const BoxConstraints(minWidth: 10, minHeight: 10),
                 child: Text(
                   '$queuePosition',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: context.theme.onPrimary,
                     fontSize: 8,
                   ),
                   textAlign: TextAlign.center,

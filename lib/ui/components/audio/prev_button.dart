@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -33,8 +34,8 @@ class PreviousButton extends StatelessWidget {
                   Icons.skip_previous_rounded,
                   size: size * 0.8,
                   color: canGoPrevious
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(50),
+                      ? context.theme.primary
+                      : context.theme.onSurfaceVariant.withAlpha(50),
                 ),
               ),
             ],

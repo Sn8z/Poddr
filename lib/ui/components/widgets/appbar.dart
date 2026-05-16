@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 
 class PoddrAppBar extends StatelessWidget {
   const PoddrAppBar({
@@ -19,9 +20,9 @@ class PoddrAppBar extends StatelessWidget {
       floating: true,
       forceMaterialTransparency: false,
       clipBehavior: Clip.antiAlias,
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
-      foregroundColor: Theme.of(context).colorScheme.onSurface,
-      surfaceTintColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: context.theme.surfaceContainerHigh,
+      foregroundColor: context.theme.onSurface,
+      surfaceTintColor: context.theme.primary,
       expandedHeight: 120,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -33,7 +34,7 @@ class PoddrAppBar extends StatelessWidget {
         title: Text(
           title,
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
+            color: context.theme.onSurface,
             fontSize: 28,
             fontWeight: FontWeight.bold,
           ),

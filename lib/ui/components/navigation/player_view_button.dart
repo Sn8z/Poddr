@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 
 class PlayerViewButton extends StatelessWidget {
@@ -16,7 +17,7 @@ class PlayerViewButton extends StatelessWidget {
       },
       icon: Icon(
         Icons.ondemand_video_rounded,
-        color: Theme.of(context).colorScheme.onSurface,
+        color: context.theme.onSurface,
         size: size,
       ),
     );

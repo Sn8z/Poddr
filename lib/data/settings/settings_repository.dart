@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:poddr/core/theme/poddr_theme_mode.dart';
 
 abstract class ISettingsRepository {
   Future<void> setColor(Color color);
   Future<Color> getColor();
 
-  Future<void> setThemeMode(ThemeMode mode);
-  Future<ThemeMode> getThemeMode();
+  Future<void> setThemeMode(PoddrThemeMode mode);
+  Future<PoddrThemeMode> getThemeMode();
 
   Future<void> saveActiveProfile(int profileId);
   Future<int> getActiveProfile();

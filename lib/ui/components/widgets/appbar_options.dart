@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 
 class PoddrAppBarOptions extends StatelessWidget {
   const PoddrAppBarOptions({
@@ -21,7 +22,7 @@ class PoddrAppBarOptions extends StatelessWidget {
           bottomRight: Radius.circular(16),
         ),
       ),
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+      backgroundColor: context.theme.surfaceContainerLow,
       title: title,
       actions: actions,
     );

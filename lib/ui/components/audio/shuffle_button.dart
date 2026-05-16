@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,8 +19,8 @@ class ShuffleButton extends StatelessWidget {
     final icon = isShuffling ? Icons.shuffle_rounded : Icons.shuffle_outlined;
 
     final color = isShuffling
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(50);
+        ? context.theme.primary
+        : context.theme.onSurfaceVariant.withAlpha(50);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,

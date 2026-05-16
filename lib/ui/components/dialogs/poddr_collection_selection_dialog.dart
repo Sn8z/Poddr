@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/collection.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
@@ -25,7 +26,7 @@ class PoddrCollectionSelectionDialog extends StatelessWidget {
             children: [
               Text(
                 'Collections',
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: context.theme.textTheme.headlineSmall,
               ),
               gapH16,
               StreamBuilder<List<PodcastCollection>>(

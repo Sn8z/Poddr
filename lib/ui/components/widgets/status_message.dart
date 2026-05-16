@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 
 class PoddrStatusMessage extends StatelessWidget {
   final String message;
@@ -12,19 +13,19 @@ class PoddrStatusMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = context.theme;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: isError
-            ? colorScheme.errorContainer.withAlpha(50)
-            : colorScheme.primaryContainer.withAlpha(50),
+            ? theme.errorContainer.withAlpha(50)
+            : theme.primaryContainer.withAlpha(50),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isError
-              ? colorScheme.error.withAlpha(77)
-              : colorScheme.primary.withAlpha(77),
+              ? theme.error.withAlpha(77)
+              : theme.primary.withAlpha(77),
           width: 1,
         ),
       ),
@@ -34,14 +35,14 @@ class PoddrStatusMessage extends StatelessWidget {
           Icon(
             isError ? Icons.error_outline : Icons.info_outline,
             size: 18,
-            color: isError ? colorScheme.error : colorScheme.primary,
+            color: isError ? theme.error : theme.primary,
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: isError ? colorScheme.error : colorScheme.primary,
+              style: context.theme.textTheme.bodySmall.copyWith(
+                    color: isError ? theme.error : theme.primary,
                     height: 1.4,
                   ),
             ),

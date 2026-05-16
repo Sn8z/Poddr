@@ -1,6 +1,7 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/audio/duration_text.dart';
 import 'package:poddr/ui/components/audio/episode_title.dart';
 import 'package:poddr/ui/components/audio/media_title.dart';
@@ -31,9 +32,7 @@ class LargePlayer extends StatelessWidget {
           child: Container(
             height: 120,
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHigh
+              color: context.theme.surfaceContainerHigh
                   .withValues(alpha: 0.75),
               borderRadius: const BorderRadius.all(Radius.circular(12)),
             ),

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -32,7 +33,7 @@ class EpisodeTitle extends StatelessWidget {
         child: Text(
           title ?? "Title",
           style: TextStyle(
-            color: color ?? Theme.of(context).colorScheme.primary,
+            color: color ?? context.theme.primary,
             fontWeight: FontWeight.bold,
             fontSize: size,
           ),

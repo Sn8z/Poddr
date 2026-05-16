@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:poddr/core/log.dart';
+import 'package:poddr/core/theme/poddr_theme_data.dart';
+import 'package:poddr/core/theme/poddr_theme_mode.dart';
 import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 
@@ -10,19 +12,27 @@ class ThemeProvider extends ChangeNotifier {
   Color _color = const Color.fromRGBO(0xFF, 0xA5, 0x00, 1);
   Color get color => _color;
 
-  ThemeData _lightTheme = ThemeData.light();
-  ThemeData get lightTheme => _lightTheme;
+  PoddrThemeData _lightTheme = PoddrThemeData.light(
+    const Color.fromRGBO(0xFF, 0xA5, 0x00, 1),
+  );
+  PoddrThemeData get lightTheme => _lightTheme;
 
-  ThemeData _darkTheme = ThemeData.dark();
-  ThemeData get darkTheme => _darkTheme;
+  PoddrThemeData _darkTheme = PoddrThemeData.dark(
+    const Color.fromRGBO(0xFF, 0xA5, 0x00, 1),
+  );
+  PoddrThemeData get darkTheme => _darkTheme;
 
-  ThemeMode _themeMode = ThemeMode.system;
-  ThemeMode get themeMode => _themeMode;
+  PoddrThemeMode _themeMode = PoddrThemeMode.system;
+  PoddrThemeMode get themeMode => _themeMode;
 
   ThemeProvider({ISettingsRepository? settingsRepository})
       : _settingsRepository =
             settingsRepository ?? SharedPrefSettingsRepository() {
     _loadTheme();
+  }
+
+  PoddrThemeData resolveTheme(Brightness systemBrightness) {
+    return systemBrightness == Brightness.dark ? _darkTheme : _lightTheme;
   }
 
   Future<void> _loadTheme() async {
@@ -35,58 +45,8 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   void _updateThemes() {
-    _lightTheme = ThemeData(
-      brightness: Brightness.light,
-      useMaterial3: true,
-      materialTapTargetSize: MaterialTapTargetSize.padded,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      fontFamily: 'Outfit',
-      primaryColor: _color,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: _color,
-        brightness: Brightness.light,
-        dynamicSchemeVariant: DynamicSchemeVariant.vibrant,
-        primary: _color,
-      ),
-    );
-
-    _darkTheme = ThemeData(
-      brightness: Brightness.dark,
-      useMaterial3: true,
-      materialTapTargetSize: MaterialTapTargetSize.padded,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      fontFamily: 'Outfit',
-      primaryColor: const Color.fromARGB(255, 15, 15, 15),
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: _color,
-        brightness: Brightness.dark,
-        dynamicSchemeVariant: DynamicSchemeVariant.vibrant,
-        primary: _color,
-        onPrimary: const Color.fromRGBO(15, 15, 15, 1),
-        onPrimaryContainer: const Color.fromRGBO(15, 15, 15, 1),
-        onPrimaryFixed: const Color.fromRGBO(15, 15, 15, 1),
-        onPrimaryFixedVariant: const Color.fromRGBO(15, 15, 15, 1),
-        onSecondary: const Color.fromRGBO(15, 15, 15, 1),
-        onSecondaryContainer: const Color.fromRGBO(15, 15, 15, 1),
-        onSecondaryFixed: const Color.fromRGBO(15, 15, 15, 1),
-        onSecondaryFixedVariant: const Color.fromRGBO(15, 15, 15, 1),
-        onTertiary: const Color.fromRGBO(15, 15, 15, 1),
-        onTertiaryContainer: const Color.fromRGBO(15, 15, 15, 1),
-        onTertiaryFixed: const Color.fromRGBO(15, 15, 15, 1),
-        onTertiaryFixedVariant: const Color.fromRGBO(15, 15, 15, 1),
-        onError: const Color.fromRGBO(15, 15, 15, 1),
-        onErrorContainer: const Color.fromRGBO(15, 15, 15, 1),
-        onSurface: const Color.fromARGB(255, 255, 255, 255),
-        surface: const Color.fromRGBO(25, 25, 25, 1),
-        surfaceBright: const Color.fromRGBO(30, 30, 30, 1),
-        surfaceDim: const Color.fromRGBO(15, 15, 15, 0.5),
-        surfaceContainerLowest: const Color.fromRGBO(20, 20, 20, 1),
-        surfaceContainerLow: const Color.fromRGBO(30, 30, 30, 1),
-        surfaceContainer: const Color.fromRGBO(40, 40, 40, 1),
-        surfaceContainerHigh: const Color.fromRGBO(50, 50, 50, 1),
-        surfaceContainerHighest: const Color.fromRGBO(60, 60, 60, 1),
-      ),
-    );
+    _lightTheme = PoddrThemeData.light(_color);
+    _darkTheme = PoddrThemeData.dark(_color);
   }
 
   Future<void> setColor(Color color) async {
@@ -98,7 +58,7 @@ class ThemeProvider extends ChangeNotifier {
     info("Color updated", name: logName);
   }
 
-  Future<void> setThemeMode(ThemeMode mode) async {
+  Future<void> setThemeMode(PoddrThemeMode mode) async {
     debug("Setting theme mode to $mode", name: logName);
     _themeMode = mode;
     _updateThemes();

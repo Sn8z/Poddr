@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/ui/views/settings/opml/opml_view_model.dart';
@@ -47,7 +48,7 @@ class _OpmlView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Text(
           statusMessage,
-          style: Theme.of(context).textTheme.bodySmall,
+          style: context.theme.textTheme.bodySmall,
         ),
       ),
       ],

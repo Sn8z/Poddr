@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 
 class PoddrLogo extends StatelessWidget {
   const PoddrLogo({super.key, this.size = 80});
@@ -8,7 +9,7 @@ class PoddrLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imagePath = Theme.of(context).brightness == Brightness.light
+    final imagePath = context.theme.brightness == Brightness.light
         ? 'assets/images/logo_dark.png'
         : 'assets/images/logo_light.png';
 

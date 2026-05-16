@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/audio/media_thumbnail.dart';
 import 'package:poddr/ui/components/navigation/destinations.dart';
@@ -31,7 +32,7 @@ class PoddrSideBar extends StatelessWidget {
         width: shouldExpand ? 220 : 80,
         height: double.infinity,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainer,
+          color: context.theme.surfaceContainer,
           borderRadius: const BorderRadius.all(Radius.circular(16)),
         ),
         clipBehavior: Clip.antiAlias,
@@ -120,13 +121,13 @@ class PoddrSideBarItem extends StatelessWidget {
             border: Border(
               left: BorderSide(
                 color: status == SideBarItemStatus.selected
-                    ? Theme.of(context).colorScheme.primary
+                    ? context.theme.primary
                     : Colors.transparent,
                 width: 4,
               ),
             ),
             color: status == SideBarItemStatus.selected
-                ? Theme.of(context).colorScheme.surfaceContainerHigh
+                ? context.theme.surfaceContainerHigh
                 : Colors.transparent,
           ),
           child: Row(
@@ -137,8 +138,8 @@ class PoddrSideBarItem extends StatelessWidget {
               Icon(
                 status == SideBarItemStatus.selected ? selectedIcon : icon,
                 color: status == SideBarItemStatus.selected
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.secondary,
+                    ? context.theme.primary
+                    : context.theme.secondary,
               ),
               if (shouldExpand) ...[
                 const SizedBox(width: 16),
@@ -146,8 +147,8 @@ class PoddrSideBarItem extends StatelessWidget {
                   title,
                   style: TextStyle(
                     color: status == SideBarItemStatus.selected
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.onSurface,
+                        ? context.theme.secondary
+                        : context.theme.onSurface,
                   ),
                 ),
               ],

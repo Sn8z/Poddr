@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:flutter/services.dart';
 
 class PoddrListItem extends StatefulWidget {
@@ -67,13 +68,13 @@ class _PoddrListItemState extends State<PoddrListItem> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: _isHovered || _isFocused || widget.isActive
-                  ? Theme.of(context).colorScheme.surfaceContainerHigh
-                  : Theme.of(context).colorScheme.surfaceContainer,
+                  ? context.theme.surfaceContainerHigh
+                  : context.theme.surfaceContainer,
               border: Border(
                 left: BorderSide(
                     width: 8,
                     color: widget.isActive
-                        ? Theme.of(context).colorScheme.primary
+                        ? context.theme.primary
                         : Colors.transparent),
               ),
             ),
@@ -99,9 +100,7 @@ class _PoddrListItemState extends State<PoddrListItem> {
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 12,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
+                              color: context.theme.onSurfaceVariant,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -112,7 +111,7 @@ class _PoddrListItemState extends State<PoddrListItem> {
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
-                              color: Theme.of(context).colorScheme.onSurface,
+                              color: context.theme.onSurface,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

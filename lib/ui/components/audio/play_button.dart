@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
 
@@ -35,10 +36,10 @@ class PlayButton extends StatelessWidget {
                 child: DecoratedBox(
                   decoration: ShapeDecoration(
                     color:
-                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                        context.theme.surfaceContainerHighest,
                     shape: RoundedSuperellipseBorder(
                       side: BorderSide(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: context.theme.primary,
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(size / 3),
@@ -55,7 +56,7 @@ class PlayButton extends StatelessWidget {
                       )
                     : Icon(
                         isPlaying ? Icons.pause : Icons.play_arrow,
-                        color: Theme.of(context).colorScheme.onSurface,
+                        color: context.theme.onSurface,
                         size: size * 0.5,
                       ),
               ),

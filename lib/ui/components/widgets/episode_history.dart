@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/services/history.dart';
 import 'package:provider/provider.dart';
@@ -82,8 +83,8 @@ class EpisodeHistoryCircle extends StatelessWidget {
               return CircularProgressIndicator(
                 value: 1,
                 strokeWidth: size! / 5,
-                color: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.surface,
+                color: context.theme.primary,
+                backgroundColor: context.theme.surface,
               );
             } else {
               final value = data.position / data.duration;
@@ -91,15 +92,15 @@ class EpisodeHistoryCircle extends StatelessWidget {
                 return CircularProgressIndicator(
                   value: value,
                   strokeWidth: size! / 5,
-                  color: Theme.of(context).colorScheme.primary,
-                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  color: context.theme.primary,
+                  backgroundColor: context.theme.surface,
                 );
               } else {
                 return CircularProgressIndicator(
                   value: 0,
                   strokeWidth: size! / 5,
-                  color: Theme.of(context).colorScheme.primary,
-                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  color: context.theme.primary,
+                  backgroundColor: context.theme.surface,
                 );
               }
             }

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
 import 'package:provider/provider.dart';
@@ -48,7 +49,7 @@ class SpeedButton extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
+                                context.theme.onSurfaceVariant,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -79,7 +80,7 @@ class SpeedButton extends StatelessWidget {
         )}x",
         style: TextStyle(
           fontSize: size * 0.6,
-          color: Theme.of(context).colorScheme.onSurface,
+          color: context.theme.onSurface,
           fontWeight: FontWeight.bold,
         ),
       ),

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 
 class HsvColorPicker extends StatefulWidget {
   final Color initialColor;
@@ -154,11 +155,11 @@ class _SliderRow extends StatelessWidget {
           children: [
             Text(
               label,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: context.theme.textTheme.bodyMedium,
             ),
             Text(
               max > 1 ? value.round().toString() : '${(value * 100).round()}%',
-              style: Theme.of(context).textTheme.bodySmall,
+              style: context.theme.textTheme.bodySmall,
             ),
           ],
         ),

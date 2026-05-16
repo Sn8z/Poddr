@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:flutter/services.dart';
 
 class PoddrTextInput extends StatelessWidget {
@@ -31,7 +32,7 @@ class PoddrTextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final theme = context.theme;
 
     return Shortcuts(
       shortcuts: const {
@@ -43,33 +44,33 @@ class PoddrTextInput extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         onFieldSubmitted: onSubmit,
-        style: TextStyle(color: colorScheme.onSurface),
+        style: TextStyle(color: theme.onSurface),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.all(15),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: colorScheme.outline),
+            borderSide: BorderSide(color: theme.outline),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: colorScheme.outline.withAlpha(128)),
+            borderSide: BorderSide(color: theme.outline.withAlpha(128)),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: colorScheme.primary, width: 2),
+            borderSide: BorderSide(color: theme.primary, width: 2),
           ),
-          prefixIconColor: colorScheme.primary,
+          prefixIconColor: theme.primary,
           labelText: labelText,
           hintText: hintText,
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
           filled: true,
-          fillColor: colorScheme.surfaceContainerLow,
-          hoverColor: colorScheme.surfaceContainer,
+          fillColor: theme.surfaceContainerLow,
+          hoverColor: theme.surfaceContainer,
         ),
         autofocus: autofocus,
         obscureText: obscure,
-        cursorColor: colorScheme.onSurface,
+        cursorColor: theme.onSurface,
         validator: validator,
       ),
     );

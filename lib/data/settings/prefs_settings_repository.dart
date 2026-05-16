@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
+import 'package:poddr/core/theme/poddr_theme_mode.dart';
 
 class SharedPrefSettingsRepository implements ISettingsRepository {
   static const String logName = "SharedPrefSettingsRepository";
@@ -31,18 +32,18 @@ class SharedPrefSettingsRepository implements ISettingsRepository {
   }
 
   @override
-  Future<void> setThemeMode(ThemeMode mode) async {
+  Future<void> setThemeMode(PoddrThemeMode mode) async {
     final prefs = await SharedPreferences.getInstance();
     debug("Saving theme mode: $mode", name: logName);
     prefs.setInt(_themeModeKey, mode.index);
   }
 
   @override
-  Future<ThemeMode> getThemeMode() async {
+  Future<PoddrThemeMode> getThemeMode() async {
     final prefs = await SharedPreferences.getInstance();
     final themeMode = prefs.getInt(_themeModeKey) ?? 0;
     debug("Loading theme mode: $themeMode", name: logName);
-    return ThemeMode.values[themeMode];
+    return PoddrThemeMode.values[themeMode];
   }
 
   @override

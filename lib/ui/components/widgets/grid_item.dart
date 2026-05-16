@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
@@ -78,8 +79,8 @@ class _PoddrListItemState extends State<PoddrGridItem> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               color: _isHovered || _isFocused || widget.isActive
-                  ? Theme.of(context).colorScheme.surfaceContainerHigh
-                  : Theme.of(context).colorScheme.surfaceContainer,
+                  ? context.theme.surfaceContainerHigh
+                  : context.theme.surfaceContainer,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -116,7 +117,7 @@ class _PoddrListItemState extends State<PoddrGridItem> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
-                                color: Theme.of(context).colorScheme.onSurface,
+                                color: context.theme.onSurface,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -128,9 +129,7 @@ class _PoddrListItemState extends State<PoddrGridItem> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 12,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
+                                color: context.theme.onSurfaceVariant,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),

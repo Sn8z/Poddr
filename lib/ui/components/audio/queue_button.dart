@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/ui/components/widgets/dialog.dart';
@@ -17,7 +18,7 @@ class QueueButton extends StatelessWidget {
     return IconButton(
       icon: Icon(
         Icons.queue_music_rounded,
-        color: Theme.of(context).colorScheme.onSurface,
+        color: context.theme.onSurface,
         size: size,
       ),
       onPressed: () {
@@ -36,7 +37,7 @@ class QueueButton extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             color:
-                                Theme.of(context).colorScheme.onSurface,
+                                context.theme.onSurface,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -45,9 +46,7 @@ class QueueButton extends StatelessWidget {
                             'Your queue is empty.',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
+                              color: context.theme.onSurfaceVariant,
                             ),
                           )
                         else
@@ -65,9 +64,7 @@ class QueueButton extends StatelessWidget {
                                     episode.title ?? '',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
+                                      color: context.theme.onSurfaceVariant,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   ),
@@ -75,9 +72,7 @@ class QueueButton extends StatelessWidget {
                                     episode.podcastTitle ?? '',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
+                                      color: context.theme.onSurfaceVariant,
                                     ),
                                   ),
                                   onTap: () {

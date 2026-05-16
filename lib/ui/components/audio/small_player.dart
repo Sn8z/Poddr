@@ -1,6 +1,7 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/audio/media_thumbnail.dart';
 import 'package:poddr/ui/components/audio/episode_title.dart';
 import 'package:poddr/ui/components/audio/media_title.dart';
@@ -22,9 +23,7 @@ class SmallPlayer extends StatelessWidget {
             height: 72,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHighest
+              color: context.theme.surfaceContainerHighest
                   .withValues(alpha: 0.3),
               borderRadius: const BorderRadius.all(Radius.circular(8)),
             ),

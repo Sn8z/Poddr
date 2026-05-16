@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -138,7 +139,7 @@ class LatestEpisodes extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.normal,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: context.theme.onSurfaceVariant,
             ),
           )
         else
