@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:provider/provider.dart';

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';

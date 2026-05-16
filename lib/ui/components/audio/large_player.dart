@@ -1,6 +1,6 @@
 ﻿import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/audio/duration_text.dart';
 import 'package:poddr/ui/components/audio/episode_title.dart';

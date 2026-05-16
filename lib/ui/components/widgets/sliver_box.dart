@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 
 class PoddrSliverBox extends StatelessWidget {

@@ -101,23 +101,23 @@ class Poddr extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeProvider themeProvider = context.watch<ThemeProvider>();
-    return SafeArea(
-      child: WidgetsApp.router(
-        title: "Poddr",
-        color: themeProvider.color,
-        routerConfig: router,
-        builder: (context, child) {
-          final systemBrightness = MediaQuery.platformBrightnessOf(context);
-          final themeData = themeProvider.resolveTheme(systemBrightness);
-          return PoddrTheme(
-            data: themeData,
+    return WidgetsApp.router(
+      title: "Poddr",
+      color: themeProvider.color,
+      routerConfig: router,
+      builder: (context, child) {
+        final systemBrightness = MediaQuery.platformBrightnessOf(context);
+        final themeData = themeProvider.resolveTheme(systemBrightness);
+        return PoddrTheme(
+          data: themeData,
+          child: SafeArea(
             child: PoddrShortcuts(
               router: router,
               child: child!,
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
