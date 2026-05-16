@@ -26,22 +26,44 @@ abstract class PoddrRouter {
     debugLogDiagnostics: true,
     navigatorKey: _rootNavKey,
     initialLocation: "/podcasts",
+    redirect: (context, state) {
+      if (state.matchedLocation == '/') {
+        return '/podcasts';
+      }
+      return null;
+    },
+    errorBuilder: (context, state) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.error_outline, size: 64),
+              const SizedBox(height: 16),
+              Text('Page not found: ${state.uri.path}'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => context.go('/podcasts'),
+                child: const Text('Go Home'),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
     routes: [
       GoRoute(
         path: '/player',
-        parentNavigatorKey: _rootNavKey,
+        name: 'player',
         pageBuilder: (context, state) {
-          return CustomTransitionPage(
+          return CustomTransitionPage<void>(
+            key: state.pageKey,
             child: const PlayerView(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
+            transitionsBuilder: (_, animation, __, child) {
               const begin = Offset(0.0, 1.0);
               const end = Offset.zero;
-              const curve = Curves.ease;
-
-              var tween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
+              final tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.ease));
               return SlideTransition(
                 position: animation.drive(tween),
                 child: child,
@@ -51,12 +73,10 @@ abstract class PoddrRouter {
         },
       ),
       StatefulShellRoute.indexedStack(
-        pageBuilder: (context, state, navigationShell) {
-          return NoTransitionPage(
-            child: BasePage(
-              state: state,
-              child: navigationShell,
-            ),
+        builder: (context, state, navigationShell) {
+          return BasePage(
+            state: state,
+            child: navigationShell,
           );
         },
         branches: [
@@ -64,25 +84,25 @@ abstract class PoddrRouter {
             navigatorKey: _podcastNavKey,
             routes: [
               GoRoute(
-                path: '/',
-                redirect: (context, state) => '/podcasts',
-              ),
-              GoRoute(
                 path: '/podcasts',
+                name: 'podcasts',
                 parentNavigatorKey: _podcastNavKey,
                 pageBuilder: (context, state) {
-                  return const NoTransitionPage(
-                    child: PodcastDiscoveryView(),
+                  return NoTransitionPage<void>(
+                    key: state.pageKey,
+                    child: const PodcastDiscoveryView(),
                   );
                 },
                 routes: [
                   GoRoute(
                     path: ':rss',
+                    name: 'podcast-details',
                     parentNavigatorKey: _podcastNavKey,
                     pageBuilder: (context, state) {
                       final rss = state.pathParameters['rss'] ?? '';
                       final decodedRSS = Uri.decodeComponent(rss);
-                      return NoTransitionPage(
+                      return NoTransitionPage<void>(
+                        key: state.pageKey,
                         child: PodcastDetailsView(rss: decodedRSS),
                       );
                     },
@@ -96,28 +116,32 @@ abstract class PoddrRouter {
             routes: [
               GoRoute(
                 path: '/library',
+                name: 'library',
                 parentNavigatorKey: _libraryNavKey,
                 pageBuilder: (context, state) {
-                  return const NoTransitionPage(
-                    child: LibraryView(),
+                  return NoTransitionPage<void>(
+                    key: state.pageKey,
+                    child: const LibraryView(),
                   );
                 },
                 routes: [
                   GoRoute(
-                    path: '/latest',
-                    parentNavigatorKey: _libraryNavKey,
+                    path: 'latest',
+                    name: 'library-latest',
                     pageBuilder: (context, state) {
-                      return const NoTransitionPage(
-                        child: LatestEpisodesView(),
+                      return NoTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const LatestEpisodesView(),
                       );
                     },
                   ),
                   GoRoute(
-                    path: '/downloads',
-                    parentNavigatorKey: _libraryNavKey,
+                    path: 'downloads',
+                    name: 'library-downloads',
                     pageBuilder: (context, state) {
-                      return const NoTransitionPage(
-                        child: DownloadsView(),
+                      return NoTransitionPage<void>(
+                        key: state.pageKey,
+                        child: const DownloadsView(),
                       );
                     },
                   ),
@@ -130,10 +154,12 @@ abstract class PoddrRouter {
             routes: [
               GoRoute(
                 path: '/search',
+                name: 'search',
                 parentNavigatorKey: _searchNavKey,
                 pageBuilder: (context, state) {
-                  return const NoTransitionPage(
-                    child: SearchView(),
+                  return NoTransitionPage<void>(
+                    key: state.pageKey,
+                    child: const SearchView(),
                   );
                 },
               ),
@@ -144,10 +170,12 @@ abstract class PoddrRouter {
             routes: [
               GoRoute(
                 path: '/settings',
+                name: 'settings',
                 parentNavigatorKey: _settingsNavKey,
                 pageBuilder: (context, state) {
-                  return const NoTransitionPage(
-                    child: SettingsView(),
+                  return NoTransitionPage<void>(
+                    key: state.pageKey,
+                    child: const SettingsView(),
                   );
                 },
               ),
