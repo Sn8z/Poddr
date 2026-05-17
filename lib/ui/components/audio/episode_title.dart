@@ -20,9 +20,8 @@ class EpisodeTitle extends StatelessWidget {
         context.select<MediaProvider, String?>((e) => e.episodeTitle);
     String? rss = context.select<MediaProvider, String?>((e) => e.podcastRSS);
 
-    final encodedRSS = rss != null && rss.isNotEmpty 
-        ? Uri.encodeComponent(rss) 
-        : null;
+    final encodedRSS =
+        rss != null && rss.isNotEmpty ? Uri.encodeComponent(rss) : null;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
