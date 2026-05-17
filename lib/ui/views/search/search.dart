@@ -71,11 +71,16 @@ class ResultBox extends StatelessWidget {
     final searchResults = context.watch<SearchViewModel>().searchResults;
 
     if (searchResults.isEmpty) {
-      return const ContentBox(
+      return ContentBox(
         children: [
           Padding(
             padding: EdgeInsets.all(12),
-            child: Text("No results"),
+            child: Text(
+              "No results",
+              style: TextStyle(
+                color: context.theme.onSurface,
+              ),
+            ),
           ),
         ],
       );

@@ -34,12 +34,18 @@ class _OpmlView extends StatelessWidget {
     return Column(
       children: [
         PoddrListItem(
-          leading: const Icon(LucideIcons.arrowRightCircle),
+          leading: Icon(
+            LucideIcons.arrowLeft,
+            color: context.theme.onSurface,
+          ),
           title: 'Import',
           onTap: isLoading ? null : () => viewModel.importOpml(),
         ),
         PoddrListItem(
-          leading: const Icon(LucideIcons.arrowLeftCircle),
+          leading: Icon(
+            LucideIcons.arrowRight,
+            color: context.theme.onSurface,
+          ),
           title: 'Export',
           onTap: isLoading ? null : () => viewModel.exportOpml(),
         ),

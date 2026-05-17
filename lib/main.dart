@@ -110,7 +110,7 @@ class Poddr extends StatelessWidget {
         final themeData = themeProvider.resolveTheme(systemBrightness);
         return PoddrTheme(
           data: themeData,
-          child: ColoredBox(
+          child: Container(
             color: themeData.colors.surface,
             child: SafeArea(
               child: PoddrShortcuts(

@@ -41,7 +41,11 @@ abstract class PoddrRouter {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(LucideIcons.alertCircle, size: 64),
+              const Icon(
+                LucideIcons.alertCircle,
+                size: 64,
+                color: Color(0xFFAA3333),
+              ),
               const SizedBox(height: 16),
               Text('Page not found: ${state.uri.path}'),
               const SizedBox(height: 16),
@@ -65,8 +69,8 @@ abstract class PoddrRouter {
             transitionsBuilder: (_, animation, __, child) {
               const begin = Offset(0.0, 1.0);
               const end = Offset.zero;
-              final tween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.ease));
+              final tween = Tween(begin: begin, end: end)
+                  .chain(CurveTween(curve: Curves.ease));
               return SlideTransition(
                 position: animation.drive(tween),
                 child: child,

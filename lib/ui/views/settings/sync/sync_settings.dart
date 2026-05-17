@@ -195,7 +195,7 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateServer(value),
           labelText: 'Server URL',
           hintText: 'https://gpodder.net',
-          prefixIcon: Icon(LucideIcons.link),
+          prefixIcon: Icon(LucideIcons.link, color: theme.onSurfaceVariant),
         ),
         gapH24,
         PoddrTextInput(
@@ -203,7 +203,7 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateUsername(value),
           labelText: 'Username',
           hintText: 'Enter your username',
-          prefixIcon: Icon(LucideIcons.user),
+          prefixIcon: Icon(LucideIcons.user, color: theme.onSurfaceVariant),
         ),
         gapH24,
         PoddrTextInput(
@@ -211,7 +211,7 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updatePassword(value),
           labelText: 'Password',
           hintText: 'Enter your password',
-          prefixIcon: Icon(LucideIcons.lock),
+          prefixIcon: Icon(LucideIcons.lock, color: theme.onSurfaceVariant),
           obscure: !setup.showPassword,
           suffixIcon: PoddrIconButton(
             icon: Icon(
@@ -227,7 +227,7 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateDeviceName(value),
           labelText: 'Device Name',
           hintText: 'Poddr',
-          prefixIcon: Icon(LucideIcons.smartphone),
+          prefixIcon: Icon(LucideIcons.smartphone, color: theme.onSurfaceVariant),
         ),
         gapH24,
         PoddrFilledButton(

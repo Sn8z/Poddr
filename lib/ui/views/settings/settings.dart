@@ -61,7 +61,10 @@ class SettingsView extends StatelessWidget {
           title: "Support",
           children: [
             PoddrListItem(
-              leading: const Icon(LucideIcons.heart),
+              leading: Icon(
+                LucideIcons.heart,
+                color: context.theme.onSurface,
+              ),
               title: "GitHub Sponsor",
               onTap: () async {
                 try {
@@ -73,19 +76,24 @@ class SettingsView extends StatelessWidget {
               },
             ),
             PoddrListItem(
-              leading: const Icon(LucideIcons.externalLink),
+              leading: Icon(
+                LucideIcons.wallet,
+                color: context.theme.onSurface,
+              ),
               title: "Paypal",
               onTap: () {
                 try {
-                  launchUrl(
-                      Uri.parse("https://www.paypal.com/paypalme/sn8z"));
+                  launchUrl(Uri.parse("https://www.paypal.com/paypalme/sn8z"));
                 } catch (e) {
                   error('Error launching URL: $e', name: 'SettingsView');
                 }
               },
             ),
             PoddrListItem(
-              leading: const Icon(LucideIcons.coffee),
+              leading: Icon(
+                LucideIcons.coffee,
+                color: context.theme.onSurface,
+              ),
               title: "Ko-Fi",
               onTap: () {
                 try {
@@ -102,19 +110,24 @@ class SettingsView extends StatelessWidget {
           title: "About",
           children: [
             PoddrListItem(
-              leading: const Icon(LucideIcons.bug),
+              leading: Icon(
+                LucideIcons.bug,
+                color: context.theme.onSurface,
+              ),
               title: "Issues",
               onTap: () {
                 try {
-                  launchUrl(
-                      Uri.parse("https://github.com/Sn8z/Poddr/issues"));
+                  launchUrl(Uri.parse("https://github.com/Sn8z/Poddr/issues"));
                 } catch (e) {
                   error('Error launching URL: $e', name: 'SettingsView');
                 }
               },
             ),
             PoddrListItem(
-              leading: const Icon(LucideIcons.info),
+              leading: Icon(
+                LucideIcons.info,
+                color: context.theme.onSurface,
+              ),
               title: 'Licenses',
               onTap: () {
                 showAboutDialog(context);
@@ -122,7 +135,6 @@ class SettingsView extends StatelessWidget {
             ),
           ],
         ),
-        gapH16,
         const BottomPaddingFix(),
       ],
     );
@@ -228,9 +240,8 @@ class ThemeBox extends StatelessWidget {
             color: color,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isSelected
-                  ? context.theme.primary
-                  : const Color(0x00000000),
+              color:
+                  isSelected ? context.theme.primary : const Color(0x00000000),
               width: isSelected ? 4 : 0,
             ),
           ),
@@ -327,7 +338,7 @@ class ColorBox extends StatelessWidget {
             ),
           ),
           child: isSelected
-              ? const Icon(LucideIcons.badgeCheck)
+              ? const Icon(LucideIcons.badgeCheck, color: Color(0xFFFFFFFF))
               : null,
         ),
       ),

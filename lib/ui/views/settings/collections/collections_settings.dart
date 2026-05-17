@@ -178,7 +178,7 @@ class _AddCollectionRow extends StatelessWidget {
             hintText: 'Enter name...',
           ),
         ),
-        gapW12,
+        gapW8,
         GestureDetector(
           onTap: () => _showColorPicker(context),
           child: Consumer<CollectionsViewModel>(
@@ -198,10 +198,13 @@ class _AddCollectionRow extends StatelessWidget {
             },
           ),
         ),
-        gapW12,
-        PoddrFilledButton(
+        gapW8,
+        PoddrIconButton(
           onPressed: () => viewModel.submitNewCollection(),
-          child: const Icon(LucideIcons.plus, size: 20),
+          size: 40,
+          iconSize: 20,
+          padding: 8.0,
+          icon: const Icon(LucideIcons.plus),
         ),
       ],
     );
