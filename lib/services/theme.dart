@@ -32,6 +32,8 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   PoddrThemeData resolveTheme(Brightness systemBrightness) {
+    if (_themeMode == PoddrThemeMode.light) return _lightTheme;
+    if (_themeMode == PoddrThemeMode.dark) return _darkTheme;
     return systemBrightness == Brightness.dark ? _darkTheme : _lightTheme;
   }
 

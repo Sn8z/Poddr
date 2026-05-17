@@ -98,71 +98,68 @@ class _PoddrTextInputState extends State<PoddrTextInput> {
         SingleActivator(LogicalKeyboardKey.space):
             DoNothingAndStopPropagationTextIntent(),
       },
-      child: Focus(
-        focusNode: _focusNode,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (widget.labelText != null) ...[
-              Text(
-                widget.labelText!,
-                style: TextStyle(
-                  color: theme.onSurfaceVariant,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 4),
-            ],
-            GestureDetector(
-              onTap: () => _focusNode.requestFocus(),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: theme.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: borderColor,
-                    width: _hasFocus ? 2 : 1,
-                  ),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                child: Row(
-                  children: [
-                    if (widget.prefixIcon != null) ...[
-                      widget.prefixIcon!,
-                      const SizedBox(width: 8),
-                    ],
-                    Expanded(
-                      child: _EditableTextField(
-                        controller: _controller,
-                        focusNode: _focusNode,
-                        obscure: widget.obscure,
-                        hintText: widget.hintText,
-                        onSubmitted: _onSubmitted,
-                        autofocus: widget.autofocus,
-                      ),
-                    ),
-                    if (widget.suffixIcon != null) ...[
-                      const SizedBox(width: 8),
-                      widget.suffixIcon!,
-                    ],
-                  ],
-                ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (widget.labelText != null) ...[
+            Text(
+              widget.labelText!,
+              style: TextStyle(
+                color: theme.onSurfaceVariant,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            if (displayError != null) ...[
-              const SizedBox(height: 4),
-              Text(
-                displayError,
-                style: TextStyle(
-                  color: theme.error,
-                  fontSize: 12,
+            const SizedBox(height: 4),
+          ],
+          GestureDetector(
+            onTap: () => _focusNode.requestFocus(),
+            child: Container(
+              decoration: BoxDecoration(
+                color: theme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: borderColor,
+                  width: _hasFocus ? 2 : 1,
                 ),
               ),
-            ],
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: Row(
+                children: [
+                  if (widget.prefixIcon != null) ...[
+                    widget.prefixIcon!,
+                    const SizedBox(width: 8),
+                  ],
+                  Expanded(
+                    child: _EditableTextField(
+                      controller: _controller,
+                      focusNode: _focusNode,
+                      obscure: widget.obscure,
+                      hintText: widget.hintText,
+                      onSubmitted: _onSubmitted,
+                      autofocus: widget.autofocus,
+                    ),
+                  ),
+                  if (widget.suffixIcon != null) ...[
+                    const SizedBox(width: 8),
+                    widget.suffixIcon!,
+                  ],
+                ],
+              ),
+            ),
+          ),
+          if (displayError != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              displayError,
+              style: TextStyle(
+                color: theme.error,
+                fontSize: 12,
+              ),
+            ),
           ],
-        ),
+        ],
       ),
     );
   }

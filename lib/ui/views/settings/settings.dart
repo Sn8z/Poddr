@@ -3,11 +3,13 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/theme/poddr_theme_mode.dart';
+import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
 import 'package:poddr/ui/views/settings/opml/opml_settings.dart';
 
+import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
-import 'package:poddr/ui/layouts/scrolling_page.dart';
+import 'package:poddr/ui/layouts/page_layout.dart';
 
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
@@ -25,9 +27,10 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScrollingPageLayout(
-      title: "Settings",
+    return PageLayout(
+      header: const PoddrAppBar(title: "Settings"),
       children: [
+        gapH16,
         const ContentBox(
           title: "Appearance",
           children: [
@@ -38,22 +41,22 @@ class SettingsView extends StatelessWidget {
             gapH16,
           ],
         ),
-        sliverGapH16,
+        gapH16,
         const ContentBox(
           title: "Collections",
           children: [
             CollectionsSection(),
           ],
         ),
-        sliverGapH16,
-        ContentBox(title: "OPML", children: [
+        gapH16,
+        const ContentBox(title: "OPML", children: [
           OpmlSection(),
         ]),
-        sliverGapH16,
-        ContentBox(title: "gPodder sync", children: [
+        gapH16,
+        const ContentBox(title: "gPodder sync", children: [
           SyncSection(),
         ]),
-        sliverGapH16,
+        gapH16,
         ContentBox(
           title: "Support",
           children: [
@@ -94,7 +97,7 @@ class SettingsView extends StatelessWidget {
             ),
           ],
         ),
-        sliverGapH16,
+        gapH16,
         ContentBox(
           title: "About",
           children: [
@@ -119,6 +122,8 @@ class SettingsView extends StatelessWidget {
             ),
           ],
         ),
+        gapH16,
+        const BottomPaddingFix(),
       ],
     );
   }

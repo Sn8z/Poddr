@@ -18,60 +18,58 @@ class ContentBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: context.theme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Visibility(
-              visible: title != null || subtitle != null || actions.isNotEmpty,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (title != null)
-                        Text(
-                          title ?? '',
-                          style: TextStyle(
-                            color: context.theme.primary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+    return Container(
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: context.theme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Visibility(
+            visible: title != null || subtitle != null || actions.isNotEmpty,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (title != null)
+                      Text(
+                        title ?? '',
+                        style: TextStyle(
+                          color: context.theme.primary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                      if (subtitle != null)
-                        Text(
-                          subtitle ?? '',
-                          style: TextStyle(
-                            color:
-                                context.theme.onSurfaceVariant,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      ),
+                    if (subtitle != null)
+                      Text(
+                        subtitle ?? '',
+                        style: TextStyle(
+                          color:
+                              context.theme.onSurfaceVariant,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: actions,
-                  ),
-                ],
-              ),
+                      ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: actions,
+                ),
+              ],
             ),
-            if (title != null || subtitle != null || actions.isNotEmpty) gapH8,
-            ...children,
-          ],
-        ),
+          ),
+          if (title != null || subtitle != null || actions.isNotEmpty) gapH8,
+          ...children,
+        ],
       ),
     );
   }
@@ -89,30 +87,28 @@ class SearchBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        margin: const EdgeInsets.only(top: 8.0),
-        decoration: BoxDecoration(
-          color: context.theme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (title != null)
-              Text(
-                title ?? '',
-                style: context.theme.textTheme.titleMedium.copyWith(
-                      color: context.theme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            if (title != null) gapH8,
-            ...children,
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.all(12.0),
+      margin: const EdgeInsets.only(top: 8.0),
+      decoration: BoxDecoration(
+        color: context.theme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (title != null)
+            Text(
+              title ?? '',
+              style: context.theme.textTheme.titleMedium.copyWith(
+                    color: context.theme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          if (title != null) gapH8,
+          ...children,
+        ],
       ),
     );
   }

@@ -6,15 +6,19 @@ import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
-import 'package:poddr/ui/layouts/scrolling_page.dart';
+import 'package:poddr/ui/layouts/page_layout.dart';
+import 'package:poddr/ui/components/widgets/appbar.dart';
+import 'package:poddr/ui/components/widgets/appbar_options.dart';
+import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/views/discover/discover_view_model.dart';
+
 import 'package:poddr/ui/components/widgets/content_box.dart';
+import 'package:poddr/ui/components/widgets/box.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/grid_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
-import 'package:poddr/ui/components/widgets/sliver_box.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
@@ -30,81 +34,81 @@ class PodcastDiscoveryView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => DiscoverViewModel(),
       builder: (context, child) {
-        return ScrollingPageLayout(
-          title: "Podcasts",
-          optionsActions: [
-            PoddrIconButton(
-              icon: Text(
-                  context.watch<DiscoverViewModel>().country),
-              onPressed: () {
-                final discoveryProvider =
-                    context.read<DiscoverViewModel>();
+        return PageLayout(
+          header: const PoddrAppBar(title: "Podcasts"),
+          options: PoddrAppBarOptions(
+            actions: [
+              PoddrIconButton(
+                icon: Text(context.watch<DiscoverViewModel>().country),
+                onPressed: () {
+                  final discoveryProvider = context.read<DiscoverViewModel>();
 
-                showPoddrDialog(
-                  context: context,
-                  builder: (dialogContext) {
-                    return PoddrDialog(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children:
-                            discoveryProvider.countries.map((country) {
-                          return GestureDetector(
-                            onTap: () {
-                              discoveryProvider
-                                  .setCountry(country.code);
-                              Navigator.of(dialogContext).pop();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(country.name),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            PoddrIconButton(
-              icon:
-                   Text(context.watch<DiscoverViewModel>().genre),
-              onPressed: () {
-                final discoveryProvider =
-                    context.read<DiscoverViewModel>();
+                  showPoddrDialog(
+                    context: context,
+                    builder: (dialogContext) {
+                      return PoddrDialog(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: discoveryProvider.countries.map((country) {
+                            return GestureDetector(
+                              onTap: () {
+                                discoveryProvider.setCountry(country.code);
+                                Navigator.of(dialogContext).pop();
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(country.name),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+              PoddrIconButton(
+                icon: Text(context.watch<DiscoverViewModel>().genre),
+                onPressed: () {
+                  final discoveryProvider = context.read<DiscoverViewModel>();
 
-                showPoddrDialog(
-                  context: context,
-                  builder: (dialogContext) {
-                    return PoddrDialog(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: discoveryProvider.genres.map((genre) {
-                          return GestureDetector(
-                            onTap: () {
-                              discoveryProvider
-                                  .setGenre(genre.id);
-                              Navigator.of(dialogContext).pop();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(genre.name),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
+                  showPoddrDialog(
+                    context: context,
+                    builder: (dialogContext) {
+                      return PoddrDialog(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: discoveryProvider.genres.map((genre) {
+                            return GestureDetector(
+                              onTap: () {
+                                discoveryProvider.setGenre(genre.id);
+                                Navigator.of(dialogContext).pop();
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: Text(genre.name),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
           children: [
+            gapH16,
             const LatestEpisodes(),
-            sliverGapH16,
+            gapH16,
             const RecentlyPlayedEpisodes(),
-            sliverGapH16,
+            gapH16,
             const TrendingPodcasts(),
+            gapH16,
+            const BottomPaddingFix(),
           ],
         );
       },
@@ -181,16 +185,16 @@ class LatestEpisodes extends StatelessWidget {
                   data: EpisodeHistory(audioUrl: episode.audioUrl),
                   onTap: () {
                     context.read<MediaProvider>().loadMedia(
-                            audioUrl: episode.audioUrl,
-                            videoUrl: episode.videoUrl,
-                            episodeTitle: episode.title,
-                            podcastTitle: episode.podcastTitle,
-                            podcastRSS: episode.podcastRSS,
-                            artUri: episode.imageUrl,
-                            artist: episode.podcastTitle,
-                            album: episode.podcastTitle,
-                            description: episode.description,
-                          );
+                          audioUrl: episode.audioUrl,
+                          videoUrl: episode.videoUrl,
+                          episodeTitle: episode.title,
+                          podcastTitle: episode.podcastTitle,
+                          podcastRSS: episode.podcastRSS,
+                          artUri: episode.imageUrl,
+                          artist: episode.podcastTitle,
+                          album: episode.podcastTitle,
+                          description: episode.description,
+                        );
                   },
                 );
               }).toList(),
@@ -288,9 +292,7 @@ class TrendingPodcasts extends StatelessWidget {
         MediaQuery.of(context).size.width < Breakpoints.mobileScreen;
 
     if (charts.charts.isEmpty) {
-      return const SliverToBoxAdapter(
-        child: SizedBox.shrink(),
-      );
+      return const SizedBox.shrink();
     }
 
     if (charts.isLoading) {
@@ -310,9 +312,11 @@ class TrendingPodcasts extends StatelessWidget {
       );
     }
 
-    return PoddrSliverBox(
-      sliver: isMobile
-          ? SliverList.builder(
+    return PoddrBox(
+      child: isMobile
+          ? ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: charts.charts.length,
               itemBuilder: (context, index) {
                 return PoddrListItem(
@@ -337,24 +341,24 @@ class TrendingPodcasts extends StatelessWidget {
                 );
               },
             )
-          : SliverLayoutBuilder(
+          : LayoutBuilder(
               builder: (context, constraints) {
                 int crossAxisCount;
-                final width = MediaQuery.sizeOf(context).width;
+                final width = constraints.maxWidth;
 
-                if (Breakpoints.isMobile(width)) {
+                if (width < 600) {
                   crossAxisCount = 2;
-                } else if (Breakpoints.isTablet(width)) {
+                } else if (width < 900) {
                   crossAxisCount = 3;
-                } else if (Breakpoints.isMedium(width)) {
+                } else if (width < 1200) {
                   crossAxisCount = 4;
-                } else if (Breakpoints.isLarge(width)) {
-                  crossAxisCount = 5;
                 } else {
-                  crossAxisCount = 6;
+                  crossAxisCount = 5;
                 }
 
-                return SliverGrid.builder(
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
                     mainAxisSpacing: 16,

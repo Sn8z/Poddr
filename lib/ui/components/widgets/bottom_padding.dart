@@ -9,13 +9,9 @@ class BottomPaddingFix extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
 
     if (width > Breakpoints.tabletScreen) {
-      return const SliverToBoxAdapter(
-        child: SizedBox(height: 136),
-      );
+      return const SizedBox(height: 136);
     } else {
-      return const SliverToBoxAdapter(
-        child: SizedBox(height: 88),
-      );
+      return const SizedBox(height: 88);
     }
   }
 }

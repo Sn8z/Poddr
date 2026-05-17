@@ -12,33 +12,6 @@ class PoddrAppBarOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverPersistentHeader(
-      pinned: true,
-      delegate: _PoddrAppBarOptionsDelegate(
-        title: title,
-        actions: actions,
-      ),
-    );
-  }
-}
-
-class _PoddrAppBarOptionsDelegate extends SliverPersistentHeaderDelegate {
-  final Widget? title;
-  final List<Widget> actions;
-
-  _PoddrAppBarOptionsDelegate({
-    this.title,
-    required this.actions,
-  });
-
-  @override
-  double get minExtent => 42;
-
-  @override
-  double get maxExtent => 42;
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final theme = context.theme;
     return Container(
       decoration: BoxDecoration(
@@ -57,10 +30,5 @@ class _PoddrAppBarOptionsDelegate extends SliverPersistentHeaderDelegate {
         ],
       ),
     );
-  }
-
-  @override
-  bool shouldRebuild(_PoddrAppBarOptionsDelegate oldDelegate) {
-    return oldDelegate.title != title || oldDelegate.actions != actions;
   }
 }

@@ -5,14 +5,17 @@ import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
-import 'package:poddr/ui/components/widgets/sliver_box.dart';
+import 'package:poddr/ui/components/widgets/box.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_progress.dart';
-import 'package:poddr/ui/layouts/scrolling_page.dart';
+import 'package:poddr/ui/layouts/page_layout.dart';
+import 'package:poddr/ui/components/widgets/bottom_padding.dart';
+import 'package:poddr/ui/components/widgets/appbar.dart';
+import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/views/library/library_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -30,70 +33,67 @@ class LibraryView extends StatelessWidget {
       builder: (context, child) {
         final viewModel = context.watch<LibraryViewModel>();
 
-        return ScrollingPageLayout(
-          title: 'Library',
-          optionsTitle: Row(
-            children: [
-              PoddrElevatedButton(
-                child: const Text("Latest Episodes"),
-                onPressed: () => context.push("/library/latest"),
-              ),
-              PoddrElevatedButton(
-                child: const Text("Downloads"),
-                onPressed: () => context.push("/library/downloads"),
-              ),
+        return PageLayout(
+          header: const PoddrAppBar(title: 'Library'),
+          options: PoddrAppBarOptions(
+            title: Row(
+              children: [
+                PoddrElevatedButton(
+                  child: const Text("Latest Episodes"),
+                  onPressed: () => context.push("/library/latest"),
+                ),
+                PoddrElevatedButton(
+                  child: const Text("Downloads"),
+                  onPressed: () => context.push("/library/downloads"),
+                ),
+              ],
+            ),
+            actions: [
+              PoddrIconButton(
+                icon: const Icon(LucideIcons.plus),
+                onPressed: () {
+                  showPoddrDialog(
+                      context: context,
+                      builder: (dialogContext) {
+                        return PoddrDialog(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: PoddrTextInput(
+                              hintText: "Input RSS",
+                              onSubmit: (value) {
+                                context
+                                    .read<LibraryViewModel>()
+                                    .addSubscription(rss: value);
+                                context.pop();
+                              },
+                            ),
+                          ),
+                        );
+                      });
+                },
+              )
             ],
           ),
-          optionsActions: [
-            PoddrIconButton(
-              icon: const Icon(LucideIcons.plus),
-              onPressed: () {
-                showPoddrDialog(
-                    context: context,
-                    builder: (dialogContext) {
-                      return PoddrDialog(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: PoddrTextInput(
-                            hintText: "Input RSS",
-                            onSubmit: (value) {
-                              context
-                                  .read<LibraryViewModel>()
-                                  .addSubscription(rss: value);
-                              context.pop();
-                            },
-                          ),
-                        ),
-                      );
-                    });
-              },
-            )
-          ],
           children: [
             if (viewModel.isLoading) ...[
-              const SliverToBoxAdapter(
-                child: Center(
-                  child: PoddrSpinner(),
-                ),
+              const Center(
+                child: PoddrSpinner(),
               ),
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 100,
-                ),
+              const SizedBox(
+                height: 100,
               ),
             ] else if (viewModel.subscriptions.isEmpty) ...[
-              const SliverToBoxAdapter(
-                child: Center(
-                  child: Text('Your library is empty'),
-                ),
+              const Center(
+                child: Text('Your library is empty'),
               ),
             ] else ...[
-              PoddrSliverBox(
-                sliver: SliverList.builder(
+              PoddrBox(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: viewModel.subscriptions.length,
                   itemBuilder: (context, index) {
-                    final Podcast podcast =
-                        viewModel.subscriptions[index];
+                    final Podcast podcast = viewModel.subscriptions[index];
                     return PoddrListItem(
                       title: podcast.title ?? 'Missing Title',
                       subtitle: podcast.author ?? 'Missing Author',
@@ -114,7 +114,7 @@ class LibraryView extends StatelessWidget {
                       actions: [
                         PoddrIconButton(
                           onPressed: () {},
-                          icon: Icon(LucideIcons.moreVertical),
+                          icon: const Icon(LucideIcons.moreVertical),
                         ),
                       ],
                     );
@@ -122,6 +122,7 @@ class LibraryView extends StatelessWidget {
                 ),
               ),
             ],
+            const BottomPaddingFix(),
           ],
         );
       },

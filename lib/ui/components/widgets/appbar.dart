@@ -15,42 +15,10 @@ class PoddrAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverPersistentHeader(
-      pinned: true,
-      floating: true,
-      delegate: _PoddrAppBarDelegate(
-        title: title,
-        actions: actions,
-        bottom: bottom,
-      ),
-    );
-  }
-}
-
-class _PoddrAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final String title;
-  final List<Widget>? actions;
-  final PreferredSizeWidget? bottom;
-
-  _PoddrAppBarDelegate({
-    required this.title,
-    this.actions,
-    this.bottom,
-  });
-
-  @override
-  double get minExtent => 60;
-
-  @override
-  double get maxExtent => 120;
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final theme = context.theme;
-    final shrinkRatio = (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0);
-    final fontSize = 28 * (1 - shrinkRatio * 0.5) + 14 * shrinkRatio;
 
     return Container(
+      height: 60,
       decoration: BoxDecoration(
         color: theme.surfaceContainerHigh,
         borderRadius: const BorderRadius.only(
@@ -63,11 +31,9 @@ class _PoddrAppBarDelegate extends SliverPersistentHeaderDelegate {
         children: [
           Positioned.fill(
             child: Padding(
-              padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                bottom: 10 + (1 - shrinkRatio) * 40,
-                top: 16 * shrinkRatio,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -77,7 +43,7 @@ class _PoddrAppBarDelegate extends SliverPersistentHeaderDelegate {
                       title,
                       style: TextStyle(
                         color: theme.onSurface,
-                        fontSize: fontSize,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                       maxLines: 1,
@@ -99,12 +65,5 @@ class _PoddrAppBarDelegate extends SliverPersistentHeaderDelegate {
         ],
       ),
     );
-  }
-
-  @override
-  bool shouldRebuild(_PoddrAppBarDelegate oldDelegate) {
-    return oldDelegate.title != title ||
-        oldDelegate.actions != actions ||
-        oldDelegate.bottom != bottom;
   }
 }

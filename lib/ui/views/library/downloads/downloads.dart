@@ -12,7 +12,9 @@ import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_confirm_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_progress.dart';
-import 'package:poddr/ui/layouts/scrolling_page.dart';
+import 'package:poddr/ui/layouts/page_layout.dart';
+import 'package:poddr/ui/components/widgets/appbar.dart';
+import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:poddr/ui/views/library/downloads/downloads_view_model.dart';
@@ -35,52 +37,51 @@ class DownloadsView extends StatelessWidget {
         final viewModel = context.watch<DownloadsViewModel>();
         final downloads = viewModel.downloads;
 
-        return ScrollingPageLayout(
-          title: 'Downloads',
-          appBarActions: [
-            if (downloads.isNotEmpty)
-              PoddrIconButton(
-                onPressed: () {
-                  _showClearAllDialog(context, viewModel);
-                },
-                icon: const Icon(LucideIcons.trash),
-              ),
-          ],
-          children: [
-            if (viewModel.isLoading)
-              const SliverToBoxAdapter(
-                child: Center(
-                  child: PoddrSpinner(),
+        return PageLayout(
+          header: PoddrAppBar(
+            title: 'Downloads',
+            actions: [
+              if (downloads.isNotEmpty)
+                PoddrIconButton(
+                  onPressed: () {
+                    _showClearAllDialog(context, viewModel);
+                  },
+                  icon: const Icon(LucideIcons.trash),
                 ),
+            ],
+          ),
+          children: [
+            gapH16,
+            if (viewModel.isLoading)
+              const Center(
+                child: PoddrSpinner(),
               )
             else if (downloads.isEmpty)
-              SliverToBoxAdapter(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        LucideIcons.download,
-                        size: 64,
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      LucideIcons.download,
+                      size: 64,
+                      color: context.theme.outline,
+                    ),
+                    gapH16,
+                    Text(
+                      'No downloads yet',
+                      style: TextStyle(
+                        fontSize: 18,
                         color: context.theme.outline,
                       ),
-                      gapH16,
-                      Text(
-                        'No downloads yet',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: context.theme.outline,
-                        ),
+                    ),
+                    gapH8,
+                    Text(
+                      'Download episodes to listen offline',
+                      style: TextStyle(
+                        color: context.theme.outline,
                       ),
-                      gapH8,
-                      Text(
-                        'Download episodes to listen offline',
-                        style: TextStyle(
-                          color: context.theme.outline,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               )
             else
@@ -100,16 +101,16 @@ class DownloadsView extends StatelessWidget {
                       ),
                       onTap: () {
                         viewModel.loadMedia(
-                                audioUrl: download.audioUrl,
-                                videoUrl: download.videoUrl,
-                                episodeTitle: download.title,
-                                podcastTitle: download.podcastTitle,
-                                podcastRSS: download.podcastRSS,
-                                description: download.description,
-                                artUri: download.imageUrl,
-                                album: download.title,
-                                artist: download.podcastTitle,
-                              );
+                          audioUrl: download.audioUrl,
+                          videoUrl: download.videoUrl,
+                          episodeTitle: download.title,
+                          podcastTitle: download.podcastTitle,
+                          podcastRSS: download.podcastRSS,
+                          description: download.description,
+                          artUri: download.imageUrl,
+                          album: download.title,
+                          artist: download.podcastTitle,
+                        );
                       },
                       actions: [
                         Text(
@@ -125,6 +126,8 @@ class DownloadsView extends StatelessWidget {
                     ),
                 ],
               ),
+            gapH16,
+            const BottomPaddingFix(),
           ],
         );
       },
@@ -137,7 +140,8 @@ class DownloadsView extends StatelessWidget {
       builder: (dialogContext) {
         return PoddrConfirmDialog(
           title: 'Clear all downloads?',
-          message: 'This will delete ${viewModel.downloads.length} downloaded episode(s).',
+          message:
+              'This will delete ${viewModel.downloads.length} downloaded episode(s).',
           confirmLabel: 'Delete all',
           onConfirm: () {
             viewModel.clearAllDownloads();
