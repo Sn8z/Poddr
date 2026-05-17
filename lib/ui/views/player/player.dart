@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:go_router/go_router.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/audio/media_display.dart';
 import 'package:poddr/ui/components/audio/duration_text.dart';
 import 'package:poddr/ui/components/audio/episode_title.dart';
@@ -21,90 +23,99 @@ class PlayerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              PoddrIconButton(
-                onPressed: () {},
-                icon: Icon(LucideIcons.moreVertical),
-              ),
-            ],
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: context.theme.surface,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                PoddrIconButton(
+                  onPressed: () => context.pop(),
+                  icon: Icon(LucideIcons.chevronLeft),
+                ),
+                PoddrIconButton(
+                  onPressed: null,
+                  icon: Icon(LucideIcons.moreVertical),
+                ),
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: SizedBox(
-            width: double.infinity,
-            child: MediaDisplay(),
+          Expanded(
+            child: SizedBox(
+              width: double.infinity,
+              child: MediaDisplay(),
+            ),
           ),
-        ),
-        const MediaProgressSlider(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          const MediaProgressSlider(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                PositionText(),
+                DurationText(),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                gapH16,
+                const EpisodeTitle(),
+                gapH16,
+                const MediaTitle(),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ShuffleButton(
+                        size: 36,
+                      ),
+                      gapW16,
+                      PreviousButton(
+                        size: 36,
+                      ),
+                      gapW16,
+                      const PlayButton(
+                        size: 72,
+                      ),
+                      gapW16,
+                      SkipButton(
+                        size: 36,
+                      ),
+                      gapW16,
+                      RepeatButton(
+                        size: 36,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              PositionText(),
-              DurationText(),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Column(
-            children: [
-              gapH16,
-              const EpisodeTitle(),
-              gapH16,
-              const MediaTitle(),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ShuffleButton(
-                      size: 36,
-                    ),
-                    gapW16,
-                    PreviousButton(
-                      size: 36,
-                    ),
-                    gapW16,
-                    const PlayButton(
-                      size: 72,
-                    ),
-                    gapW16,
-                    SkipButton(
-                      size: 36,
-                    ),
-                    gapW16,
-                    RepeatButton(
-                      size: 36,
-                    ),
-                  ],
-                ),
+              QueueButton(
+                size: 32,
+              ),
+              gapW16,
+              SpeedButton(
+                size: 32,
               ),
             ],
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            QueueButton(
-              size: 32,
-            ),
-            gapW16,
-            SpeedButton(
-              size: 32,
-            ),
-          ],
-        ),
-        gapH16,
-      ],
+          gapH16,
+        ],
+      ),
     );
   }
 }

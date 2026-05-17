@@ -20,12 +20,15 @@ class MediaTitle extends StatelessWidget {
         context.select<MediaProvider, String?>((e) => e.podcastTitle);
     String? rss = context.select<MediaProvider, String?>((e) => e.podcastRSS);
 
+    final encodedRSS =
+        rss != null && rss.isNotEmpty ? Uri.encodeComponent(rss) : null;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () {
-          context.push("/podcasts/$rss");
-        },
+        onTap: encodedRSS != null
+            ? () => context.go("/podcasts/$encodedRSS")
+            : null,
         child: Text(
           artist ?? "Artist",
           style: TextStyle(

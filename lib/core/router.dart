@@ -101,6 +101,13 @@ abstract class PoddrRouter {
                     path: ':rss',
                     name: 'podcast-details',
                     parentNavigatorKey: _podcastNavKey,
+                    redirect: (context, state) {
+                      final rss = state.pathParameters['rss'];
+                      if (rss == null || rss.isEmpty || rss == 'null') {
+                        return '/podcasts';
+                      }
+                      return null;
+                    },
                     pageBuilder: (context, state) {
                       final rss = state.pathParameters['rss'] ?? '';
                       final decodedRSS = Uri.decodeComponent(rss);

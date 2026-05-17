@@ -28,7 +28,7 @@ class EpisodeTitle extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: encodedRSS != null
-            ? () => context.push("/podcasts/$encodedRSS")
+            ? () => context.go("/podcasts/$encodedRSS")
             : null,
         child: Text(
           title ?? "Title",
