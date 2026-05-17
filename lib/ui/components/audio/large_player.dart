@@ -32,25 +32,25 @@ class LargePlayer extends StatelessWidget {
           child: Container(
             height: 120,
             decoration: BoxDecoration(
-              color: context.theme.surfaceContainerHigh
-                  .withValues(alpha: 0.75),
+              color: context.theme.surfaceContainerHigh.withValues(alpha: 0.75),
               borderRadius: const BorderRadius.all(Radius.circular(12)),
             ),
             clipBehavior: Clip.antiAlias,
-            child: Column(
-              children: [
-                const MediaProgressSlider(),
-                Expanded(
-                  child: Row(
-                    children: [
-                      const Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  const MediaProgressSlider(),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        const Expanded(
+                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              gapH8,
                               PositionText(),
                               Spacer(),
                               EpisodeTitle(),
@@ -58,34 +58,32 @@ class LargePlayer extends StatelessWidget {
                             ],
                           ),
                         ),
-                      ),
-                      ShuffleButton(
-                        size: 36,
-                      ),
-                      gapW8,
-                      const PreviousButton(
-                        size: 36,
-                      ),
-                      gapW8,
-                      const PlayButton(
-                        size: 56,
-                      ),
-                      gapW8,
-                      const SkipButton(
-                        size: 36,
-                      ),
-                      gapW8,
-                      RepeatButton(
-                        size: 36,
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                        ShuffleButton(
+                          size: 36,
+                        ),
+                        gapW8,
+                        const PreviousButton(
+                          size: 36,
+                        ),
+                        gapW8,
+                        const PlayButton(
+                          size: 56,
+                        ),
+                        gapW8,
+                        const SkipButton(
+                          size: 36,
+                        ),
+                        gapW8,
+                        RepeatButton(
+                          size: 36,
+                        ),
+                        Expanded(
+                          flex: 2,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
+                              gapH8,
                               const DurationText(),
                               Expanded(
                                 child: Row(
@@ -102,11 +100,11 @@ class LargePlayer extends StatelessWidget {
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

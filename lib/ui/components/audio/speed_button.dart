@@ -58,6 +58,7 @@ class SpeedButton extends StatelessWidget {
                         min: 0,
                         max: (speedSteps.length - 1).toDouble(),
                         divisions: speedSteps.length - 1,
+                        trackHeight: 4,
                         onChanged: (double value) {
                           int index = value.round();
                           context

@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/ui/components/widgets/poddr_slider.dart';
@@ -24,9 +24,12 @@ class MediaProgressSlider extends StatelessWidget {
 
     return PoddrSlider(
       value: currentValue,
+      bufferedValue: bufferedValue,
       min: 0,
       max: maxValue,
-      height: 12,
+      trackHeight: 12,
+      thumbVisibility: PoddrThumbVisibility.never,
+      trackShape: PoddrTrackShape.flat,
       onChanged: (double value) {
         context.read<MediaProvider>().seek(
               Duration(

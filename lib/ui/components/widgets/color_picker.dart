@@ -168,15 +168,15 @@ class _SliderRow extends StatelessWidget {
         Container(
           height: 24,
           decoration: BoxDecoration(
-            gradient: gradient,
             borderRadius: BorderRadius.circular(12),
           ),
           child: PoddrSlider(
             value: value,
             min: min,
             max: max,
+            trackHeight: 24,
+            activeGradient: gradient,
             onChanged: onChanged,
-            height: 24,
           ),
         ),
       ],
