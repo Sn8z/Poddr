@@ -58,7 +58,10 @@ export class OfflineService {
 		}
 
 		this.getPodcast(podcastObject).subscribe((response) => {
-			const fileName = (title.toLowerCase() + "-" + podcastObject.title.toLowerCase() + "." + this.getFileExtension(podcastObject.enclosure.type)).replace(/\W/g, '_');
+			const extension = this.getFileExtension(podcastObject.enclosure.type);
+			const safeTitle = (title.toLowerCase() + "-" + podcastObject.title.toLowerCase()).replace(/[^\w-]/g, '_');
+			
+			const fileName = `${safeTitle}.${extension}`;
 			fs.writeFile(this.storagePath + fileName, Buffer.from(response), (error) => {
 				if (error) {
 					log.error("Offline service :: An error ocurred creating the file > ERROR MSG: " + error.message);
