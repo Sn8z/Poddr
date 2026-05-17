@@ -22,59 +22,63 @@ class PoddrSideBar extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
     final bool shouldExpand = Breakpoints.isDesktop(width);
 
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 8,
-        top: 8,
-        bottom: 8,
-      ),
-      child: Container(
-        width: shouldExpand ? 220 : 80,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: context.theme.surfaceContainer,
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 8,
+          top: 8,
+          bottom: 8,
         ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 16,
-            ),
-            Expanded(
-              child: Column(
-                children: destinations.map((dest) {
-                  final isSelected = _isSelected(dest.route);
-                  return PoddrSideBarItem(
-                    icon: dest.icon,
-                    selectedIcon: dest.selectedIcon,
-                    title: dest.label,
-                    status: isSelected
-                        ? SideBarItemStatus.selected
-                        : SideBarItemStatus.normal,
-                    onTap: () {
-                      context.go(dest.route);
-                    },
-                  );
-                }).toList(),
+        child: Container(
+          width: shouldExpand ? 220 : 80,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: context.theme.surfaceContainer,
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 16,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: AspectRatio(
-                aspectRatio: 1.0, // 1:1 aspect ratio
-                child: Container(
-                  clipBehavior: Clip.antiAlias,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                  ),
-                  child: const MediaThumbnail(),
+              Expanded(
+                child: Column(
+                  children: destinations.map((dest) {
+                    final isSelected = _isSelected(dest.route);
+                    return PoddrSideBarItem(
+                      icon: dest.icon,
+                      selectedIcon: dest.selectedIcon,
+                      title: dest.label,
+                      status: isSelected
+                          ? SideBarItemStatus.selected
+                          : SideBarItemStatus.normal,
+                      onTap: () {
+                        context.go(dest.route);
+                      },
+                    );
+                  }).toList(),
                 ),
               ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: AspectRatio(
+                  aspectRatio: 1.0, // 1:1 aspect ratio
+                  child: Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                    ),
+                    child: const MediaThumbnail(),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
