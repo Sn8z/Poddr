@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:poddr/core/theme/poddr_theme_mode.dart';
+import 'package:poddr/core/theme/poddr_theme_data.dart';
 
 abstract class ISettingsRepository {
   Future<void> setColor(Color color);

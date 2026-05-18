@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_colors.dart';
 import 'package:poddr/core/theme/poddr_text_theme.dart';
 
+enum PoddrThemeMode { system, light, dark }
+
 @immutable
 class PoddrThemeData {
   final Brightness brightness;
@@ -53,7 +55,16 @@ class PoddrThemeData {
   Color get surfaceContainerHighest => colors.surfaceContainerHighest;
   Color get outline => colors.outline;
   Color get error => colors.error;
+  Color get onError => colors.onError;
   Color get errorContainer => colors.errorContainer;
+  Color get secondaryContainer => colors.secondaryContainer;
+  Color get onSecondaryContainer => colors.onSecondaryContainer;
+  Color get tertiary => colors.tertiary;
+  Color get onTertiary => colors.onTertiary;
+  Color get tertiaryContainer => colors.tertiaryContainer;
+  Color get onTertiaryContainer => colors.onTertiaryContainer;
+  Color get shadow => colors.shadow;
+  Color get scrim => colors.scrim;
 
   PoddrThemeData copyWith({
     Brightness? brightness,

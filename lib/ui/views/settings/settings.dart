@@ -2,7 +2,7 @@
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/core/log.dart';
-import 'package:poddr/core/theme/poddr_theme_mode.dart';
+import 'package:poddr/core/theme/poddr_theme_data.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
 import 'package:poddr/ui/views/settings/opml/opml_settings.dart';

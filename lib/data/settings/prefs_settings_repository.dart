@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
-import 'package:poddr/core/theme/poddr_theme_mode.dart';
+import 'package:poddr/core/theme/poddr_theme_data.dart';
 
 class SharedPrefSettingsRepository implements ISettingsRepository {
   static const String logName = "SharedPrefSettingsRepository";
