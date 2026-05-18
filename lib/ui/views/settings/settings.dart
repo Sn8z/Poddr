@@ -8,17 +8,17 @@ import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
 import 'package:poddr/ui/views/settings/opml/opml_settings.dart';
 
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
+import 'package:poddr/ui/components/widgets/color_picker.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 
 import 'package:poddr/services/theme.dart';
-import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
-import 'package:poddr/data/theme/theme_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:poddr/ui/views/settings/sync/sync_settings.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
+import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
@@ -292,73 +292,61 @@ class ColorSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile =
-        MediaQuery.sizeOf(context).width < Breakpoints.mobileScreen;
-
-    if (isMobile) {
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            for (final color in colors)
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: ColorBox(
-                  color: color.color,
-                ),
-              ),
-          ],
-        ),
-      );
-    } else {
-      return Wrap(
-        spacing: 12,
-        runSpacing: 12,
-        children: [
-          for (final color in colors)
-            ColorBox(
-              color: color.color,
-            ),
-        ],
-      );
-    }
-  }
-}
-
-class ColorBox extends StatelessWidget {
-  final Color color;
-
-  const ColorBox({
-    super.key,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isSelected = context.watch<ThemeProvider>().color == color;
+    final currentColor = context.watch<ThemeProvider>().color;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () {
-          context.read<ThemeProvider>().setColor(color);
-        },
+        onTap: () => _showColorPickerDialog(context),
         child: Container(
           width: 64,
           height: 64,
           decoration: BoxDecoration(
-            color: color,
+            color: currentColor,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isSelected
-                  ? context.theme.onSurface
-                  : const Color(0x00000000),
-              width: isSelected ? 4 : 0,
+              color: context.theme.onSurface,
+              width: 4,
             ),
           ),
-          child: isSelected
-              ? const Icon(LucideIcons.badgeCheck, color: Color(0xFFFFFFFF))
-              : null,
+        ),
+      ),
+    );
+  }
+
+  void _showColorPickerDialog(BuildContext context) {
+    showPoddrDialog(
+      context: context,
+      builder: (dialogContext) => PoddrDialog(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Theme Color',
+                style: context.theme.textTheme.titleMedium,
+              ),
+              gapH16,
+              HsvColorPicker(
+                initialColor: context.read<ThemeProvider>().color,
+                onColorChanged: (color) {
+                  dialogContext.read<ThemeProvider>().setColor(color);
+                },
+              ),
+              gapH24,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  PoddrTextButton(
+                    label: 'Done',
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
