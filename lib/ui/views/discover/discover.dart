@@ -213,9 +213,7 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
     final historyProvider = context.watch<HistoryProvider>();
 
     if (historyProvider.history.isEmpty) {
-      return const SliverToBoxAdapter(
-        child: SizedBox.shrink(),
-      );
+      return const SizedBox.shrink();
     }
 
     return ContentBox(
