@@ -219,6 +219,7 @@ class SyncSection extends StatelessWidget {
               color: theme.primary,
             ),
             onPressed: () => setup.togglePasswordVisibility(),
+            padding: 2.0,
           ),
         ),
         gapH24,

@@ -201,9 +201,6 @@ class _AddCollectionRow extends StatelessWidget {
         gapW8,
         PoddrIconButton(
           onPressed: () => viewModel.submitNewCollection(),
-          size: 40,
-          iconSize: 20,
-          padding: 8.0,
           icon: const Icon(LucideIcons.plus),
         ),
       ],

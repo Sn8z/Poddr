@@ -26,10 +26,14 @@ class SearchView extends StatelessWidget {
 
         return PageLayout(
           header: Container(
-            padding: const EdgeInsets.all(8),
-            color: context.theme.surfaceContainerHigh,
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: context.theme.surfaceContainerHigh,
+              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+            ),
             child: PoddrTextInput(
               hintText: 'Search',
+              fontSize: 18,
               onSubmit: (value) {
                 searchProvider.searchPodcast(value);
               },
