@@ -67,16 +67,16 @@ class PoddrColors {
     final onPrimaryContainer = hsl.withLightness(0.1).toColor();
 
     final secondaryHsl = hsl.withHue((hsl.hue + 15) % 360).withSaturation(
-      (hsl.saturation * 0.6).clamp(0.0, 1.0),
-    );
+          (hsl.saturation * 0.6).clamp(0.0, 1.0),
+        );
     final secondary = secondaryHsl.withLightness(0.6).toColor();
     final onSecondary = secondaryHsl.withLightness(0.05).toColor();
     final secondaryContainer = secondaryHsl.withLightness(0.9).toColor();
     final onSecondaryContainer = secondaryHsl.withLightness(0.1).toColor();
 
     final tertiaryHsl = hsl.withHue((hsl.hue + 60) % 360).withSaturation(
-      (hsl.saturation * 0.5).clamp(0.0, 1.0),
-    );
+          (hsl.saturation * 0.5).clamp(0.0, 1.0),
+        );
     final tertiary = tertiaryHsl.withLightness(0.6).toColor();
     final onTertiary = tertiaryHsl.withLightness(0.05).toColor();
     final tertiaryContainer = tertiaryHsl.withLightness(0.9).toColor();
@@ -142,8 +142,8 @@ class PoddrColors {
     final onPrimaryContainer = hsl.withLightness(0.9).toColor();
 
     final secondaryHsl = hsl.withHue((hsl.hue + 15) % 360).withSaturation(
-      (hsl.saturation * 0.6).clamp(0.0, 1.0),
-    );
+          (hsl.saturation * 0.6).clamp(0.0, 1.0),
+        );
     final secondary = secondaryHsl.withLightness(0.7).toColor();
     final onSecondary = secondaryHsl.lightness > 0.5
         ? secondaryHsl.withLightness(0.05).toColor()
@@ -152,8 +152,8 @@ class PoddrColors {
     final onSecondaryContainer = secondaryHsl.withLightness(0.9).toColor();
 
     final tertiaryHsl = hsl.withHue((hsl.hue + 60) % 360).withSaturation(
-      (hsl.saturation * 0.5).clamp(0.0, 1.0),
-    );
+          (hsl.saturation * 0.5).clamp(0.0, 1.0),
+        );
     final tertiary = tertiaryHsl.withLightness(0.7).toColor();
     final onTertiary = tertiaryHsl.lightness > 0.5
         ? tertiaryHsl.withLightness(0.05).toColor()
@@ -166,11 +166,11 @@ class PoddrColors {
     final surfaceVariant = const Color.fromRGBO(35, 35, 35, 1);
     final onSurfaceVariant = const Color.fromRGBO(200, 200, 200, 1);
 
-    final surfaceContainerLowest = const Color.fromRGBO(20, 20, 20, 1);
-    final surfaceContainerLow = const Color.fromRGBO(30, 30, 30, 1);
+    final surfaceContainerLowest = const Color.fromRGBO(30, 30, 30, 1);
+    final surfaceContainerLow = const Color.fromRGBO(35, 35, 35, 1);
     final surfaceContainer = const Color.fromRGBO(40, 40, 40, 1);
-    final surfaceContainerHigh = const Color.fromRGBO(50, 50, 50, 1);
-    final surfaceContainerHighest = const Color.fromRGBO(60, 60, 60, 1);
+    final surfaceContainerHigh = const Color.fromRGBO(45, 45, 45, 1);
+    final surfaceContainerHighest = const Color.fromRGBO(50, 50, 50, 1);
 
     final outline = const Color.fromRGBO(120, 120, 120, 1);
     final error = const Color(0xFFFFB4AB);
