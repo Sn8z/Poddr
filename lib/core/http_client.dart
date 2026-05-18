@@ -1,5 +1,6 @@
-import 'dart:io';
+import 'dart:io' show Platform;
 import 'dart:async';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/log.dart';
@@ -7,8 +8,12 @@ import 'package:poddr/core/log.dart';
 class PoddrHttpClient extends http.BaseClient {
   static const String _appName = 'Poddr';
   static const String _appVersion = '3.0.0+1';
-  static String get userAgent =>
-      '$_appName/$_appVersion (${Platform.operatingSystem})';
+  static String get userAgent {
+    if (kIsWeb) {
+      return '$_appName/$_appVersion (Web)';
+    }
+    return '$_appName/$_appVersion (${Platform.operatingSystem})';
+  }
 
   final http.Client _inner = http.Client();
   static const Duration _defaultTimeout = Duration(seconds: 30);

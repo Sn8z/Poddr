@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:isolate';
+import 'package:flutter/foundation.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/http_client.dart';
 import 'package:poddr/core/exceptions.dart';
@@ -98,7 +98,7 @@ class ITunesPodcastRepository implements IPodcastRepository {
 
       if (response.statusCode == 200) {
         final content = response.body;
-        return await Isolate.run(() => PoddrPodcastParser.parse(content, rss));
+        return await compute((_) => PoddrPodcastParser.parse(content, rss), null);
       } else {
         error("Feed return code ${response.statusCode}", name: logName);
         throw ApiException("Could not get feed");

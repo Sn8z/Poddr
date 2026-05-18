@@ -156,7 +156,7 @@ QueryExecutor _openConnection() {
     ),
     web: DriftWebOptions(
       sqlite3Wasm: Uri.parse('sqlite3.wasm'),
-      driftWorker: Uri.parse('drift_worker.dart.js'),
+      driftWorker: Uri.parse('drift_worker.js'),
     ),
   );
 }
