@@ -7,7 +7,7 @@ Future<T?> showPoddrDialog<T>({
   bool dismissible = true,
   Color? barrierColor,
 }) {
-  return Navigator.of(context).push<T>(
+  return Navigator.of(context, rootNavigator: true).push<T>(
     _PoddrDialogRoute(
       builder: builder,
       dismissible: dismissible,
