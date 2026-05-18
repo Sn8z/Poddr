@@ -21,6 +21,8 @@ import 'package:poddr/ui/views/settings/sync/sync_settings.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
+import 'package:poddr/ui/components/widgets/poddr_licenses.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -129,47 +131,64 @@ class SettingsView extends StatelessWidget {
                 color: context.theme.onSurface,
               ),
               title: 'Licenses',
-              onTap: () {
-                showAboutDialog(context);
-              },
+              onTap: () => showPoddrDialog(
+                context: context,
+                maxWidth: 500,
+                builder: (dialogContext) {
+                  final contentHeight = MediaQuery.sizeOf(dialogContext).height * 0.7;
+                  return SizedBox(
+                    height: contentHeight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Poddr",
+                              style: dialogContext.theme.textTheme.titleMedium,
+                            ),
+                            PoddrIconButton(
+                              icon: const Icon(LucideIcons.x, size: 18),
+                              onPressed: () => Navigator.of(dialogContext).pop(),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "Version 3.0.0",
+                          style: dialogContext.theme.textTheme.bodyMedium.copyWith(
+                            color: dialogContext.theme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(height: 1, color: dialogContext.theme.outline.withAlpha(50)),
+                        const SizedBox(height: 12),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: PoddrLicenseView(),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            PoddrTextButton(
+                              label: "Close",
+                              onPressed: () => Navigator.of(dialogContext).pop(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
         const BottomPaddingFix(),
       ],
-    );
-  }
-
-  void showAboutDialog(BuildContext context) {
-    showPoddrDialog(
-      context: context,
-      builder: (dialogContext) => Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Poddr",
-            style: dialogContext.theme.textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Version 3.0.0",
-            style: dialogContext.theme.textTheme.bodyMedium.copyWith(
-              color: dialogContext.theme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              PoddrTextButton(
-                label: "Close",
-                onPressed: () => Navigator.of(dialogContext).pop(),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

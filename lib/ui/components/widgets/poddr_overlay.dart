@@ -6,12 +6,14 @@ Future<T?> showPoddrDialog<T>({
   required WidgetBuilder builder,
   bool dismissible = true,
   Color? barrierColor,
+  double maxWidth = 400,
 }) {
   return Navigator.of(context, rootNavigator: true).push<T>(
     _PoddrDialogRoute(
       builder: builder,
       dismissible: dismissible,
       barrierColor: barrierColor,
+      maxWidth: maxWidth,
     ),
   );
 }
@@ -21,9 +23,10 @@ class _PoddrDialogRoute<T> extends PageRouteBuilder<T> {
     required WidgetBuilder builder,
     required bool dismissible,
     Color? barrierColor,
+    double maxWidth = 400,
   }) : super(
           pageBuilder: (context, animation, secondaryAnimation) =>
-              _PoddrDialogPage(builder: builder),
+              _PoddrDialogPage(builder: builder, maxWidth: maxWidth),
           transitionsBuilder: (context, animation, _, child) =>
               FadeTransition(opacity: animation, child: child),
           barrierDismissible: dismissible,
@@ -34,16 +37,18 @@ class _PoddrDialogRoute<T> extends PageRouteBuilder<T> {
 
 class _PoddrDialogPage extends StatelessWidget {
   final WidgetBuilder builder;
+  final double maxWidth;
 
   const _PoddrDialogPage({
     required this.builder,
+    required this.maxWidth,
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 400),
+        constraints: BoxConstraints(maxWidth: maxWidth),
         child: Container(
           decoration: BoxDecoration(
             color: context.theme.surfaceContainerLow,
