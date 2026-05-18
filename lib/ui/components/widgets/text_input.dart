@@ -39,6 +39,8 @@ class PoddrTextInput extends StatefulWidget {
     this.minHeight,
     this.fontSize,
     this.selectionColor,
+    this.backgroundColor,
+    this.foregroundColor,
   }) : assert(
           maxLines == null || maxLines > 0,
           'maxLines must be null or greater than zero.',
@@ -73,6 +75,8 @@ class PoddrTextInput extends StatefulWidget {
   final double? minHeight;
   final double? fontSize;
   final Color? selectionColor;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
 
   @override
   State<PoddrTextInput> createState() => _PoddrTextInputState();
@@ -193,9 +197,9 @@ class _PoddrTextInputState extends State<PoddrTextInput> {
                 ),
                 height: widget.height,
                 decoration: BoxDecoration(
-                  color: widget.enabled
+                  color: widget.backgroundColor ?? (widget.enabled
                       ? theme.surfaceContainerLowest
-                      : theme.surfaceContainerLowest.withValues(alpha: 0.5),
+                      : theme.surfaceContainerLowest.withValues(alpha: 0.5)),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: borderColor,
@@ -241,6 +245,7 @@ class _PoddrTextInputState extends State<PoddrTextInput> {
                         fontSize: effectiveFontSize,
                         selectionColor: widget.selectionColor ??
                             theme.primary.withValues(alpha: 0.3),
+                        foregroundColor: widget.foregroundColor,
                       ),
                     ),
                     if (widget.suffixIcon != null) ...[
@@ -289,6 +294,7 @@ class _EditableTextField extends StatelessWidget {
     this.enableSuggestions = true,
     this.maxLines = 1,
     this.minLines,
+    this.foregroundColor,
   });
 
   final TextEditingController controller;
@@ -310,12 +316,13 @@ class _EditableTextField extends StatelessWidget {
   final int? minLines;
   final double fontSize;
   final Color selectionColor;
+  final Color? foregroundColor;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
     final textStyle = TextStyle(
-      color: enabled ? theme.onSurface : theme.onSurfaceVariant,
+      color: foregroundColor ?? (enabled ? theme.onSurface : theme.onSurfaceVariant),
       fontSize: fontSize,
     );
 
@@ -339,7 +346,7 @@ class _EditableTextField extends StatelessWidget {
           controller: controller,
           focusNode: focusNode,
           style: textStyle,
-          cursorColor: theme.onSurface,
+          cursorColor: foregroundColor ?? theme.onSurface,
           backgroundCursorColor: theme.onSurfaceVariant,
           selectionColor: selectionColor,
           obscureText: obscure,

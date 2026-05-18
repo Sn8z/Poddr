@@ -229,9 +229,14 @@ class _AddCollectionRow extends StatelessWidget {
                 },
               ),
               gapH24,
-              PoddrTextButton(
-                label: 'Done',
-                onPressed: () => Navigator.of(dialogContext).pop(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  PoddrTextButton(
+                    label: 'Done',
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                  ),
+                ],
               ),
             ],
           ),

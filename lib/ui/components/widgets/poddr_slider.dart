@@ -20,6 +20,7 @@ class PoddrSlider extends StatefulWidget {
   final double borderRadius;
   final PoddrTrackShape trackShape;
   final Gradient? activeGradient;
+  final Gradient? inactiveGradient;
   final Color? activeColor;
   final Color? inactiveColor;
   final Color? bufferedColor;
@@ -45,6 +46,7 @@ class PoddrSlider extends StatefulWidget {
     this.borderRadius = 0,
     this.trackShape = PoddrTrackShape.rounded,
     this.activeGradient,
+    this.inactiveGradient,
     this.activeColor,
     this.inactiveColor,
     this.bufferedColor,
@@ -244,6 +246,7 @@ class _PoddrSliderState extends State<PoddrSlider> with SingleTickerProviderStat
                 activeColor: effectiveActiveColor,
                 activeGradient: widget.activeGradient,
                 inactiveColor: effectiveInactiveColor,
+                inactiveGradient: widget.inactiveGradient,
                 bufferedColor: effectiveBufferedColor,
                 thumbColor: effectiveThumbColor,
                 thumbOpacity: _shouldShowThumb ? _thumbAnimation.value : 0.0,
@@ -294,6 +297,7 @@ class _SliderPainter extends CustomPainter {
   final Color activeColor;
   final Gradient? activeGradient;
   final Color inactiveColor;
+  final Gradient? inactiveGradient;
   final Color bufferedColor;
   final Color thumbColor;
   final double thumbOpacity;
@@ -310,6 +314,7 @@ class _SliderPainter extends CustomPainter {
     required this.activeColor,
     required this.activeGradient,
     required this.inactiveColor,
+    required this.inactiveGradient,
     required this.bufferedColor,
     required this.thumbColor,
     required this.thumbOpacity,
@@ -336,8 +341,17 @@ class _SliderPainter extends CustomPainter {
     final centerY = size.height / 2;
 
     final inactiveRect = _makeTrackRect(0, size.width, centerY, borderRadius);
-    final inactivePaint = Paint()..color = inactiveColor;
-    canvas.drawRRect(inactiveRect, inactivePaint);
+
+    if (inactiveGradient != null) {
+      final paint = Paint()
+        ..shader = inactiveGradient!.createShader(
+          Rect.fromLTWH(0, centerY - trackHeight / 2, size.width, trackHeight),
+        );
+      canvas.drawRRect(inactiveRect, paint);
+    } else {
+      final inactivePaint = Paint()..color = inactiveColor;
+      canvas.drawRRect(inactiveRect, inactivePaint);
+    }
 
     if (hasBuffered && bufferedFraction > 0) {
       final bufferedWidth = size.width * bufferedFraction;
@@ -360,7 +374,7 @@ class _SliderPainter extends CustomPainter {
       canvas.drawRRect(activeRect, activePaint);
     }
 
-    if (showThumb && activeWidth > 0) {
+    if (showThumb) {
       final thumbX = activeWidth;
       final thumbPaint = Paint()
         ..color = thumbColor.withAlpha((thumbOpacity * 255).round());
@@ -377,6 +391,7 @@ class _SliderPainter extends CustomPainter {
       oldDelegate.activeColor != activeColor ||
       oldDelegate.activeGradient != activeGradient ||
       oldDelegate.inactiveColor != inactiveColor ||
+      oldDelegate.inactiveGradient != inactiveGradient ||
       oldDelegate.bufferedColor != bufferedColor ||
       oldDelegate.thumbColor != thumbColor;
 }
