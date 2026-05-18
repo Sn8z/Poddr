@@ -225,14 +225,10 @@ class _AddCollectionRow extends StatelessWidget {
                 style: context.theme.textTheme.titleMedium,
               ),
               gapH16,
-              Consumer<CollectionsViewModel>(
-                builder: (context, vm, child) {
-                  return HsvColorPicker(
-                    initialColor: Color(vm.newCollectionColor),
-                    onColorChanged: (color) {
-                      vm.setNewCollectionColor(color.toARGB32());
-                    },
-                  );
+              HsvColorPicker(
+                initialColor: Color(viewModel.newCollectionColor),
+                onColorChanged: (color) {
+                  viewModel.setNewCollectionColor(color.toARGB32());
                 },
               ),
               gapH24,
