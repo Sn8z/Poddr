@@ -200,8 +200,10 @@ class _PoddrSliderState extends State<PoddrSlider> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final fraction = (widget.value - widget.min) / (widget.max - widget.min);
-    final bufferedFraction = widget.bufferedValue != null
+    final fraction = widget.max != widget.min
+        ? ((widget.value - widget.min) / (widget.max - widget.min)).clamp(0.0, 1.0)
+        : 0.0;
+    final bufferedFraction = widget.bufferedValue != null && widget.max != widget.min
         ? ((widget.bufferedValue! - widget.min) / (widget.max - widget.min)).clamp(0.0, 1.0)
         : 0.0;
 
@@ -230,8 +232,8 @@ class _PoddrSliderState extends State<PoddrSlider> with SingleTickerProviderStat
         builder: (context, child) {
           return SizedBox(
             height: effectiveTrackHeight,
+            width: double.infinity,
             child: CustomPaint(
-              size: Size(double.infinity, effectiveTrackHeight),
               painter: _SliderPainter(
                 fraction: fraction,
                 bufferedFraction: bufferedFraction,
@@ -330,6 +332,7 @@ class _SliderPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (size.width <= 0 || size.height <= 0 || size.width.isNaN || size.height.isNaN) return;
     final centerY = size.height / 2;
 
     final inactiveRect = _makeTrackRect(0, size.width, centerY, borderRadius);
