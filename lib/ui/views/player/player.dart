@@ -51,7 +51,10 @@ class PlayerView extends StatelessWidget {
               child: MediaDisplay(),
             ),
           ),
-          const MediaProgressSlider(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: const MediaProgressSlider(),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -113,7 +116,6 @@ class PlayerView extends StatelessWidget {
               ),
             ],
           ),
-          gapH16,
         ],
       ),
     );

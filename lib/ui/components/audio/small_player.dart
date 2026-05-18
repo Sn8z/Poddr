@@ -23,8 +23,8 @@ class SmallPlayer extends StatelessWidget {
             height: 72,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
-              color: context.theme.surfaceContainerHighest
-                  .withValues(alpha: 0.3),
+              color:
+                  context.theme.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: const BorderRadius.all(Radius.circular(8)),
             ),
             child: const Row(
@@ -43,15 +43,13 @@ class SmallPlayer extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Padding(
-                                padding:
-                                    EdgeInsets.symmetric(horizontal: 8.0),
+                                padding: EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    MediaTitle(),
                                     EpisodeTitle(),
+                                    MediaTitle(),
                                   ],
                                 ),
                               ),

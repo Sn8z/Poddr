@@ -214,7 +214,6 @@ class LatestEpisodesView extends StatelessWidget {
                 ],
               ),
             ],
-            gapH16,
             const BottomPaddingFix(),
           ],
         );

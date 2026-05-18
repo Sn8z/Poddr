@@ -37,7 +37,6 @@ class SearchView extends StatelessWidget {
           children: [
             gapH16,
             searchProvider.isLoading ? const LoadingBox() : const ResultBox(),
-            gapH16,
             const BottomPaddingFix(),
           ],
         );

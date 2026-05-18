@@ -126,7 +126,6 @@ class DownloadsView extends StatelessWidget {
                     ),
                 ],
               ),
-            gapH16,
             const BottomPaddingFix(),
           ],
         );

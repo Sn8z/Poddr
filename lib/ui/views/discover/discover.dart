@@ -107,7 +107,6 @@ class PodcastDiscoveryView extends StatelessWidget {
             const RecentlyPlayedEpisodes(),
             gapH16,
             const TrendingPodcasts(),
-            gapH16,
             const BottomPaddingFix(),
           ],
         );
