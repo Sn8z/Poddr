@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/widgets.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
@@ -70,18 +71,25 @@ class ResultBox extends StatelessWidget {
     final searchResults = context.watch<SearchViewModel>().searchResults;
 
     if (searchResults.isEmpty) {
-      return ContentBox(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(12),
-            child: Text(
-              "No results",
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              LucideIcons.search,
+              size: 64,
+              color: context.theme.outline,
+            ),
+            gapH16,
+            Text(
+              'No results found',
               style: TextStyle(
-                color: context.theme.onSurface,
+                fontSize: 18,
+                color: context.theme.outline,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }
 

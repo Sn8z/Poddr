@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
@@ -16,6 +17,7 @@ import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
+import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/views/library/library_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -38,11 +40,12 @@ class LibraryView extends StatelessWidget {
           options: PoddrAppBarOptions(
             title: Row(
               children: [
-                PoddrElevatedButton(
+                PoddrOutlinedButton(
                   child: const Text("Latest Episodes"),
                   onPressed: () => context.push("/library/latest"),
                 ),
-                PoddrElevatedButton(
+                gapW8,
+                PoddrOutlinedButton(
                   child: const Text("Downloads"),
                   onPressed: () => context.push("/library/downloads"),
                 ),
@@ -79,13 +82,27 @@ class LibraryView extends StatelessWidget {
               const Center(
                 child: PoddrSpinner(),
               ),
-              const SizedBox(
-                height: 100,
-              ),
             ] else if (viewModel.subscriptions.isEmpty) ...[
-              const Center(
-                child: Text('Your library is empty'),
-              ),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      LucideIcons.podcast,
+                      size: 64,
+                      color: context.theme.outline,
+                    ),
+                    gapH16,
+                    Text(
+                      'No subscriptions yet',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: context.theme.outline,
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ] else ...[
               PoddrBox(
                 child: ListView.builder(
