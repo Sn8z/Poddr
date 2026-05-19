@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 
@@ -52,9 +53,9 @@ class _PoddrIconButtonState extends State<PoddrIconButton> {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final baseColor = widget.color ?? theme.onSurface;
-    final hoverBg = widget.hoverColor ?? theme.onSurface.withAlpha(26);
-    final pressBg = widget.pressColor ?? theme.onSurface.withAlpha(51);
+    final baseColor = widget.color ?? theme.primary;
+    final hoverBg = widget.hoverColor ?? baseColor.withAlpha(26);
+    final pressBg = widget.pressColor ?? baseColor.withAlpha(51);
 
     Color bgColor = const Color(0x00000000);
     Color iconColor = baseColor;
@@ -73,7 +74,8 @@ class _PoddrIconButtonState extends State<PoddrIconButton> {
     }
 
     final totalSize = widget.size + _effectivePadding * 2;
-    final effectiveBorderRadius = widget.borderRadius ?? BorderRadius.circular(totalSize / 2);
+    final effectiveBorderRadius =
+        widget.borderRadius ?? BorderRadius.circular(totalSize / 3);
 
     return Semantics(
       label: widget.semanticLabel,
@@ -81,35 +83,53 @@ class _PoddrIconButtonState extends State<PoddrIconButton> {
       enabled: _enabled,
       child: Focus(
         focusNode: _focusNode,
+        onKeyEvent: (node, event) {
+          if (_enabled &&
+              event is KeyDownEvent &&
+              (event.logicalKey == LogicalKeyboardKey.enter ||
+                  event.logicalKey == LogicalKeyboardKey.space)) {
+            widget.onPressed?.call();
+            return KeyEventResult.handled;
+          }
+          return KeyEventResult.ignored;
+        },
         child: MouseRegion(
-          cursor: _enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+          cursor:
+              _enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
           onEnter: (_) => setState(() => _hovering = true),
           onExit: (_) => setState(() => _hovering = false),
           child: GestureDetector(
             onTap: widget.onPressed,
             onLongPress: widget.onLongPress,
-            onTapDown: _enabled ? (_) => setState(() => _pressing = true) : null,
+            onTapDown:
+                _enabled ? (_) => setState(() => _pressing = true) : null,
             onTapUp: _enabled ? (_) => setState(() => _pressing = false) : null,
-            onTapCancel: _enabled ? () => setState(() => _pressing = false) : null,
+            onTapCancel:
+                _enabled ? () => setState(() => _pressing = false) : null,
             behavior: HitTestBehavior.opaque,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
               width: totalSize,
               height: totalSize,
-              decoration: BoxDecoration(
+              decoration: ShapeDecoration(
                 color: bgColor,
-                borderRadius: effectiveBorderRadius,
-                border: _focusNode.hasFocus
-                    ? Border.all(color: theme.outline, width: 2)
-                    : null,
+                shape: RoundedSuperellipseBorder(
+                  side: _focusNode.hasFocus
+                      ? BorderSide(color: theme.outline, width: 2)
+                      : BorderSide.none,
+                  borderRadius: effectiveBorderRadius,
+                ),
               ),
-              child: Center(
-                child: IconTheme(
-                  data: IconThemeData(
-                    size: _effectiveIconSize,
-                    color: iconColor,
+              child: Semantics(
+                excludeSemantics: true,
+                child: Center(
+                  child: IconTheme(
+                    data: IconThemeData(
+                      size: _effectiveIconSize,
+                      color: iconColor,
+                    ),
+                    child: widget.icon,
                   ),
-                  child: widget.icon,
                 ),
               ),
             ),
