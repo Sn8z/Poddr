@@ -20,6 +20,9 @@ class SubscriptionProvider extends ChangeNotifier {
   List<Podcast> _subscriptions = [];
   List<Podcast> get subscriptions => _subscriptions;
 
+  Map<String, int> _subscriptionIdByRss = {};
+  Map<String, int> get subscriptionIdByRss => _subscriptionIdByRss;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -48,6 +51,8 @@ class SubscriptionProvider extends ChangeNotifier {
       notifyListeners();
 
       _subscriptions = await _subscriptionRepository.getSubscriptions();
+      _subscriptionIdByRss =
+          await _subscriptionRepository.getAllSubscriptionIds();
       await _updateLatestEpisodes();
     } catch (e, stackTrace) {
       error(e.toString(), name: logName, error: e, stackTrace: stackTrace);

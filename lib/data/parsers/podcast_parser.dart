@@ -230,13 +230,15 @@ class PoddrPodcastParser {
     final image = _parseImage(channel);
     final title = _parseTitle(channel);
     final author = _parseAuthor(channel);
-
+    final newFeedUrl = _parseNewFeedUrl(channel);
+    final effectiveRss = newFeedUrl ?? rss;
+ 
     if (title == null || title.isEmpty) {
       warning("Podcast missing title", name: logName);
     } else {
       debug("Parsing podcast: $title", name: logName);
     }
-
+ 
     return Podcast(
       title: title,
       description: _parseDescription(channel),
@@ -253,11 +255,11 @@ class PoddrPodcastParser {
                 episode,
                 image: image,
                 podcastTitle: title,
-                podcastRSS: rss,
+                podcastRSS: effectiveRss,
                 author: author,
               ))
           .toList(),
-      newFeedUrl: _parseNewFeedUrl(channel),
+      newFeedUrl: newFeedUrl,
       locked: _parseLocked(channel),
       funding: _parseFunding(channel),
       chapters: _parseChapters(channel),

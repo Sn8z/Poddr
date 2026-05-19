@@ -1,7 +1,9 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
+import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/podcast.dart';
+import 'package:poddr/ui/utils/sort_fields.dart';
 
 class PodcastViewModel extends ChangeNotifier {
   final IPodcastRepository _podcastRepository;
@@ -15,6 +17,15 @@ class PodcastViewModel extends ChangeNotifier {
   String? _currentRss;
   String? get currentRss => _currentRss;
 
+  String _filter = '';
+  String get filter => _filter;
+
+  EpisodeSortField _sortField = EpisodeSortField.publicationDate;
+  String get sortField => _sortField.label;
+
+  SortDirection _sortDirection = SortDirection.descending;
+  String get sortDirection => _sortDirection.label;
+
   PodcastViewModel({
     IPodcastRepository? podcastRepository,
     String? initialRss,
@@ -24,6 +35,16 @@ class PodcastViewModel extends ChangeNotifier {
         getPodcast(initialRss);
       });
     }
+  }
+
+  List<PodcastEpisode> get episodes {
+    if (_podcast == null) return [];
+    return filterAndSortEpisodes(
+      episodes: _podcast!.episodes,
+      filter: _filter,
+      sortField: _sortField,
+      sortDirection: _sortDirection,
+    );
   }
 
   Future<void> getPodcast(String rss) async {
@@ -44,5 +65,19 @@ class PodcastViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void setFilter(String value) {
+    _filter = value;
+    notifyListeners();
+  }
+
+  void setSort({
+    EpisodeSortField? field,
+    SortDirection? direction,
+  }) {
+    if (field != null) _sortField = field;
+    if (direction != null) _sortDirection = direction;
+    notifyListeners();
   }
 }

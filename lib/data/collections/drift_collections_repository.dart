@@ -106,6 +106,28 @@ class DriftCollectionsRepository implements ICollectionsRepository {
   }
 
   @override
+  Future<Map<int, Set<int>>> getAllSubscriptionCollectionPairs() async {
+    final rows =
+        await database.select(database.subscriptionCollections).get();
+    return _rowsToMap(rows);
+  }
+ 
+  @override
+  Stream<Map<int, Set<int>>> watchAllSubscriptionCollectionPairs() {
+    return database.select(database.subscriptionCollections)
+        .watch()
+        .map(_rowsToMap);
+  }
+ 
+  Map<int, Set<int>> _rowsToMap(List<SubscriptionCollection> rows) {
+    final map = <int, Set<int>>{};
+    for (var row in rows) {
+      map.putIfAbsent(row.subscriptionId, () => {}).add(row.collectionId);
+    }
+    return map;
+  }
+ 
+  @override
   Stream<List<PodcastCollection>> watchAllCollections() {
     return database.select(database.collections).watch().map(
           (collections) => collections

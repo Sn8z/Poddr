@@ -1,26 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:poddr/models/episode.dart';
+import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/subscriptions.dart';
-
-enum EpisodeSortField {
-  publicationDate('Publication Date'),
-  title('Title'),
-  duration('Duration');
-
-  const EpisodeSortField(this.label);
-  final String label;
-}
-
-enum SortDirection {
-  ascending('Ascending'),
-  descending('Descending');
-
-  const SortDirection(this.label);
-  final String label;
-}
+import 'package:poddr/ui/utils/sort_fields.dart';
 
 class LatestEpisodesViewModel extends ChangeNotifier {
   final SubscriptionProvider _source;
+  final CollectionsProvider _collectionsProvider;
 
   String _filter = '';
   String get filter => _filter;
@@ -31,27 +17,34 @@ class LatestEpisodesViewModel extends ChangeNotifier {
   SortDirection _sortDirection = SortDirection.descending;
   String get sortDirection => _sortDirection.label;
 
-  LatestEpisodesViewModel(this._source) {
+  Set<int> _selectedCollectionIds = {};
+  Set<int> get selectedCollectionIds => _selectedCollectionIds;
+
+  LatestEpisodesViewModel(this._source, this._collectionsProvider) {
     _source.addListener(notifyListeners);
+    _collectionsProvider.addListener(notifyListeners);
   }
 
   List<PodcastEpisode> get episodes {
-    var list = List<PodcastEpisode>.from(_source.latestEpisodes);
+    var episodes = _source.latestEpisodes;
 
-    if (_filter.isNotEmpty) {
-      final q = _filter.toLowerCase();
-      list = list.where((e) => _matchesFilter(e, q)).toList();
+    if (_selectedCollectionIds.isNotEmpty) {
+      final idByRss = _source.subscriptionIdByRss;
+      final subToCol = _collectionsProvider.subscriptionToCollections;
+      episodes = episodes.where((e) {
+        final subId = idByRss[e.podcastRSS ?? ''];
+        if (subId == null) return false;
+        final collectionIds = subToCol[subId] ?? {};
+        return _selectedCollectionIds.any((id) => collectionIds.contains(id));
+      }).toList();
     }
 
-    list.sort(_comparator);
-    return list;
-  }
-
-  bool _matchesFilter(PodcastEpisode e, String q) {
-    return (e.title ?? '').toLowerCase().contains(q) ||
-        (e.author ?? '').toLowerCase().contains(q) ||
-        (e.podcastTitle ?? '').toLowerCase().contains(q) ||
-        (e.description ?? '').toLowerCase().contains(q);
+    return filterAndSortEpisodes(
+      episodes: episodes,
+      filter: _filter,
+      sortField: _sortField,
+      sortDirection: _sortDirection,
+    );
   }
 
   void setFilter(String value) {
@@ -68,41 +61,20 @@ class LatestEpisodesViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  int _comparator(PodcastEpisode a, PodcastEpisode b) {
-    int result;
+  void setCollectionFilter(Set<int> ids) {
+    _selectedCollectionIds = ids;
+    notifyListeners();
+  }
 
-    switch (_sortField) {
-      case EpisodeSortField.publicationDate:
-        final ad = a.publicationDate;
-        final bd = b.publicationDate;
-        if (ad == null && bd == null) {
-          result = 0;
-        } else if (ad == null) {
-          result = 1;
-        } else if (bd == null) {
-          result = -1;
-        } else {
-          result = ad.compareTo(bd);
-        }
-        break;
-
-      case EpisodeSortField.title:
-        result = (a.title ?? '').compareTo(b.title ?? '');
-        break;
-
-      case EpisodeSortField.duration:
-        final ad = a.duration ?? Duration.zero;
-        final bd = b.duration ?? Duration.zero;
-        result = ad.compareTo(bd);
-        break;
-    }
-
-    return _sortDirection == SortDirection.ascending ? result : -result;
+  void clearCollectionFilter() {
+    _selectedCollectionIds = {};
+    notifyListeners();
   }
 
   @override
   void dispose() {
     _source.removeListener(notifyListeners);
+    _collectionsProvider.removeListener(notifyListeners);
     super.dispose();
   }
 }

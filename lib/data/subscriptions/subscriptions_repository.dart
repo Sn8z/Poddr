@@ -13,6 +13,8 @@ abstract class ISubscriptionRepository {
 
   Future<int?> getSubscriptionIdByRss(String rss);
 
+  Future<Map<String, int>> getAllSubscriptionIds();
+
   Stream<int?> watchSubscriptionIdByRss(String rss);
 
   Stream<List<Podcast>> watchAllSubscriptions();

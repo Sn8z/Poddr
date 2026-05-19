@@ -90,6 +90,13 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
   }
 
   @override
+  Future<Map<String, int>> getAllSubscriptionIds() async {
+    final subscriptions =
+        await database.select(database.podcastSubscription).get();
+    return {for (var sub in subscriptions) sub.rss: sub.id};
+  }
+
+  @override
   Future<int?> getSubscriptionIdByRss(String rss) async {
     debug("Getting subscription ID for $rss", name: logName);
     final result = await (database.select(database.podcastSubscription)

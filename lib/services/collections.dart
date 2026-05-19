@@ -11,6 +11,10 @@ class CollectionsProvider extends ChangeNotifier {
   List<PodcastCollection> _collections = [];
   List<PodcastCollection> get collections => _collections;
 
+  Map<int, Set<int>> _subscriptionToCollections = {};
+  Map<int, Set<int>> get subscriptionToCollections =>
+      _subscriptionToCollections;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -25,14 +29,25 @@ class CollectionsProvider extends ChangeNotifier {
   CollectionsProvider({ICollectionsRepository? repository})
       : _repository = repository ?? DriftCollectionsRepository() {
     loadCollections();
+    _initSubscriptionCollectionWatcher();
   }
-
+ 
+  void _initSubscriptionCollectionWatcher() {
+    _repository.watchAllSubscriptionCollectionPairs().listen((pairs) {
+      _subscriptionToCollections = pairs;
+      notifyListeners();
+    });
+  }
+ 
   Future<void> loadCollections() async {
     try {
       _isLoading = true;
       notifyListeners();
 
       _collections = await _repository.getAllCollections();
+      _subscriptionToCollections =
+          await _repository.getAllSubscriptionCollectionPairs();
+      notifyListeners();
     } catch (e, stackTrace) {
       error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
     } finally {

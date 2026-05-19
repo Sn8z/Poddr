@@ -2,6 +2,7 @@
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
@@ -20,8 +21,11 @@ import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
+import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
+import 'package:poddr/ui/utils/sort_fields.dart';
+import 'package:poddr/ui/components/widgets/collection_filter_list.dart';
 import 'package:poddr/ui/views/library/latest/latest_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -30,23 +34,35 @@ class LatestEpisodesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProxyProvider<SubscriptionProvider,
-        LatestEpisodesViewModel>(
+    return ChangeNotifierProxyProvider2<SubscriptionProvider,
+        CollectionsProvider, LatestEpisodesViewModel>(
       create: (context) => LatestEpisodesViewModel(
         context.read<SubscriptionProvider>(),
+        context.read<CollectionsProvider>(),
       ),
-      update: (context, source, previous) =>
-          previous ?? LatestEpisodesViewModel(source),
+      update: (context, source, collections, previous) =>
+          previous ?? LatestEpisodesViewModel(source, collections),
       builder: (context, child) {
         final viewModel = context.watch<LatestEpisodesViewModel>();
 
         return PageLayout(
           header: PoddrAppBar(
             title: const Text('Latest Episodes'),
+            actions: [
+              PoddrOutlinedButton(
+                child: const Text("Library"),
+                onPressed: () => context.push("/library"),
+              ),
+              gapW8,
+              PoddrOutlinedButton(
+                child: const Text("Downloads"),
+                onPressed: () => context.push("/library/downloads"),
+              ),
+            ],
             bottom: PoddrAppBarOptions(
               title: LayoutBuilder(
                 builder: (layoutContext, constraints) {
-                  if (constraints.maxWidth > 600) {
+                  if (constraints.maxWidth > Breakpoints.tabletScreen) {
                     return Row(
                       children: [
                         Expanded(
@@ -68,26 +84,7 @@ class LatestEpisodesView extends StatelessWidget {
                         PoddrElevatedButton(
                           child: Text(viewModel.sortField),
                           onPressed: () {
-                            showPoddrDialog(
-                              context: context,
-                              builder: (dialogContext) {
-                                return PoddrDialog(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      for (var field in EpisodeSortField.values)
-                                        PoddrListTile(
-                                          title: field.label,
-                                          onTap: () {
-                                            viewModel.setSort(field: field);
-                                            context.pop();
-                                          },
-                                        ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
+                            _showSortDialog(context, viewModel);
                           },
                         ),
                         const SizedBox(width: 8),
@@ -103,69 +100,17 @@ class LatestEpisodesView extends StatelessWidget {
                             );
                           },
                         ),
+                        const SizedBox(width: 8),
+                        _LatestCollectionFilterButton(viewModel: viewModel),
                       ],
                     );
                   } else {
                     return Row(
                       children: [
-                        Expanded(
-                          child: PoddrIconButton(
-                            icon: const Icon(LucideIcons.search),
-                            onPressed: () {
-                              showPoddrDialog(
-                                context: context,
-                                builder: (dialogContext) {
-                                  return PoddrDialog(
-                                    child: PoddrTextInput(
-                                      labelText: "Filter",
-                                      hintText: "Type to filter episodes...",
-                                      onSubmit: (value) {
-                                        viewModel.setFilter(value);
-                                        context.pop();
-                                      },
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                        PoddrElevatedButton(
-                          child: Text(viewModel.sortField),
-                          onPressed: () {
-                            showPoddrDialog(
-                              context: context,
-                              builder: (dialogContext) {
-                                return PoddrDialog(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      for (var field in EpisodeSortField.values)
-                                        PoddrListTile(
-                                          title: field.label,
-                                          onTap: () {
-                                            viewModel.setSort(field: field);
-                                            context.pop();
-                                          },
-                                        ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(width: 8),
                         PoddrIconButton(
-                          icon: viewModel.sortDirection == "Ascending"
-                              ? const Icon(LucideIcons.arrowUp)
-                              : const Icon(LucideIcons.arrowDown),
+                          icon: const Icon(LucideIcons.filter),
                           onPressed: () {
-                            viewModel.setSort(
-                              direction: viewModel.sortDirection == "Ascending"
-                                  ? SortDirection.descending
-                                  : SortDirection.ascending,
-                            );
+                            _showFilterSortDialog(context, viewModel);
                           },
                         ),
                       ],
@@ -229,6 +174,198 @@ class LatestEpisodesView extends StatelessWidget {
                     ],
                   ),
                 ),
+        );
+      },
+    );
+  }
+
+  void _showSortDialog(
+      BuildContext context, LatestEpisodesViewModel viewModel) {
+    showPoddrDialog(
+      context: context,
+      builder: (dialogContext) {
+        return PoddrDialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var field in EpisodeSortField.values)
+                PoddrListTile(
+                  title: field.label,
+                  trailing: viewModel.sortField == field.label
+                      ? const Icon(LucideIcons.check, size: 18)
+                      : null,
+                  onTap: () {
+                    viewModel.setSort(field: field);
+                  },
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showFilterSortDialog(
+      BuildContext context, LatestEpisodesViewModel viewModel) {
+    showPoddrDialog(
+      context: context,
+      builder: (dialogContext) {
+        return ListenableBuilder(
+          listenable: viewModel,
+          builder: (context, child) {
+            return PoddrDialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text("Filter & Sort",
+                      style: dialogContext.theme.textTheme.titleMedium),
+                  gapH16,
+                  PoddrTextInput(
+                    labelText: "Search",
+                    hintText: "Type to filter episodes...",
+                    initialValue: viewModel.filter,
+                    onChanged: (value) {
+                      viewModel.setFilter(value);
+                    },
+                    suffixIcon: viewModel.filter.isNotEmpty
+                        ? PoddrIconButton(
+                            icon: const Icon(LucideIcons.x),
+                            size: 20,
+                            onPressed: () {
+                              viewModel.setFilter('');
+                            },
+                          )
+                        : null,
+                  ),
+                  gapH16,
+                  Text("Sort by",
+                      style: dialogContext.theme.textTheme.titleSmall),
+                  gapH8,
+                  for (var field in EpisodeSortField.values)
+                    PoddrListTile(
+                      title: field.label,
+                      trailing: viewModel.sortField == field.label
+                          ? const Icon(LucideIcons.check, size: 18)
+                          : null,
+                      onTap: () {
+                        viewModel.setSort(field: field);
+                      },
+                    ),
+                  gapH16,
+                  Text("Direction",
+                      style: dialogContext.theme.textTheme.titleSmall),
+                  gapH8,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: viewModel.sortDirection == "Ascending"
+                            ? PoddrFilledButton(
+                                onPressed: () {},
+                                child: const Text("Ascending"),
+                              )
+                            : PoddrOutlinedButton(
+                                onPressed: () {
+                                  viewModel.setSort(
+                                      direction: SortDirection.ascending);
+                                },
+                                child: const Text("Ascending"),
+                              ),
+                      ),
+                      gapW8,
+                      Expanded(
+                        child: viewModel.sortDirection == "Descending"
+                            ? PoddrFilledButton(
+                                onPressed: () {},
+                                child: const Text("Descending"),
+                              )
+                            : PoddrOutlinedButton(
+                                onPressed: () {
+                                  viewModel.setSort(
+                                      direction: SortDirection.descending);
+                                },
+                                child: const Text("Descending"),
+                              ),
+                      ),
+                    ],
+                  ),
+                  gapH16,
+                  Text("Collections",
+                      style: dialogContext.theme.textTheme.titleSmall),
+                  gapH8,
+                  PoddrCollectionFilterList(
+                    selectedCollectionIds: viewModel.selectedCollectionIds,
+                    onCollectionChanged: (ids) {
+                      viewModel.setCollectionFilter(ids);
+                    },
+                  ),
+                  gapH16,
+                  PoddrFilledButton(
+                    child: const Text("Done"),
+                    onPressed: () => Navigator.pop(dialogContext),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _LatestCollectionFilterButton extends StatelessWidget {
+  final LatestEpisodesViewModel viewModel;
+
+  const _LatestCollectionFilterButton({required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: viewModel,
+      builder: (context, child) {
+        final selected = viewModel.selectedCollectionIds;
+        final label = selected.isEmpty
+            ? "All collections"
+            : "${selected.length} collection${selected.length == 1 ? '' : 's'}";
+
+        return PoddrOutlinedButton(
+          child: Text(label),
+          onPressed: () {
+            showPoddrDialog(
+              context: context,
+              builder: (dialogContext) {
+                return ListenableBuilder(
+                  listenable: viewModel,
+                  builder: (context, child) {
+                    return PoddrDialog(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text("Filter by collection",
+                              style: dialogContext.theme.textTheme.titleMedium),
+                          gapH16,
+                          PoddrCollectionFilterList(
+                            selectedCollectionIds:
+                                viewModel.selectedCollectionIds,
+                            onCollectionChanged: (ids) {
+                              viewModel.setCollectionFilter(ids);
+                            },
+                          ),
+                          gapH16,
+                          PoddrFilledButton(
+                            child: const Text("Done"),
+                            onPressed: () => Navigator.pop(dialogContext),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          },
         );
       },
     );

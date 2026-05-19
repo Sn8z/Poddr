@@ -27,4 +27,8 @@ abstract class ICollectionsRepository {
       int subscriptionId);
 
   Stream<List<Podcast>> watchSubscriptionsForCollection(int collectionId);
+ 
+  Future<Map<int, Set<int>>> getAllSubscriptionCollectionPairs();
+
+  Stream<Map<int, Set<int>>> watchAllSubscriptionCollectionPairs();
 }
