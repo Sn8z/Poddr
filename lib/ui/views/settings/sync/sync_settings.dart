@@ -89,16 +89,16 @@ class SyncSection extends StatelessWidget {
                     Text(
                       'Connected',
                       style: context.theme.textTheme.titleMedium.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.primary,
-                          ),
+                        fontWeight: FontWeight.bold,
+                        color: theme.primary,
+                      ),
                     ),
                     gapH4,
                     Text(
                       '${setup.username} @ ${setup.server}',
                       style: context.theme.textTheme.bodyMedium.copyWith(
-                            color: theme.onSurfaceVariant,
-                          ),
+                        color: theme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
@@ -161,7 +161,9 @@ class SyncSection extends StatelessWidget {
         ),
         gapH12,
         PoddrOutlinedButton(
-          onPressed: sync.isLoading ? null : () => _showFullResyncDialog(context, sync),
+          onPressed: sync.isLoading
+              ? null
+              : () => _showFullResyncDialog(context, sync),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -227,7 +229,8 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateDeviceName(value),
           labelText: 'Device Name',
           hintText: 'Poddr',
-          prefixIcon: Icon(LucideIcons.smartphone, color: theme.onSurfaceVariant),
+          prefixIcon:
+              Icon(LucideIcons.smartphone, color: theme.onSurfaceVariant),
         ),
         gapH24,
         PoddrFilledButton(
@@ -358,7 +361,8 @@ class SyncSection extends StatelessWidget {
                       color: context.theme.primary,
                     ),
                     gapW12,
-                    Text('None (don\'t sync)', style: context.theme.textTheme.bodyMedium),
+                    Text('None (don\'t sync)',
+                        style: context.theme.textTheme.bodyMedium),
                   ],
                 ),
               ),
@@ -366,7 +370,8 @@ class SyncSection extends StatelessWidget {
             for (var i = 0; i < groupedDevices.length; i++) ...[
               const PoddrDivider(),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 child: Text(
                   'Sync Group ${i + 1}',
                   style: context.theme.textTheme.labelMedium.copyWith(
@@ -389,7 +394,8 @@ class SyncSection extends StatelessWidget {
                             color: context.theme.primary,
                           ),
                           gapW12,
-                          Text(device['caption'] ?? device['id'] ?? 'Unknown', style: context.theme.textTheme.bodyMedium),
+                          Text(device['caption'] ?? device['id'] ?? 'Unknown',
+                              style: context.theme.textTheme.bodyMedium),
                         ],
                       ),
                     ),
@@ -398,7 +404,8 @@ class SyncSection extends StatelessWidget {
             if (unsyncedDevices.isNotEmpty) ...[
               const PoddrDivider(),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 child: Text(
                   'Unsynced Devices',
                   style: TextStyle(
@@ -421,7 +428,8 @@ class SyncSection extends StatelessWidget {
                             color: context.theme.onSurfaceVariant,
                           ),
                           gapW12,
-                          Text(device['caption'] ?? device['id'] ?? 'Unknown', style: context.theme.textTheme.bodyMedium),
+                          Text(device['caption'] ?? device['id'] ?? 'Unknown',
+                              style: context.theme.textTheme.bodyMedium),
                         ],
                       ),
                     ),
@@ -437,7 +445,8 @@ class SyncSection extends StatelessWidget {
     }
   }
 
-  Future<void> _showFullResyncDialog(BuildContext context, SyncProvider sync) async {
+  Future<void> _showFullResyncDialog(
+      BuildContext context, SyncProvider sync) async {
     final confirmed = await showPoddrDialog<bool>(
       context: context,
       builder: (dialogContext) => PoddrDialog(
@@ -448,8 +457,8 @@ class SyncSection extends StatelessWidget {
             Text(
               'Full Re-Sync',
               style: context.theme.textTheme.titleMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             gapH16,
             Text(

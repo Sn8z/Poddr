@@ -6,9 +6,6 @@ import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/box.dart';
-import 'package:poddr/ui/components/widgets/text_input.dart';
-import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
-import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
@@ -36,10 +33,10 @@ class LibraryView extends StatelessWidget {
         final viewModel = context.watch<LibraryViewModel>();
 
         return PageLayout(
-          header: const PoddrAppBar(title: 'Library'),
-          options: PoddrAppBarOptions(
-            title: Row(
-              children: [
+          header: PoddrAppBar(
+            title: const Text('Library'),
+            bottom: PoddrAppBarOptions(
+              actions: [
                 PoddrOutlinedButton(
                   child: const Text("Latest Episodes"),
                   onPressed: () => context.push("/library/latest"),
@@ -51,31 +48,6 @@ class LibraryView extends StatelessWidget {
                 ),
               ],
             ),
-            actions: [
-              PoddrIconButton(
-                icon: const Icon(LucideIcons.plus),
-                onPressed: () {
-                  showPoddrDialog(
-                      context: context,
-                      builder: (dialogContext) {
-                        return PoddrDialog(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: PoddrTextInput(
-                              hintText: "Input RSS",
-                              onSubmit: (value) {
-                                context
-                                    .read<LibraryViewModel>()
-                                    .addSubscription(rss: value);
-                                context.pop();
-                              },
-                            ),
-                          ),
-                        );
-                      });
-                },
-              )
-            ],
           ),
           child: viewModel.isLoading
               ? const ShimmerLoadingList()

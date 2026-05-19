@@ -42,7 +42,7 @@ class DownloadsView extends StatelessWidget {
 
         return PageLayout(
           header: PoddrAppBar(
-            title: 'Downloads',
+            title: const Text('Downloads'),
             actions: [
               if (downloads.isNotEmpty)
                 PoddrIconButton(
@@ -52,19 +52,16 @@ class DownloadsView extends StatelessWidget {
                   icon: const Icon(LucideIcons.trash),
                 ),
             ],
-          ),
-          options: PoddrAppBarOptions(
-            actions: [
-              PoddrOutlinedButton(
-                child: Text(
-                  "Clear all",
-                  style: context.theme.textTheme.labelLarge,
+            bottom: PoddrAppBarOptions(
+              actions: [
+                PoddrOutlinedButton(
+                  child: Text("Clear all"),
+                  onPressed: () {
+                    _showClearAllDialog(context, viewModel);
+                  },
                 ),
-                onPressed: () {
-                  _showClearAllDialog(context, viewModel);
-                },
-              ),
-            ],
+              ],
+            ),
           ),
           child: viewModel.isLoading
               ? const ShimmerLoadingList()

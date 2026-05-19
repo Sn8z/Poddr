@@ -31,14 +31,16 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageLayout(
-      header: const PoddrAppBar(title: "Settings"),
-      options: PoddrAppBarOptions(
-        actions: [
-          PoddrIconButton(
-            icon: const Icon(LucideIcons.github),
-            onPressed: () {},
-          ),
-        ],
+      header: PoddrAppBar(
+        title: const Text('Settings'),
+        bottom: PoddrAppBarOptions(
+          actions: [
+            PoddrIconButton(
+              icon: const Icon(LucideIcons.github),
+              onPressed: () {},
+            ),
+          ],
+        ),
       ),
       child: SingleChildScrollView(
         child: Column(

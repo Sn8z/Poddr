@@ -8,26 +8,34 @@ import 'package:poddr/ui/views/podcast/podcast_view_model.dart';
 
 class PodcastHeader extends StatelessWidget {
   final PodcastViewModel podcastProvider;
+  final Widget? bottom;
 
-  const PodcastHeader({super.key, required this.podcastProvider});
+  const PodcastHeader({
+    super.key,
+    required this.podcastProvider,
+    this.bottom,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.sizeOf(context).width < Breakpoints.mobileScreen;
     final theme = context.theme;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.brightness == Brightness.dark
-            ? theme.surfaceContainerLow
-            : theme.primaryContainer,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-      ),
-      padding: const EdgeInsets.all(16.0),
-      child: isMobile
+    return Semantics(
+      header: true,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              color: theme.brightness == Brightness.dark
+                  ? theme.surfaceContainerLow
+                  : theme.primaryContainer,
+              padding: const EdgeInsets.all(16.0),
+              child: isMobile
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -117,6 +125,11 @@ class PodcastHeader extends StatelessWidget {
                 ),
               ],
             ),
+            ),
+            if (bottom != null) bottom!,
+          ],
+        ),
+      ),
     );
   }
 }

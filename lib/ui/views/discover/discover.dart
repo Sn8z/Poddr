@@ -36,75 +36,78 @@ class PodcastDiscoveryView extends StatelessWidget {
       create: (_) => DiscoverViewModel(),
       builder: (context, child) {
         return PageLayout(
-          header: const PoddrAppBar(title: "Podcasts"),
-          options: PoddrAppBarOptions(
-            actions: [
-              PoddrOutlinedButton(
-                child: Text(context.watch<DiscoverViewModel>().country,
-                    style: context.theme.textTheme.bodyMedium),
-                onPressed: () {
-                  final discoveryProvider = context.read<DiscoverViewModel>();
+          header: PoddrAppBar(
+            title: const Text('Podcasts'),
+            bottom: PoddrAppBarOptions(
+              actions: [
+                PoddrOutlinedButton(
+                  child: Text(context.watch<DiscoverViewModel>().country),
+                  onPressed: () {
+                    final discoveryProvider = context.read<DiscoverViewModel>();
 
-                  showPoddrDialog(
-                    context: context,
-                    builder: (dialogContext) {
-                      return PoddrDialog(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: discoveryProvider.countries.map((country) {
-                            return GestureDetector(
-                              onTap: () {
-                                discoveryProvider.setCountry(country.code);
-                                Navigator.of(dialogContext).pop();
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                child: Text(country.name,
-                                    style: context.theme.textTheme.bodyMedium),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-              gapW8,
-              PoddrOutlinedButton(
-                child: Text(context.watch<DiscoverViewModel>().genre,
-                    style: context.theme.textTheme.bodyMedium),
-                onPressed: () {
-                  final discoveryProvider = context.read<DiscoverViewModel>();
+                    showPoddrDialog(
+                      context: context,
+                      builder: (dialogContext) {
+                        return PoddrDialog(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children:
+                                discoveryProvider.countries.map((country) {
+                              return GestureDetector(
+                                onTap: () {
+                                  discoveryProvider.setCountry(country.code);
+                                  Navigator.of(dialogContext).pop();
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  child: Text(country.name,
+                                      style:
+                                          context.theme.textTheme.bodyMedium),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+                gapW8,
+                PoddrOutlinedButton(
+                  child: Text(context.watch<DiscoverViewModel>().genre),
+                  onPressed: () {
+                    final discoveryProvider = context.read<DiscoverViewModel>();
 
-                  showPoddrDialog(
-                    context: context,
-                    builder: (dialogContext) {
-                      return PoddrDialog(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: discoveryProvider.genres.map((genre) {
-                            return GestureDetector(
-                              onTap: () {
-                                discoveryProvider.setGenre(genre.id);
-                                Navigator.of(dialogContext).pop();
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                child: Text(genre.name,
-                                    style: context.theme.textTheme.bodyMedium),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
+                    showPoddrDialog(
+                      context: context,
+                      builder: (dialogContext) {
+                        return PoddrDialog(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: discoveryProvider.genres.map((genre) {
+                              return GestureDetector(
+                                onTap: () {
+                                  discoveryProvider.setGenre(genre.id);
+                                  Navigator.of(dialogContext).pop();
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  child: Text(genre.name,
+                                      style:
+                                          context.theme.textTheme.bodyMedium),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
           child: SingleChildScrollView(
             child: Column(

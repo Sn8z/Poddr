@@ -41,8 +41,9 @@ class LatestEpisodesView extends StatelessWidget {
         final viewModel = context.watch<LatestEpisodesViewModel>();
 
         return PageLayout(
-          header: const PoddrAppBar(title: 'Latest Episodes'),
-          options: PoddrAppBarOptions(
+          header: PoddrAppBar(
+            title: const Text('Latest Episodes'),
+            bottom: PoddrAppBarOptions(
             title: LayoutBuilder(
               builder: (layoutContext, constraints) {
                 if (constraints.maxWidth > 600) {
@@ -173,6 +174,7 @@ class LatestEpisodesView extends StatelessWidget {
                 }
               },
             ),
+          ),
           ),
           child: viewModel.episodes.isEmpty
               ? const EmptyState(

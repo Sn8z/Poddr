@@ -14,18 +14,11 @@ class PoddrAppBarOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
     return Container(
-      decoration: BoxDecoration(
-        color: theme.surfaceContainerLow,
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
-        ),
-      ),
-      clipBehavior: Clip.antiAlias,
+      color: theme.surfaceContainerLow,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          if (title != null) Expanded(child: title!),
+          title != null ? Expanded(child: title!) : const Spacer(),
           ...actions,
         ],
       ),

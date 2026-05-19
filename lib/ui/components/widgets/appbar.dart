@@ -9,28 +9,25 @@ class PoddrAppBar extends StatelessWidget {
     this.actions,
   });
 
-  final String title;
+  final Widget title;
   final List<Widget>? actions;
-  final PreferredSizeWidget? bottom;
+  final Widget? bottom;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    return Container(
-      height: 60,
-      decoration: BoxDecoration(
-        color: theme.surfaceContainerHigh,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Padding(
+    return Semantics(
+      header: true,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              color: theme.surfaceContainerHigh,
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 16,
@@ -39,28 +36,20 @@ class PoddrAppBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
-                    child: Text(
-                      title,
+                    child: DefaultTextStyle(
                       style: context.theme.textTheme.titleLarge.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      child: title,
                     ),
                   ),
                   if (actions != null) ...actions!,
                 ],
               ),
             ),
-          ),
-          if (bottom != null)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: bottom!,
-            ),
-        ],
+            if (bottom != null) bottom!,
+          ],
+        ),
       ),
     );
   }

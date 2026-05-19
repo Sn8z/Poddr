@@ -41,23 +41,53 @@ class PodcastDetailsView extends StatelessWidget {
         final podcastProvider = context.watch<PodcastViewModel>();
 
         return PageLayout(
-          header: PodcastHeader(podcastProvider: podcastProvider),
-          options: PoddrAppBarOptions(
-            title: Row(
-              children: [
+          header: PodcastHeader(
+            podcastProvider: podcastProvider,
+            bottom: PoddrAppBarOptions(
+              title: Row(
+                children: [
+                  PoddrIconButton(
+                    onPressed: () {},
+                    icon: const Icon(LucideIcons.list),
+                  ),
+                  PoddrIconButton(
+                    icon: const Icon(LucideIcons.search),
+                    onPressed: () {
+                      showPoddrDialog(
+                        context: context,
+                        builder: (dialogContext) {
+                          return PoddrDialog(
+                            child: PoddrTextInput(
+                              labelText: "Filter",
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                PoddrAddSubscriptionBtn(rss: rss),
                 PoddrIconButton(
-                  onPressed: () {},
-                  icon: const Icon(LucideIcons.list),
-                ),
-                PoddrIconButton(
-                  icon: const Icon(LucideIcons.search),
+                  icon: const Icon(LucideIcons.info),
                   onPressed: () {
                     showPoddrDialog(
                       context: context,
                       builder: (dialogContext) {
                         return PoddrDialog(
-                          child: PoddrTextInput(
-                            labelText: "Filter",
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                podcastProvider.podcast?.title ?? "Podcast",
+                                style: context.theme.textTheme.headlineSmall,
+                              ),
+                              PoddrHTML(
+                                  html:
+                                      podcastProvider.podcast?.description ?? ""),
+                            ],
                           ),
                         );
                       },
@@ -66,34 +96,6 @@ class PodcastDetailsView extends StatelessWidget {
                 ),
               ],
             ),
-            actions: [
-              PoddrAddSubscriptionBtn(rss: rss),
-              PoddrIconButton(
-                icon: const Icon(LucideIcons.info),
-                onPressed: () {
-                  showPoddrDialog(
-                    context: context,
-                    builder: (dialogContext) {
-                      return PoddrDialog(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              podcastProvider.podcast?.title ?? "Podcast",
-                              style: context.theme.textTheme.headlineSmall,
-                            ),
-                            PoddrHTML(
-                                html:
-                                    podcastProvider.podcast?.description ?? ""),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
           ),
           child: podcastProvider.isLoading || podcastProvider.podcast != null
               ? SingleChildScrollView(
