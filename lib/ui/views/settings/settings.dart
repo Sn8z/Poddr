@@ -4,6 +4,7 @@ import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/theme/poddr_theme_data.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
+import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
 import 'package:poddr/ui/views/settings/opml/opml_settings.dart';
 
@@ -31,6 +32,14 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageLayout(
       header: const PoddrAppBar(title: "Settings"),
+      options: PoddrAppBarOptions(
+        actions: [
+          PoddrIconButton(
+            icon: const Icon(LucideIcons.github),
+            onPressed: () {},
+          ),
+        ],
+      ),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -88,7 +97,8 @@ class SettingsView extends StatelessWidget {
                   title: "Paypal",
                   onTap: () {
                     try {
-                      launchUrl(Uri.parse("https://www.paypal.com/paypalme/sn8z"));
+                      launchUrl(
+                          Uri.parse("https://www.paypal.com/paypalme/sn8z"));
                     } catch (e) {
                       error('Error launching URL: $e', name: 'SettingsView');
                     }
@@ -122,7 +132,8 @@ class SettingsView extends StatelessWidget {
                   title: "Issues",
                   onTap: () {
                     try {
-                      launchUrl(Uri.parse("https://github.com/Sn8z/Poddr/issues"));
+                      launchUrl(
+                          Uri.parse("https://github.com/Sn8z/Poddr/issues"));
                     } catch (e) {
                       error('Error launching URL: $e', name: 'SettingsView');
                     }
@@ -138,7 +149,8 @@ class SettingsView extends StatelessWidget {
                     context: context,
                     maxWidth: 500,
                     builder: (dialogContext) {
-                      final contentHeight = MediaQuery.sizeOf(dialogContext).height * 0.7;
+                      final contentHeight =
+                          MediaQuery.sizeOf(dialogContext).height * 0.7;
                       return SizedBox(
                         height: contentHeight,
                         child: Column(
@@ -149,23 +161,29 @@ class SettingsView extends StatelessWidget {
                               children: [
                                 Text(
                                   "Poddr",
-                                  style: dialogContext.theme.textTheme.titleMedium,
+                                  style:
+                                      dialogContext.theme.textTheme.titleMedium,
                                 ),
                                 PoddrIconButton(
                                   icon: const Icon(LucideIcons.x),
-                                  onPressed: () => Navigator.of(dialogContext).pop(),
+                                  onPressed: () =>
+                                      Navigator.of(dialogContext).pop(),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 2),
                             Text(
                               "Version 3.0.0",
-                              style: dialogContext.theme.textTheme.bodyMedium.copyWith(
+                              style: dialogContext.theme.textTheme.bodyMedium
+                                  .copyWith(
                                 color: dialogContext.theme.onSurfaceVariant,
                               ),
                             ),
                             const SizedBox(height: 12),
-                            Container(height: 1, color: dialogContext.theme.outline.withAlpha(50)),
+                            Container(
+                                height: 1,
+                                color:
+                                    dialogContext.theme.outline.withAlpha(50)),
                             const SizedBox(height: 12),
                             Expanded(
                               child: SingleChildScrollView(
@@ -178,7 +196,8 @@ class SettingsView extends StatelessWidget {
                               children: [
                                 PoddrTextButton(
                                   label: "Close",
-                                  onPressed: () => Navigator.of(dialogContext).pop(),
+                                  onPressed: () =>
+                                      Navigator.of(dialogContext).pop(),
                                 ),
                               ],
                             ),

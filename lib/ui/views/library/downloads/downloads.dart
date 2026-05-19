@@ -3,11 +3,13 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/offline.dart';
+import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_confirm_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
@@ -49,6 +51,19 @@ class DownloadsView extends StatelessWidget {
                   },
                   icon: const Icon(LucideIcons.trash),
                 ),
+            ],
+          ),
+          options: PoddrAppBarOptions(
+            actions: [
+              PoddrOutlinedButton(
+                child: Text(
+                  "Clear all",
+                  style: context.theme.textTheme.labelLarge,
+                ),
+                onPressed: () {
+                  _showClearAllDialog(context, viewModel);
+                },
+              ),
             ],
           ),
           child: viewModel.isLoading
