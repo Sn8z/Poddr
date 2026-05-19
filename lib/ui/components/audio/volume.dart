@@ -56,8 +56,8 @@ class VolumeSlider extends StatelessWidget {
 
   IconData _getVolumeIcon(double volume) {
     if (volume == 0) return LucideIcons.volumeX;
-    if (volume <= 33) return LucideIcons.volume1;
-    if (volume <= 66) return LucideIcons.volume2;
-    return LucideIcons.volume;
+    if (volume <= 33) return LucideIcons.volume;
+    if (volume <= 66) return LucideIcons.volume1;
+    return LucideIcons.volume2;
   }
 }
