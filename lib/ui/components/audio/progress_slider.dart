@@ -29,7 +29,7 @@ class MediaProgressSlider extends StatelessWidget {
       max: maxValue,
       trackHeight: 12,
       thumbVisibility: PoddrThumbVisibility.never,
-      trackShape: PoddrTrackShape.flat,
+      trackShape: PoddrTrackShape.rounded,
       onChanged: (double value) {
         context.read<MediaProvider>().seek(
               Duration(

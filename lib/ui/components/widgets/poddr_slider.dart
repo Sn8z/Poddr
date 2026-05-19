@@ -322,57 +322,47 @@ class _SliderPainter extends CustomPainter {
     required this.hasBuffered,
   });
 
-  RRect _makeTrackRect(double x, double width, double centerY, double radius) {
-    if (trackShape == PoddrTrackShape.flat) {
-      return RRect.fromRectAndRadius(
-        Rect.fromLTWH(x, centerY - trackHeight / 2, width, trackHeight),
-        Radius.circular(borderRadius),
-      );
-    }
-    return RRect.fromRectAndRadius(
-      Rect.fromLTWH(x, centerY - trackHeight / 2, width, trackHeight),
-      Radius.circular(borderRadius),
-    );
-  }
-
   @override
   void paint(Canvas canvas, Size size) {
     if (size.width <= 0 || size.height <= 0 || size.width.isNaN || size.height.isNaN) return;
     final centerY = size.height / 2;
+    final trackRect = Rect.fromLTWH(0, centerY - trackHeight / 2, size.width, trackHeight);
 
-    final inactiveRect = _makeTrackRect(0, size.width, centerY, borderRadius);
+    final clipRadius = trackShape == PoddrTrackShape.rounded ? borderRadius : 0.0;
+    final clipRRect = RRect.fromRectAndRadius(trackRect, Radius.circular(clipRadius));
+
+    canvas.save();
+    canvas.clipRRect(clipRRect);
 
     if (inactiveGradient != null) {
       final paint = Paint()
-        ..shader = inactiveGradient!.createShader(
-          Rect.fromLTWH(0, centerY - trackHeight / 2, size.width, trackHeight),
-        );
-      canvas.drawRRect(inactiveRect, paint);
+        ..shader = inactiveGradient!.createShader(trackRect);
+      canvas.drawRect(trackRect, paint);
     } else {
       final inactivePaint = Paint()..color = inactiveColor;
-      canvas.drawRRect(inactiveRect, inactivePaint);
+      canvas.drawRect(trackRect, inactivePaint);
     }
 
     if (hasBuffered && bufferedFraction > 0) {
       final bufferedWidth = size.width * bufferedFraction;
-      final bufferedRect = _makeTrackRect(0, bufferedWidth, centerY, borderRadius);
+      final bufferedRect = Rect.fromLTWH(0, centerY - trackHeight / 2, bufferedWidth, trackHeight);
       final bufferedPaint = Paint()..color = bufferedColor;
-      canvas.drawRRect(bufferedRect, bufferedPaint);
+      canvas.drawRect(bufferedRect, bufferedPaint);
     }
 
     final activeWidth = size.width * fraction;
-    final activeRect = _makeTrackRect(0, activeWidth, centerY, borderRadius);
+    final activeRect = Rect.fromLTWH(0, centerY - trackHeight / 2, activeWidth, trackHeight);
 
     if (activeGradient != null) {
       final paint = Paint()
-        ..shader = activeGradient!.createShader(
-          Rect.fromLTWH(0, centerY - trackHeight / 2, activeWidth, trackHeight),
-        );
-      canvas.drawRRect(activeRect, paint);
+        ..shader = activeGradient!.createShader(activeRect);
+      canvas.drawRect(activeRect, paint);
     } else {
       final activePaint = Paint()..color = activeColor;
-      canvas.drawRRect(activeRect, activePaint);
+      canvas.drawRect(activeRect, activePaint);
     }
+
+    canvas.restore();
 
     if (showThumb) {
       final thumbX = activeWidth;
