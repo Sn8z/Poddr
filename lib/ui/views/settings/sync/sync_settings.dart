@@ -104,7 +104,7 @@ class SyncSection extends StatelessWidget {
                 ),
               ),
               PoddrIconButton(
-                icon: const Icon(LucideIcons.refreshCw, size: 20),
+                icon: const Icon(LucideIcons.refreshCw),
                 onPressed: sync.isLoading ? null : () => sync.syncNow(),
               ),
             ],
@@ -150,7 +150,7 @@ class SyncSection extends StatelessWidget {
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(LucideIcons.link2Off, size: 18),
+                    Icon(LucideIcons.link2Off),
                     SizedBox(width: 8),
                     Text('Disconnect'),
                   ],
@@ -165,7 +165,7 @@ class SyncSection extends StatelessWidget {
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(LucideIcons.refreshCw, size: 18),
+              Icon(LucideIcons.refreshCw),
               SizedBox(width: 8),
               Text('Full Re-Sync'),
             ],
@@ -216,7 +216,6 @@ class SyncSection extends StatelessWidget {
           suffixIcon: PoddrIconButton(
             icon: Icon(
               setup.showPassword ? LucideIcons.eyeOff : LucideIcons.eye,
-              color: theme.primary,
             ),
             onPressed: () => setup.togglePasswordVisibility(),
             padding: 2.0,
@@ -257,7 +256,7 @@ class SyncSection extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
               ] else
-                const Icon(LucideIcons.link, size: 18),
+                const Icon(LucideIcons.link),
               if (sync.isLoading) const SizedBox(width: 8),
               Text(sync.isLoading ? 'Connecting...' : 'Connect'),
             ],
@@ -359,7 +358,7 @@ class SyncSection extends StatelessWidget {
                       color: context.theme.primary,
                     ),
                     gapW12,
-                    const Text('None (don\'t sync)'),
+                    Text('None (don\'t sync)', style: context.theme.textTheme.bodyMedium),
                   ],
                 ),
               ),
@@ -370,10 +369,8 @@ class SyncSection extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 child: Text(
                   'Sync Group ${i + 1}',
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: context.theme.textTheme.labelMedium.copyWith(
                     color: context.theme.primary,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
@@ -392,7 +389,7 @@ class SyncSection extends StatelessWidget {
                             color: context.theme.primary,
                           ),
                           gapW12,
-                          Text(device['caption'] ?? device['id'] ?? 'Unknown'),
+                          Text(device['caption'] ?? device['id'] ?? 'Unknown', style: context.theme.textTheme.bodyMedium),
                         ],
                       ),
                     ),
@@ -424,7 +421,7 @@ class SyncSection extends StatelessWidget {
                             color: context.theme.onSurfaceVariant,
                           ),
                           gapW12,
-                          Text(device['caption'] ?? device['id'] ?? 'Unknown'),
+                          Text(device['caption'] ?? device['id'] ?? 'Unknown', style: context.theme.textTheme.bodyMedium),
                         ],
                       ),
                     ),
@@ -461,6 +458,7 @@ class SyncSection extends StatelessWidget {
               '• Pull all current server subscriptions and episode history\n'
               '• Preserve all local subscriptions\n'
               '• Set sync timestamps to current time (only new data fetched next sync)',
+              style: context.theme.textTheme.bodyMedium,
             ),
             gapH20,
             Row(

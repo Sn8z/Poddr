@@ -56,7 +56,7 @@ class _CollectionsView extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(16),
             child: Center(
-              child: Text('Error: ${snapshot.error}'),
+              child: Text('Error: ${snapshot.error}', style: context.theme.textTheme.bodyMedium.copyWith(color: context.theme.error)),
             ),
           );
         }
@@ -71,7 +71,7 @@ class _CollectionsView extends StatelessWidget {
                 child: Text(
                   'No collections yet. Create one to organize your podcasts!',
                   textAlign: TextAlign.start,
-                  style: TextStyle(
+                  style: context.theme.textTheme.bodyLarge.copyWith(
                     color: context.theme.onSurfaceVariant,
                   ),
                 ),

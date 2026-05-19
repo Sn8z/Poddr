@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/poddr_slider.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/utils/gaps.dart';
@@ -118,8 +119,7 @@ class _HsvColorPickerState extends State<HsvColorPicker> {
           foregroundColor: textColor,
           prefixIcon: Text(
             '#',
-            style: TextStyle(
-              fontSize: 16,
+            style: context.theme.textTheme.titleMedium.copyWith(
               fontWeight: FontWeight.bold,
               color: textColor,
             ),

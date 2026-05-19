@@ -152,7 +152,7 @@ class SettingsView extends StatelessWidget {
                                   style: dialogContext.theme.textTheme.titleMedium,
                                 ),
                                 PoddrIconButton(
-                                  icon: const Icon(LucideIcons.x, size: 18),
+                                  icon: const Icon(LucideIcons.x),
                                   onPressed: () => Navigator.of(dialogContext).pop(),
                                 ),
                               ],
@@ -278,9 +278,8 @@ class ThemeBox extends StatelessWidget {
               ),
               Text(
                 title,
-                style: TextStyle(
+                style: context.theme.textTheme.titleMedium.copyWith(
                   color: iconColor,
-                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -11,6 +11,7 @@ import 'package:poddr/ui/views/library/downloads/downloads.dart';
 import 'package:poddr/ui/views/library/latest/latest.dart';
 import 'package:poddr/ui/views/search/search.dart';
 import 'package:poddr/ui/views/settings/settings.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 
 final _rootNavKey = GlobalKey<NavigatorState>(debugLabel: 'Root navigation');
@@ -41,13 +42,14 @@ abstract class PoddrRouter {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 LucideIcons.alertCircle,
                 size: 64,
-                color: Color(0xFFAA3333),
+                color: context.theme.error,
               ),
               const SizedBox(height: 16),
-              Text('Page not found: ${state.uri.path}'),
+              Text('Page not found: ${state.uri.path}',
+                  style: context.theme.textTheme.bodyLarge),
               const SizedBox(height: 16),
               PoddrFilledButton(
                 onPressed: () => context.go('/podcasts'),

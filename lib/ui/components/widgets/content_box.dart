@@ -41,20 +41,16 @@ class ContentBox extends StatelessWidget {
                     if (title != null)
                       Text(
                         title ?? '',
-                        style: TextStyle(
-                          color: context.theme.primary,
-                          fontSize: 16,
+                        style: context.theme.textTheme.titleMedium.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: context.theme.primary,
                         ),
                       ),
                     if (subtitle != null)
                       Text(
                         subtitle ?? '',
-                        style: TextStyle(
-                          color:
-                              context.theme.onSurfaceVariant,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                        style: context.theme.textTheme.labelMedium.copyWith(
+                          color: context.theme.onSurfaceVariant,
                         ),
                       ),
                   ],

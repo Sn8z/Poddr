@@ -19,7 +19,7 @@ class PoddrIconButton extends StatefulWidget {
     required this.icon,
     required this.onPressed,
     this.onLongPress,
-    this.size = 26,
+    this.size = 20,
     this.iconSize,
     this.padding,
     this.color,

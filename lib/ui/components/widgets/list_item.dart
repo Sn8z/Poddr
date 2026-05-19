@@ -97,9 +97,7 @@ class _PoddrListItemState extends State<PoddrListItem> {
                           Text(
                             widget.subtitle!,
                             maxLines: 1,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12,
+                            style: context.theme.textTheme.labelMedium.copyWith(
                               color: context.theme.onSurfaceVariant,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -108,10 +106,7 @@ class _PoddrListItemState extends State<PoddrListItem> {
                           Text(
                             widget.title!,
                             maxLines: 2,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: context.theme.onSurface,
+                            style: context.theme.textTheme.titleSmall.copyWith(
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

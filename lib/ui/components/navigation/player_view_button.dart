@@ -16,10 +16,7 @@ class PlayerViewButton extends StatelessWidget {
       onPressed: () {
         context.push('/player');
       },
-      icon: Icon(
-        LucideIcons.monitor,
-        size: size,
-      ),
+      icon: const Icon(LucideIcons.monitorPlay),
       size: size,
     );
   }

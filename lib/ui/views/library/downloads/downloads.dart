@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/offline.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
@@ -97,6 +98,7 @@ class DownloadsView extends StatelessWidget {
                                       convertDurationToString(
                                         Duration(seconds: download.duration),
                                       ),
+                                      style: context.theme.textTheme.bodySmall,
                                     ),
                                     EpisodeHistoryCircle(
                                         audioUrl: download.audioUrl),

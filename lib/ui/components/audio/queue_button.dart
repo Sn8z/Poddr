@@ -20,10 +20,7 @@ class QueueButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PoddrIconButton(
-      icon: Icon(
-        LucideIcons.music,
-        size: size,
-      ),
+      icon: const Icon(LucideIcons.music),
       onPressed: () {
         showPoddrDialog(
           context: context,

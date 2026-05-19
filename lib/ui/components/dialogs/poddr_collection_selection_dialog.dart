@@ -38,8 +38,9 @@ class PoddrCollectionSelectionDialog extends StatelessWidget {
                 }
                 final allCollections = snapshot.data ?? [];
                 if (allCollections.isEmpty) {
-                  return const Text(
-                      'No collections found. Create one in settings.');
+                  return Text(
+                      'No collections found. Create one in settings.',
+                      style: context.theme.textTheme.bodyMedium);
                 }
                 return StreamBuilder<List<PodcastCollection>>(
                   stream: collectionsProvider

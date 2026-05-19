@@ -13,10 +13,7 @@ class DurationText extends StatelessWidget {
         context.select<MediaProvider, Duration>((e) => e.duration);
     return Text(
       convertDurationToString(duration),
-      style: TextStyle(
-        color: context.theme.onSurface,
-        fontSize: 14,
-      ),
+      style: context.theme.textTheme.labelMedium,
     );
   }
 }

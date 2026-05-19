@@ -10,12 +10,14 @@ class PoddrThemeData {
   final PoddrColors colors;
   final PoddrTextTheme textTheme;
   final String fontFamily;
+  final IconThemeData iconTheme;
 
   const PoddrThemeData({
     required this.brightness,
     required this.colors,
     required this.textTheme,
     this.fontFamily = 'Outfit',
+    this.iconTheme = const IconThemeData(size: 20),
   });
 
   factory PoddrThemeData.light(Color seedColor, {String fontFamily = 'Outfit'}) {
@@ -25,6 +27,7 @@ class PoddrThemeData {
       colors: colors,
       textTheme: PoddrTextTheme.light(fontFamily: fontFamily),
       fontFamily: fontFamily,
+      iconTheme: IconThemeData(color: colors.onSurface, size: 20),
     );
   }
 
@@ -35,6 +38,7 @@ class PoddrThemeData {
       colors: colors,
       textTheme: PoddrTextTheme.dark(fontFamily: fontFamily),
       fontFamily: fontFamily,
+      iconTheme: IconThemeData(color: colors.onSurface, size: 20),
     );
   }
 
@@ -71,12 +75,14 @@ class PoddrThemeData {
     PoddrColors? colors,
     PoddrTextTheme? textTheme,
     String? fontFamily,
+    IconThemeData? iconTheme,
   }) {
     return PoddrThemeData(
       brightness: brightness ?? this.brightness,
       colors: colors ?? this.colors,
       textTheme: textTheme ?? this.textTheme,
       fontFamily: fontFamily ?? this.fontFamily,
+      iconTheme: iconTheme ?? this.iconTheme,
     );
   }
 
@@ -87,11 +93,12 @@ class PoddrThemeData {
         other.brightness == brightness &&
         other.colors == colors &&
         other.textTheme == textTheme &&
-        other.fontFamily == fontFamily;
+        other.fontFamily == fontFamily &&
+        other.iconTheme == iconTheme;
   }
 
   @override
   int get hashCode {
-    return Object.hash(brightness, colors, textTheme, fontFamily);
+    return Object.hash(brightness, colors, textTheme, fontFamily, iconTheme);
   }
 }

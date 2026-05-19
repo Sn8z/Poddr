@@ -171,7 +171,7 @@ class _PoddrTextInputState extends State<PoddrTextInput> {
               label: widget.labelText,
               child: Text(
                 widget.labelText!,
-                style: TextStyle(
+                style: theme.textTheme.bodyMedium.copyWith(
                   fontSize: effectiveFontSize,
                   color:
                       widget.enabled ? theme.onSurface : theme.onSurfaceVariant,
@@ -261,9 +261,8 @@ class _PoddrTextInputState extends State<PoddrTextInput> {
             const SizedBox(height: 4),
             Text(
               _displayError!,
-              style: TextStyle(
+              style: theme.textTheme.bodySmall.copyWith(
                 color: theme.error,
-                fontSize: 12,
               ),
             ),
           ],
@@ -321,7 +320,7 @@ class _EditableTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final textStyle = TextStyle(
+    final textStyle = theme.textTheme.bodyLarge.copyWith(
       color: foregroundColor ?? (enabled ? theme.onSurface : theme.onSurfaceVariant),
       fontSize: fontSize,
     );

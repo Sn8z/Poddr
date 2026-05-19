@@ -49,9 +49,8 @@ class PodcastHeader extends StatelessWidget {
                 gapH8,
                 Text(
                   podcastProvider.podcast?.title ?? "",
-                  style: TextStyle(
+                  style: theme.textTheme.titleLarge.copyWith(
                     overflow: TextOverflow.ellipsis,
-                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: theme.primary,
                   ),
@@ -59,10 +58,8 @@ class PodcastHeader extends StatelessWidget {
                 gapH8,
                 Text(
                   podcastProvider.podcast?.author ?? "",
-                  style: TextStyle(
+                  style: theme.textTheme.titleSmall.copyWith(
                     overflow: TextOverflow.ellipsis,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
                     color: theme.onSurfaceVariant,
                   ),
                 ),
@@ -92,9 +89,8 @@ class PodcastHeader extends StatelessWidget {
                     children: [
                       Text(
                         podcastProvider.podcast?.title ?? "",
-                        style: TextStyle(
+                        style: theme.textTheme.displaySmall.copyWith(
                           overflow: TextOverflow.ellipsis,
-                          fontSize: 40,
                           fontWeight: FontWeight.bold,
                           color: theme.primary,
                         ),
@@ -102,19 +98,16 @@ class PodcastHeader extends StatelessWidget {
                       gapH8,
                       Text(
                         podcastProvider.podcast?.author ?? "",
-                        style: TextStyle(
+                        style: theme.textTheme.titleLarge.copyWith(
                           overflow: TextOverflow.ellipsis,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
                           color: theme.onSurfaceVariant,
                         ),
                       ),
                       gapH8,
                       Text(
                         "${podcastProvider.podcast?.episodes.length ?? 0} Episodes",
-                        style: TextStyle(
+                        style: theme.textTheme.labelMedium.copyWith(
                           overflow: TextOverflow.ellipsis,
-                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: theme.secondary,
                         ),

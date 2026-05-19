@@ -13,10 +13,7 @@ class PositionText extends StatelessWidget {
         context.select<MediaProvider, Duration>((e) => e.position);
     return Text(
       convertDurationToString(position),
-      style: TextStyle(
-        color: context.theme.onSurface,
-        fontSize: 14,
-      ),
+      style: context.theme.textTheme.labelMedium,
     );
   }
 }

@@ -41,9 +41,7 @@ class PoddrAppBar extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: TextStyle(
-                        color: theme.onSurface,
-                        fontSize: 20,
+                      style: context.theme.textTheme.titleLarge.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                       maxLines: 1,

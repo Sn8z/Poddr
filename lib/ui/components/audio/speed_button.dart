@@ -78,9 +78,7 @@ class SpeedButton extends StatelessWidget {
         "${context.select<MediaProvider, double>(
           (mediaProvider) => mediaProvider.speed,
         )}x",
-        style: TextStyle(
-          fontSize: size * 0.6,
-          color: context.theme.onSurface,
+        style: context.theme.textTheme.labelLarge.copyWith(
           fontWeight: FontWeight.bold,
         ),
       ),

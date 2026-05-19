@@ -24,7 +24,7 @@ class RepeatButton extends StatelessWidget {
         icon = LucideIcons.repeat;
         break;
       case AudioServiceRepeatMode.one:
-        icon = LucideIcons.repeat;
+        icon = LucideIcons.repeat1;
         break;
       case AudioServiceRepeatMode.all:
         icon = LucideIcons.repeat;

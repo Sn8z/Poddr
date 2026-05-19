@@ -88,6 +88,7 @@ class _PoddrFilledButtonState extends State<PoddrFilledButton> {
                   color: fgColor.withAlpha(_enabled ? 255 : 128),
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
+                  fontFamily: 'Outfit',
                 ),
                 child: IconTheme(
                   data: IconThemeData(
@@ -201,6 +202,7 @@ class _PoddrElevatedButtonState extends State<PoddrElevatedButton> {
                   color: fgColor.withAlpha(_enabled ? 255 : 128),
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
+                  fontFamily: 'Outfit',
                 ),
                 child: IconTheme(
                   data: IconThemeData(
@@ -311,6 +313,7 @@ class _PoddrOutlinedButtonState extends State<PoddrOutlinedButton> {
                   color: fgColor.withAlpha(_enabled ? 255 : 128),
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
+                  fontFamily: 'Outfit',
                 ),
                 child: IconTheme(
                   data: IconThemeData(
@@ -408,6 +411,7 @@ class _PoddrTextButtonState extends State<PoddrTextButton> {
                   color: textColor,
                   fontWeight: FontWeight.w500,
                   fontSize: 14,
+                  fontFamily: 'Outfit',
                 ),
               ),
             ),

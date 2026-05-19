@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/collection.dart';
 
 class PoddrCollectionChip extends StatelessWidget {
@@ -16,10 +17,9 @@ class PoddrCollectionChip extends StatelessWidget {
       ),
       child: Text(
         collection.name,
-        style: const TextStyle(
-          fontSize: 12,
+        style: context.theme.textTheme.labelMedium.copyWith(
           fontWeight: FontWeight.bold,
-          color: Color.fromARGB(255, 255, 255, 255),
+          color: context.theme.onPrimary,
         ),
       ),
     );

@@ -38,11 +38,7 @@ class MediaDisplay extends StatelessWidget {
                             color: const Color(0x8A000000),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(
-                            LucideIcons.maximize,
-                            color: Color(0xFFFFFFFF),
-                            size: 20,
-                          ),
+                          child: Icon(LucideIcons.maximize),
                         ),
                       ),
                     ),

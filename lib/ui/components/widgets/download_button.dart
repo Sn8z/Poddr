@@ -44,7 +44,7 @@ class DownloadButton extends StatelessWidget {
               onPressed: () {
                 offlineProvider.cancelDownload(episode.audioUrl);
               },
-              icon: const Icon(LucideIcons.x, size: 14),
+              icon: const Icon(LucideIcons.x),
               size: 14,
             ),
           ],
@@ -61,7 +61,7 @@ class DownloadButton extends StatelessWidget {
             onPressed: () {
               offlineProvider.cancelDownload(episode.audioUrl);
             },
-            icon: const Icon(LucideIcons.clock, size: 14),
+            icon: const Icon(LucideIcons.clock),
             size: 14,
           ),
           if (queuePosition > 0)
@@ -77,9 +77,8 @@ class DownloadButton extends StatelessWidget {
                 constraints: const BoxConstraints(minWidth: 10, minHeight: 10),
                 child: Text(
                   '$queuePosition',
-                  style: TextStyle(
+                  style: context.theme.textTheme.labelSmall.copyWith(
                     color: context.theme.onPrimary,
-                    fontSize: 8,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -94,10 +93,7 @@ class DownloadButton extends StatelessWidget {
         onPressed: () {
           offlineProvider.remove(episode.audioUrl);
         },
-        icon: Icon(
-          LucideIcons.trash,
-          size: iconSize,
-        ),
+        icon: const Icon(LucideIcons.trash),
         size: iconSize,
       );
     }
@@ -106,10 +102,7 @@ class DownloadButton extends StatelessWidget {
       onPressed: () {
         offlineProvider.download(episode);
       },
-      icon: Icon(
-        LucideIcons.download,
-        size: iconSize,
-      ),
+      icon: const Icon(LucideIcons.download),
       size: iconSize,
     );
   }

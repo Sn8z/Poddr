@@ -33,9 +33,8 @@ class _PoddrLicenseViewState extends State<PoddrLicenseView> {
         if (licenses.isEmpty) {
           return Text(
             "No license information available.",
-            style: TextStyle(
+            style: context.theme.textTheme.bodyMedium.copyWith(
               color: context.theme.onSurfaceVariant,
-              fontSize: 14,
             ),
           );
         }
@@ -89,10 +88,8 @@ class _LicenseCard extends StatelessWidget {
         children: [
           Text(
             entry.packages.join(', '),
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: theme.onSurface,
+            style: theme.textTheme.titleMedium.copyWith(
+              fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 6),
@@ -107,9 +104,7 @@ class _LicenseCard extends StatelessWidget {
                 textAlign: paragraph.indent == LicenseParagraph.centeredIndent
                     ? TextAlign.center
                     : TextAlign.start,
-                style: TextStyle(
-                  fontSize: 13,
-                  height: 1.4,
+                style: theme.textTheme.bodyMedium.copyWith(
                   color: theme.onSurfaceVariant,
                 ),
               ),

@@ -149,7 +149,7 @@ class PoddrSideBarItem extends StatelessWidget {
                 const SizedBox(width: 16),
                 Text(
                   title,
-                  style: TextStyle(
+                  style: context.theme.textTheme.labelLarge.copyWith(
                     color: status == SideBarItemStatus.selected
                         ? context.theme.secondary
                         : context.theme.onSurface,

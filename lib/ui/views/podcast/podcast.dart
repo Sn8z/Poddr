@@ -196,19 +196,16 @@ class Episode extends StatelessWidget {
             episode.duration,
           ),
           maxLines: 1,
-          style: TextStyle(
+          style: context.theme.textTheme.labelMedium.copyWith(
             color: isCurrentEpisode
                 ? context.theme.onSurface
                 : context.theme.onSurfaceVariant,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         PoddrIconButton(
           icon: const Icon(
             LucideIcons.info,
-            size: 24,
           ),
           onPressed: () {
             showPoddrDialog(
@@ -248,7 +245,6 @@ class Episode extends StatelessWidget {
           },
           icon: const Icon(
             LucideIcons.listMusic,
-            size: 24,
           ),
         ),
         EpisodeHistoryCircle(

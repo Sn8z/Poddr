@@ -6,6 +6,7 @@ import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
@@ -38,8 +39,9 @@ class PodcastDiscoveryView extends StatelessWidget {
           header: const PoddrAppBar(title: "Podcasts"),
           options: PoddrAppBarOptions(
             actions: [
-              PoddrIconButton(
-                icon: Text(context.watch<DiscoverViewModel>().country),
+              PoddrOutlinedButton(
+                child: Text(context.watch<DiscoverViewModel>().country,
+                    style: context.theme.textTheme.bodyMedium),
                 onPressed: () {
                   final discoveryProvider = context.read<DiscoverViewModel>();
 
@@ -58,7 +60,8 @@ class PodcastDiscoveryView extends StatelessWidget {
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
-                                child: Text(country.name),
+                                child: Text(country.name,
+                                    style: context.theme.textTheme.bodyMedium),
                               ),
                             );
                           }).toList(),
@@ -68,8 +71,10 @@ class PodcastDiscoveryView extends StatelessWidget {
                   );
                 },
               ),
-              PoddrIconButton(
-                icon: Text(context.watch<DiscoverViewModel>().genre),
+              gapW8,
+              PoddrOutlinedButton(
+                child: Text(context.watch<DiscoverViewModel>().genre,
+                    style: context.theme.textTheme.bodyMedium),
                 onPressed: () {
                   final discoveryProvider = context.read<DiscoverViewModel>();
 
@@ -88,7 +93,8 @@ class PodcastDiscoveryView extends StatelessWidget {
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
-                                child: Text(genre.name),
+                                child: Text(genre.name,
+                                    style: context.theme.textTheme.bodyMedium),
                               ),
                             );
                           }).toList(),
@@ -159,9 +165,7 @@ class LatestEpisodes extends StatelessWidget {
         else if (subscriptionProvider.latestEpisodes.isEmpty)
           Text(
             "No episodes available",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.normal,
+            style: context.theme.textTheme.bodyLarge.copyWith(
               color: context.theme.onSurfaceVariant,
             ),
           )
