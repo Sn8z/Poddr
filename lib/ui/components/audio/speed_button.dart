@@ -80,6 +80,7 @@ class SpeedButton extends StatelessWidget {
         )}x",
         style: context.theme.textTheme.labelLarge.copyWith(
           fontWeight: FontWeight.bold,
+          color: context.theme.secondary,
         ),
       ),
       size: size,

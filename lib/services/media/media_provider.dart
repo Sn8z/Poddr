@@ -44,6 +44,8 @@ class MediaProvider extends ChangeNotifier {
   double _volume = 56.0;
   double get volume => _volume;
 
+  double? _previousVolume;
+
   double get speed => _mediaHandler.playbackState.value.speed;
 
   Duration _position = Duration.zero;
@@ -171,6 +173,15 @@ class MediaProvider extends ChangeNotifier {
   void seek(Duration position) async => await _mediaHandler.seek(position);
 
   void setVolume(double volume) async => await _mediaHandler.setVolume(volume);
+
+  void toggleMute() {
+    if (_volume > 0) {
+      _previousVolume = _volume;
+      setVolume(0);
+    } else {
+      setVolume(_previousVolume ?? 100.0);
+    }
+  }
 
   void increaseVolume([double amount = 5]) {
     final newVolume = (_volume + amount);

@@ -12,7 +12,7 @@ class PoddrAddSubscriptionBtn extends StatelessWidget {
   const PoddrAddSubscriptionBtn({
     super.key,
     this.rss,
-    this.size = 26,
+    this.size = 20,
   });
 
   @override
@@ -27,7 +27,7 @@ class PoddrAddSubscriptionBtn extends StatelessWidget {
         isSubscription ? LucideIcons.heart : LucideIcons.heartOff,
         size: size,
         color: isSubscription
-            ? context.theme.primary
+            ? context.theme.secondary
             : context.theme.onSurfaceVariant,
       ),
       onPressed: () {

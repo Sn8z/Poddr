@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/ui/components/widgets/poddr_slider.dart';
@@ -22,12 +23,17 @@ class VolumeSlider extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          _getVolumeIcon(volume),
-          color: context.theme.onSurface,
-          size: size,
+        PoddrIconButton(
+          icon: switch (volume.round()) {
+            <= 0 => Icon(LucideIcons.volumeX, color: context.theme.error),
+            <= 33 => Icon(LucideIcons.volume, color: context.theme.secondary),
+            <= 66 => Icon(LucideIcons.volume1, color: context.theme.secondary),
+            _ => Icon(LucideIcons.volume2, color: context.theme.secondary),
+          },
+          onPressed: () {
+            mediaProvider.toggleMute();
+          },
         ),
-        const SizedBox(width: 8),
         SizedBox(
           width: 160,
           child: Listener(
@@ -52,12 +58,5 @@ class VolumeSlider extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  IconData _getVolumeIcon(double volume) {
-    if (volume == 0) return LucideIcons.volumeX;
-    if (volume <= 33) return LucideIcons.volume;
-    if (volume <= 66) return LucideIcons.volume1;
-    return LucideIcons.volume2;
   }
 }

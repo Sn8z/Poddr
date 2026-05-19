@@ -53,7 +53,7 @@ class _PoddrIconButtonState extends State<PoddrIconButton> {
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final baseColor = widget.color ?? theme.primary;
+    final baseColor = widget.color ?? theme.secondary;
     final hoverBg = widget.hoverColor ?? baseColor.withAlpha(26);
     final pressBg = widget.pressColor ?? baseColor.withAlpha(51);
 

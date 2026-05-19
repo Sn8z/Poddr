@@ -7,7 +7,7 @@ class PlayerViewButton extends StatelessWidget {
   final double size;
   const PlayerViewButton({
     super.key,
-    this.size = 26,
+    this.size = 20,
   });
 
   @override
