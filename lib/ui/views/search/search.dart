@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
+import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
@@ -27,15 +28,10 @@ class SearchView extends StatelessWidget {
         final searchResults = searchProvider.searchResults;
 
         return PageLayout(
-          header: Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              color: context.theme.surfaceContainerHigh,
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
-            ),
-            child: PoddrTextInput(
+          header: PoddrAppBar(
+            title: PoddrTextInput(
               hintText: 'Search',
-              fontSize: 18,
+              fontSize: 16,
               onSubmit: (value) {
                 searchProvider.searchPodcast(value);
               },
@@ -88,5 +84,3 @@ class SearchView extends StatelessWidget {
     );
   }
 }
-
-
