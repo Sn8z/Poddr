@@ -36,7 +36,9 @@ class PoddrSideBar extends StatelessWidget {
           height: double.infinity,
           decoration: BoxDecoration(
             color: context.theme.surfaceContainer,
-            borderRadius: const BorderRadius.all(Radius.circular(16)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(16),
+            ),
           ),
           clipBehavior: Clip.antiAlias,
           child: Column(
@@ -65,9 +67,9 @@ class PoddrSideBar extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: AspectRatio(
-                  aspectRatio: 1.0, // 1:1 aspect ratio
+                  aspectRatio: 1.0,
                   child: Container(
-                    clipBehavior: Clip.antiAlias,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(
                         Radius.circular(8),
@@ -133,6 +135,14 @@ class PoddrSideBarItem extends StatelessWidget {
             color: status == SideBarItemStatus.selected
                 ? context.theme.surfaceContainerHigh
                 : const Color(0x00000000),
+            gradient: LinearGradient(
+              colors: [
+                context.theme.primary.withAlpha(50),
+                context.theme.primary.withAlpha(10),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
           child: Row(
             mainAxisAlignment: shouldExpand
@@ -142,8 +152,8 @@ class PoddrSideBarItem extends StatelessWidget {
               Icon(
                 status == SideBarItemStatus.selected ? selectedIcon : icon,
                 color: status == SideBarItemStatus.selected
-                    ? context.theme.primary
-                    : context.theme.secondary,
+                    ? context.theme.secondary
+                    : context.theme.primary,
               ),
               if (shouldExpand) ...[
                 const SizedBox(width: 16),

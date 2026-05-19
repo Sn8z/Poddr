@@ -65,11 +65,22 @@ class _PoddrListItemState extends State<PoddrListItem> {
             curve: Curves.easeInOut,
             padding: const EdgeInsets.all(8),
             margin: const EdgeInsets.all(8),
+            clipBehavior: Clip.antiAliasWithSaveLayer,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: _isHovered || _isFocused || widget.isActive
                   ? context.theme.surfaceContainerHigh
                   : context.theme.surfaceContainer,
+              gradient: widget.isActive
+                  ? LinearGradient(
+                      colors: [
+                        context.theme.primary.withAlpha(50),
+                        context.theme.primary.withAlpha(10),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
+                  : null,
               border: Border(
                 left: BorderSide(
                     width: 8,

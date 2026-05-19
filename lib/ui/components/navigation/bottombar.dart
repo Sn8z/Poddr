@@ -78,7 +78,6 @@ class PoddrBottomBarItem extends StatelessWidget {
         child: Container(
           height: double.infinity,
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
@@ -91,6 +90,14 @@ class PoddrBottomBarItem extends StatelessWidget {
             color: status == BottomBarItemStatus.selected
                 ? context.theme.surfaceContainerHigh
                 : const Color(0x00000000),
+            gradient: LinearGradient(
+              colors: [
+                context.theme.primary.withAlpha(50),
+                context.theme.primary.withAlpha(10),
+              ],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -99,7 +106,7 @@ class PoddrBottomBarItem extends StatelessWidget {
               Icon(
                 status == BottomBarItemStatus.selected ? selectedIcon : icon,
                 color: status == BottomBarItemStatus.selected
-                    ? context.theme.onSurfaceVariant
+                    ? context.theme.secondary
                     : context.theme.onSurface,
               ),
             ],

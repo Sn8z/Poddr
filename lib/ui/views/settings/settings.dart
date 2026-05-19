@@ -4,7 +4,6 @@ import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/theme/poddr_theme_data.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
-import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
 import 'package:poddr/ui/views/settings/opml/opml_settings.dart';
 
@@ -33,14 +32,6 @@ class SettingsView extends StatelessWidget {
     return PageLayout(
       header: PoddrAppBar(
         title: const Text('Settings'),
-        bottom: PoddrAppBarOptions(
-          actions: [
-            PoddrIconButton(
-              icon: const Icon(LucideIcons.github),
-              onPressed: () {},
-            ),
-          ],
-        ),
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -83,7 +74,7 @@ class SettingsView extends StatelessWidget {
               children: [
                 PoddrListItem(
                   leading: Icon(
-                    LucideIcons.heart,
+                    LucideIcons.github,
                     color: context.theme.onSurface,
                   ),
                   title: "GitHub Sponsor",
