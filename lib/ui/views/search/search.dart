@@ -1,6 +1,5 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';

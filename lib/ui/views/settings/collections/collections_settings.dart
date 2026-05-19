@@ -56,7 +56,9 @@ class _CollectionsView extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(16),
             child: Center(
-              child: Text('Error: ${snapshot.error}', style: context.theme.textTheme.bodyMedium.copyWith(color: context.theme.error)),
+              child: Text('Error: ${snapshot.error}',
+                  style: context.theme.textTheme.bodyMedium
+                      .copyWith(color: context.theme.error)),
             ),
           );
         }
@@ -139,11 +141,14 @@ class _CollectionListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return PoddrListItem(
       leading: Container(
-        width: 24,
-        height: 24,
-        decoration: BoxDecoration(
+        width: 48,
+        height: 48,
+        decoration: ShapeDecoration(
           color: Color(collection.color),
-          shape: BoxShape.circle,
+          shape: RoundedSuperellipseBorder(
+            side: BorderSide.none,
+            borderRadius: BorderRadius.circular(48 / 3),
+          ),
         ),
       ),
       title: collection.name,
@@ -168,42 +173,33 @@ class _AddCollectionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: PoddrTextInput(
-            controller: viewModel.nameController,
-            onSubmit: (val) => viewModel.submitNewCollection(),
-            labelText: 'New Collection',
-            hintText: 'Enter name...',
-          ),
-        ),
-        gapW8,
-        GestureDetector(
-          onTap: () => _showColorPicker(context),
-          child: Consumer<CollectionsViewModel>(
-            builder: (context, vm, child) {
-              return Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Color(vm.newCollectionColor),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: context.theme.outline,
-                    width: 1,
-                  ),
+    return PoddrTextInput(
+      controller: viewModel.nameController,
+      onSubmit: (val) => viewModel.submitNewCollection(),
+      hintText: 'Enter name...',
+      fontSize: 18,
+      prefixIcon: GestureDetector(
+        onTap: () => _showColorPicker(context),
+        child: Consumer<CollectionsViewModel>(
+          builder: (context, vm, child) {
+            return Container(
+              width: 28,
+              height: 28,
+              decoration: ShapeDecoration(
+                color: Color(vm.newCollectionColor),
+                shape: RoundedSuperellipseBorder(
+                  side: BorderSide.none,
+                  borderRadius: BorderRadius.circular(28 / 3),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
-        gapW8,
-        PoddrIconButton(
-          onPressed: () => viewModel.submitNewCollection(),
-          icon: const Icon(LucideIcons.plus),
-        ),
-      ],
+      ),
+      suffixIcon: PoddrIconButton(
+        onPressed: () => viewModel.submitNewCollection(),
+        icon: const Icon(LucideIcons.plus),
+      ),
     );
   }
 

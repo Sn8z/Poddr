@@ -53,7 +53,12 @@ class SettingsView extends StatelessWidget {
                 gapH32,
                 ThemeSelector(),
                 gapH32,
-                ColorSelector(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ColorSelector(),
+                  ],
+                ),
                 gapH16,
               ],
             ),
@@ -281,13 +286,16 @@ class ThemeBox extends StatelessWidget {
         child: Container(
           width: 96,
           height: 96,
-          decoration: BoxDecoration(
+          decoration: ShapeDecoration(
             color: color,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color:
-                  isSelected ? context.theme.primary : const Color(0x00000000),
-              width: isSelected ? 4 : 0,
+            shape: RoundedSuperellipseBorder(
+              side: isSelected
+                  ? BorderSide(
+                      width: 4,
+                      color: context.theme.primary,
+                    )
+                  : BorderSide.none,
+              borderRadius: BorderRadius.circular(96 / 3),
             ),
           ),
           child: Column(
@@ -326,12 +334,11 @@ class ColorSelector extends StatelessWidget {
         child: Container(
           width: 64,
           height: 64,
-          decoration: BoxDecoration(
+          decoration: ShapeDecoration(
             color: currentColor,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: context.theme.onSurface,
-              width: 4,
+            shape: RoundedSuperellipseBorder(
+              side: BorderSide.none,
+              borderRadius: BorderRadius.circular(64 / 3),
             ),
           ),
         ),
