@@ -1,7 +1,6 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
-import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
@@ -12,7 +11,8 @@ import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
-import 'package:poddr/ui/components/widgets/poddr_progress.dart';
+import 'package:poddr/ui/components/widgets/empty_state.dart';
+import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
@@ -77,70 +77,60 @@ class LibraryView extends StatelessWidget {
               )
             ],
           ),
-          children: [
-            if (viewModel.isLoading) ...[
-              const Center(
-                child: PoddrSpinner(),
-              ),
-            ] else if (viewModel.subscriptions.isEmpty) ...[
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      LucideIcons.podcast,
-                      size: 64,
-                      color: context.theme.outline,
-                    ),
-                    gapH16,
-                    Text(
-                      'No subscriptions yet',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: context.theme.outline,
+          child: viewModel.isLoading
+              ? const ShimmerLoadingList()
+              : viewModel.subscriptions.isEmpty
+                  ? const EmptyState(
+                      icon: LucideIcons.podcast,
+                      title: 'No subscriptions yet',
+                      subtitle: 'Subscribe to podcasts to see them here',
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          gapH16,
+                          PoddrBox(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: viewModel.subscriptions.length,
+                              itemBuilder: (context, index) {
+                                final Podcast podcast =
+                                    viewModel.subscriptions[index];
+                                return PoddrListItem(
+                                  title: podcast.title ?? 'Missing Title',
+                                  subtitle: podcast.author ?? 'Missing Author',
+                                  onTap: () {
+                                    final rss =
+                                        Uri.encodeComponent(podcast.rss ?? '');
+                                    context.push('/podcasts/$rss');
+                                  },
+                                  leading: Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: PoddrImage(
+                                      imageUrl: podcast.image ?? '',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  actions: [
+                                    PoddrIconButton(
+                                      onPressed: () {},
+                                      icon:
+                                          const Icon(LucideIcons.moreVertical),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                          const BottomPaddingFix(),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              )
-            ] else ...[
-              PoddrBox(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: viewModel.subscriptions.length,
-                  itemBuilder: (context, index) {
-                    final Podcast podcast = viewModel.subscriptions[index];
-                    return PoddrListItem(
-                      title: podcast.title ?? 'Missing Title',
-                      subtitle: podcast.author ?? 'Missing Author',
-                      onTap: () {
-                        final rss = Uri.encodeComponent(podcast.rss ?? '');
-                        context.push('/podcasts/$rss');
-                      },
-                      leading: Container(
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: PoddrImage(
-                          imageUrl: podcast.image ?? '',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      actions: [
-                        PoddrIconButton(
-                          onPressed: () {},
-                          icon: const Icon(LucideIcons.moreVertical),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-            const BottomPaddingFix(),
-          ],
         );
       },
     );

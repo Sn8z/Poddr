@@ -31,164 +31,169 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageLayout(
       header: const PoddrAppBar(title: "Settings"),
-      children: [
-        gapH16,
-        const ContentBox(
-          title: "Appearance",
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            gapH32,
-            ThemeSelector(),
-            gapH32,
-            ColorSelector(),
             gapH16,
-          ],
-        ),
-        gapH16,
-        const ContentBox(
-          title: "Collections",
-          children: [
-            CollectionsSection(),
-          ],
-        ),
-        gapH16,
-        const ContentBox(title: "OPML", children: [
-          OpmlSection(),
-        ]),
-        gapH16,
-        const ContentBox(title: "gPodder sync", children: [
-          SyncSection(),
-        ]),
-        gapH16,
-        ContentBox(
-          title: "Support",
-          children: [
-            PoddrListItem(
-              leading: Icon(
-                LucideIcons.heart,
-                color: context.theme.onSurface,
-              ),
-              title: "GitHub Sponsor",
-              onTap: () async {
-                try {
-                  await launchUrl(
-                      Uri.parse("https://github.com/sponsors/Sn8z"));
-                } catch (e) {
-                  error('Error launching URL: $e', name: 'SettingsView');
-                }
-              },
+            const ContentBox(
+              title: "Appearance",
+              children: [
+                gapH32,
+                ThemeSelector(),
+                gapH32,
+                ColorSelector(),
+                gapH16,
+              ],
             ),
-            PoddrListItem(
-              leading: Icon(
-                LucideIcons.wallet,
-                color: context.theme.onSurface,
-              ),
-              title: "Paypal",
-              onTap: () {
-                try {
-                  launchUrl(Uri.parse("https://www.paypal.com/paypalme/sn8z"));
-                } catch (e) {
-                  error('Error launching URL: $e', name: 'SettingsView');
-                }
-              },
+            gapH16,
+            const ContentBox(
+              title: "Collections",
+              children: [
+                CollectionsSection(),
+              ],
             ),
-            PoddrListItem(
-              leading: Icon(
-                LucideIcons.coffee,
-                color: context.theme.onSurface,
-              ),
-              title: "Ko-Fi",
-              onTap: () {
-                try {
-                  launchUrl(Uri.parse("https://ko-fi.com/sneitz"));
-                } catch (e) {
-                  error('Error launching URL: $e', name: 'SettingsView');
-                }
-              },
+            gapH16,
+            const ContentBox(title: "OPML", children: [
+              OpmlSection(),
+            ]),
+            gapH16,
+            const ContentBox(title: "gPodder sync", children: [
+              SyncSection(),
+            ]),
+            gapH16,
+            ContentBox(
+              title: "Support",
+              children: [
+                PoddrListItem(
+                  leading: Icon(
+                    LucideIcons.heart,
+                    color: context.theme.onSurface,
+                  ),
+                  title: "GitHub Sponsor",
+                  onTap: () async {
+                    try {
+                      await launchUrl(
+                          Uri.parse("https://github.com/sponsors/Sn8z"));
+                    } catch (e) {
+                      error('Error launching URL: $e', name: 'SettingsView');
+                    }
+                  },
+                ),
+                PoddrListItem(
+                  leading: Icon(
+                    LucideIcons.wallet,
+                    color: context.theme.onSurface,
+                  ),
+                  title: "Paypal",
+                  onTap: () {
+                    try {
+                      launchUrl(Uri.parse("https://www.paypal.com/paypalme/sn8z"));
+                    } catch (e) {
+                      error('Error launching URL: $e', name: 'SettingsView');
+                    }
+                  },
+                ),
+                PoddrListItem(
+                  leading: Icon(
+                    LucideIcons.coffee,
+                    color: context.theme.onSurface,
+                  ),
+                  title: "Ko-Fi",
+                  onTap: () {
+                    try {
+                      launchUrl(Uri.parse("https://ko-fi.com/sneitz"));
+                    } catch (e) {
+                      error('Error launching URL: $e', name: 'SettingsView');
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-        gapH16,
-        ContentBox(
-          title: "About",
-          children: [
-            PoddrListItem(
-              leading: Icon(
-                LucideIcons.bug,
-                color: context.theme.onSurface,
-              ),
-              title: "Issues",
-              onTap: () {
-                try {
-                  launchUrl(Uri.parse("https://github.com/Sn8z/Poddr/issues"));
-                } catch (e) {
-                  error('Error launching URL: $e', name: 'SettingsView');
-                }
-              },
-            ),
-            PoddrListItem(
-              leading: Icon(
-                LucideIcons.info,
-                color: context.theme.onSurface,
-              ),
-              title: 'Licenses',
-              onTap: () => showPoddrDialog(
-                context: context,
-                maxWidth: 500,
-                builder: (dialogContext) {
-                  final contentHeight = MediaQuery.sizeOf(dialogContext).height * 0.7;
-                  return SizedBox(
-                    height: contentHeight,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            gapH16,
+            ContentBox(
+              title: "About",
+              children: [
+                PoddrListItem(
+                  leading: Icon(
+                    LucideIcons.bug,
+                    color: context.theme.onSurface,
+                  ),
+                  title: "Issues",
+                  onTap: () {
+                    try {
+                      launchUrl(Uri.parse("https://github.com/Sn8z/Poddr/issues"));
+                    } catch (e) {
+                      error('Error launching URL: $e', name: 'SettingsView');
+                    }
+                  },
+                ),
+                PoddrListItem(
+                  leading: Icon(
+                    LucideIcons.info,
+                    color: context.theme.onSurface,
+                  ),
+                  title: 'Licenses',
+                  onTap: () => showPoddrDialog(
+                    context: context,
+                    maxWidth: 500,
+                    builder: (dialogContext) {
+                      final contentHeight = MediaQuery.sizeOf(dialogContext).height * 0.7;
+                      return SizedBox(
+                        height: contentHeight,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Poddr",
+                                  style: dialogContext.theme.textTheme.titleMedium,
+                                ),
+                                PoddrIconButton(
+                                  icon: const Icon(LucideIcons.x, size: 18),
+                                  onPressed: () => Navigator.of(dialogContext).pop(),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2),
                             Text(
-                              "Poddr",
-                              style: dialogContext.theme.textTheme.titleMedium,
+                              "Version 3.0.0",
+                              style: dialogContext.theme.textTheme.bodyMedium.copyWith(
+                                color: dialogContext.theme.onSurfaceVariant,
+                              ),
                             ),
-                            PoddrIconButton(
-                              icon: const Icon(LucideIcons.x, size: 18),
-                              onPressed: () => Navigator.of(dialogContext).pop(),
+                            const SizedBox(height: 12),
+                            Container(height: 1, color: dialogContext.theme.outline.withAlpha(50)),
+                            const SizedBox(height: 12),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: PoddrLicenseView(),
+                              ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          "Version 3.0.0",
-                          style: dialogContext.theme.textTheme.bodyMedium.copyWith(
-                            color: dialogContext.theme.onSurfaceVariant,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(height: 1, color: dialogContext.theme.outline.withAlpha(50)),
-                        const SizedBox(height: 12),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: PoddrLicenseView(),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            PoddrTextButton(
-                              label: "Close",
-                              onPressed: () => Navigator.of(dialogContext).pop(),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                PoddrTextButton(
+                                  label: "Close",
+                                  onPressed: () => Navigator.of(dialogContext).pop(),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
+            const BottomPaddingFix(),
           ],
         ),
-        const BottomPaddingFix(),
-      ],
+      ),
     );
   }
 }

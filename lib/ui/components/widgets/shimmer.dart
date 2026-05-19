@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
+import 'package:poddr/ui/components/widgets/list_item.dart';
+import 'package:poddr/ui/utils/gaps.dart';
 
 class ShimmerBox extends StatefulWidget {
   final double? height;
@@ -67,5 +69,37 @@ class _ShimmerBoxState extends State<ShimmerBox>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+}
+
+class ShimmerLoadingList extends StatelessWidget {
+  final int itemCount;
+  final double height;
+  final double radius;
+
+  const ShimmerLoadingList({
+    super.key,
+    this.itemCount = 5,
+    this.height = 100,
+    this.radius = 16,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        gapH8,
+        for (var i = 0; i < itemCount; i++) ...[
+          PoddrListItem(
+            data: ShimmerBox(height: height, radius: radius),
+          ),
+          gapH8,
+        ],
+        gapH8,
+      ],
+    );
   }
 }

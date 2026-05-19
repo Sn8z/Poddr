@@ -22,6 +22,7 @@ import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/podcast_header.dart';
+import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/utils/gaps.dart';
@@ -83,7 +84,8 @@ class PodcastDetailsView extends StatelessWidget {
                               style: context.theme.textTheme.headlineSmall,
                             ),
                             PoddrHTML(
-                                html: podcastProvider.podcast?.description ?? ""),
+                                html:
+                                    podcastProvider.podcast?.description ?? ""),
                           ],
                         ),
                       );
@@ -93,78 +95,77 @@ class PodcastDetailsView extends StatelessWidget {
               ),
             ],
           ),
-          children: [
-            gapH8,
-            StreamBuilder<int?>(
-              stream: context
-                  .read<SubscriptionProvider>()
-                  .watchSubscriptionId(rss),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting &&
-                    !snapshot.hasData) {
-                  return const SizedBox.shrink();
-                }
-                final subscriptionId = snapshot.data;
-                if (subscriptionId == null) {
-                  return const SizedBox.shrink();
-                }
-                return StreamBuilder<List<PodcastCollection>>(
-                  stream: context
-                      .read<CollectionsProvider>()
-                      .watchCollectionsForSubscription(subscriptionId),
-                  builder: (context, colSnapshot) {
-                    final collections = colSnapshot.data ?? [];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child:
-                                PoddrCollectionsDisplay(collections: collections),
-                          ),
-                          gapW8,
-                          PoddrCollectionLinkButton(
-                              subscriptionId: subscriptionId),
-                        ],
+          child: podcastProvider.isLoading || podcastProvider.podcast != null
+              ? SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      gapH8,
+                      StreamBuilder<int?>(
+                        stream: context
+                            .read<SubscriptionProvider>()
+                            .watchSubscriptionId(rss),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                                  ConnectionState.waiting &&
+                              !snapshot.hasData) {
+                            return const SizedBox.shrink();
+                          }
+                          final subscriptionId = snapshot.data;
+                          if (subscriptionId == null) {
+                            return const SizedBox.shrink();
+                          }
+                          return StreamBuilder<List<PodcastCollection>>(
+                            stream: context
+                                .read<CollectionsProvider>()
+                                .watchCollectionsForSubscription(
+                                    subscriptionId),
+                            builder: (context, colSnapshot) {
+                              final collections = colSnapshot.data ?? [];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: PoddrCollectionsDisplay(
+                                          collections: collections),
+                                    ),
+                                    gapW8,
+                                    PoddrCollectionLinkButton(
+                                        subscriptionId: subscriptionId),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
-                    );
-                  },
-                );
-              },
-            ),
-            gapH8,
-            if (podcastProvider.isLoading)
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return const PoddrListItem(
-                    data: ShimmerBox(
-                      height: 48,
-                      radius: 16,
-                    ),
-                  );
-                },
-              )
-            else if (podcastProvider.podcast == null)
-              const Center(
-                child: Text("No podcast found"),
-              )
-            else
-              PoddrBox(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: podcastProvider.podcast!.episodes.length,
-                  itemBuilder: (context, index) {
-                    return Episode(
-                        episode: podcastProvider.podcast!.episodes[index]);
-                  },
-                ),
-              ),
-              const BottomPaddingFix(),
-          ],
+                      gapH8,
+                      if (podcastProvider.isLoading)
+                        const ShimmerLoadingList(height: 48)
+                      else
+                        PoddrBox(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: podcastProvider.podcast!.episodes.length,
+                            itemBuilder: (context, index) {
+                              return Episode(
+                                  episode:
+                                      podcastProvider.podcast!.episodes[index]);
+                            },
+                          ),
+                        ),
+                      const BottomPaddingFix(),
+                    ],
+                  ),
+                )
+              : const EmptyState(
+                    icon: LucideIcons.podcast,
+                    title: 'Podcast not found',
+                    subtitle: 'This podcast could not be loaded',
+                  ),
         );
       },
     );

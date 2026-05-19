@@ -16,6 +16,7 @@ import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
+import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/utils/gaps.dart';
@@ -172,50 +173,58 @@ class LatestEpisodesView extends StatelessWidget {
               },
             ),
           ),
-          children: [
-            gapH16,
-            if (viewModel.episodes.isEmpty) ...[
-              const Center(
-                child: Text("No episodes found."),
-              ),
-            ] else ...[
-              ContentBox(
-                children: [
-                  for (var episode in viewModel.episodes)
-                    PoddrListItem(
-                      title: episode.title,
-                      subtitle: episode.author,
-                      leading: Container(
-                        clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                        ),
-                        child: PoddrImage(imageUrl: episode.imageUrl ?? ''),
+          child: viewModel.episodes.isEmpty
+              ? const EmptyState(
+                  icon: LucideIcons.rss,
+                  title: 'No episodes yet',
+                  subtitle: 'New episodes from your subscriptions will appear here',
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      gapH16,
+                      ContentBox(
+                        children: [
+                          for (var episode in viewModel.episodes)
+                            PoddrListItem(
+                              title: episode.title,
+                              subtitle: episode.author,
+                              leading: Container(
+                                clipBehavior: Clip.antiAlias,
+                                decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12)),
+                                ),
+                                child: PoddrImage(
+                                    imageUrl: episode.imageUrl ?? ''),
+                              ),
+                              onTap: () {
+                                context.read<MediaProvider>().loadMedia(
+                                      album: episode.podcastTitle,
+                                      podcastTitle: episode.podcastTitle,
+                                      episodeTitle: episode.title,
+                                      artist: episode.author,
+                                      description: episode.description,
+                                      audioUrl: episode.audioUrl,
+                                      videoUrl: episode.videoUrl,
+                                      podcastRSS: episode.podcastRSS,
+                                      artUri: episode.imageUrl,
+                                    );
+                              },
+                              actions: [
+                                Text(convertDurationToString(episode.duration)),
+                                EpisodeHistoryCircle(
+                                    audioUrl: episode.audioUrl),
+                                DownloadButton(episode: episode),
+                              ],
+                            ),
+                        ],
                       ),
-                      onTap: () {
-                        context.read<MediaProvider>().loadMedia(
-                              album: episode.podcastTitle,
-                              podcastTitle: episode.podcastTitle,
-                              episodeTitle: episode.title,
-                              artist: episode.author,
-                              description: episode.description,
-                              audioUrl: episode.audioUrl,
-                              videoUrl: episode.videoUrl,
-                              podcastRSS: episode.podcastRSS,
-                              artUri: episode.imageUrl,
-                            );
-                      },
-                      actions: [
-                        Text(convertDurationToString(episode.duration)),
-                        EpisodeHistoryCircle(audioUrl: episode.audioUrl),
-                        DownloadButton(episode: episode),
-                      ],
-                    ),
-                ],
-              ),
-            ],
-            const BottomPaddingFix(),
-          ],
+                      const BottomPaddingFix(),
+                    ],
+                  ),
+                ),
         );
       },
     );

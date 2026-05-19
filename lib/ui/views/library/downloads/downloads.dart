@@ -1,6 +1,5 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/offline.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
@@ -11,7 +10,8 @@ import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_confirm_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
-import 'package:poddr/ui/components/widgets/poddr_progress.dart';
+import 'package:poddr/ui/components/widgets/empty_state.dart';
+import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
@@ -50,84 +50,68 @@ class DownloadsView extends StatelessWidget {
                 ),
             ],
           ),
-          children: [
-            gapH16,
-            if (viewModel.isLoading)
-              const Center(
-                child: PoddrSpinner(),
-              )
-            else if (downloads.isEmpty)
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      LucideIcons.download,
-                      size: 64,
-                      color: context.theme.outline,
-                    ),
-                    gapH16,
-                    Text(
-                      'No downloads yet',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: context.theme.outline,
-                      ),
-                    ),
-                    gapH8,
-                    Text(
-                      'Download episodes to listen offline',
-                      style: TextStyle(
-                        color: context.theme.outline,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            else
-              ContentBox(
-                title: "Episodes (${downloads.length})",
-                children: [
-                  for (var download in downloads)
-                    PoddrListItem(
-                      title: download.title,
-                      subtitle: download.podcastTitle,
-                      leading: Container(
-                        clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                        ),
-                        child: PoddrImage(imageUrl: download.imageUrl),
-                      ),
-                      onTap: () {
-                        viewModel.loadMedia(
-                          audioUrl: download.audioUrl,
-                          videoUrl: download.videoUrl,
-                          episodeTitle: download.title,
-                          podcastTitle: download.podcastTitle,
-                          podcastRSS: download.podcastRSS,
-                          description: download.description,
-                          artUri: download.imageUrl,
-                          album: download.title,
-                          artist: download.podcastTitle,
-                        );
-                      },
-                      actions: [
-                        Text(
-                          convertDurationToString(
-                            Duration(seconds: download.duration),
+          child: viewModel.isLoading
+              ? const ShimmerLoadingList()
+              : downloads.isEmpty
+                  ? const EmptyState(
+                      icon: LucideIcons.download,
+                      title: 'No downloads yet',
+                      subtitle: 'Download episodes to listen offline',
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          gapH16,
+                          ContentBox(
+                            title: "Episodes (${downloads.length})",
+                            children: [
+                              for (var download in downloads)
+                                PoddrListItem(
+                                  title: download.title,
+                                  subtitle: download.podcastTitle,
+                                  leading: Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: const BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(12)),
+                                    ),
+                                    child:
+                                        PoddrImage(imageUrl: download.imageUrl),
+                                  ),
+                                  onTap: () {
+                                    viewModel.loadMedia(
+                                      audioUrl: download.audioUrl,
+                                      videoUrl: download.videoUrl,
+                                      episodeTitle: download.title,
+                                      podcastTitle: download.podcastTitle,
+                                      podcastRSS: download.podcastRSS,
+                                      description: download.description,
+                                      artUri: download.imageUrl,
+                                      album: download.title,
+                                      artist: download.podcastTitle,
+                                    );
+                                  },
+                                  actions: [
+                                    Text(
+                                      convertDurationToString(
+                                        Duration(seconds: download.duration),
+                                      ),
+                                    ),
+                                    EpisodeHistoryCircle(
+                                        audioUrl: download.audioUrl),
+                                    DownloadButton(
+                                      episode:
+                                          viewModel.toPodcastEpisode(download)!,
+                                    ),
+                                  ],
+                                ),
+                            ],
                           ),
-                        ),
-                        EpisodeHistoryCircle(audioUrl: download.audioUrl),
-                        DownloadButton(
-                          episode: viewModel.toPodcastEpisode(download)!,
-                        ),
-                      ],
+                          const BottomPaddingFix(),
+                        ],
+                      ),
                     ),
-                ],
-              ),
-            const BottomPaddingFix(),
-          ],
         );
       },
     );

@@ -100,15 +100,20 @@ class PodcastDiscoveryView extends StatelessWidget {
               ),
             ],
           ),
-          children: [
-            gapH16,
-            const LatestEpisodes(),
-            gapH16,
-            const RecentlyPlayedEpisodes(),
-            gapH16,
-            const TrendingPodcasts(),
-            const BottomPaddingFix(),
-          ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                gapH16,
+                const LatestEpisodes(),
+                gapH16,
+                const RecentlyPlayedEpisodes(),
+                gapH16,
+                const TrendingPodcasts(),
+                const BottomPaddingFix(),
+              ],
+            ),
+          ),
         );
       },
     );

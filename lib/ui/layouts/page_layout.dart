@@ -3,14 +3,14 @@ import 'package:flutter/widgets.dart';
 class PageLayout extends StatelessWidget {
   final Widget? header;
   final Widget? options;
-  final List<Widget> children;
+  final Widget child;
   final bool isHeaderSticky;
 
   const PageLayout({
     super.key,
     this.header,
     this.options,
-    required this.children,
+    required this.child,
     this.isHeaderSticky = true,
   });
 
@@ -27,14 +27,7 @@ class PageLayout extends StatelessWidget {
             children: [
               if (header != null) header!,
               if (options != null) options!,
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: children,
-                  ),
-                ),
-              ),
+              Expanded(child: child),
             ],
           ),
         ),
@@ -51,7 +44,7 @@ class PageLayout extends StatelessWidget {
               children: [
                 if (header != null) header!,
                 if (options != null) options!,
-                ...children,
+                child,
               ],
             ),
           ),

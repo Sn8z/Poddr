@@ -6,6 +6,7 @@ import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
+import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
@@ -23,6 +24,7 @@ class SearchView extends StatelessWidget {
       create: (context) => SearchViewModel(),
       builder: (context, child) {
         final searchProvider = context.watch<SearchViewModel>();
+        final searchResults = searchProvider.searchResults;
 
         return PageLayout(
           header: Container(
@@ -39,85 +41,52 @@ class SearchView extends StatelessWidget {
               },
             ),
           ),
-          children: [
-            gapH16,
-            searchProvider.isLoading ? const LoadingBox() : const ResultBox(),
-            const BottomPaddingFix(),
-          ],
+          child: searchProvider.isLoading
+              ? const ShimmerLoadingList()
+              : searchResults.isEmpty
+                  ? const EmptyState(
+                      icon: LucideIcons.search,
+                      title: 'No results found',
+                      subtitle: 'Try searching for a different term',
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          gapH16,
+                          ContentBox(
+                            children: searchResults.map((result) {
+                              return PoddrListItem(
+                                leading: Container(
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12)),
+                                  ),
+                                  child:
+                                      PoddrImage(imageUrl: result.image ?? ''),
+                                ),
+                                title: result.title,
+                                subtitle: result.author,
+                                onTap: () {
+                                  final rss =
+                                      Uri.encodeComponent(result.rss ?? '');
+                                  context.push('/podcasts/$rss');
+                                },
+                                actions: [
+                                  PoddrAddSubscriptionBtn(rss: result.rss),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                          const BottomPaddingFix(),
+                        ],
+                      ),
+                    ),
         );
       },
     );
   }
 }
 
-class LoadingBox extends StatelessWidget {
-  const LoadingBox({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return ContentBox(
-      children: List.generate(5, (index) {
-        return const PoddrListItem(
-          data: ShimmerBox(
-            height: 36,
-          ),
-        );
-      }),
-    );
-  }
-}
-
-class ResultBox extends StatelessWidget {
-  const ResultBox({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final searchResults = context.watch<SearchViewModel>().searchResults;
-
-    if (searchResults.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              LucideIcons.search,
-              size: 64,
-              color: context.theme.outline,
-            ),
-            gapH16,
-            Text(
-              'No results found',
-              style: TextStyle(
-                fontSize: 18,
-                color: context.theme.outline,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return ContentBox(
-      children: searchResults.map((result) {
-        return PoddrListItem(
-          leading: Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            child: PoddrImage(imageUrl: result.image ?? ''),
-          ),
-          title: result.title,
-          subtitle: result.author,
-          onTap: () {
-            final rss = Uri.encodeComponent(result.rss ?? '');
-            context.push('/podcasts/$rss');
-          },
-          actions: [
-            PoddrAddSubscriptionBtn(rss: result.rss),
-          ],
-        );
-      }).toList(),
-    );
-  }
-}
