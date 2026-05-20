@@ -1,6 +1,5 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
-import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
 class _ShimmerPainter extends CustomPainter {

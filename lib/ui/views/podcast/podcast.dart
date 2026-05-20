@@ -6,13 +6,11 @@ import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
-import 'package:poddr/ui/components/widgets/box.dart';
 import 'package:poddr/ui/components/widgets/collections_section.dart';
 import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/html.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
-import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/ui/views/podcast/podcast_view_model.dart';
@@ -72,8 +70,9 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                 title: podcast?.title,
                 subtitle: podcast?.author,
                 isLoading: podcastProvider.isLoading,
-                metadata:
-                    podcast != null ? _buildMetadataRow(context, podcast) : null,
+                metadata: podcast != null
+                    ? _buildMetadataRow(context, podcast)
+                    : null,
                 collections: CollectionsSection(rss: widget.rss),
                 actions: [
                   PoddrAddSubscriptionBtn(rss: widget.rss),

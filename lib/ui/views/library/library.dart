@@ -7,7 +7,6 @@ import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
-import 'package:poddr/ui/components/widgets/box.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
@@ -42,7 +41,8 @@ class LibraryView extends StatelessWidget {
           previous ?? LibraryViewModel(subscription, collections),
       builder: (context, child) {
         final viewModel = context.watch<LibraryViewModel>();
-        final isDesktop = MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
+        final isDesktop =
+            MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
 
         return PageLayout(
           header: PoddrAppBar(

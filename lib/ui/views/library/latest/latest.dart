@@ -4,7 +4,6 @@ import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/subscriptions.dart';
-import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
@@ -43,7 +42,8 @@ class LatestEpisodesView extends StatelessWidget {
           previous ?? LatestEpisodesViewModel(source, collections),
       builder: (context, child) {
         final viewModel = context.watch<LatestEpisodesViewModel>();
-        final isDesktop = MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
+        final isDesktop =
+            MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
 
         return PageLayout(
           header: PoddrAppBar(
