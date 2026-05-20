@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
+import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 
 class PoddrConfirmDialog extends StatelessWidget {
   final String title;
@@ -20,38 +21,31 @@ class PoddrConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: context.theme.textTheme.titleMedium,
+    return PoddrDialog(
+      header: Text(
+        title,
+        style: context.theme.textTheme.headlineSmall.copyWith(
+          fontWeight: FontWeight.bold,
+          color: context.theme.secondary,
         ),
-        const SizedBox(height: 8),
-        Text(
-          message,
-          style: context.theme.textTheme.bodyMedium.copyWith(
-            color: context.theme.onSurfaceVariant,
-          ),
+      ),
+      actions: [
+        PoddrTextButton(
+          label: cancelLabel,
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            PoddrTextButton(
-              label: cancelLabel,
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            const SizedBox(width: 8),
-            PoddrTextButton(
-              label: confirmLabel,
-              onPressed: onConfirm,
-              color: context.theme.error,
-            ),
-          ],
+        PoddrTextButton(
+          label: confirmLabel,
+          onPressed: onConfirm,
+          color: context.theme.error,
         ),
       ],
+      child: Text(
+        message,
+        style: context.theme.textTheme.bodyMedium.copyWith(
+          color: context.theme.onSurfaceVariant,
+        ),
+      ),
     );
   }
 }

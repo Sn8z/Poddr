@@ -23,6 +23,7 @@ import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
+import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
@@ -48,26 +49,9 @@ class PodcastDiscoveryView extends StatelessWidget {
                     showPoddrDialog(
                       context: context,
                       builder: (dialogContext) {
-                        return PoddrDialog(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children:
-                                discoveryProvider.countries.map((country) {
-                              return GestureDetector(
-                                onTap: () {
-                                  discoveryProvider.setCountry(country.code);
-                                  Navigator.of(dialogContext).pop();
-                                },
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  child: Text(country.name,
-                                      style:
-                                          context.theme.textTheme.bodyMedium),
-                                ),
-                              );
-                            }).toList(),
-                          ),
+                        return _CountrySelectionDialog(
+                          discoveryProvider: discoveryProvider,
+                          dialogContext: dialogContext,
                         );
                       },
                     );
@@ -82,25 +66,9 @@ class PodcastDiscoveryView extends StatelessWidget {
                     showPoddrDialog(
                       context: context,
                       builder: (dialogContext) {
-                        return PoddrDialog(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: discoveryProvider.genres.map((genre) {
-                              return GestureDetector(
-                                onTap: () {
-                                  discoveryProvider.setGenre(genre.id);
-                                  Navigator.of(dialogContext).pop();
-                                },
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  child: Text(genre.name,
-                                      style:
-                                          context.theme.textTheme.bodyMedium),
-                                ),
-                              );
-                            }).toList(),
-                          ),
+                        return _GenreSelectionDialog(
+                          discoveryProvider: discoveryProvider,
+                          dialogContext: dialogContext,
                         );
                       },
                     );
@@ -125,6 +93,103 @@ class PodcastDiscoveryView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _CountrySelectionDialog extends StatefulWidget {
+  final DiscoverViewModel discoveryProvider;
+  final BuildContext dialogContext;
+
+  const _CountrySelectionDialog({
+    required this.discoveryProvider,
+    required this.dialogContext,
+  });
+
+  @override
+  State<_CountrySelectionDialog> createState() =>
+      _CountrySelectionDialogState();
+}
+
+class _CountrySelectionDialogState extends State<_CountrySelectionDialog> {
+  String _searchQuery = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final filteredCountries = widget.discoveryProvider.countries
+        .where((country) =>
+            country.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+        .toList();
+
+    return PoddrDialog(
+      header: Text(
+        "Select country",
+        style: context.theme.textTheme.headlineSmall.copyWith(
+          fontWeight: FontWeight.bold,
+          color: context.theme.secondary,
+        ),
+      ),
+      showCloseButton: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          PoddrTextInput(
+            hintText: "Search countries...",
+            onChanged: (value) => setState(() => _searchQuery = value),
+          ),
+          gapH12,
+          ...filteredCountries.map((country) {
+            final isActive =
+                widget.discoveryProvider.countryCode == country.code;
+            return PoddrListItem(
+              title: country.name,
+              isActive: isActive,
+              onTap: () {
+                widget.discoveryProvider.setCountry(country.code);
+                Navigator.of(widget.dialogContext).pop();
+              },
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _GenreSelectionDialog extends StatelessWidget {
+  final DiscoverViewModel discoveryProvider;
+  final BuildContext dialogContext;
+
+  const _GenreSelectionDialog({
+    required this.discoveryProvider,
+    required this.dialogContext,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PoddrDialog(
+      header: Text(
+        "Select genre",
+        style: context.theme.textTheme.headlineSmall.copyWith(
+          fontWeight: FontWeight.bold,
+          color: context.theme.secondary,
+        ),
+      ),
+      showCloseButton: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: discoveryProvider.genres.map((genre) {
+          final isActive = discoveryProvider.genreID == genre.id;
+          return PoddrListItem(
+            title: genre.name,
+            isActive: isActive,
+            onTap: () {
+              discoveryProvider.setGenre(genre.id);
+              Navigator.of(dialogContext).pop();
+            },
+          );
+        }).toList(),
+      ),
     );
   }
 }

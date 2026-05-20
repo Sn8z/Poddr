@@ -336,17 +336,14 @@ class SyncSection extends StatelessWidget {
     final selected = await showPoddrDialog<String>(
       context: context,
       builder: (dialogContext) => PoddrDialog(
+        header: Text(
+          'Sync With',
+          style: context.theme.textTheme.titleMedium,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Text(
-                'Sync With',
-                style: context.theme.textTheme.titleMedium,
-              ),
-            ),
             GestureDetector(
               onTap: () => Navigator.pop(dialogContext, ''),
               child: Padding(
@@ -450,44 +447,34 @@ class SyncSection extends StatelessWidget {
     final confirmed = await showPoddrDialog<bool>(
       context: context,
       builder: (dialogContext) => PoddrDialog(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Full Re-Sync',
-              style: context.theme.textTheme.titleMedium.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+        header: Text(
+          'Full Re-Sync',
+          style: context.theme.textTheme.titleMedium.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          Expanded(
+            child: PoddrOutlinedButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Cancel'),
             ),
-            gapH16,
-            Text(
-              'This will:\n'
-              '• Clear all unsynced local changes\n'
-              '• Pull all current server subscriptions and episode history\n'
-              '• Preserve all local subscriptions\n'
-              '• Set sync timestamps to current time (only new data fetched next sync)',
-              style: context.theme.textTheme.bodyMedium,
+          ),
+          gapW12,
+          Expanded(
+            child: PoddrFilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Confirm'),
             ),
-            gapH20,
-            Row(
-              children: [
-                Expanded(
-                  child: PoddrOutlinedButton(
-                    onPressed: () => Navigator.pop(dialogContext, false),
-                    child: const Text('Cancel'),
-                  ),
-                ),
-                gapW12,
-                Expanded(
-                  child: PoddrFilledButton(
-                    onPressed: () => Navigator.pop(dialogContext, true),
-                    child: const Text('Confirm'),
-                  ),
-                ),
-              ],
-            ),
-          ],
+          ),
+        ],
+        child: Text(
+          'This will:\n'
+          '• Clear all unsynced local changes\n'
+          '• Pull all current server subscriptions and episode history\n'
+          '• Preserve all local subscriptions\n'
+          '• Set sync timestamps to current time (only new data fetched next sync)',
+          style: context.theme.textTheme.bodyMedium,
         ),
       ),
     );

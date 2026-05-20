@@ -21,7 +21,6 @@ import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
-import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_licenses.dart';
 
 class SettingsView extends StatelessWidget {
@@ -145,62 +144,43 @@ class SettingsView extends StatelessWidget {
                   title: 'Licenses',
                   onTap: () => showPoddrDialog(
                     context: context,
-                    maxWidth: 500,
                     builder: (dialogContext) {
-                      final contentHeight =
-                          MediaQuery.sizeOf(dialogContext).height * 0.7;
-                      return SizedBox(
-                        height: contentHeight,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                      return PoddrDialog(
+                        header: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   "Poddr",
-                                  style:
-                                      dialogContext.theme.textTheme.titleMedium,
+                                  style: dialogContext
+                                      .theme.textTheme.headlineSmall
+                                      .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: dialogContext.theme.secondary,
+                                  ),
                                 ),
-                                PoddrIconButton(
-                                  icon: const Icon(LucideIcons.x),
-                                  onPressed: () =>
-                                      Navigator.of(dialogContext).pop(),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              "Version 3.0.0",
-                              style: dialogContext.theme.textTheme.bodyMedium
-                                  .copyWith(
-                                color: dialogContext.theme.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Container(
-                                height: 1,
-                                color:
-                                    dialogContext.theme.outline.withAlpha(50)),
-                            const SizedBox(height: 12),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                child: PoddrLicenseView(),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                PoddrTextButton(
-                                  label: "Close",
-                                  onPressed: () =>
-                                      Navigator.of(dialogContext).pop(),
+                                Text(
+                                  "3.0.0",
+                                  style: dialogContext
+                                      .theme.textTheme.bodyMedium
+                                      .copyWith(
+                                    color: dialogContext.theme.onSurfaceVariant,
+                                  ),
                                 ),
                               ],
                             ),
                           ],
                         ),
+                        showCloseButton: true,
+                        actions: [
+                          PoddrTextButton(
+                            label: "Close",
+                            onPressed: () => Navigator.of(dialogContext).pop(),
+                          ),
+                        ],
+                        child: PoddrLicenseView(),
                       );
                     },
                   ),
@@ -341,35 +321,25 @@ class ColorSelector extends StatelessWidget {
     showPoddrDialog(
       context: context,
       builder: (dialogContext) => PoddrDialog(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Theme Color',
-                style: context.theme.textTheme.titleMedium,
-              ),
-              gapH16,
-              HsvColorPicker(
-                initialColor: context.read<ThemeProvider>().color,
-                onColorChanged: (color) {
-                  dialogContext.read<ThemeProvider>().setColor(color);
-                },
-              ),
-              gapH24,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  PoddrTextButton(
-                    label: 'Done',
-                    onPressed: () => Navigator.of(dialogContext).pop(),
-                  ),
-                ],
-              ),
-            ],
+        header: Text(
+          'Theme Color',
+          style: context.theme.textTheme.headlineSmall.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.theme.secondary,
           ),
+        ),
+        actions: [
+          PoddrTextButton(
+            label: 'Done',
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+        ],
+        showCloseButton: true,
+        child: HsvColorPicker(
+          initialColor: context.read<ThemeProvider>().color,
+          onColorChanged: (color) {
+            dialogContext.read<ThemeProvider>().setColor(color);
+          },
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_slider.dart';
+import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
 
 class SpeedButton extends StatelessWidget {
@@ -34,6 +35,14 @@ class SpeedButton extends StatelessWidget {
           context: context,
           builder: (context) {
             return PoddrDialog(
+              header: Text(
+                'Playback Speed',
+                style: context.theme.textTheme.headlineSmall.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.theme.secondary,
+                ),
+              ),
+              showCloseButton: true,
               child: Selector<MediaProvider, double>(
                 selector: (_, mediaProvider) => mediaProvider.speed,
                 builder: (context, speed, child) {
@@ -53,12 +62,16 @@ class SpeedButton extends StatelessWidget {
                           color: context.theme.onSurfaceVariant,
                         ),
                       ),
+                      gapH8,
                       PoddrSlider(
                         value: currentIndex.toDouble(),
                         min: 0,
                         max: (speedSteps.length - 1).toDouble(),
                         divisions: speedSteps.length - 1,
-                        trackHeight: 4,
+                        trackHeight: 8,
+                        thumbRadius: 8,
+                        thumbColor: context.theme.secondary,
+                        thumbVisibility: PoddrThumbVisibility.always,
                         onChanged: (double value) {
                           int index = value.round();
                           context

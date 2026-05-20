@@ -3,6 +3,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/media/media_provider.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
@@ -26,16 +27,29 @@ class QueueButton extends StatelessWidget {
           context: context,
           builder: (context) {
             return PoddrDialog(
+              header: Text(
+                'Queue',
+                style: context.theme.textTheme.headlineSmall.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.theme.secondary,
+                ),
+              ),
+              actions: [
+                PoddrOutlinedButton(
+                  child: Text('Clear Queue'),
+                  onPressed: () {
+                    context.read<MediaProvider>().clearQueue();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+              showCloseButton: true,
               child: Selector<MediaProvider, List<PodcastEpisode>>(
                 selector: (_, mediaProvider) => mediaProvider.mediaQueue,
                 builder: (context, queue, child) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        'Queue (${queue.length})',
-                        style: context.theme.textTheme.titleMedium,
-                      ),
                       if (queue.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16),
