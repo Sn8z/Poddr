@@ -9,13 +9,13 @@ import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/box.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
-import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
+import 'package:poddr/ui/components/widgets/library_nav.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
@@ -42,26 +42,38 @@ class LibraryView extends StatelessWidget {
           previous ?? LibraryViewModel(subscription, collections),
       builder: (context, child) {
         final viewModel = context.watch<LibraryViewModel>();
+        final isDesktop = MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
 
         return PageLayout(
           header: PoddrAppBar(
-            title: const Text('Library'),
-            actions: [
-              PoddrOutlinedButton(
-                child: const Text("Latest Episodes"),
-                onPressed: () => context.push("/library/latest"),
-              ),
-              gapW8,
-              PoddrOutlinedButton(
-                child: const Text("Downloads"),
-                onPressed: () => context.push("/library/downloads"),
-              ),
-            ],
+            title: const Text('Subscriptions'),
+            actions: isDesktop
+                ? [
+                    PoddrLibraryNav(
+                      currentRoute: '/library/subscriptions',
+                      segments: const [
+                        LibrarySegment(
+                          label: 'Subscriptions',
+                          icon: LucideIcons.library,
+                          route: '/library/subscriptions',
+                        ),
+                        LibrarySegment(
+                          label: 'Latest',
+                          icon: LucideIcons.clock,
+                          route: '/library/latest',
+                        ),
+                        LibrarySegment(
+                          label: 'Downloads',
+                          icon: LucideIcons.download,
+                          route: '/library/downloads',
+                        ),
+                      ],
+                    ),
+                  ]
+                : null,
             bottom: PoddrAppBarOptions(
-              title: LayoutBuilder(
-                builder: (layoutContext, constraints) {
-                  if (constraints.maxWidth > Breakpoints.tabletScreen) {
-                    return Row(
+              title: isDesktop
+                  ? Row(
                       children: [
                         PoddrIconButton(
                           icon: const Icon(LucideIcons.filter),
@@ -89,9 +101,8 @@ class LibraryView extends StatelessWidget {
                           ),
                         ),
                       ],
-                    );
-                  } else {
-                    return Row(
+                    )
+                  : Row(
                       children: [
                         PoddrIconButton(
                           icon: const Icon(LucideIcons.filter),
@@ -100,10 +111,31 @@ class LibraryView extends StatelessWidget {
                           },
                         ),
                       ],
-                    );
-                  }
-                },
-              ),
+                    ),
+              actions: isDesktop
+                  ? []
+                  : [
+                      PoddrLibraryNav(
+                        currentRoute: '/library/subscriptions',
+                        segments: const [
+                          LibrarySegment(
+                            label: 'Subscriptions',
+                            icon: LucideIcons.library,
+                            route: '/library/subscriptions',
+                          ),
+                          LibrarySegment(
+                            label: 'Latest',
+                            icon: LucideIcons.clock,
+                            route: '/library/latest',
+                          ),
+                          LibrarySegment(
+                            label: 'Downloads',
+                            icon: LucideIcons.download,
+                            route: '/library/downloads',
+                          ),
+                        ],
+                      ),
+                    ],
             ),
           ),
           child: viewModel.isLoading

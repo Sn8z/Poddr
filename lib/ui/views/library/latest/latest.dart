@@ -1,7 +1,6 @@
 ﻿import 'package:flutter/widgets.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
-import 'package:go_router/go_router.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/subscriptions.dart';
@@ -14,8 +13,8 @@ import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
-import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
+import 'package:poddr/ui/components/widgets/library_nav.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
@@ -44,26 +43,38 @@ class LatestEpisodesView extends StatelessWidget {
           previous ?? LatestEpisodesViewModel(source, collections),
       builder: (context, child) {
         final viewModel = context.watch<LatestEpisodesViewModel>();
+        final isDesktop = MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
 
         return PageLayout(
           header: PoddrAppBar(
             title: const Text('Latest Episodes'),
-            actions: [
-              PoddrOutlinedButton(
-                child: const Text("Library"),
-                onPressed: () => context.push("/library"),
-              ),
-              gapW8,
-              PoddrOutlinedButton(
-                child: const Text("Downloads"),
-                onPressed: () => context.push("/library/downloads"),
-              ),
-            ],
+            actions: isDesktop
+                ? [
+                    PoddrLibraryNav(
+                      currentRoute: '/library/latest',
+                      segments: const [
+                        LibrarySegment(
+                          label: 'Subscriptions',
+                          icon: LucideIcons.library,
+                          route: '/library/subscriptions',
+                        ),
+                        LibrarySegment(
+                          label: 'Latest',
+                          icon: LucideIcons.clock,
+                          route: '/library/latest',
+                        ),
+                        LibrarySegment(
+                          label: 'Downloads',
+                          icon: LucideIcons.download,
+                          route: '/library/downloads',
+                        ),
+                      ],
+                    ),
+                  ]
+                : null,
             bottom: PoddrAppBarOptions(
-              title: LayoutBuilder(
-                builder: (layoutContext, constraints) {
-                  if (constraints.maxWidth > Breakpoints.tabletScreen) {
-                    return Row(
+              title: isDesktop
+                  ? Row(
                       children: [
                         PoddrIconButton(
                           icon: const Icon(LucideIcons.filter),
@@ -91,9 +102,8 @@ class LatestEpisodesView extends StatelessWidget {
                           ),
                         ),
                       ],
-                    );
-                  } else {
-                    return Row(
+                    )
+                  : Row(
                       children: [
                         PoddrIconButton(
                           icon: const Icon(LucideIcons.filter),
@@ -102,10 +112,31 @@ class LatestEpisodesView extends StatelessWidget {
                           },
                         ),
                       ],
-                    );
-                  }
-                },
-              ),
+                    ),
+              actions: isDesktop
+                  ? []
+                  : [
+                      PoddrLibraryNav(
+                        currentRoute: '/library/latest',
+                        segments: const [
+                          LibrarySegment(
+                            label: 'Subscriptions',
+                            icon: LucideIcons.library,
+                            route: '/library/subscriptions',
+                          ),
+                          LibrarySegment(
+                            label: 'Latest',
+                            icon: LucideIcons.clock,
+                            route: '/library/latest',
+                          ),
+                          LibrarySegment(
+                            label: 'Downloads',
+                            icon: LucideIcons.download,
+                            route: '/library/downloads',
+                          ),
+                        ],
+                      ),
+                    ],
             ),
           ),
           child: viewModel.episodes.isEmpty

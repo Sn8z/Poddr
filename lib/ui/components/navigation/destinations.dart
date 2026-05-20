@@ -41,3 +41,24 @@ final List<NavItem> destinations = [
     route: '/settings',
   ),
 ];
+
+final List<NavItem> librarySubNav = [
+  NavItem(
+    label: 'Subscriptions',
+    icon: LucideIcons.library,
+    selectedIcon: LucideIcons.library,
+    route: '/library/subscriptions',
+  ),
+  NavItem(
+    label: 'Latest',
+    icon: LucideIcons.clock,
+    selectedIcon: LucideIcons.clock,
+    route: '/library/latest',
+  ),
+  NavItem(
+    label: 'Downloads',
+    icon: LucideIcons.download,
+    selectedIcon: LucideIcons.download,
+    route: '/library/downloads',
+  ),
+];

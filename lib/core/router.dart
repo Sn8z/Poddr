@@ -132,6 +132,12 @@ abstract class PoddrRouter {
             routes: [
               GoRoute(
                 path: '/library',
+                redirect: (context, state) {
+                  return '/library/subscriptions';
+                },
+              ),
+              GoRoute(
+                path: '/library/subscriptions',
                 name: 'library',
                 parentNavigatorKey: _libraryNavKey,
                 pageBuilder: (context, state) {
@@ -140,28 +146,28 @@ abstract class PoddrRouter {
                     child: const LibraryView(),
                   );
                 },
-                routes: [
-                  GoRoute(
-                    path: 'latest',
-                    name: 'library-latest',
-                    pageBuilder: (context, state) {
-                      return NoTransitionPage<void>(
-                        key: state.pageKey,
-                        child: const LatestEpisodesView(),
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    path: 'downloads',
-                    name: 'library-downloads',
-                    pageBuilder: (context, state) {
-                      return NoTransitionPage<void>(
-                        key: state.pageKey,
-                        child: const DownloadsView(),
-                      );
-                    },
-                  ),
-                ],
+              ),
+              GoRoute(
+                path: '/library/latest',
+                name: 'library-latest',
+                parentNavigatorKey: _libraryNavKey,
+                pageBuilder: (context, state) {
+                  return NoTransitionPage<void>(
+                    key: state.pageKey,
+                    child: const LatestEpisodesView(),
+                  );
+                },
+              ),
+              GoRoute(
+                path: '/library/downloads',
+                name: 'library-downloads',
+                parentNavigatorKey: _libraryNavKey,
+                pageBuilder: (context, state) {
+                  return NoTransitionPage<void>(
+                    key: state.pageKey,
+                    child: const DownloadsView(),
+                  );
+                },
               ),
             ],
           ),
