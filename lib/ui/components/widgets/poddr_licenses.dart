@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
-import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 
 class PoddrLicenseView extends StatefulWidget {
@@ -26,7 +25,7 @@ class _PoddrLicenseViewState extends State<PoddrLicenseView> {
       future: _licenses,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildShimmer();
+          return const ShimmerLoadingList();
         }
 
         final licenses = snapshot.data ?? [];
@@ -46,29 +45,6 @@ class _PoddrLicenseViewState extends State<PoddrLicenseView> {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildShimmer() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(4, (i) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: i < 3 ? 20 : 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ShimmerBox(height: 18, width: 100.0 + (i * 20), radius: 4),
-              gapH8,
-              ShimmerBox(height: 13, width: double.infinity, radius: 4),
-              gapH4,
-              ShimmerBox(height: 13, width: double.infinity, radius: 4),
-              gapH4,
-              ShimmerBox(height: 13, width: 200.0, radius: 4),
-            ],
-          ),
-        );
-      }),
     );
   }
 }

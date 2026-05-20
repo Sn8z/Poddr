@@ -87,19 +87,24 @@ class ShimmerLoadingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        gapH8,
-        for (var i = 0; i < itemCount; i++) ...[
-          PoddrListItem(
-            data: ShimmerBox(height: height, radius: radius),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(4, (i) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: i < 3 ? 20 : 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ShimmerBox(height: 26, width: 100.0 + (i * 20), radius: 4),
+              gapH8,
+              ShimmerBox(height: 18, width: double.infinity, radius: 4),
+              gapH4,
+              ShimmerBox(height: 18, width: double.infinity, radius: 4),
+              gapH4,
+              ShimmerBox(height: 18, width: 200.0, radius: 4),
+            ],
           ),
-          gapH8,
-        ],
-        gapH8,
-      ],
+        );
+      }),
     );
   }
 }
