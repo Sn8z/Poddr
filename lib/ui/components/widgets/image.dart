@@ -9,10 +9,12 @@ class PoddrImage extends StatelessWidget {
     super.key,
     required this.imageUrl,
     this.fit = BoxFit.cover,
+    this.maxHeightDiskCache,
   });
 
   final String imageUrl;
   final BoxFit fit;
+  final int? maxHeightDiskCache;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class PoddrImage extends StatelessWidget {
       imageUrl: imageUrl,
       fit: fit,
       httpHeaders: {'User-Agent': PoddrHttpClient.userAgent},
-      maxHeightDiskCache: 800,
+      maxHeightDiskCache: maxHeightDiskCache ?? 600,
       fadeInDuration: const Duration(milliseconds: 300),
       fadeOutDuration: const Duration(milliseconds: 300),
       placeholder: (context, url) => const ShimmerBox(),

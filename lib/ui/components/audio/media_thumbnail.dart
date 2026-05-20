@@ -22,7 +22,7 @@ class MediaThumbnail extends StatelessWidget {
         controls: NoVideoControls,
       );
     } else {
-      content = PoddrImage(imageUrl: mediaProvider.artwork);
+      content = PoddrImage(imageUrl: mediaProvider.artwork, maxHeightDiskCache: 300);
     }
 
     return GestureDetector(

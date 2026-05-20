@@ -58,9 +58,9 @@ class SearchView extends StatelessWidget {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(12)),
                                   ),
-                                  child:
-                                      PoddrImage(imageUrl: result.image ?? ''),
-                                ),
+                                    child:
+                                        PoddrImage(imageUrl: result.image ?? '', maxHeightDiskCache: 300),
+                                  ),
                                 title: result.title,
                                 subtitle: result.author,
                                 onTap: () {
