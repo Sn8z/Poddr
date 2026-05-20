@@ -3,6 +3,43 @@ import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
+class _ShimmerPainter extends CustomPainter {
+  final double progress;
+  final Color baseColor;
+  final Color highlightColor;
+  final double radius;
+
+  _ShimmerPainter({
+    required this.progress,
+    required this.baseColor,
+    required this.highlightColor,
+    required this.radius,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(radius));
+
+    final gradient = LinearGradient(
+      transform: const GradientRotation(0.5),
+      stops: [
+        (progress - 0.1).clamp(0.0, 1.0),
+        progress.clamp(0.0, 1.0),
+        (progress + 0.1).clamp(0.0, 1.0),
+      ],
+      colors: [baseColor, highlightColor, baseColor],
+    );
+
+    final paint = Paint()..shader = gradient.createShader(rect);
+    canvas.drawRRect(rrect, paint);
+  }
+
+  @override
+  bool shouldRepaint(_ShimmerPainter oldDelegate) =>
+      oldDelegate.progress != progress;
+}
+
 class ShimmerBox extends StatefulWidget {
   final double? height;
   final double? width;
@@ -34,34 +71,28 @@ class _ShimmerBoxState extends State<ShimmerBox>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Container(
-          constraints: BoxConstraints(
-            minHeight: 2,
-            minWidth: 2,
-            maxHeight: widget.height ?? double.infinity,
-            maxWidth: widget.width ?? double.infinity,
-          ),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              transform: const GradientRotation(0.5),
-              stops: [
-                _controller.value - 0.1,
-                _controller.value,
-                _controller.value + 0.1,
-              ],
-              colors: [
-                context.theme.surfaceContainer,
-                context.theme.surfaceContainerHigh,
-                context.theme.surfaceContainer,
-              ],
+    final theme = context.theme;
+    final baseColor = theme.surfaceContainer;
+    final highlightColor = theme.surfaceContainerHigh;
+    final radius = widget.radius ?? 16.0;
+
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return CustomPaint(
+            painter: _ShimmerPainter(
+              progress: _controller.value,
+              baseColor: baseColor,
+              highlightColor: highlightColor,
+              radius: radius,
             ),
-            borderRadius: BorderRadius.circular(widget.radius ?? 16),
-          ),
-        );
-      },
+            child: const SizedBox(),
+          );
+        },
+      ),
     );
   }
 
