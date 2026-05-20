@@ -69,7 +69,7 @@ class PoddrSideBar extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 1.0,
                   child: Container(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    clipBehavior: Clip.antiAlias,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(
                         Radius.circular(8),

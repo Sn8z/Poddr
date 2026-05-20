@@ -65,7 +65,7 @@ class _PoddrListItemState extends State<PoddrListItem> {
             curve: Curves.easeInOut,
             padding: const EdgeInsets.all(8),
             margin: const EdgeInsets.all(8),
-            clipBehavior: Clip.antiAliasWithSaveLayer,
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: _isHovered || _isFocused || widget.isActive
