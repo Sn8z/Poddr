@@ -4,12 +4,14 @@ class PageLayout extends StatelessWidget {
   final Widget? header;
   final Widget child;
   final bool isHeaderSticky;
+  final ValueNotifier<double>? shrinkRatioNotifier;
 
   const PageLayout({
     super.key,
     this.header,
     required this.child,
     this.isHeaderSticky = true,
+    this.shrinkRatioNotifier,
   });
 
   @override
@@ -24,7 +26,22 @@ class PageLayout extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (header != null) header!,
-              Expanded(child: child),
+              Expanded(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    if (shrinkRatioNotifier != null) {
+                      final offset = notification.metrics.pixels;
+                      final newRatio = (offset / 150).clamp(0.0, 1.0);
+                      final currentRatio = shrinkRatioNotifier!.value;
+                      if ((newRatio - currentRatio).abs() > 0.01) {
+                        shrinkRatioNotifier!.value = newRatio;
+                      }
+                    }
+                    return false;
+                  },
+                  child: child,
+                ),
+              ),
             ],
           ),
         ),
@@ -35,13 +52,26 @@ class PageLayout extends StatelessWidget {
         onTap: () {},
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (header != null) header!,
-                child,
-              ],
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              if (shrinkRatioNotifier != null) {
+                final offset = notification.metrics.pixels;
+                final newRatio = (offset / 150).clamp(0.0, 1.0);
+                final currentRatio = shrinkRatioNotifier!.value;
+                if ((newRatio - currentRatio).abs() > 0.01) {
+                  shrinkRatioNotifier!.value = newRatio;
+                }
+              }
+              return false;
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (header != null) header!,
+                  child,
+                ],
+              ),
             ),
           ),
         ),

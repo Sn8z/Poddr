@@ -3,18 +3,16 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/models/episode.dart';
-import 'package:poddr/models/collection.dart';
+import 'package:poddr/models/podcast.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
-import 'package:poddr/ui/components/widgets/collections_display.dart';
-import 'package:poddr/ui/components/widgets/collection_link_button.dart';
-import 'package:poddr/services/collections.dart';
-import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/box.dart';
+import 'package:poddr/ui/components/widgets/collections_section.dart';
 import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/html.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/ui/views/podcast/podcast_view_model.dart';
@@ -31,145 +29,148 @@ import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class PodcastDetailsView extends StatelessWidget {
+class PodcastDetailsView extends StatefulWidget {
   const PodcastDetailsView({super.key, required this.rss});
   final String rss;
 
   @override
+  State<PodcastDetailsView> createState() => _PodcastDetailsViewState();
+}
+
+class _PodcastDetailsViewState extends State<PodcastDetailsView> {
+  late final ValueNotifier<double> _shrinkRatioNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _shrinkRatioNotifier = ValueNotifier<double>(0.0);
+  }
+
+  @override
+  void dispose() {
+    _shrinkRatioNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PodcastViewModel(initialRss: rss),
+      create: (context) => PodcastViewModel(initialRss: widget.rss),
       builder: (context, child) {
         final podcastProvider = context.watch<PodcastViewModel>();
+        final podcast = podcastProvider.podcast;
 
         return PageLayout(
-          header: PodcastHeader(
-            podcastProvider: podcastProvider,
-            bottom: PoddrAppBarOptions(
-              title: LayoutBuilder(
-                builder: (layoutContext, constraints) {
-                  if (constraints.maxWidth > Breakpoints.tabletScreen) {
-                    return Row(
-                      children: [
-                        PoddrIconButton(
-                          icon: const Icon(LucideIcons.filter),
-                          onPressed: () {
-                            _showFilterSortDialog(context, podcastProvider);
-                          },
-                        ),
-                        gapW8,
-                        Expanded(
-                          child: PoddrTextInput(
-                            controller: podcastProvider.filterController,
-                            hintText: "Type to filter episodes...",
-                            onChanged: (value) {
-                              podcastProvider.setFilter(value);
-                            },
-                            suffixIcon: podcastProvider.filter.isNotEmpty
-                                ? PoddrIconButton(
-                                    icon: const Icon(LucideIcons.x),
-                                    size: 20,
-                                    onPressed: () {
-                                      podcastProvider.setFilter('');
-                                    },
-                                  )
-                                : null,
-                          ),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return Row(
-                      children: [
-                        PoddrIconButton(
-                          icon: const Icon(LucideIcons.filter),
-                          onPressed: () {
-                            _showFilterSortDialog(context, podcastProvider);
-                          },
-                        ),
-                      ],
-                    );
-                  }
-                },
-              ),
-              actions: [
-                PoddrAddSubscriptionBtn(rss: rss),
-                PoddrIconButton(
-                  icon: const Icon(LucideIcons.info),
-                  onPressed: () {
-                    showPoddrDialog(
-                      context: context,
-                      builder: (dialogContext) {
-                        return PoddrDialog(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                podcastProvider.podcast?.title ?? "Podcast",
-                                style: context.theme.textTheme.headlineSmall,
-                              ),
-                              PoddrHTML(
-                                  html: podcastProvider.podcast?.description ??
-                                      ""),
-                            ],
-                          ),
-                        );
+          shrinkRatioNotifier: _shrinkRatioNotifier,
+          header: ListenableBuilder(
+            listenable: _shrinkRatioNotifier,
+            builder: (context, _) {
+              return PodcastHeader(
+                imageUrl: podcast?.image,
+                title: podcast?.title,
+                subtitle: podcast?.author,
+                isLoading: podcastProvider.isLoading,
+                metadata:
+                    podcast != null ? _buildMetadataRow(context, podcast) : null,
+                collections: CollectionsSection(rss: widget.rss),
+                actions: [
+                  PoddrAddSubscriptionBtn(rss: widget.rss),
+                  PoddrIconButton(
+                    icon: const Icon(LucideIcons.info),
+                    onPressed: () {
+                      showPoddrDialog(
+                        context: context,
+                        builder: (dialogContext) {
+                          return PoddrDialog(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  podcast?.title ?? "Podcast",
+                                  style: context.theme.textTheme.headlineSmall,
+                                ),
+                                PoddrHTML(html: podcast?.description ?? ""),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  if (podcast?.link != null && podcast!.link!.isNotEmpty) ...[
+                    PoddrIconButton(
+                      icon: const Icon(LucideIcons.globe),
+                      onPressed: () async {
+                        final uri = Uri.parse(podcast.link ?? "");
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri,
+                              mode: LaunchMode.externalApplication);
+                        }
                       },
-                    );
-                  },
+                    ),
+                  ],
+                ],
+                shrinkRatio: _shrinkRatioNotifier.value,
+                bottom: PoddrAppBarOptions(
+                  title: LayoutBuilder(
+                    builder: (layoutContext, constraints) {
+                      if (constraints.maxWidth > Breakpoints.tabletScreen) {
+                        return Row(
+                          children: [
+                            PoddrIconButton(
+                              icon: const Icon(LucideIcons.filter),
+                              onPressed: () {
+                                _showFilterSortDialog(context, podcastProvider);
+                              },
+                            ),
+                            gapW8,
+                            Expanded(
+                              child: PoddrTextInput(
+                                controller: podcastProvider.filterController,
+                                hintText: "Type to filter episodes...",
+                                onChanged: (value) {
+                                  podcastProvider.setFilter(value);
+                                },
+                                suffixIcon: podcastProvider.filter.isNotEmpty
+                                    ? PoddrIconButton(
+                                        icon: const Icon(LucideIcons.x),
+                                        size: 20,
+                                        onPressed: () {
+                                          podcastProvider.setFilter('');
+                                        },
+                                      )
+                                    : null,
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return Row(
+                          children: [
+                            PoddrIconButton(
+                              icon: const Icon(LucideIcons.filter),
+                              onPressed: () {
+                                _showFilterSortDialog(context, podcastProvider);
+                              },
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
                 ),
-              ],
-            ),
+              );
+            },
           ),
           child: podcastProvider.isLoading || podcastProvider.podcast != null
               ? SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      gapH8,
-                      StreamBuilder<int?>(
-                        stream: context
-                            .read<SubscriptionProvider>()
-                            .watchSubscriptionId(rss),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                                  ConnectionState.waiting &&
-                              !snapshot.hasData) {
-                            return const SizedBox.shrink();
-                          }
-                          final subscriptionId = snapshot.data;
-                          if (subscriptionId == null) {
-                            return const SizedBox.shrink();
-                          }
-                          return StreamBuilder<List<PodcastCollection>>(
-                            stream: context
-                                .read<CollectionsProvider>()
-                                .watchCollectionsForSubscription(
-                                    subscriptionId),
-                            builder: (context, colSnapshot) {
-                              final collections = colSnapshot.data ?? [];
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: PoddrCollectionsDisplay(
-                                          collections: collections),
-                                    ),
-                                    gapW8,
-                                    PoddrCollectionLinkButton(
-                                        subscriptionId: subscriptionId),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      gapH8,
+                      gapH16,
                       if (podcastProvider.isLoading)
                         const ShimmerLoadingList(height: 48)
                       else
@@ -195,6 +196,98 @@ class PodcastDetailsView extends StatelessWidget {
                 ),
         );
       },
+    );
+  }
+
+  Widget _buildMetadataRow(BuildContext context, Podcast podcast) {
+    final theme = context.theme;
+    final items = <Widget>[];
+
+    if (podcast.explicit) {
+      items.add(
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: theme.secondaryContainer,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            'E',
+            style: theme.textTheme.labelSmall.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.onSecondaryContainer,
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (podcast.language != null && podcast.language!.isNotEmpty) {
+      if (items.isNotEmpty) items.add(gapW8);
+      items.add(
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(LucideIcons.languages,
+                size: 12, color: theme.onSurfaceVariant),
+            gapW4,
+            Text(
+              podcast.language!.toUpperCase(),
+              style: theme.textTheme.labelSmall.copyWith(
+                color: theme.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (podcast.episodes.isNotEmpty) {
+      if (items.isNotEmpty) items.add(gapW8);
+      items.add(
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(LucideIcons.listTree, size: 12, color: theme.onSurfaceVariant),
+            gapW4,
+            Text(
+              '${podcast.episodes.length} Episodes',
+              style: theme.textTheme.labelSmall.copyWith(
+                color: theme.secondary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (podcast.medium != null && podcast.medium!.isNotEmpty) {
+      if (items.isNotEmpty) items.add(gapW8);
+      items.add(
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: theme.tertiaryContainer,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            capitalize(podcast.medium!),
+            style: theme.textTheme.labelSmall.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.onTertiaryContainer,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      alignment: WrapAlignment.center,
+      children: items,
     );
   }
 
