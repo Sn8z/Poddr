@@ -8,6 +8,8 @@ class LatestEpisodesViewModel extends ChangeNotifier {
   final SubscriptionProvider _source;
   final CollectionsProvider _collectionsProvider;
 
+  final TextEditingController filterController = TextEditingController();
+
   String _filter = '';
   String get filter => _filter;
 
@@ -49,7 +51,18 @@ class LatestEpisodesViewModel extends ChangeNotifier {
 
   void setFilter(String value) {
     _filter = value;
+    if (filterController.text != value) {
+      filterController.text = value;
+    }
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _source.removeListener(notifyListeners);
+    _collectionsProvider.removeListener(notifyListeners);
+    filterController.dispose();
+    super.dispose();
   }
 
   void setSort({
@@ -69,12 +82,5 @@ class LatestEpisodesViewModel extends ChangeNotifier {
   void clearCollectionFilter() {
     _selectedCollectionIds = {};
     notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    _source.removeListener(notifyListeners);
-    _collectionsProvider.removeListener(notifyListeners);
-    super.dispose();
   }
 }

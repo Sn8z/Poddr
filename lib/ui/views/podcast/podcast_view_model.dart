@@ -17,6 +17,8 @@ class PodcastViewModel extends ChangeNotifier {
   String? _currentRss;
   String? get currentRss => _currentRss;
 
+  final TextEditingController filterController = TextEditingController();
+
   String _filter = '';
   String get filter => _filter;
 
@@ -69,7 +71,16 @@ class PodcastViewModel extends ChangeNotifier {
 
   void setFilter(String value) {
     _filter = value;
+    if (filterController.text != value) {
+      filterController.text = value;
+    }
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    filterController.dispose();
+    super.dispose();
   }
 
   void setSort({

@@ -72,64 +72,32 @@ class DownloadsView extends StatelessWidget {
                   if (constraints.maxWidth > Breakpoints.tabletScreen) {
                     return Row(
                       children: [
+                        PoddrIconButton(
+                          icon: const Icon(LucideIcons.filter),
+                          onPressed: () {
+                            _showFilterSortDialog(context, viewModel);
+                          },
+                        ),
+                        gapW8,
                         Expanded(
                           child: PoddrTextInput(
+                            controller: viewModel.filterController,
                             hintText: "Type to filter downloads...",
                             onChanged: (value) {
                               viewModel.setFilter(value);
                             },
-                            suffixIcon: PoddrIconButton(
-                              icon: const Icon(LucideIcons.x),
-                              size: 20,
-                              onPressed: () {
-                                viewModel.setFilter('');
-                              },
-                            ),
+                            suffixIcon: viewModel.filter.isNotEmpty
+                                ? PoddrIconButton(
+                                    icon: const Icon(LucideIcons.x),
+                                    size: 20,
+                                    onPressed: () {
+                                      viewModel.setFilter('');
+                                    },
+                                  )
+                                : null,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        PoddrElevatedButton(
-                          child: Text(viewModel.sortField),
-                          onPressed: () {
-                            showPoddrDialog(
-                              context: context,
-                              builder: (dialogContext) {
-                                return PoddrDialog(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      for (var field
-                                          in OfflineEpisodeSortField.values)
-                                        PoddrListTile(
-                                          title: field.label,
-                                          onTap: () {
-                                            viewModel.setSort(field: field);
-                                            context.pop();
-                                          },
-                                        ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        PoddrIconButton(
-                          icon: viewModel.sortDirection == "Ascending"
-                              ? const Icon(LucideIcons.arrowUp)
-                              : const Icon(LucideIcons.arrowDown),
-                          onPressed: () {
-                            viewModel.setSort(
-                              direction: viewModel.sortDirection == "Ascending"
-                                  ? SortDirection.descending
-                                  : SortDirection.ascending,
-                            );
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        _DownloadsCollectionFilterButton(viewModel: viewModel),
-                        const SizedBox(width: 8),
+                        gapW8,
                         PoddrOutlinedButton(
                           child: Text("Clear all"),
                           onPressed: () {
@@ -242,13 +210,9 @@ class DownloadsView extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text("Filter & Sort",
-                      style: dialogContext.theme.textTheme.titleMedium),
-                  gapH16,
                   PoddrTextInput(
-                    labelText: "Search",
+                    controller: viewModel.filterController,
                     hintText: "Type to filter downloads...",
-                    initialValue: viewModel.filter,
                     onChanged: (value) {
                       viewModel.setFilter(value);
                     },
@@ -263,55 +227,31 @@ class DownloadsView extends StatelessWidget {
                         : null,
                   ),
                   gapH16,
-                  Text("Sort by",
-                      style: dialogContext.theme.textTheme.titleSmall),
-                  gapH8,
                   for (var field in OfflineEpisodeSortField.values)
                     PoddrListTile(
+                      leading: Icon(
+                        viewModel.sortField == field.label
+                            ? LucideIcons.circleDot
+                            : LucideIcons.circle,
+                        size: 18,
+                        color: context.theme.secondary,
+                      ),
                       title: field.label,
-                      trailing: viewModel.sortField == field.label
-                          ? const Icon(LucideIcons.check, size: 18)
-                          : null,
                       onTap: () {
                         viewModel.setSort(field: field);
                       },
                     ),
-                  gapH16,
-                  Text("Direction",
-                      style: dialogContext.theme.textTheme.titleSmall),
-                  gapH8,
-                  Row(
-                    children: [
-                      Expanded(
-                        child: viewModel.sortDirection == "Ascending"
-                            ? PoddrFilledButton(
-                                onPressed: () {},
-                                child: const Text("Ascending"),
-                              )
-                            : PoddrOutlinedButton(
-                                onPressed: () {
-                                  viewModel.setSort(
-                                      direction: SortDirection.ascending);
-                                },
-                                child: const Text("Ascending"),
-                              ),
-                      ),
-                      gapW8,
-                      Expanded(
-                        child: viewModel.sortDirection == "Descending"
-                            ? PoddrFilledButton(
-                                onPressed: () {},
-                                child: const Text("Descending"),
-                              )
-                            : PoddrOutlinedButton(
-                                onPressed: () {
-                                  viewModel.setSort(
-                                      direction: SortDirection.descending);
-                                },
-                                child: const Text("Descending"),
-                              ),
-                      ),
-                    ],
+                  PoddrIconButton(
+                    icon: viewModel.sortDirection == "Ascending"
+                        ? const Icon(LucideIcons.arrowUp, size: 20)
+                        : const Icon(LucideIcons.arrowDown, size: 20),
+                    onPressed: () {
+                      viewModel.setSort(
+                        direction: viewModel.sortDirection == "Ascending"
+                            ? SortDirection.descending
+                            : SortDirection.ascending,
+                      );
+                    },
                   ),
                   gapH16,
                   Text("Collections",
@@ -323,71 +263,8 @@ class DownloadsView extends StatelessWidget {
                       viewModel.setCollectionFilter(ids);
                     },
                   ),
-                  gapH16,
-                  PoddrFilledButton(
-                    child: const Text("Done"),
-                    onPressed: () => Navigator.pop(dialogContext),
-                  ),
                 ],
               ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class _DownloadsCollectionFilterButton extends StatelessWidget {
-  final DownloadsViewModel viewModel;
-
-  const _DownloadsCollectionFilterButton({required this.viewModel});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: viewModel,
-      builder: (context, child) {
-        final selected = viewModel.selectedCollectionIds;
-        final label = selected.isEmpty
-            ? "All collections"
-            : "${selected.length} collection${selected.length == 1 ? '' : 's'}";
-
-        return PoddrOutlinedButton(
-          child: Text(label),
-          onPressed: () {
-            showPoddrDialog(
-              context: context,
-              builder: (dialogContext) {
-                return ListenableBuilder(
-                  listenable: viewModel,
-                  builder: (context, child) {
-                    return PoddrDialog(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text("Filter by collection",
-                              style: dialogContext.theme.textTheme.titleMedium),
-                          gapH16,
-                          PoddrCollectionFilterList(
-                            selectedCollectionIds:
-                                viewModel.selectedCollectionIds,
-                            onCollectionChanged: (ids) {
-                              viewModel.setCollectionFilter(ids);
-                            },
-                          ),
-                          gapH16,
-                          PoddrFilledButton(
-                            child: const Text("Done"),
-                            onPressed: () => Navigator.pop(dialogContext),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
             );
           },
         );

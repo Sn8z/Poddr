@@ -1,5 +1,4 @@
 ﻿import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
@@ -23,7 +22,6 @@ import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
-import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/podcast_header.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
@@ -54,62 +52,30 @@ class PodcastDetailsView extends StatelessWidget {
                   if (constraints.maxWidth > Breakpoints.tabletScreen) {
                     return Row(
                       children: [
+                        PoddrIconButton(
+                          icon: const Icon(LucideIcons.filter),
+                          onPressed: () {
+                            _showFilterSortDialog(context, podcastProvider);
+                          },
+                        ),
+                        gapW8,
                         Expanded(
                           child: PoddrTextInput(
+                            controller: podcastProvider.filterController,
                             hintText: "Type to filter episodes...",
                             onChanged: (value) {
                               podcastProvider.setFilter(value);
                             },
-                            suffixIcon: PoddrIconButton(
-                              icon: const Icon(LucideIcons.x),
-                              size: 20,
-                              onPressed: () {
-                                podcastProvider.setFilter('');
-                              },
-                            ),
+                            suffixIcon: podcastProvider.filter.isNotEmpty
+                                ? PoddrIconButton(
+                                    icon: const Icon(LucideIcons.x),
+                                    size: 20,
+                                    onPressed: () {
+                                      podcastProvider.setFilter('');
+                                    },
+                                  )
+                                : null,
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        PoddrElevatedButton(
-                          child: Text(podcastProvider.sortField),
-                          onPressed: () {
-                            showPoddrDialog(
-                              context: context,
-                              builder: (dialogContext) {
-                                return PoddrDialog(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      for (var field
-                                          in EpisodeSortField.values)
-                                        PoddrListTile(
-                                          title: field.label,
-                                          onTap: () {
-                                            podcastProvider
-                                                .setSort(field: field);
-                                            context.pop();
-                                          },
-                                        ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        PoddrIconButton(
-                          icon: podcastProvider.sortDirection == "Ascending"
-                              ? const Icon(LucideIcons.arrowUp)
-                              : const Icon(LucideIcons.arrowDown),
-                          onPressed: () {
-                            podcastProvider.setSort(
-                              direction:
-                                  podcastProvider.sortDirection == "Ascending"
-                                      ? SortDirection.descending
-                                      : SortDirection.ascending,
-                            );
-                          },
                         ),
                       ],
                     );
@@ -119,8 +85,7 @@ class PodcastDetailsView extends StatelessWidget {
                         PoddrIconButton(
                           icon: const Icon(LucideIcons.filter),
                           onPressed: () {
-                            _showFilterSortDialog(
-                                context, podcastProvider);
+                            _showFilterSortDialog(context, podcastProvider);
                           },
                         ),
                       ],
@@ -146,7 +111,8 @@ class PodcastDetailsView extends StatelessWidget {
                                 style: context.theme.textTheme.headlineSmall,
                               ),
                               PoddrHTML(
-                                  html: podcastProvider.podcast?.description ?? ""),
+                                  html: podcastProvider.podcast?.description ??
+                                      ""),
                             ],
                           ),
                         );
@@ -223,103 +189,74 @@ class PodcastDetailsView extends StatelessWidget {
                   ),
                 )
               : const EmptyState(
-                    icon: LucideIcons.podcast,
-                    title: 'Podcast not found',
-                    subtitle: 'This podcast could not be loaded',
-                  ),
+                  icon: LucideIcons.podcast,
+                  title: 'Podcast not found',
+                  subtitle: 'This podcast could not be loaded',
+                ),
         );
       },
     );
   }
 
-  void _showFilterSortDialog(
-      BuildContext context, PodcastViewModel viewModel) {
+  void _showFilterSortDialog(BuildContext context, PodcastViewModel viewModel) {
     showPoddrDialog(
       context: context,
       builder: (dialogContext) {
-        return PoddrDialog(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text("Filter & Sort",
-                  style: dialogContext.theme.textTheme.titleMedium),
-              gapH16,
-              PoddrTextInput(
-                labelText: "Search",
-                hintText: "Type to filter episodes...",
-                initialValue: viewModel.filter,
-                onChanged: (value) {
-                  viewModel.setFilter(value);
-                },
-                suffixIcon: viewModel.filter.isNotEmpty
-                    ? PoddrIconButton(
-                        icon: const Icon(LucideIcons.x),
-                        size: 20,
-                        onPressed: () {
-                          viewModel.setFilter('');
-                        },
-                      )
-                    : null,
-              ),
-              gapH16,
-              Text("Sort by",
-                  style: dialogContext.theme.textTheme.titleSmall),
-              gapH8,
-              for (var field in EpisodeSortField.values)
-                PoddrListTile(
-                  title: field.label,
-                  trailing: viewModel.sortField == field.label
-                      ? const Icon(LucideIcons.check, size: 18)
-                      : null,
-                  onTap: () {
-                    viewModel.setSort(field: field);
-                  },
-                ),
-              gapH16,
-              Text("Direction",
-                  style: dialogContext.theme.textTheme.titleSmall),
-              gapH8,
-              Row(
+        return ListenableBuilder(
+          listenable: viewModel,
+          builder: (context, child) {
+            return PoddrDialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: viewModel.sortDirection == "Ascending"
-                        ? PoddrFilledButton(
-                            onPressed: () {},
-                            child: const Text("Ascending"),
-                          )
-                        : PoddrOutlinedButton(
+                  PoddrTextInput(
+                    controller: viewModel.filterController,
+                    hintText: "Type to filter episodes...",
+                    onChanged: (value) {
+                      viewModel.setFilter(value);
+                    },
+                    suffixIcon: viewModel.filter.isNotEmpty
+                        ? PoddrIconButton(
+                            icon: const Icon(LucideIcons.x),
+                            size: 20,
                             onPressed: () {
-                              viewModel.setSort(
-                                  direction: SortDirection.ascending);
+                              viewModel.setFilter('');
                             },
-                            child: const Text("Ascending"),
-                          ),
+                          )
+                        : null,
                   ),
-                  gapW8,
-                  Expanded(
-                    child: viewModel.sortDirection == "Descending"
-                        ? PoddrFilledButton(
-                            onPressed: () {},
-                            child: const Text("Descending"),
-                          )
-                        : PoddrOutlinedButton(
-                            onPressed: () {
-                              viewModel.setSort(
-                                  direction: SortDirection.descending);
-                            },
-                            child: const Text("Descending"),
-                          ),
+                  gapH16,
+                  for (var field in EpisodeSortField.values)
+                    PoddrListTile(
+                      leading: Icon(
+                        viewModel.sortField == field.label
+                            ? LucideIcons.circleDot
+                            : LucideIcons.circle,
+                        size: 18,
+                        color: context.theme.secondary,
+                      ),
+                      title: field.label,
+                      onTap: () {
+                        viewModel.setSort(field: field);
+                      },
+                    ),
+                  PoddrIconButton(
+                    icon: viewModel.sortDirection == "Ascending"
+                        ? const Icon(LucideIcons.arrowUp, size: 20)
+                        : const Icon(LucideIcons.arrowDown, size: 20),
+                    onPressed: () {
+                      viewModel.setSort(
+                        direction: viewModel.sortDirection == "Ascending"
+                            ? SortDirection.descending
+                            : SortDirection.ascending,
+                      );
+                    },
                   ),
                 ],
               ),
-              gapH16,
-              PoddrFilledButton(
-                child: const Text("Done"),
-                onPressed: () => Navigator.pop(dialogContext),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

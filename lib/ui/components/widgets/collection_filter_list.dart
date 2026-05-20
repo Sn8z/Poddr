@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:poddr/models/collection.dart';
 import 'package:poddr/services/collections.dart';
+import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_toggle.dart';
+import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
 
 class PoddrCollectionFilterList extends StatelessWidget {
@@ -36,15 +38,6 @@ class PoddrCollectionFilterList extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            PoddrToggle(
-              label: "All collections",
-              value: selectedCollectionIds.isEmpty,
-              onChanged: (value) {
-                if (value) {
-                  onCollectionChanged({});
-                }
-              },
-            ),
             for (var collection in collections)
               PoddrToggle(
                 label: collection.name,
@@ -61,6 +54,13 @@ class PoddrCollectionFilterList extends StatelessWidget {
                   _toggleCollection(collection.id);
                 },
               ),
+            gapH8,
+            PoddrOutlinedButton(
+              onPressed: selectedCollectionIds.isEmpty
+                  ? null
+                  : () => onCollectionChanged({}),
+              child: const Text("Clear all"),
+            ),
           ],
         );
       },
