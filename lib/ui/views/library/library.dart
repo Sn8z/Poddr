@@ -146,17 +146,14 @@ class LibraryView extends StatelessWidget {
                       title: 'No subscriptions yet',
                       subtitle: 'Subscribe to podcasts to see them here',
                     )
-                  : SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          gapH16,
-                          PoddrBox(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: viewModel.subscriptions.length,
-                              itemBuilder: (context, index) {
+                  : CustomScrollView(
+                      slivers: [
+                        sliverGapH16,
+                        SliverPadding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          sliver: SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
                                 final Podcast podcast =
                                     viewModel.subscriptions[index];
                                 return PoddrListItem(
@@ -175,6 +172,7 @@ class LibraryView extends StatelessWidget {
                                     child: PoddrImage(
                                       imageUrl: podcast.image ?? '',
                                       fit: BoxFit.cover,
+                                      maxHeightDiskCache: 300,
                                     ),
                                   ),
                                   actions: [
@@ -186,11 +184,12 @@ class LibraryView extends StatelessWidget {
                                   ],
                                 );
                               },
+                              childCount: viewModel.subscriptions.length,
                             ),
                           ),
-                          const BottomPaddingFix(),
-                        ],
-                      ),
+                        ),
+                        SliverToBoxAdapter(child: BottomPaddingFix()),
+                      ],
                     ),
         );
       },

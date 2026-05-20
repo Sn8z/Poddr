@@ -166,28 +166,28 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
             },
           ),
           child: podcastProvider.isLoading || podcastProvider.podcast != null
-              ? SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      gapH16,
-                      if (podcastProvider.isLoading)
-                        const ShimmerLoadingList(height: 48)
-                      else
-                        PoddrBox(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: podcastProvider.episodes.length,
-                            itemBuilder: (context, index) {
+              ? CustomScrollView(
+                  slivers: [
+                    sliverGapH16,
+                    if (podcastProvider.isLoading)
+                      const SliverToBoxAdapter(
+                        child: ShimmerLoadingList(height: 48),
+                      )
+                    else
+                      SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
                               return Episode(
                                   episode: podcastProvider.episodes[index]);
                             },
+                            childCount: podcastProvider.episodes.length,
                           ),
                         ),
-                      const BottomPaddingFix(),
-                    ],
-                  ),
+                      ),
+                    SliverToBoxAdapter(child: BottomPaddingFix()),
+                  ],
                 )
               : const EmptyState(
                   icon: LucideIcons.podcast,

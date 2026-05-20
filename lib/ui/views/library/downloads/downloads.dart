@@ -169,16 +169,29 @@ class DownloadsView extends StatelessWidget {
                       title: 'No downloads yet',
                       subtitle: 'Download episodes to listen offline',
                     )
-                  : SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          gapH16,
-                          ContentBox(
-                            title: "Episodes (${downloads.length})",
-                            children: [
-                              for (var download in downloads)
-                                PoddrListItem(
+                  : CustomScrollView(
+                      slivers: [
+                        sliverGapH16,
+                        if (downloads.isNotEmpty)
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 12, bottom: 8),
+                              child: Text(
+                                "Episodes (${downloads.length})",
+                                style: context.theme.textTheme.titleMedium.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: context.theme.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        SliverPadding(
+                          padding: const EdgeInsets.all(12),
+                          sliver: SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final download = downloads[index];
+                                return PoddrListItem(
                                   title: download.title,
                                   subtitle: download.podcastTitle,
                                   leading: Container(
@@ -187,8 +200,9 @@ class DownloadsView extends StatelessWidget {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(12)),
                                     ),
-                                    child:
-                                        PoddrImage(imageUrl: download.imageUrl),
+                                    child: PoddrImage(
+                                        imageUrl: download.imageUrl,
+                                        maxHeightDiskCache: 300),
                                   ),
                                   onTap: () {
                                     viewModel.loadMedia(
@@ -217,12 +231,14 @@ class DownloadsView extends StatelessWidget {
                                           viewModel.toPodcastEpisode(download)!,
                                     ),
                                   ],
-                                ),
-                            ],
+                                );
+                              },
+                              childCount: downloads.length,
+                            ),
                           ),
-                          const BottomPaddingFix(),
-                        ],
-                      ),
+                        ),
+                        SliverToBoxAdapter(child: BottomPaddingFix()),
+                      ],
                     ),
         );
       },

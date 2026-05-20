@@ -146,15 +146,16 @@ class LatestEpisodesView extends StatelessWidget {
                   subtitle:
                       'New episodes from your subscriptions will appear here',
                 )
-              : SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      gapH16,
-                      ContentBox(
-                        children: [
-                          for (var episode in viewModel.episodes)
-                            PoddrListItem(
+              : CustomScrollView(
+                  slivers: [
+                    sliverGapH16,
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final episode = viewModel.episodes[index];
+                            return PoddrListItem(
                               title: episode.title,
                               subtitle: episode.author,
                               leading: Container(
@@ -164,7 +165,8 @@ class LatestEpisodesView extends StatelessWidget {
                                       BorderRadius.all(Radius.circular(12)),
                                 ),
                                 child: PoddrImage(
-                                    imageUrl: episode.imageUrl ?? ''),
+                                    imageUrl: episode.imageUrl ?? '',
+                                    maxHeightDiskCache: 300),
                               ),
                               onTap: () {
                                 context.read<MediaProvider>().loadMedia(
@@ -186,12 +188,14 @@ class LatestEpisodesView extends StatelessWidget {
                                     audioUrl: episode.audioUrl),
                                 DownloadButton(episode: episode),
                               ],
-                            ),
-                        ],
+                            );
+                          },
+                          childCount: viewModel.episodes.length,
+                        ),
                       ),
-                      const BottomPaddingFix(),
-                    ],
-                  ),
+                    ),
+                    SliverToBoxAdapter(child: BottomPaddingFix()),
+                  ],
                 ),
         );
       },

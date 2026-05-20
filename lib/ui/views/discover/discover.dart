@@ -77,19 +77,16 @@ class PodcastDiscoveryView extends StatelessWidget {
               ],
             ),
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                gapH16,
-                const LatestEpisodes(),
-                gapH16,
-                const RecentlyPlayedEpisodes(),
-                gapH16,
-                const TrendingPodcasts(),
-                const BottomPaddingFix(),
-              ],
-            ),
+          child: CustomScrollView(
+            slivers: [
+              sliverGapH16,
+              const SliverToBoxAdapter(child: LatestEpisodes()),
+              sliverGapH16,
+              const SliverToBoxAdapter(child: RecentlyPlayedEpisodes()),
+              sliverGapH16,
+              const SliverToBoxAdapter(child: TrendingPodcasts()),
+              SliverToBoxAdapter(child: BottomPaddingFix()),
+            ],
           ),
         );
       },
@@ -252,7 +249,7 @@ class LatestEpisodes extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: PoddrImage(imageUrl: episode.imageUrl ?? ""),
+                        child: PoddrImage(imageUrl: episode.imageUrl ?? "", maxHeightDiskCache: 300),
                   ),
                   title: episode.title,
                   titleMaxLines: 1,
@@ -326,7 +323,7 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: PoddrImage(imageUrl: history.imageUrl ?? ""),
+                        child: PoddrImage(imageUrl: history.imageUrl ?? "", maxHeightDiskCache: 300),
                       ),
                       title: history.title,
                       titleMaxLines: 1,
@@ -400,7 +397,7 @@ class TrendingPodcasts extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(12)),
                     ),
                     child:
-                        PoddrImage(imageUrl: charts.charts[index].image ?? ''),
+                        PoddrImage(imageUrl: charts.charts[index].image ?? '', maxHeightDiskCache: 300),
                   ),
                   title: charts.charts[index].title,
                   subtitle: charts.charts[index].rss,
@@ -454,6 +451,7 @@ class TrendingPodcasts extends StatelessWidget {
                         ),
                         child: PoddrImage(
                           imageUrl: charts.charts[index].image ?? '',
+                          maxHeightDiskCache: 300,
                         ),
                       ),
                       title: charts.charts[index].title,
