@@ -1,0 +1,26 @@
+display_name: Poddr
+package_name: poddr
+maintainer:
+  name: Marcus "Sn8z" Sneitz
+  email: marcus.sneitz@gmail.com
+priority: optional
+section: multimedia
+installed_size: 1337 # Update this with the actual installed size in KB
+icon: assets/images/logo.png
+
+keywords:
+  - Poddr
+  - Podcast
+  - Audio
+  - Player
+  - Media
+  - Music
+
+generic_name: Podcast Player
+
+categories:
+  - Audio
+  - Media
+  - Music
+
+startup_notify: true

@@ -1,0 +1,27 @@
+icon: assets/images/logo.png
+summary: A cross-platform podcast player
+group: Application/Multimedia
+vendor: Sn8z
+packager: Marcus "Sn8z" Sneitz
+packagerEmail: marcus.sneitz@gmail.com
+license: GPL-3.0
+url: https://github.com/Sn8z/Poddr
+
+display_name: Poddr
+
+keywords:
+  - Poddr
+  - Podcast
+  - Audio
+  - Player
+  - Media
+  - Music
+
+generic_name: Podcast Player
+
+categories:
+  - Audio
+  - Media
+  - Music
+
+startup_notify: true

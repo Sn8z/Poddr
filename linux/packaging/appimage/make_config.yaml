@@ -1,0 +1,19 @@
+display_name: Poddr
+icon: assets/images/logo.png
+
+keywords:
+  - Poddr
+  - Podcast
+  - Audio
+  - Player
+  - Media
+  - Music
+
+generic_name: Podcast Player
+
+categories:
+  - Audio
+  - Media
+  - Music
+
+startup_notify: true

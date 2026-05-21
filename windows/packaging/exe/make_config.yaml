@@ -1,0 +1,6 @@
+app_id: com.sn8z.poddr
+publisher_name: Marcus "Sn8z" Sneitz
+publisher_url: https://github.com/Sn8z
+display_name: Poddr
+create_desktop_icon: true
+launch_at_startup: false
