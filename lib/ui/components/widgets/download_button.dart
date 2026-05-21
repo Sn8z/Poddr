@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/offline.dart';
@@ -44,7 +44,7 @@ class DownloadButton extends StatelessWidget {
               onPressed: () {
                 offlineProvider.cancelDownload(episode.audioUrl);
               },
-              icon: const Icon(LucideIcons.x),
+              icon: FaIcon(FontAwesomeIcons.xmark),
               size: 14,
             ),
           ],
@@ -61,7 +61,7 @@ class DownloadButton extends StatelessWidget {
             onPressed: () {
               offlineProvider.cancelDownload(episode.audioUrl);
             },
-            icon: const Icon(LucideIcons.clock),
+            icon: FaIcon(FontAwesomeIcons.clock),
             size: 14,
           ),
           if (queuePosition > 0)
@@ -93,7 +93,7 @@ class DownloadButton extends StatelessWidget {
         onPressed: () {
           offlineProvider.remove(episode.audioUrl);
         },
-        icon: const Icon(LucideIcons.trash),
+        icon: FaIcon(FontAwesomeIcons.trash),
         size: iconSize,
       );
     }
@@ -102,7 +102,7 @@ class DownloadButton extends StatelessWidget {
       onPressed: () {
         offlineProvider.download(episode);
       },
-      icon: const Icon(LucideIcons.download),
+      icon: FaIcon(FontAwesomeIcons.download),
       size: iconSize,
     );
   }

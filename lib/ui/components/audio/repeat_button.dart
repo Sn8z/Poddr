@@ -1,6 +1,6 @@
-﻿import 'package:audio_service/audio_service.dart';
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
@@ -18,19 +18,19 @@ class RepeatButton extends StatelessWidget {
     final repeatMode = context
         .select<MediaProvider, AudioServiceRepeatMode>((e) => e.repeatMode);
 
-    IconData icon;
+    FaIconData icon;
     switch (repeatMode) {
       case AudioServiceRepeatMode.none:
-        icon = LucideIcons.repeat;
+        icon = FontAwesomeIcons.repeat;
         break;
       case AudioServiceRepeatMode.one:
-        icon = LucideIcons.repeat1;
+        icon = FontAwesomeIcons.repeat;
         break;
       case AudioServiceRepeatMode.all:
-        icon = LucideIcons.repeat;
+        icon = FontAwesomeIcons.repeat;
         break;
       default:
-        icon = LucideIcons.repeat;
+        icon = FontAwesomeIcons.repeat;
         break;
     }
 
@@ -50,7 +50,7 @@ class RepeatButton extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Center(
-                child: Icon(
+                child: FaIcon(
                   icon,
                   size: size * 0.8,
                   color: color,

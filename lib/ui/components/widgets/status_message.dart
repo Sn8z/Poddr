@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 
 class PoddrStatusMessage extends StatelessWidget {
@@ -33,8 +33,8 @@ class PoddrStatusMessage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            isError ? LucideIcons.alertCircle : LucideIcons.info,
+          FaIcon(
+            isError ? FontAwesomeIcons.circleExclamation : FontAwesomeIcons.circleInfo,
             size: 18,
             color: isError ? theme.error : theme.primary,
           ),

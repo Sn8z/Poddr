@@ -1,4 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/audio/media_thumbnail.dart';
@@ -96,8 +97,8 @@ enum SideBarItemStatus {
 
 class PoddrSideBarItem extends StatelessWidget {
   final String title;
-  final IconData icon;
-  final IconData selectedIcon;
+  final FaIconData icon;
+  final FaIconData selectedIcon;
   final SideBarItemStatus status;
   final VoidCallback onTap;
 
@@ -149,7 +150,7 @@ class PoddrSideBarItem extends StatelessWidget {
                 ? MainAxisAlignment.start
                 : MainAxisAlignment.center,
             children: [
-              Icon(
+              FaIcon(
                 status == SideBarItemStatus.selected ? selectedIcon : icon,
                 color: status == SideBarItemStatus.selected
                     ? context.theme.secondary

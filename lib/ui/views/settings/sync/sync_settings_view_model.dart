@@ -1,4 +1,4 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
 
 class SyncSetupProvider extends ChangeNotifier {
   String _server;

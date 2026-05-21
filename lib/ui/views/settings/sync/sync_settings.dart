@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/info_row.dart';
 import 'package:poddr/ui/components/widgets/status_message.dart';
@@ -75,8 +75,7 @@ class SyncSection extends StatelessWidget {
                   color: theme.primary.withAlpha(40),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  LucideIcons.cloud,
+                child: FaIcon(FontAwesomeIcons.cloud,
                   color: theme.primary,
                   size: 28,
                 ),
@@ -104,7 +103,7 @@ class SyncSection extends StatelessWidget {
                 ),
               ),
               PoddrIconButton(
-                icon: const Icon(LucideIcons.refreshCw),
+                icon: FaIcon(FontAwesomeIcons.rotate),
                 onPressed: sync.isLoading ? null : () => sync.syncNow(),
               ),
             ],
@@ -112,21 +111,20 @@ class SyncSection extends StatelessWidget {
         ),
         gapH32,
         PoddrInfoRow(
-          icon: LucideIcons.monitor,
+          icon: FontAwesomeIcons.desktop,
           label: 'Device Name',
           value: setup.deviceName,
         ),
         gapH16,
         PoddrInfoRow(
-          icon: LucideIcons.arrowLeftRight,
+          icon: FontAwesomeIcons.arrowsLeftRightToLine,
           label: 'Syncing With',
           value: sync.targetSyncDeviceName.isEmpty
               ? 'No device selected'
               : sync.targetSyncDeviceName,
           onTap:
               sync.isLoading ? null : () => _showDeviceSelection(context, sync),
-          action: Icon(
-            LucideIcons.chevronRight,
+          action: FaIcon(FontAwesomeIcons.chevronRight,
             size: 18,
             color: theme.primary,
           ),
@@ -134,7 +132,7 @@ class SyncSection extends StatelessWidget {
         if (sync.lastSyncTime != null) ...[
           gapH16,
           PoddrInfoRow(
-            icon: LucideIcons.clock,
+            icon: FontAwesomeIcons.clock,
             label: 'Last Sync',
             value: convertDateToTimeAgo(sync.lastSyncTime!),
           ),
@@ -150,7 +148,7 @@ class SyncSection extends StatelessWidget {
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(LucideIcons.link2Off),
+                    FaIcon(FontAwesomeIcons.linkSlash),
                     SizedBox(width: 8),
                     Text('Disconnect'),
                   ],
@@ -167,7 +165,7 @@ class SyncSection extends StatelessWidget {
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(LucideIcons.refreshCw),
+              FaIcon(FontAwesomeIcons.rotate),
               SizedBox(width: 8),
               Text('Full Re-Sync'),
             ],
@@ -197,7 +195,7 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateServer(value),
           labelText: 'Server URL',
           hintText: 'https://gpodder.net',
-          prefixIcon: Icon(LucideIcons.link, color: theme.onSurfaceVariant),
+          prefixIcon: FaIcon(FontAwesomeIcons.link, color: theme.onSurfaceVariant),
         ),
         gapH24,
         PoddrTextInput(
@@ -205,7 +203,7 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateUsername(value),
           labelText: 'Username',
           hintText: 'Enter your username',
-          prefixIcon: Icon(LucideIcons.user, color: theme.onSurfaceVariant),
+          prefixIcon: FaIcon(FontAwesomeIcons.user, color: theme.onSurfaceVariant),
         ),
         gapH24,
         PoddrTextInput(
@@ -213,11 +211,11 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updatePassword(value),
           labelText: 'Password',
           hintText: 'Enter your password',
-          prefixIcon: Icon(LucideIcons.lock, color: theme.onSurfaceVariant),
+          prefixIcon: FaIcon(FontAwesomeIcons.lock, color: theme.onSurfaceVariant),
           obscure: !setup.showPassword,
           suffixIcon: PoddrIconButton(
-            icon: Icon(
-              setup.showPassword ? LucideIcons.eyeOff : LucideIcons.eye,
+            icon: FaIcon(
+              setup.showPassword ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye,
             ),
             onPressed: () => setup.togglePasswordVisibility(),
             padding: 2.0,
@@ -230,7 +228,7 @@ class SyncSection extends StatelessWidget {
           labelText: 'Device Name',
           hintText: 'Poddr',
           prefixIcon:
-              Icon(LucideIcons.smartphone, color: theme.onSurfaceVariant),
+              FaIcon(FontAwesomeIcons.mobileScreenButton, color: theme.onSurfaceVariant),
         ),
         gapH24,
         PoddrFilledButton(
@@ -259,7 +257,7 @@ class SyncSection extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
               ] else
-                const Icon(LucideIcons.link),
+                FaIcon(FontAwesomeIcons.link),
               if (sync.isLoading) const SizedBox(width: 8),
               Text(sync.isLoading ? 'Connecting...' : 'Connect'),
             ],
@@ -350,10 +348,10 @@ class SyncSection extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Row(
                   children: [
-                    Icon(
+                    FaIcon(
                       groupedDevices.isEmpty
-                          ? LucideIcons.checkCircle
-                          : LucideIcons.circle,
+                          ? FontAwesomeIcons.circleCheck
+                          : FontAwesomeIcons.circle,
                       size: 20,
                       color: context.theme.primary,
                     ),
@@ -383,10 +381,10 @@ class SyncSection extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Row(
                         children: [
-                          Icon(
+                          FaIcon(
                             device['id'] == sync.targetSyncDeviceId
-                                ? LucideIcons.checkCircle
-                                : LucideIcons.circle,
+                                ? FontAwesomeIcons.circleCheck
+                                : FontAwesomeIcons.circle,
                             size: 20,
                             color: context.theme.primary,
                           ),
@@ -419,8 +417,7 @@ class SyncSection extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Row(
                         children: [
-                          Icon(
-                            LucideIcons.circle,
+                          FaIcon(FontAwesomeIcons.circle,
                             size: 20,
                             color: context.theme.onSurfaceVariant,
                           ),
@@ -470,10 +467,10 @@ class SyncSection extends StatelessWidget {
         ],
         child: Text(
           'This will:\n'
-          '• Clear all unsynced local changes\n'
-          '• Pull all current server subscriptions and episode history\n'
-          '• Preserve all local subscriptions\n'
-          '• Set sync timestamps to current time (only new data fetched next sync)',
+          'Ã¢â‚¬Â¢ Clear all unsynced local changes\n'
+          'Ã¢â‚¬Â¢ Pull all current server subscriptions and episode history\n'
+          'Ã¢â‚¬Â¢ Preserve all local subscriptions\n'
+          'Ã¢â‚¬Â¢ Set sync timestamps to current time (only new data fetched next sync)',
           style: context.theme.textTheme.bodyMedium,
         ),
       ),

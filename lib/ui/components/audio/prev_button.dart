@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
@@ -31,8 +31,7 @@ class PreviousButton extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Center(
-                child: Icon(
-                  LucideIcons.skipBack,
+                child: FaIcon(FontAwesomeIcons.backwardStep,
                   size: size * 0.8,
                   color: canGoPrevious
                       ? context.theme.primary

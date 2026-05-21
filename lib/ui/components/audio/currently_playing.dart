@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
@@ -16,8 +16,7 @@ class CurrentlyPlayingIcon extends StatelessWidget {
     final isCurrentEpisode = currentEpisode == episodeSource;
 
     if (isCurrentEpisode) {
-      return Icon(
-        LucideIcons.music,
+      return FaIcon(FontAwesomeIcons.music,
         color: context.theme.primary,
       );
     } else {

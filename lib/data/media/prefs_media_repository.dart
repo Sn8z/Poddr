@@ -1,4 +1,4 @@
-﻿import 'package:poddr/core/log.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/data/media/media_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

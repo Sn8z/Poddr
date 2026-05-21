@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 
@@ -16,7 +16,7 @@ class PlayerViewButton extends StatelessWidget {
       onPressed: () {
         context.push('/player');
       },
-      icon: const Icon(LucideIcons.monitorPlay),
+      icon: FaIcon(FontAwesomeIcons.desktop),
       size: size,
     );
   }

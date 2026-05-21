@@ -1,6 +1,6 @@
-﻿import 'package:flutter/gestures.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:provider/provider.dart';
@@ -25,10 +25,10 @@ class VolumeSlider extends StatelessWidget {
       children: [
         PoddrIconButton(
           icon: switch (volume.round()) {
-            <= 0 => Icon(LucideIcons.volumeX, color: context.theme.error),
-            <= 33 => Icon(LucideIcons.volume, color: context.theme.secondary),
-            <= 66 => Icon(LucideIcons.volume1, color: context.theme.secondary),
-            _ => Icon(LucideIcons.volume2, color: context.theme.secondary),
+            <= 0 => FaIcon(FontAwesomeIcons.volumeXmark, color: context.theme.error),
+            <= 33 => FaIcon(FontAwesomeIcons.volumeHigh, color: context.theme.secondary),
+            <= 66 => FaIcon(FontAwesomeIcons.volumeLow, color: context.theme.secondary),
+            _ => FaIcon(FontAwesomeIcons.volumeHigh, color: context.theme.secondary),
           },
           onPressed: () {
             mediaProvider.toggleMute();

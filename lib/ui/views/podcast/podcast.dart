@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/models/episode.dart';
@@ -77,7 +77,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                 actions: [
                   PoddrAddSubscriptionBtn(rss: widget.rss),
                   PoddrIconButton(
-                    icon: const Icon(LucideIcons.info),
+                    icon: FaIcon(FontAwesomeIcons.circleInfo),
                     onPressed: () {
                       showPoddrDialog(
                         context: context,
@@ -101,7 +101,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                   ),
                   if (podcast?.link != null && podcast!.link!.isNotEmpty) ...[
                     PoddrIconButton(
-                      icon: const Icon(LucideIcons.globe),
+                      icon: FaIcon(FontAwesomeIcons.globe),
                       onPressed: () async {
                         final uri = Uri.parse(podcast.link ?? "");
                         if (await canLaunchUrl(uri)) {
@@ -120,7 +120,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                         return Row(
                           children: [
                             PoddrIconButton(
-                              icon: const Icon(LucideIcons.filter),
+                              icon: FaIcon(FontAwesomeIcons.filter),
                               onPressed: () {
                                 _showFilterSortDialog(context, podcastProvider);
                               },
@@ -135,7 +135,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                                 },
                                 suffixIcon: podcastProvider.filter.isNotEmpty
                                     ? PoddrIconButton(
-                                        icon: const Icon(LucideIcons.x),
+                                        icon: FaIcon(FontAwesomeIcons.xmark),
                                         size: 20,
                                         onPressed: () {
                                           podcastProvider.setFilter('');
@@ -150,7 +150,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                         return Row(
                           children: [
                             PoddrIconButton(
-                              icon: const Icon(LucideIcons.filter),
+                              icon: FaIcon(FontAwesomeIcons.filter),
                               onPressed: () {
                                 _showFilterSortDialog(context, podcastProvider);
                               },
@@ -189,7 +189,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                   ],
                 )
               : const EmptyState(
-                  icon: LucideIcons.podcast,
+                  icon: FontAwesomeIcons.podcast,
                   title: 'Podcast not found',
                   subtitle: 'This podcast could not be loaded',
                 ),
@@ -227,7 +227,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(LucideIcons.languages,
+            FaIcon(FontAwesomeIcons.language,
                 size: 12, color: theme.onSurfaceVariant),
             gapW4,
             Text(
@@ -248,7 +248,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(LucideIcons.listTree, size: 12, color: theme.onSurfaceVariant),
+            FaIcon(FontAwesomeIcons.list, size: 12, color: theme.onSurfaceVariant),
             gapW4,
             Text(
               '${podcast.episodes.length} Episodes',
@@ -310,7 +310,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                     },
                     suffixIcon: viewModel.filter.isNotEmpty
                         ? PoddrIconButton(
-                            icon: const Icon(LucideIcons.x),
+                            icon: FaIcon(FontAwesomeIcons.xmark),
                             size: 20,
                             onPressed: () {
                               viewModel.setFilter('');
@@ -321,10 +321,10 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                   gapH16,
                   for (var field in EpisodeSortField.values)
                     PoddrListTile(
-                      leading: Icon(
+                      leading: FaIcon(
                         viewModel.sortField == field.label
-                            ? LucideIcons.circleDot
-                            : LucideIcons.circle,
+                            ? FontAwesomeIcons.circleDot
+                            : FontAwesomeIcons.circle,
                         size: 18,
                         color: context.theme.secondary,
                       ),
@@ -335,8 +335,8 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                     ),
                   PoddrIconButton(
                     icon: viewModel.sortDirection == "Ascending"
-                        ? const Icon(LucideIcons.arrowUp, size: 20)
-                        : const Icon(LucideIcons.arrowDown, size: 20),
+                        ? FaIcon(FontAwesomeIcons.arrowUp, size: 20)
+                        : FaIcon(FontAwesomeIcons.arrowDown, size: 20),
                     onPressed: () {
                       viewModel.setSort(
                         direction: viewModel.sortDirection == "Ascending"
@@ -387,8 +387,7 @@ class Episode extends StatelessWidget {
           ),
         ),
         PoddrIconButton(
-          icon: const Icon(
-            LucideIcons.info,
+          icon: const FaIcon(FontAwesomeIcons.circleInfo,
           ),
           onPressed: () {
             showPoddrDialog(
@@ -426,8 +425,7 @@ class Episode extends StatelessWidget {
                   artist: podcastProvider.podcast!.author,
                 );
           },
-          icon: const Icon(
-            LucideIcons.listMusic,
+          icon: const FaIcon(FontAwesomeIcons.music,
           ),
         ),
         EpisodeHistoryCircle(

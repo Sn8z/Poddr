@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 Color generateRandomColor() {

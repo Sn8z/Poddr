@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/theme/poddr_theme_data.dart';
@@ -72,8 +72,7 @@ class SettingsView extends StatelessWidget {
               title: "Support",
               children: [
                 PoddrListItem(
-                  leading: Icon(
-                    LucideIcons.github,
+                  leading: FaIcon(FontAwesomeIcons.github,
                     color: context.theme.onSurface,
                   ),
                   title: "GitHub Sponsor",
@@ -87,8 +86,7 @@ class SettingsView extends StatelessWidget {
                   },
                 ),
                 PoddrListItem(
-                  leading: Icon(
-                    LucideIcons.wallet,
+                  leading: FaIcon(FontAwesomeIcons.wallet,
                     color: context.theme.onSurface,
                   ),
                   title: "Paypal",
@@ -102,8 +100,7 @@ class SettingsView extends StatelessWidget {
                   },
                 ),
                 PoddrListItem(
-                  leading: Icon(
-                    LucideIcons.coffee,
+                  leading: FaIcon(FontAwesomeIcons.mugSaucer,
                     color: context.theme.onSurface,
                   ),
                   title: "Ko-Fi",
@@ -122,8 +119,7 @@ class SettingsView extends StatelessWidget {
               title: "About",
               children: [
                 PoddrListItem(
-                  leading: Icon(
-                    LucideIcons.bug,
+                  leading: FaIcon(FontAwesomeIcons.bug,
                     color: context.theme.onSurface,
                   ),
                   title: "Issues",
@@ -137,8 +133,7 @@ class SettingsView extends StatelessWidget {
                   },
                 ),
                 PoddrListItem(
-                  leading: Icon(
-                    LucideIcons.info,
+                  leading: FaIcon(FontAwesomeIcons.circleInfo,
                     color: context.theme.onSurface,
                   ),
                   title: 'Licenses',
@@ -200,28 +195,28 @@ class ThemeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         ThemeBox(
           title: 'System',
           mode: PoddrThemeMode.system,
           color: Color(0xFF808080),
-          icon: LucideIcons.monitor,
+          icon: FontAwesomeIcons.desktop,
           iconColor: Color(0xFFFFFFFF),
         ),
         ThemeBox(
           title: 'Light',
           mode: PoddrThemeMode.light,
           color: Color(0xFFFFFFFF),
-          icon: LucideIcons.sun,
+          icon: FontAwesomeIcons.sun,
           iconColor: Color(0xFF000000),
         ),
         ThemeBox(
           title: 'Dark',
           mode: PoddrThemeMode.dark,
           color: Color(0xFF000000),
-          icon: LucideIcons.moon,
+          icon: FontAwesomeIcons.moon,
           iconColor: Color(0xFFFFFFFF),
         ),
       ],
@@ -233,7 +228,7 @@ class ThemeBox extends StatelessWidget {
   final String title;
   final PoddrThemeMode mode;
   final Color color;
-  final IconData icon;
+  final FaIconData icon;
   final Color iconColor;
 
   const ThemeBox({
@@ -272,7 +267,7 @@ class ThemeBox extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              FaIcon(
                 icon,
                 color: iconColor,
               ),

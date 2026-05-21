@@ -1,14 +1,15 @@
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 
 class LibrarySegment {
   final String label;
-  final IconData icon;
+  final FaIconData icon;
   final String route;
 
-  const LibrarySegment({
+  LibrarySegment({
     required this.label,
     required this.icon,
     required this.route,
@@ -98,11 +99,11 @@ class _SegmentedBarState extends State<_SegmentedBar> {
                       : (isHovered ? theme.surfaceContainer : const Color(0x00000000)),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      segment.icon,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FaIcon(
+                        segment.icon,
                       size: 18,
                       color: isActive
                           ? theme.secondary

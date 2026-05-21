@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'dart:async';
 import 'package:drift/drift.dart';
 import 'package:poddr/core/log.dart';

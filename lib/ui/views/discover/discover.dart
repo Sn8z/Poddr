@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/services/history.dart';
@@ -202,7 +202,7 @@ class LatestEpisodes extends StatelessWidget {
       title: "Latest episodes",
       actions: [
         PoddrIconButton(
-          icon: const Icon(LucideIcons.chevronRight),
+          icon: FaIcon(FontAwesomeIcons.chevronRight),
           onPressed: () {
             context.push('/library/latest');
           },

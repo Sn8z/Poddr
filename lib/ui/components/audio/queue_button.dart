@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -21,7 +21,7 @@ class QueueButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PoddrIconButton(
-      icon: const Icon(LucideIcons.music),
+      icon: FaIcon(FontAwesomeIcons.music),
       onPressed: () {
         showPoddrDialog(
           context: context,
@@ -74,7 +74,7 @@ class QueueButton extends StatelessWidget {
                                 title: episode.title ?? '',
                                 subtitle: episode.podcastTitle ?? '',
                                 trailing: PoddrIconButton(
-                                  icon: const Icon(LucideIcons.x),
+                                  icon: FaIcon(FontAwesomeIcons.xmark),
                                   size: 20,
                                   color: context.theme.onSurfaceVariant,
                                   onPressed: () {

@@ -1,9 +1,10 @@
-﻿import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
 class PoddrInfoRow extends StatelessWidget {
-  final IconData icon;
+  final FaIconData icon;
   final String label;
   final String value;
   final VoidCallback? onTap;
@@ -35,7 +36,7 @@ class PoddrInfoRow extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, size: 20, color: theme.primary),
+            FaIcon(icon, size: 20, color: theme.primary),
             gapW12,
             Expanded(
               child: Column(

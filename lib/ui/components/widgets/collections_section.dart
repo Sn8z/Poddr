@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/collection.dart';
 import 'package:poddr/services/collections.dart';
@@ -63,7 +63,7 @@ class PoddrCollectionEditButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PoddrIconButton(
-      icon: Icon(LucideIcons.edit),
+      icon: FaIcon(FontAwesomeIcons.penToSquare),
       onPressed: () {
         showPoddrDialog(
           context: context,

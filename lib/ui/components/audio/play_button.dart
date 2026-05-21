@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -55,8 +55,8 @@ class PlayButton extends StatelessWidget {
                         size: size * 0.4,
                         strokeWidth: 2,
                       )
-                    : Icon(
-                        isPlaying ? LucideIcons.pause : LucideIcons.play,
+                    : FaIcon(
+                        isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
                         color: context.theme.onSurface,
                         size: size * 0.5,
                       ),

@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/offline/drift_offline_repository.dart';

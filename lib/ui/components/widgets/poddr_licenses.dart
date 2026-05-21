@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 
@@ -76,8 +76,8 @@ class _LicenseCardState extends State<_LicenseCard> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 children: [
-                  Icon(
-                    _expanded ? LucideIcons.chevronDown : LucideIcons.chevronRight,
+                  FaIcon(
+                    _expanded ? FontAwesomeIcons.chevronDown : FontAwesomeIcons.chevronRight,
                     size: 16,
                     color: theme.onSurfaceVariant,
                   ),

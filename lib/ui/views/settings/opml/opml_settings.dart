@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:provider/provider.dart';
@@ -34,16 +34,14 @@ class _OpmlView extends StatelessWidget {
     return Column(
       children: [
         PoddrListItem(
-          leading: Icon(
-            LucideIcons.arrowLeft,
+          leading: FaIcon(FontAwesomeIcons.arrowLeft,
             color: context.theme.onSurface,
           ),
           title: 'Import',
           onTap: isLoading ? null : () => viewModel.importOpml(),
         ),
         PoddrListItem(
-          leading: Icon(
-            LucideIcons.arrowRight,
+          leading: FaIcon(FontAwesomeIcons.arrowRight,
             color: context.theme.onSurface,
           ),
           title: 'Export',

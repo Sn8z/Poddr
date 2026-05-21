@@ -1,10 +1,10 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NavItem {
   String label;
-  IconData icon;
-  IconData selectedIcon;
+  FaIconData icon;
+  FaIconData selectedIcon;
   String route;
 
   NavItem({
@@ -18,26 +18,26 @@ class NavItem {
 final List<NavItem> destinations = [
   NavItem(
     label: 'Podcasts',
-    icon: LucideIcons.podcast,
-    selectedIcon: LucideIcons.podcast,
+    icon: FontAwesomeIcons.podcast,
+    selectedIcon: FontAwesomeIcons.podcast,
     route: '/podcasts',
   ),
   NavItem(
     label: 'Library',
-    icon: LucideIcons.library,
-    selectedIcon: LucideIcons.library,
+    icon: FontAwesomeIcons.bookOpen,
+    selectedIcon: FontAwesomeIcons.bookOpen,
     route: '/library',
   ),
   NavItem(
     label: 'Search',
-    icon: LucideIcons.search,
-    selectedIcon: LucideIcons.search,
+    icon: FontAwesomeIcons.magnifyingGlass,
+    selectedIcon: FontAwesomeIcons.magnifyingGlass,
     route: '/search',
   ),
   NavItem(
     label: 'Settings',
-    icon: LucideIcons.settings,
-    selectedIcon: LucideIcons.settings,
+    icon: FontAwesomeIcons.gear,
+    selectedIcon: FontAwesomeIcons.gear,
     route: '/settings',
   ),
 ];
@@ -45,20 +45,20 @@ final List<NavItem> destinations = [
 final List<NavItem> librarySubNav = [
   NavItem(
     label: 'Subscriptions',
-    icon: LucideIcons.library,
-    selectedIcon: LucideIcons.library,
+    icon: FontAwesomeIcons.bookOpen,
+    selectedIcon: FontAwesomeIcons.bookOpen,
     route: '/library/subscriptions',
   ),
   NavItem(
     label: 'Latest',
-    icon: LucideIcons.clock,
-    selectedIcon: LucideIcons.clock,
+    icon: FontAwesomeIcons.clock,
+    selectedIcon: FontAwesomeIcons.clock,
     route: '/library/latest',
   ),
   NavItem(
     label: 'Downloads',
-    icon: LucideIcons.download,
-    selectedIcon: LucideIcons.download,
+    icon: FontAwesomeIcons.download,
+    selectedIcon: FontAwesomeIcons.download,
     route: '/library/downloads',
   ),
 ];

@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
@@ -23,8 +23,8 @@ class PoddrAddSubscriptionBtn extends StatelessWidget {
     final isSubscription = subcriptions.any((podcast) => podcast.rss == rss);
 
     return PoddrIconButton(
-      icon: Icon(
-        isSubscription ? LucideIcons.heart : LucideIcons.heartOff,
+      icon: FaIcon(
+        isSubscription ? FontAwesomeIcons.heart : FontAwesomeIcons.heartCrack,
         size: size,
         color: isSubscription
             ? context.theme.secondary

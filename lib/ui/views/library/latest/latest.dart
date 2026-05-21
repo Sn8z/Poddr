@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -52,20 +52,20 @@ class LatestEpisodesView extends StatelessWidget {
                 ? [
                     PoddrLibraryNav(
                       currentRoute: '/library/latest',
-                      segments: const [
+                      segments: [
                         LibrarySegment(
                           label: 'Subscriptions',
-                          icon: LucideIcons.library,
+                          icon: FontAwesomeIcons.bookOpen,
                           route: '/library/subscriptions',
                         ),
                         LibrarySegment(
                           label: 'Latest',
-                          icon: LucideIcons.clock,
+                          icon: FontAwesomeIcons.clock,
                           route: '/library/latest',
                         ),
                         LibrarySegment(
                           label: 'Downloads',
-                          icon: LucideIcons.download,
+                          icon: FontAwesomeIcons.download,
                           route: '/library/downloads',
                         ),
                       ],
@@ -77,7 +77,7 @@ class LatestEpisodesView extends StatelessWidget {
                   ? Row(
                       children: [
                         PoddrIconButton(
-                          icon: const Icon(LucideIcons.filter),
+                          icon: FaIcon(FontAwesomeIcons.filter),
                           onPressed: () {
                             _showFilterSortDialog(context, viewModel);
                           },
@@ -92,7 +92,7 @@ class LatestEpisodesView extends StatelessWidget {
                             },
                             suffixIcon: viewModel.filter.isNotEmpty
                                 ? PoddrIconButton(
-                                    icon: const Icon(LucideIcons.x),
+                                    icon: FaIcon(FontAwesomeIcons.xmark),
                                     size: 20,
                                     onPressed: () {
                                       viewModel.setFilter('');
@@ -106,7 +106,7 @@ class LatestEpisodesView extends StatelessWidget {
                   : Row(
                       children: [
                         PoddrIconButton(
-                          icon: const Icon(LucideIcons.filter),
+                          icon: FaIcon(FontAwesomeIcons.filter),
                           onPressed: () {
                             _showFilterSortDialog(context, viewModel);
                           },
@@ -118,20 +118,20 @@ class LatestEpisodesView extends StatelessWidget {
                   : [
                       PoddrLibraryNav(
                         currentRoute: '/library/latest',
-                        segments: const [
+                        segments: [
                           LibrarySegment(
                             label: 'Subscriptions',
-                            icon: LucideIcons.library,
+                            icon: FontAwesomeIcons.bookOpen,
                             route: '/library/subscriptions',
                           ),
                           LibrarySegment(
                             label: 'Latest',
-                            icon: LucideIcons.clock,
+                            icon: FontAwesomeIcons.clock,
                             route: '/library/latest',
                           ),
                           LibrarySegment(
                             label: 'Downloads',
-                            icon: LucideIcons.download,
+                            icon: FontAwesomeIcons.download,
                             route: '/library/downloads',
                           ),
                         ],
@@ -141,7 +141,7 @@ class LatestEpisodesView extends StatelessWidget {
           ),
           child: viewModel.episodes.isEmpty
               ? const EmptyState(
-                  icon: LucideIcons.rss,
+                  icon: FontAwesomeIcons.rss,
                   title: 'No episodes yet',
                   subtitle:
                       'New episodes from your subscriptions will appear here',
@@ -223,7 +223,7 @@ class LatestEpisodesView extends StatelessWidget {
                     },
                     suffixIcon: viewModel.filter.isNotEmpty
                         ? PoddrIconButton(
-                            icon: const Icon(LucideIcons.x),
+                            icon: FaIcon(FontAwesomeIcons.xmark),
                             size: 20,
                             onPressed: () {
                               viewModel.setFilter('');
@@ -234,10 +234,10 @@ class LatestEpisodesView extends StatelessWidget {
                   gapH16,
                   for (var field in EpisodeSortField.values)
                     PoddrListTile(
-                      leading: Icon(
+                      leading: FaIcon(
                         viewModel.sortField == field.label
-                            ? LucideIcons.circleDot
-                            : LucideIcons.circle,
+                            ? FontAwesomeIcons.circleDot
+                            : FontAwesomeIcons.circle,
                         size: 18,
                         color: context.theme.secondary,
                       ),
@@ -248,8 +248,8 @@ class LatestEpisodesView extends StatelessWidget {
                     ),
                   PoddrIconButton(
                     icon: viewModel.sortDirection == "Ascending"
-                        ? const Icon(LucideIcons.arrowUp, size: 20)
-                        : const Icon(LucideIcons.arrowDown, size: 20),
+                        ? FaIcon(FontAwesomeIcons.arrowUp, size: 20)
+                        : FaIcon(FontAwesomeIcons.arrowDown, size: 20),
                     onPressed: () {
                       viewModel.setSort(
                         direction: viewModel.sortDirection == "Ascending"

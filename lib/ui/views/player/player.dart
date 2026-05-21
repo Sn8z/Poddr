@@ -1,5 +1,5 @@
-﻿import 'package:flutter/widgets.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/audio/media_display.dart';
@@ -36,11 +36,11 @@ class PlayerView extends StatelessWidget {
               children: [
                 PoddrIconButton(
                   onPressed: () => context.pop(),
-                  icon: Icon(LucideIcons.chevronLeft),
+                  icon: FaIcon(FontAwesomeIcons.chevronLeft),
                 ),
                 PoddrIconButton(
                   onPressed: null,
-                  icon: Icon(LucideIcons.moreVertical),
+                  icon: FaIcon(FontAwesomeIcons.ellipsisVertical),
                 ),
               ],
             ),
