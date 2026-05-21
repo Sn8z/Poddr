@@ -29,10 +29,10 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-def keystorePath = keystoreProperties["storeFile"] ?: System.getenv("KEYSTORE_PATH")
-def storePassword = keystoreProperties["storePassword"] ?: System.getenv("KEYSTORE_PASSWORD")
-def keyAlias = keystoreProperties["keyAlias"] ?: System.getenv("KEY_ALIAS")
-def keyPassword = keystoreProperties["keyPassword"] ?: System.getenv("KEY_PASSWORD")
+def keystorePath_ = keystoreProperties["storeFile"] ?: System.getenv("KEYSTORE_PATH")
+def storePassword_ = keystoreProperties["storePassword"] ?: System.getenv("KEYSTORE_PASSWORD")
+def keyAlias_ = keystoreProperties["keyAlias"] ?: System.getenv("KEY_ALIAS")
+def keyPassword_ = keystoreProperties["keyPassword"] ?: System.getenv("KEY_PASSWORD")
 
 android {
     namespace = "com.sn8z.poddr"
@@ -59,11 +59,11 @@ android {
 
     signingConfigs {
         release {
-            if (keystorePath && file(keystorePath).exists()) {
-                storeFile file(keystorePath)
-                storePassword storePassword
-                keyAlias keyAlias
-                keyPassword keyPassword
+            if (keystorePath_ && file(keystorePath_).exists()) {
+                storeFile file(keystorePath_)
+                storePassword storePassword_
+                keyAlias keyAlias_
+                keyPassword keyPassword_
             }
         }
     }
