@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -55,11 +55,11 @@ class PlayButton extends StatelessWidget {
                         size: size * 0.4,
                         strokeWidth: 2,
                       )
-                    : FaIcon(
-                        isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
-                        color: context.theme.onSurface,
-                        size: size * 0.5,
-                      ),
+                     : HugeIcon(
+                         icon: isPlaying ? HugeIcons.strokeRoundedPause : HugeIcons.strokeRoundedPlay,
+                         color: context.theme.onSurface,
+                         size: size * 0.5,
+                       ),
               ),
             ],
           ),

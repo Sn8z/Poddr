@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/collections.dart';
@@ -154,11 +154,11 @@ class _CollectionListItem extends StatelessWidget {
       title: collection.name,
       actions: [
         PoddrIconButton(
-          icon: FaIcon(FontAwesomeIcons.pencil),
+          icon: HugeIcon(icon: HugeIcons.strokeRoundedEdit01),
           onPressed: onEdit,
         ),
         PoddrIconButton(
-          icon: FaIcon(FontAwesomeIcons.trash),
+          icon: HugeIcon(icon: HugeIcons.strokeRoundedDelete01),
           onPressed: onDelete,
         ),
       ],
@@ -198,7 +198,9 @@ class _AddCollectionRow extends StatelessWidget {
       ),
       suffixIcon: PoddrIconButton(
         onPressed: () => viewModel.submitNewCollection(),
-        icon: FaIcon(FontAwesomeIcons.plus),
+        icon: HugeIcon(
+          icon: HugeIcons.strokeRoundedPlusSign,
+        ),
       ),
     );
   }

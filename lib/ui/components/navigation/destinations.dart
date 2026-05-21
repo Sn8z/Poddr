@@ -1,9 +1,10 @@
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/widgets.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class NavItem {
   String label;
-  FaIconData icon;
-  FaIconData selectedIcon;
+  Widget icon;
+  Widget selectedIcon;
   String route;
 
   NavItem({
@@ -17,26 +18,42 @@ class NavItem {
 final List<NavItem> destinations = [
   NavItem(
     label: 'Podcasts',
-    icon: FontAwesomeIcons.podcast,
-    selectedIcon: FontAwesomeIcons.podcast,
+    icon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedPodcast,
+    ),
+    selectedIcon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedPodcast,
+    ),
     route: '/podcasts',
   ),
   NavItem(
     label: 'Library',
-    icon: FontAwesomeIcons.bookOpen,
-    selectedIcon: FontAwesomeIcons.bookOpen,
+    icon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedLibrary,
+    ),
+    selectedIcon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedLibrary,
+    ),
     route: '/library',
   ),
   NavItem(
     label: 'Search',
-    icon: FontAwesomeIcons.magnifyingGlass,
-    selectedIcon: FontAwesomeIcons.magnifyingGlass,
+    icon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedSearch01,
+    ),
+    selectedIcon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedSearch01,
+    ),
     route: '/search',
   ),
   NavItem(
     label: 'Settings',
-    icon: FontAwesomeIcons.gear,
-    selectedIcon: FontAwesomeIcons.gear,
+    icon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedSettings01,
+    ),
+    selectedIcon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedSettings01,
+    ),
     route: '/settings',
   ),
 ];
@@ -44,20 +61,32 @@ final List<NavItem> destinations = [
 final List<NavItem> librarySubNav = [
   NavItem(
     label: 'Subscriptions',
-    icon: FontAwesomeIcons.bookOpen,
-    selectedIcon: FontAwesomeIcons.bookOpen,
+    icon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedLibrary,
+    ),
+    selectedIcon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedLibrary,
+    ),
     route: '/library/subscriptions',
   ),
   NavItem(
     label: 'Latest',
-    icon: FontAwesomeIcons.clock,
-    selectedIcon: FontAwesomeIcons.clock,
+    icon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedClock01,
+    ),
+    selectedIcon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedClock01,
+    ),
     route: '/library/latest',
   ),
   NavItem(
     label: 'Downloads',
-    icon: FontAwesomeIcons.download,
-    selectedIcon: FontAwesomeIcons.download,
+    icon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedDownload01,
+    ),
+    selectedIcon: const HugeIcon(
+      icon: HugeIcons.strokeRoundedDownload01,
+    ),
     route: '/library/downloads',
   ),
 ];

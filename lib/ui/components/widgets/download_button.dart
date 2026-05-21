@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/offline.dart';
@@ -20,7 +20,8 @@ class DownloadButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final offlineProvider = context.watch<OfflineProvider>();
-    final isDownloading = offlineProvider.downloading.contains(episode.audioUrl);
+    final isDownloading =
+        offlineProvider.downloading.contains(episode.audioUrl);
     final progress = offlineProvider.downloadProgress[episode.audioUrl];
     final isDownloaded = offlineProvider.downloads.any(
       (d) => d.audioUrl == episode.audioUrl,
@@ -44,7 +45,9 @@ class DownloadButton extends StatelessWidget {
               onPressed: () {
                 offlineProvider.cancelDownload(episode.audioUrl);
               },
-              icon: FaIcon(FontAwesomeIcons.xmark),
+              icon: HugeIcon(
+                icon: HugeIcons.strokeRoundedCancel01,
+              ),
               size: 14,
             ),
           ],
@@ -61,7 +64,9 @@ class DownloadButton extends StatelessWidget {
             onPressed: () {
               offlineProvider.cancelDownload(episode.audioUrl);
             },
-            icon: FaIcon(FontAwesomeIcons.clock),
+            icon: HugeIcon(
+              icon: HugeIcons.strokeRoundedLoading01,
+            ),
             size: 14,
           ),
           if (queuePosition > 0)
@@ -93,7 +98,9 @@ class DownloadButton extends StatelessWidget {
         onPressed: () {
           offlineProvider.remove(episode.audioUrl);
         },
-        icon: FaIcon(FontAwesomeIcons.trash),
+        icon: HugeIcon(
+          icon: HugeIcons.strokeRoundedCancel01,
+        ),
         size: iconSize,
       );
     }
@@ -102,7 +109,9 @@ class DownloadButton extends StatelessWidget {
       onPressed: () {
         offlineProvider.download(episode);
       },
-      icon: FaIcon(FontAwesomeIcons.download),
+      icon: HugeIcon(
+        icon: HugeIcons.strokeRoundedDownload01,
+      ),
       size: iconSize,
     );
   }

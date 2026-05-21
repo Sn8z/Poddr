@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
@@ -40,7 +40,7 @@ class SearchView extends StatelessWidget {
               ? const ShimmerLoadingList()
               : searchResults.isEmpty
                   ? const EmptyState(
-                      icon: FontAwesomeIcons.magnifyingGlass,
+                       icon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01),
                       title: 'No results found',
                       subtitle: 'Try searching for a different term',
                     )

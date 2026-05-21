@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 
@@ -76,8 +76,10 @@ class _LicenseCardState extends State<_LicenseCard> {
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Row(
                 children: [
-                  FaIcon(
-                    _expanded ? FontAwesomeIcons.chevronDown : FontAwesomeIcons.chevronRight,
+                  HugeIcon(
+                    icon: _expanded
+                        ? HugeIcons.strokeRoundedArrowDown01
+                        : HugeIcons.strokeRoundedArrowRight01,
                     size: 16,
                     color: theme.onSurfaceVariant,
                   ),

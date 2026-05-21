@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/audio/media_display.dart';
@@ -32,15 +32,11 @@ class PlayerView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 PoddrIconButton(
                   onPressed: () => context.pop(),
-                  icon: FaIcon(FontAwesomeIcons.chevronLeft),
-                ),
-                PoddrIconButton(
-                  onPressed: null,
-                  icon: FaIcon(FontAwesomeIcons.ellipsisVertical),
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01),
                 ),
               ],
             ),

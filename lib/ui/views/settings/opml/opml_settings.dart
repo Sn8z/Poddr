@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:provider/provider.dart';
@@ -34,14 +34,16 @@ class _OpmlView extends StatelessWidget {
     return Column(
       children: [
         PoddrListItem(
-          leading: FaIcon(FontAwesomeIcons.arrowLeft,
+          leading: HugeIcon(
+            icon: HugeIcons.strokeRoundedFileImport,
             color: context.theme.onSurface,
           ),
           title: 'Import',
           onTap: isLoading ? null : () => viewModel.importOpml(),
         ),
         PoddrListItem(
-          leading: FaIcon(FontAwesomeIcons.arrowRight,
+          leading: HugeIcon(
+            icon: HugeIcons.strokeRoundedFileExport,
             color: context.theme.onSurface,
           ),
           title: 'Export',

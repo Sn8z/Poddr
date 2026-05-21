@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/models/episode.dart';
@@ -77,7 +77,8 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                 actions: [
                   PoddrAddSubscriptionBtn(rss: widget.rss),
                   PoddrIconButton(
-                    icon: FaIcon(FontAwesomeIcons.circleInfo),
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
+                    size: 20,
                     onPressed: () {
                       showPoddrDialog(
                         context: context,
@@ -101,7 +102,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                   ),
                   if (podcast?.link != null && podcast!.link!.isNotEmpty) ...[
                     PoddrIconButton(
-                      icon: FaIcon(FontAwesomeIcons.globe),
+                      icon: HugeIcon(icon: HugeIcons.strokeRoundedGlobe),
                       onPressed: () async {
                         final uri = Uri.parse(podcast.link ?? "");
                         if (await canLaunchUrl(uri)) {
@@ -120,7 +121,8 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                         return Row(
                           children: [
                             PoddrIconButton(
-                              icon: FaIcon(FontAwesomeIcons.filter),
+                              icon:
+                                  HugeIcon(icon: HugeIcons.strokeRoundedFilter),
                               onPressed: () {
                                 _showFilterSortDialog(context, podcastProvider);
                               },
@@ -135,7 +137,9 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                                 },
                                 suffixIcon: podcastProvider.filter.isNotEmpty
                                     ? PoddrIconButton(
-                                        icon: FaIcon(FontAwesomeIcons.xmark),
+                                        icon: HugeIcon(
+                                            icon: HugeIcons
+                                                .strokeRoundedCancel01),
                                         size: 20,
                                         onPressed: () {
                                           podcastProvider.setFilter('');
@@ -150,7 +154,8 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                         return Row(
                           children: [
                             PoddrIconButton(
-                              icon: FaIcon(FontAwesomeIcons.filter),
+                              icon:
+                                  HugeIcon(icon: HugeIcons.strokeRoundedFilter),
                               onPressed: () {
                                 _showFilterSortDialog(context, podcastProvider);
                               },
@@ -189,7 +194,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                   ],
                 )
               : const EmptyState(
-                  icon: FontAwesomeIcons.podcast,
+                  icon: HugeIcon(icon: HugeIcons.strokeRoundedPodcast),
                   title: 'Podcast not found',
                   subtitle: 'This podcast could not be loaded',
                 ),
@@ -227,8 +232,10 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FaIcon(FontAwesomeIcons.language,
-                size: 12, color: theme.onSurfaceVariant),
+            HugeIcon(
+                icon: HugeIcons.strokeRoundedLanguageSquare,
+                size: 12,
+                color: theme.onSurfaceVariant),
             gapW4,
             Text(
               podcast.language!.toUpperCase(),
@@ -248,7 +255,10 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FaIcon(FontAwesomeIcons.list, size: 12, color: theme.onSurfaceVariant),
+            HugeIcon(
+                icon: HugeIcons.strokeRoundedListChevronsDownUp,
+                size: 12,
+                color: theme.onSurfaceVariant),
             gapW4,
             Text(
               '${podcast.episodes.length} Episodes',
@@ -310,7 +320,8 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                     },
                     suffixIcon: viewModel.filter.isNotEmpty
                         ? PoddrIconButton(
-                            icon: FaIcon(FontAwesomeIcons.xmark),
+                            icon:
+                                HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
                             size: 20,
                             onPressed: () {
                               viewModel.setFilter('');
@@ -321,10 +332,10 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                   gapH16,
                   for (var field in EpisodeSortField.values)
                     PoddrListTile(
-                      leading: FaIcon(
-                        viewModel.sortField == field.label
-                            ? FontAwesomeIcons.circleDot
-                            : FontAwesomeIcons.circle,
+                      leading: HugeIcon(
+                        icon: viewModel.sortField == field.label
+                            ? HugeIcons.strokeRoundedCheckmarkCircle01
+                            : HugeIcons.strokeRoundedCircle,
                         size: 18,
                         color: context.theme.secondary,
                       ),
@@ -335,8 +346,10 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                     ),
                   PoddrIconButton(
                     icon: viewModel.sortDirection == "Ascending"
-                        ? FaIcon(FontAwesomeIcons.arrowUp, size: 20)
-                        : FaIcon(FontAwesomeIcons.arrowDown, size: 20),
+                        ? HugeIcon(
+                            icon: HugeIcons.strokeRoundedArrowUp01, size: 20)
+                        : HugeIcon(
+                            icon: HugeIcons.strokeRoundedArrowDown01, size: 20),
                     onPressed: () {
                       viewModel.setSort(
                         direction: viewModel.sortDirection == "Ascending"
@@ -387,8 +400,7 @@ class Episode extends StatelessWidget {
           ),
         ),
         PoddrIconButton(
-          icon: const FaIcon(FontAwesomeIcons.circleInfo,
-          ),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedInformationSquare),
           onPressed: () {
             showPoddrDialog(
               context: context,
@@ -425,8 +437,7 @@ class Episode extends StatelessWidget {
                   artist: podcastProvider.podcast!.author,
                 );
           },
-          icon: const FaIcon(FontAwesomeIcons.music,
-          ),
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedMusicNote01),
         ),
         EpisodeHistoryCircle(
           audioUrl: episode.audioUrl,

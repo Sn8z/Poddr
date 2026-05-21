@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/theme/poddr_theme_data.dart';
@@ -72,8 +72,8 @@ class SettingsView extends StatelessWidget {
               title: "Support",
               children: [
                 PoddrListItem(
-                  leading: FaIcon(FontAwesomeIcons.github,
-                    color: context.theme.onSurface,
+                  leading: HugeIcon(
+                    icon: HugeIcons.strokeRoundedGithub,
                   ),
                   title: "GitHub Sponsor",
                   onTap: () async {
@@ -86,8 +86,8 @@ class SettingsView extends StatelessWidget {
                   },
                 ),
                 PoddrListItem(
-                  leading: FaIcon(FontAwesomeIcons.wallet,
-                    color: context.theme.onSurface,
+                  leading: HugeIcon(
+                    icon: HugeIcons.strokeRoundedWallet01,
                   ),
                   title: "Paypal",
                   onTap: () {
@@ -100,8 +100,8 @@ class SettingsView extends StatelessWidget {
                   },
                 ),
                 PoddrListItem(
-                  leading: FaIcon(FontAwesomeIcons.mugSaucer,
-                    color: context.theme.onSurface,
+                  leading: HugeIcon(
+                    icon: HugeIcons.strokeRoundedCoffee01,
                   ),
                   title: "Ko-Fi",
                   onTap: () {
@@ -119,8 +119,8 @@ class SettingsView extends StatelessWidget {
               title: "About",
               children: [
                 PoddrListItem(
-                  leading: FaIcon(FontAwesomeIcons.bug,
-                    color: context.theme.onSurface,
+                  leading: HugeIcon(
+                    icon: HugeIcons.strokeRoundedBug01,
                   ),
                   title: "Issues",
                   onTap: () {
@@ -133,8 +133,8 @@ class SettingsView extends StatelessWidget {
                   },
                 ),
                 PoddrListItem(
-                  leading: FaIcon(FontAwesomeIcons.circleInfo,
-                    color: context.theme.onSurface,
+                  leading: HugeIcon(
+                    icon: HugeIcons.strokeRoundedInformationSquare,
                   ),
                   title: 'Licenses',
                   onTap: () => showPoddrDialog(
@@ -202,21 +202,21 @@ class ThemeSelector extends StatelessWidget {
           title: 'System',
           mode: PoddrThemeMode.system,
           color: Color(0xFF808080),
-          icon: FontAwesomeIcons.desktop,
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedSettings04),
           iconColor: Color(0xFFFFFFFF),
         ),
         ThemeBox(
           title: 'Light',
           mode: PoddrThemeMode.light,
           color: Color(0xFFFFFFFF),
-          icon: FontAwesomeIcons.sun,
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedSun02),
           iconColor: Color(0xFF000000),
         ),
         ThemeBox(
           title: 'Dark',
           mode: PoddrThemeMode.dark,
           color: Color(0xFF000000),
-          icon: FontAwesomeIcons.moon,
+          icon: const HugeIcon(icon: HugeIcons.strokeRoundedMoon02),
           iconColor: Color(0xFFFFFFFF),
         ),
       ],
@@ -228,7 +228,7 @@ class ThemeBox extends StatelessWidget {
   final String title;
   final PoddrThemeMode mode;
   final Color color;
-  final FaIconData icon;
+  final Widget icon;
   final Color iconColor;
 
   const ThemeBox({
@@ -267,10 +267,7 @@ class ThemeBox extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FaIcon(
-                icon,
-                color: iconColor,
-              ),
+              icon,
               Text(
                 title,
                 style: context.theme.textTheme.titleMedium.copyWith(

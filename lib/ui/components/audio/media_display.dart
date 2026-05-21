@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +38,9 @@ class MediaDisplay extends StatelessWidget {
                             color: const Color(0x8A000000),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: FaIcon(FontAwesomeIcons.upRightAndDownLeftFromCenter),
+                          child: HugeIcon(
+                            icon: HugeIcons.strokeRoundedFullScreen,
+                          ),
                         ),
                       ),
                     ),

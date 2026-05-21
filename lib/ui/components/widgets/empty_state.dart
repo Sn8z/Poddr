@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 
 class EmptyState extends StatelessWidget {
-  final FaIconData icon;
+  final Widget icon;
   final String title;
   final String subtitle;
 
@@ -23,14 +22,17 @@ class EmptyState extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         gapH32,
-        FaIcon(icon, size: 64, color: context.theme.onSurfaceVariant),
+        icon,
         gapH16,
         Text(
           title,
-          style: context.theme.textTheme.titleMedium.copyWith(fontSize: 18, color: context.theme.onSurfaceVariant),
+          style: context.theme.textTheme.titleMedium
+              .copyWith(fontSize: 18, color: context.theme.onSurfaceVariant),
         ),
         gapH8,
-        Text(subtitle, style: context.theme.textTheme.bodyMedium.copyWith(color: context.theme.onSurfaceVariant)),
+        Text(subtitle,
+            style: context.theme.textTheme.bodyMedium
+                .copyWith(color: context.theme.onSurfaceVariant)),
       ],
     );
   }

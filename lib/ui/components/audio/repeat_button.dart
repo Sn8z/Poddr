@@ -1,6 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:provider/provider.dart';
@@ -18,25 +18,25 @@ class RepeatButton extends StatelessWidget {
     final repeatMode = context
         .select<MediaProvider, AudioServiceRepeatMode>((e) => e.repeatMode);
 
-    FaIconData icon;
-    switch (repeatMode) {
-      case AudioServiceRepeatMode.none:
-        icon = FontAwesomeIcons.repeat;
-        break;
-      case AudioServiceRepeatMode.one:
-        icon = FontAwesomeIcons.repeat;
-        break;
-      case AudioServiceRepeatMode.all:
-        icon = FontAwesomeIcons.repeat;
-        break;
-      default:
-        icon = FontAwesomeIcons.repeat;
-        break;
-    }
-
     final color = repeatMode != AudioServiceRepeatMode.none
         ? context.theme.primary
         : context.theme.onSurfaceVariant.withAlpha(50);
+
+    Widget icon;
+    switch (repeatMode) {
+      case AudioServiceRepeatMode.none:
+        icon = HugeIcon(icon: HugeIcons.strokeRoundedRepeat, color: color);
+        break;
+      case AudioServiceRepeatMode.one:
+        icon = HugeIcon(icon: HugeIcons.strokeRoundedRepeatOne01, color: color);
+        break;
+      case AudioServiceRepeatMode.all:
+        icon = HugeIcon(icon: HugeIcons.strokeRoundedRepeat, color: color);
+        break;
+      default:
+        icon = HugeIcon(icon: HugeIcons.strokeRoundedRepeat, color: color);
+        break;
+    }
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -50,11 +50,7 @@ class RepeatButton extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Center(
-                child: FaIcon(
-                  icon,
-                  size: size * 0.8,
-                  color: color,
-                ),
+                child: icon,
               ),
             ],
           ),

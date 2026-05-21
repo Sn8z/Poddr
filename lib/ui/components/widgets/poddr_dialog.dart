@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/utils/gaps.dart';
@@ -81,7 +81,9 @@ class PoddrDialog extends StatelessWidget {
           if (header != null) Expanded(child: header!),
           if (showCloseButton)
             PoddrIconButton(
-              icon: FaIcon(FontAwesomeIcons.xmark),
+              icon: HugeIcon(
+                icon: HugeIcons.strokeRoundedCancel01,
+              ),
               onPressed: onClose ?? () => Navigator.of(context).pop(),
             ),
         ],

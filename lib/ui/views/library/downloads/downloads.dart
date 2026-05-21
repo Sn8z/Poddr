@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -50,7 +50,8 @@ class DownloadsView extends StatelessWidget {
       builder: (context, child) {
         final viewModel = context.watch<DownloadsViewModel>();
         final downloads = viewModel.downloads;
-        final isDesktop = MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
+        final isDesktop =
+            MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
 
         return PageLayout(
           header: PoddrAppBar(
@@ -62,17 +63,18 @@ class DownloadsView extends StatelessWidget {
                       segments: [
                         LibrarySegment(
                           label: 'Subscriptions',
-                          icon: FontAwesomeIcons.bookOpen,
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedLibrary),
                           route: '/library/subscriptions',
                         ),
                         LibrarySegment(
                           label: 'Latest',
-                          icon: FontAwesomeIcons.clock,
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01),
                           route: '/library/latest',
                         ),
                         LibrarySegment(
                           label: 'Downloads',
-                          icon: FontAwesomeIcons.download,
+                          icon:
+                              HugeIcon(icon: HugeIcons.strokeRoundedDownload01),
                           route: '/library/downloads',
                         ),
                       ],
@@ -84,7 +86,8 @@ class DownloadsView extends StatelessWidget {
                   ? Row(
                       children: [
                         PoddrIconButton(
-                          icon: FaIcon(FontAwesomeIcons.filter),
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedFilter),
+                          size: 20,
                           onPressed: () {
                             _showFilterSortDialog(context, viewModel);
                           },
@@ -99,7 +102,9 @@ class DownloadsView extends StatelessWidget {
                             },
                             suffixIcon: viewModel.filter.isNotEmpty
                                 ? PoddrIconButton(
-                                    icon: FaIcon(FontAwesomeIcons.xmark),
+                                    icon: HugeIcon(
+                                      icon: HugeIcons.strokeRoundedCancel01,
+                                    ),
                                     size: 20,
                                     onPressed: () {
                                       viewModel.setFilter('');
@@ -120,7 +125,8 @@ class DownloadsView extends StatelessWidget {
                   : Row(
                       children: [
                         PoddrIconButton(
-                          icon: FaIcon(FontAwesomeIcons.filter),
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedFilter),
+                          size: 20,
                           onPressed: () {
                             _showFilterSortDialog(context, viewModel);
                           },
@@ -142,17 +148,20 @@ class DownloadsView extends StatelessWidget {
                         segments: [
                           LibrarySegment(
                             label: 'Subscriptions',
-                            icon: FontAwesomeIcons.bookOpen,
+                            icon:
+                                HugeIcon(icon: HugeIcons.strokeRoundedLibrary),
                             route: '/library/subscriptions',
                           ),
                           LibrarySegment(
                             label: 'Latest',
-                            icon: FontAwesomeIcons.clock,
+                            icon:
+                                HugeIcon(icon: HugeIcons.strokeRoundedClock01),
                             route: '/library/latest',
                           ),
                           LibrarySegment(
                             label: 'Downloads',
-                            icon: FontAwesomeIcons.download,
+                            icon: HugeIcon(
+                                icon: HugeIcons.strokeRoundedDownload01),
                             route: '/library/downloads',
                           ),
                         ],
@@ -164,7 +173,10 @@ class DownloadsView extends StatelessWidget {
               ? const ShimmerLoadingList()
               : downloads.isEmpty
                   ? const EmptyState(
-                      icon: FontAwesomeIcons.download,
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedDownload01,
+                        size: 64,
+                      ),
                       title: 'No downloads yet',
                       subtitle: 'Download episodes to listen offline',
                     )
@@ -174,10 +186,12 @@ class DownloadsView extends StatelessWidget {
                         if (downloads.isNotEmpty)
                           SliverToBoxAdapter(
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 12, bottom: 8),
+                              padding:
+                                  const EdgeInsets.only(left: 12, bottom: 8),
                               child: Text(
                                 "Episodes (${downloads.length})",
-                                style: context.theme.textTheme.titleMedium.copyWith(
+                                style: context.theme.textTheme.titleMedium
+                                    .copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: context.theme.primary,
                                 ),
@@ -265,7 +279,8 @@ class DownloadsView extends StatelessWidget {
                     },
                     suffixIcon: viewModel.filter.isNotEmpty
                         ? PoddrIconButton(
-                            icon: FaIcon(FontAwesomeIcons.xmark),
+                            icon:
+                                HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
                             size: 20,
                             onPressed: () {
                               viewModel.setFilter('');
@@ -276,10 +291,10 @@ class DownloadsView extends StatelessWidget {
                   gapH16,
                   for (var field in OfflineEpisodeSortField.values)
                     PoddrListTile(
-                      leading: FaIcon(
-                        viewModel.sortField == field.label
-                            ? FontAwesomeIcons.circleDot
-                            : FontAwesomeIcons.circle,
+                      leading: HugeIcon(
+                        icon: viewModel.sortField == field.label
+                            ? HugeIcons.strokeRoundedCircleArrowRight01
+                            : HugeIcons.strokeRoundedCircle,
                         size: 18,
                         color: context.theme.secondary,
                       ),
@@ -290,8 +305,11 @@ class DownloadsView extends StatelessWidget {
                     ),
                   PoddrIconButton(
                     icon: viewModel.sortDirection == "Ascending"
-                        ? FaIcon(FontAwesomeIcons.arrowUp, size: 20)
-                        : FaIcon(FontAwesomeIcons.arrowDown, size: 20),
+                        ? HugeIcon(
+                            icon: HugeIcons.strokeRoundedSortByUp02, size: 20)
+                        : HugeIcon(
+                            icon: HugeIcons.strokeRoundedSortByDown02,
+                            size: 20),
                     onPressed: () {
                       viewModel.setSort(
                         direction: viewModel.sortDirection == "Ascending"

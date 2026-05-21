@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/navigation/destinations.dart';
@@ -56,8 +55,8 @@ enum BottomBarItemStatus {
 
 class PoddrBottomBarItem extends StatelessWidget {
   final String title;
-  final FaIconData icon;
-  final FaIconData selectedIcon;
+  final Widget icon;
+  final Widget selectedIcon;
   final BottomBarItemStatus status;
   final VoidCallback onTap;
 
@@ -104,11 +103,15 @@ class PoddrBottomBarItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              FaIcon(
-                status == BottomBarItemStatus.selected ? selectedIcon : icon,
-                color: status == BottomBarItemStatus.selected
-                    ? context.theme.secondary
-                    : context.theme.onSurface,
+              IconTheme(
+                data: IconThemeData(
+                  color: status == BottomBarItemStatus.selected
+                      ? context.theme.secondary
+                      : context.theme.onSurface,
+                ),
+                child: status == BottomBarItemStatus.selected
+                    ? selectedIcon
+                    : icon,
               ),
             ],
           ),

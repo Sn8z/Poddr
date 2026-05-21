@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/info_row.dart';
 import 'package:poddr/ui/components/widgets/status_message.dart';
@@ -75,9 +75,9 @@ class SyncSection extends StatelessWidget {
                   color: theme.primary.withAlpha(40),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: FaIcon(FontAwesomeIcons.cloud,
+                child: HugeIcon(
+                  icon: HugeIcons.strokeRoundedCloud,
                   color: theme.primary,
-                  size: 28,
                 ),
               ),
               gapW12,
@@ -103,7 +103,9 @@ class SyncSection extends StatelessWidget {
                 ),
               ),
               PoddrIconButton(
-                icon: FaIcon(FontAwesomeIcons.rotate),
+                icon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedRefresh,
+                ),
                 onPressed: sync.isLoading ? null : () => sync.syncNow(),
               ),
             ],
@@ -111,20 +113,25 @@ class SyncSection extends StatelessWidget {
         ),
         gapH32,
         PoddrInfoRow(
-          icon: FontAwesomeIcons.desktop,
+          icon: HugeIcon(
+            icon: HugeIcons.strokeRoundedComputerPhoneSync,
+          ),
           label: 'Device Name',
           value: setup.deviceName,
         ),
         gapH16,
         PoddrInfoRow(
-          icon: FontAwesomeIcons.arrowsLeftRightToLine,
+          icon: HugeIcon(
+            icon: HugeIcons.strokeRoundedDatabaseSync,
+          ),
           label: 'Syncing With',
           value: sync.targetSyncDeviceName.isEmpty
               ? 'No device selected'
               : sync.targetSyncDeviceName,
           onTap:
               sync.isLoading ? null : () => _showDeviceSelection(context, sync),
-          action: FaIcon(FontAwesomeIcons.chevronRight,
+          action: HugeIcon(
+            icon: HugeIcons.strokeRoundedEdit01,
             size: 18,
             color: theme.primary,
           ),
@@ -132,7 +139,9 @@ class SyncSection extends StatelessWidget {
         if (sync.lastSyncTime != null) ...[
           gapH16,
           PoddrInfoRow(
-            icon: FontAwesomeIcons.clock,
+            icon: HugeIcon(
+              icon: HugeIcons.strokeRoundedClock01,
+            ),
             label: 'Last Sync',
             value: convertDateToTimeAgo(sync.lastSyncTime!),
           ),
@@ -148,8 +157,10 @@ class SyncSection extends StatelessWidget {
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FaIcon(FontAwesomeIcons.linkSlash),
-                    SizedBox(width: 8),
+                    HugeIcon(
+                      icon: HugeIcons.strokeRoundedUnlink01,
+                    ),
+                    gapW8,
                     Text('Disconnect'),
                   ],
                 ),
@@ -165,8 +176,10 @@ class SyncSection extends StatelessWidget {
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FaIcon(FontAwesomeIcons.rotate),
-              SizedBox(width: 8),
+              HugeIcon(
+                icon: HugeIcons.strokeRoundedRefresh,
+              ),
+              gapW8,
               Text('Full Re-Sync'),
             ],
           ),
@@ -195,7 +208,9 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateServer(value),
           labelText: 'Server URL',
           hintText: 'https://gpodder.net',
-          prefixIcon: FaIcon(FontAwesomeIcons.link, color: theme.onSurfaceVariant),
+          prefixIcon: HugeIcon(
+              icon: HugeIcons.strokeRoundedLink01,
+              color: theme.onSurfaceVariant),
         ),
         gapH24,
         PoddrTextInput(
@@ -203,7 +218,10 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateUsername(value),
           labelText: 'Username',
           hintText: 'Enter your username',
-          prefixIcon: FaIcon(FontAwesomeIcons.user, color: theme.onSurfaceVariant),
+          prefixIcon: HugeIcon(
+            icon: HugeIcons.strokeRoundedUser,
+            color: theme.onSurfaceVariant,
+          ),
         ),
         gapH24,
         PoddrTextInput(
@@ -211,11 +229,16 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updatePassword(value),
           labelText: 'Password',
           hintText: 'Enter your password',
-          prefixIcon: FaIcon(FontAwesomeIcons.lock, color: theme.onSurfaceVariant),
+          prefixIcon: HugeIcon(
+            icon: HugeIcons.strokeRoundedSquareLockPassword,
+            color: theme.onSurfaceVariant,
+          ),
           obscure: !setup.showPassword,
           suffixIcon: PoddrIconButton(
-            icon: FaIcon(
-              setup.showPassword ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye,
+            icon: HugeIcon(
+              icon: setup.showPassword
+                  ? HugeIcons.strokeRoundedView
+                  : HugeIcons.strokeRoundedViewOff,
             ),
             onPressed: () => setup.togglePasswordVisibility(),
             padding: 2.0,
@@ -227,8 +250,9 @@ class SyncSection extends StatelessWidget {
           onChanged: (value) => setup.updateDeviceName(value),
           labelText: 'Device Name',
           hintText: 'Poddr',
-          prefixIcon:
-              FaIcon(FontAwesomeIcons.mobileScreenButton, color: theme.onSurfaceVariant),
+          prefixIcon: HugeIcon(
+              icon: HugeIcons.strokeRoundedComputerPhoneSync,
+              color: theme.onSurfaceVariant),
         ),
         gapH24,
         PoddrFilledButton(
@@ -257,7 +281,7 @@ class SyncSection extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
               ] else
-                FaIcon(FontAwesomeIcons.link),
+                HugeIcon(icon: HugeIcons.strokeRoundedLink01),
               if (sync.isLoading) const SizedBox(width: 8),
               Text(sync.isLoading ? 'Connecting...' : 'Connect'),
             ],
@@ -348,10 +372,10 @@ class SyncSection extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Row(
                   children: [
-                    FaIcon(
-                      groupedDevices.isEmpty
-                          ? FontAwesomeIcons.circleCheck
-                          : FontAwesomeIcons.circle,
+                    HugeIcon(
+                      icon: groupedDevices.isEmpty
+                          ? HugeIcons.strokeRoundedCheckmarkCircle01
+                          : HugeIcons.strokeRoundedCircle,
                       size: 20,
                       color: context.theme.primary,
                     ),
@@ -381,10 +405,10 @@ class SyncSection extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Row(
                         children: [
-                          FaIcon(
-                            device['id'] == sync.targetSyncDeviceId
-                                ? FontAwesomeIcons.circleCheck
-                                : FontAwesomeIcons.circle,
+                          HugeIcon(
+                            icon: device['id'] == sync.targetSyncDeviceId
+                                ? HugeIcons.strokeRoundedCheckmarkCircle01
+                                : HugeIcons.strokeRoundedCircle,
                             size: 20,
                             color: context.theme.primary,
                           ),
@@ -417,7 +441,8 @@ class SyncSection extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Row(
                         children: [
-                          FaIcon(FontAwesomeIcons.circle,
+                          HugeIcon(
+                            icon: HugeIcons.strokeRoundedCircle,
                             size: 20,
                             color: context.theme.onSurfaceVariant,
                           ),

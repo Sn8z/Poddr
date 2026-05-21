@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/podcast.dart';
@@ -54,17 +54,18 @@ class LibraryView extends StatelessWidget {
                       segments: [
                         LibrarySegment(
                           label: 'Subscriptions',
-                          icon: FontAwesomeIcons.bookOpen,
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedBook01),
                           route: '/library/subscriptions',
                         ),
                         LibrarySegment(
                           label: 'Latest',
-                          icon: FontAwesomeIcons.clock,
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01),
                           route: '/library/latest',
                         ),
                         LibrarySegment(
                           label: 'Downloads',
-                          icon: FontAwesomeIcons.download,
+                          icon:
+                              HugeIcon(icon: HugeIcons.strokeRoundedDownload01),
                           route: '/library/downloads',
                         ),
                       ],
@@ -76,7 +77,8 @@ class LibraryView extends StatelessWidget {
                   ? Row(
                       children: [
                         PoddrIconButton(
-                          icon: FaIcon(FontAwesomeIcons.filter),
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
+                          size: 20,
                           onPressed: () {
                             _showFilterSortDialog(context, viewModel);
                           },
@@ -91,7 +93,8 @@ class LibraryView extends StatelessWidget {
                             },
                             suffixIcon: viewModel.filter.isNotEmpty
                                 ? PoddrIconButton(
-                                    icon: FaIcon(FontAwesomeIcons.xmark),
+                                    icon: HugeIcon(
+                                        icon: HugeIcons.strokeRoundedCancel01),
                                     size: 20,
                                     onPressed: () {
                                       viewModel.setFilter('');
@@ -105,7 +108,8 @@ class LibraryView extends StatelessWidget {
                   : Row(
                       children: [
                         PoddrIconButton(
-                          icon: FaIcon(FontAwesomeIcons.filter),
+                          icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
+                          size: 20,
                           onPressed: () {
                             _showFilterSortDialog(context, viewModel);
                           },
@@ -120,17 +124,19 @@ class LibraryView extends StatelessWidget {
                         segments: [
                           LibrarySegment(
                             label: 'Subscriptions',
-                            icon: FontAwesomeIcons.bookOpen,
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedBook01),
                             route: '/library/subscriptions',
                           ),
                           LibrarySegment(
                             label: 'Latest',
-                            icon: FontAwesomeIcons.clock,
+                            icon:
+                                HugeIcon(icon: HugeIcons.strokeRoundedClock01),
                             route: '/library/latest',
                           ),
                           LibrarySegment(
                             label: 'Downloads',
-                            icon: FontAwesomeIcons.download,
+                            icon: HugeIcon(
+                                icon: HugeIcons.strokeRoundedDownload01),
                             route: '/library/downloads',
                           ),
                         ],
@@ -142,7 +148,7 @@ class LibraryView extends StatelessWidget {
               ? const ShimmerLoadingList()
               : viewModel.subscriptions.isEmpty
                   ? const EmptyState(
-                      icon: FontAwesomeIcons.podcast,
+                      icon: HugeIcon(icon: HugeIcons.strokeRoundedPodcast),
                       title: 'No subscriptions yet',
                       subtitle: 'Subscribe to podcasts to see them here',
                     )
@@ -178,8 +184,9 @@ class LibraryView extends StatelessWidget {
                                   actions: [
                                     PoddrIconButton(
                                       onPressed: () {},
-                                      icon:
-                                          FaIcon(FontAwesomeIcons.ellipsisVertical),
+                                      icon: HugeIcon(
+                                          icon: HugeIcons
+                                              .strokeRoundedMoreVertical),
                                     ),
                                   ],
                                 );
@@ -216,7 +223,8 @@ class LibraryView extends StatelessWidget {
                     },
                     suffixIcon: viewModel.filter.isNotEmpty
                         ? PoddrIconButton(
-                            icon: FaIcon(FontAwesomeIcons.xmark),
+                            icon:
+                                HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
                             size: 20,
                             onPressed: () {
                               viewModel.setFilter('');
@@ -227,10 +235,10 @@ class LibraryView extends StatelessWidget {
                   gapH16,
                   for (var field in PodcastSortField.values)
                     PoddrListTile(
-                      leading: FaIcon(
-                        viewModel.sortField == field.label
-                            ? FontAwesomeIcons.circleDot
-                            : FontAwesomeIcons.circle,
+                      leading: HugeIcon(
+                        icon: viewModel.sortField == field.label
+                            ? HugeIcons.strokeRoundedCheckmarkCircle01
+                            : HugeIcons.strokeRoundedCircle,
                         size: 18,
                         color: context.theme.secondary,
                       ),
@@ -241,8 +249,10 @@ class LibraryView extends StatelessWidget {
                     ),
                   PoddrIconButton(
                     icon: viewModel.sortDirection == "Ascending"
-                        ? FaIcon(FontAwesomeIcons.arrowUp, size: 20)
-                        : FaIcon(FontAwesomeIcons.arrowDown, size: 20),
+                        ? HugeIcon(
+                            icon: HugeIcons.strokeRoundedArrowUp01, size: 20)
+                        : HugeIcon(
+                            icon: HugeIcons.strokeRoundedArrowDown01, size: 20),
                     onPressed: () {
                       viewModel.setSort(
                         direction: viewModel.sortDirection == "Ascending"

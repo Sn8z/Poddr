@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/services/history.dart';
@@ -202,7 +202,9 @@ class LatestEpisodes extends StatelessWidget {
       title: "Latest episodes",
       actions: [
         PoddrIconButton(
-          icon: FaIcon(FontAwesomeIcons.chevronRight),
+          icon: HugeIcon(
+            icon: HugeIcons.strokeRoundedArrowRight01,
+          ),
           onPressed: () {
             context.push('/library/latest');
           },
@@ -249,7 +251,9 @@ class LatestEpisodes extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                        child: PoddrImage(imageUrl: episode.imageUrl ?? "", maxHeightDiskCache: 300),
+                    child: PoddrImage(
+                        imageUrl: episode.imageUrl ?? "",
+                        maxHeightDiskCache: 300),
                   ),
                   title: episode.title,
                   titleMaxLines: 1,
@@ -323,7 +327,9 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: PoddrImage(imageUrl: history.imageUrl ?? "", maxHeightDiskCache: 300),
+                        child: PoddrImage(
+                            imageUrl: history.imageUrl ?? "",
+                            maxHeightDiskCache: 300),
                       ),
                       title: history.title,
                       titleMaxLines: 1,
@@ -396,8 +402,9 @@ class TrendingPodcasts extends StatelessWidget {
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(12)),
                     ),
-                    child:
-                        PoddrImage(imageUrl: charts.charts[index].image ?? '', maxHeightDiskCache: 300),
+                    child: PoddrImage(
+                        imageUrl: charts.charts[index].image ?? '',
+                        maxHeightDiskCache: 300),
                   ),
                   title: charts.charts[index].title,
                   subtitle: charts.charts[index].rss,

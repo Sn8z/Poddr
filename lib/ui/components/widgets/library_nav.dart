@@ -1,12 +1,11 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 
 class LibrarySegment {
   final String label;
-  final FaIconData icon;
+  final Widget icon;
   final String route;
 
   LibrarySegment({
@@ -28,7 +27,8 @@ class PoddrLibraryNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showLabels = MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
+    final showLabels =
+        MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
     return _SegmentedBar(
       segments: segments,
       currentRoute: currentRoute,
@@ -96,19 +96,15 @@ class _SegmentedBarState extends State<_SegmentedBar> {
                 decoration: BoxDecoration(
                   color: isActive
                       ? theme.surfaceContainerHigh
-                      : (isHovered ? theme.surfaceContainer : const Color(0x00000000)),
+                      : (isHovered
+                          ? theme.surfaceContainer
+                          : const Color(0x00000000)),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      FaIcon(
-                        segment.icon,
-                      size: 18,
-                      color: isActive
-                          ? theme.secondary
-                          : theme.onSurfaceVariant,
-                    ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    segment.icon,
                     if (widget.showLabels) ...[
                       const SizedBox(width: 6),
                       Text(
@@ -117,9 +113,21 @@ class _SegmentedBarState extends State<_SegmentedBar> {
                           color: isActive
                               ? theme.secondary
                               : theme.onSurfaceVariant,
-                          fontWeight: isActive
-                              ? FontWeight.w600
-                              : FontWeight.w500,
+                          fontWeight:
+                              isActive ? FontWeight.w600 : FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                    if (widget.showLabels) ...[
+                      const SizedBox(width: 6),
+                      Text(
+                        segment.label,
+                        style: theme.textTheme.labelLarge.copyWith(
+                          color: isActive
+                              ? theme.secondary
+                              : theme.onSurfaceVariant,
+                          fontWeight:
+                              isActive ? FontWeight.w600 : FontWeight.w500,
                         ),
                       ),
                     ],

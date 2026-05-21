@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:poddr/ui/layouts/base.dart';
@@ -42,7 +42,8 @@ abstract class PoddrRouter {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              FaIcon(FontAwesomeIcons.circleExclamation,
+              HugeIcon(
+                icon: HugeIcons.strokeRoundedAlertSquare,
                 size: 64,
                 color: context.theme.error,
               ),
