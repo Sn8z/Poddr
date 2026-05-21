@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:poddr/core/log.dart';
-import 'package:uuid/uuid.dart';
+import 'package:poddr/core/utils/uuid.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 import 'package:poddr/data/settings/secure_settings_repository.dart';
 import 'package:poddr/data/settings/prefs_settings_repository.dart';
@@ -129,7 +129,7 @@ class SyncProvider extends ChangeNotifier {
 
     _deviceId = await _settings.getSyncDeviceId();
     if (_deviceId!.isEmpty) {
-      _deviceId = const Uuid().v4();
+      _deviceId = generateUuidV4();
       await _settings.setSyncDeviceId(_deviceId!);
     }
 

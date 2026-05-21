@@ -1,12 +1,15 @@
 import 'package:xml/xml.dart';
-import 'package:intl/intl.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/models/episode.dart';
 
 class PoddrPodcastParser {
   static const String logName = "PoddrPodcastParser";
-  static final _dateFormat = DateFormat('EEE, dd MMM yyyy HH:mm:ss Z');
+
+  static const _months = {
+    'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
+    'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12,
+  };
 
   static Podcast parse(String xmlString, String rssUrl) {
     try {
@@ -57,21 +60,45 @@ class PoddrPodcastParser {
       return DateTime.parse(trimmedDate);
     } catch (_) {}
 
-    String cleanedDate = _sanitizeRssDate(trimmedDate);
-
-    try {
-      return _dateFormat.parse(cleanedDate);
-    } catch (_) {}
-
-    try {
-      final fallbackFormat = DateFormat('dd MMM yyyy HH:mm:ss Z');
-      final noDayString =
-          cleanedDate.replaceFirst(RegExp(r'^[a-zA-Z]+,\s+'), '');
-      return fallbackFormat.parse(noDayString);
-    } catch (_) {}
+    final parsed = _parseRfc822Date(trimmedDate);
+    if (parsed != null) return parsed;
 
     warning("Failed to parse date: $trimmedDate", name: logName);
     return null;
+  }
+
+  static DateTime? _parseRfc822Date(String dateString) {
+    String cleaned = _sanitizeRssDate(dateString);
+    cleaned = cleaned.replaceAll(RegExp(r'\s+'), ' ').trim();
+
+    final withDay = RegExp(
+        r'^[a-zA-Z]+,\s+(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})\s+(\d{2}):(\d{2}):(\d{2})\s+([+-]\d{4})$');
+    final withoutDay = RegExp(
+        r'^(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})\s+(\d{2}):(\d{2}):(\d{2})\s+([+-]\d{4})$');
+
+    Match? match = withDay.firstMatch(cleaned) ?? withoutDay.firstMatch(cleaned);
+    if (match == null) return null;
+
+    final day = int.tryParse(match.group(1)!);
+    final month = _months[match.group(2)!];
+    final year = int.tryParse(match.group(3)!);
+    final hour = int.tryParse(match.group(4)!);
+    final minute = int.tryParse(match.group(5)!);
+    final second = int.tryParse(match.group(6)!);
+    final tz = match.group(7)!;
+
+    if (day == null || month == null || year == null ||
+        hour == null || minute == null || second == null) {
+      return null;
+    }
+
+    final tzSign = tz[0] == '-' ? -1 : 1;
+    final tzHours = int.tryParse(tz.substring(1, 3)) ?? 0;
+    final tzMinutes = int.tryParse(tz.substring(3, 5)) ?? 0;
+    final tzOffsetMinutes = tzSign * (tzHours * 60 + tzMinutes);
+
+    final utcDate = DateTime.utc(year, month, day, hour, minute, second);
+    return utcDate.subtract(Duration(minutes: tzOffsetMinutes));
   }
 
   static String _sanitizeRssDate(String dateString) {
