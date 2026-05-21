@@ -29,6 +29,7 @@ import 'package:poddr/ui/utils/sort_fields.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:poddr/ui/components/widgets/collection_filter_list.dart';
 import 'package:poddr/ui/views/library/downloads/downloads_view_model.dart';
+import 'package:poddr/ui/components/navigation/destinations.dart';
 import 'package:provider/provider.dart';
 
 class DownloadsView extends StatelessWidget {
@@ -60,24 +61,9 @@ class DownloadsView extends StatelessWidget {
                 ? [
                     PoddrLibraryNav(
                       currentRoute: '/library/downloads',
-                      segments: [
-                        LibrarySegment(
-                          label: 'Subscriptions',
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedLibrary),
-                          route: '/library/subscriptions',
-                        ),
-                        LibrarySegment(
-                          label: 'Latest',
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01),
-                          route: '/library/latest',
-                        ),
-                        LibrarySegment(
-                          label: 'Downloads',
-                          icon:
-                              HugeIcon(icon: HugeIcons.strokeRoundedDownload01),
-                          route: '/library/downloads',
-                        ),
-                      ],
+                      segments: librarySubNav
+                          .map((item) => LibrarySegment.fromNavItem(item))
+                          .toList(),
                     ),
                   ]
                 : null,
@@ -145,26 +131,9 @@ class DownloadsView extends StatelessWidget {
                   : [
                       PoddrLibraryNav(
                         currentRoute: '/library/downloads',
-                        segments: [
-                          LibrarySegment(
-                            label: 'Subscriptions',
-                            icon:
-                                HugeIcon(icon: HugeIcons.strokeRoundedLibrary),
-                            route: '/library/subscriptions',
-                          ),
-                          LibrarySegment(
-                            label: 'Latest',
-                            icon:
-                                HugeIcon(icon: HugeIcons.strokeRoundedClock01),
-                            route: '/library/latest',
-                          ),
-                          LibrarySegment(
-                            label: 'Downloads',
-                            icon: HugeIcon(
-                                icon: HugeIcons.strokeRoundedDownload01),
-                            route: '/library/downloads',
-                          ),
-                        ],
+                        segments: librarySubNav
+                            .map((item) => LibrarySegment.fromNavItem(item))
+                            .toList(),
                       ),
                     ],
             ),
@@ -172,10 +141,11 @@ class DownloadsView extends StatelessWidget {
           child: viewModel.isLoading
               ? const ShimmerLoadingList()
               : downloads.isEmpty
-                  ? const EmptyState(
+                  ? EmptyState(
                       icon: HugeIcon(
                         icon: HugeIcons.strokeRoundedDownload01,
                         size: 64,
+                        color: context.theme.secondary,
                       ),
                       title: 'No downloads yet',
                       subtitle: 'Download episodes to listen offline',

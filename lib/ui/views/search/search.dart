@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/content_box.dart';
@@ -39,8 +40,12 @@ class SearchView extends StatelessWidget {
           child: searchProvider.isLoading
               ? const ShimmerLoadingList()
               : searchResults.isEmpty
-                  ? const EmptyState(
-                       icon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01),
+                  ? EmptyState(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedSearch01,
+                        size: 64,
+                        color: context.theme.secondary,
+                      ),
                       title: 'No results found',
                       subtitle: 'Try searching for a different term',
                     )
@@ -58,9 +63,10 @@ class SearchView extends StatelessWidget {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(12)),
                                   ),
-                                    child:
-                                        PoddrImage(imageUrl: result.image ?? '', maxHeightDiskCache: 300),
-                                  ),
+                                  child: PoddrImage(
+                                      imageUrl: result.image ?? '',
+                                      maxHeightDiskCache: 300),
+                                ),
                                 title: result.title,
                                 subtitle: result.author,
                                 onTap: () {

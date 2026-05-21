@@ -24,6 +24,7 @@ import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
 import 'package:poddr/ui/components/widgets/collection_filter_list.dart';
 import 'package:poddr/ui/views/library/library_view_model.dart';
+import 'package:poddr/ui/components/navigation/destinations.dart';
 import 'package:provider/provider.dart';
 
 class LibraryView extends StatelessWidget {
@@ -51,24 +52,9 @@ class LibraryView extends StatelessWidget {
                 ? [
                     PoddrLibraryNav(
                       currentRoute: '/library/subscriptions',
-                      segments: [
-                        LibrarySegment(
-                          label: 'Subscriptions',
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedBook01),
-                          route: '/library/subscriptions',
-                        ),
-                        LibrarySegment(
-                          label: 'Latest',
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01),
-                          route: '/library/latest',
-                        ),
-                        LibrarySegment(
-                          label: 'Downloads',
-                          icon:
-                              HugeIcon(icon: HugeIcons.strokeRoundedDownload01),
-                          route: '/library/downloads',
-                        ),
-                      ],
+                      segments: librarySubNav
+                          .map((item) => LibrarySegment.fromNavItem(item))
+                          .toList(),
                     ),
                   ]
                 : null,
@@ -121,25 +107,9 @@ class LibraryView extends StatelessWidget {
                   : [
                       PoddrLibraryNav(
                         currentRoute: '/library/subscriptions',
-                        segments: [
-                          LibrarySegment(
-                            label: 'Subscriptions',
-                            icon: HugeIcon(icon: HugeIcons.strokeRoundedBook01),
-                            route: '/library/subscriptions',
-                          ),
-                          LibrarySegment(
-                            label: 'Latest',
-                            icon:
-                                HugeIcon(icon: HugeIcons.strokeRoundedClock01),
-                            route: '/library/latest',
-                          ),
-                          LibrarySegment(
-                            label: 'Downloads',
-                            icon: HugeIcon(
-                                icon: HugeIcons.strokeRoundedDownload01),
-                            route: '/library/downloads',
-                          ),
-                        ],
+                        segments: librarySubNav
+                            .map((item) => LibrarySegment.fromNavItem(item))
+                            .toList(),
                       ),
                     ],
             ),
@@ -147,8 +117,12 @@ class LibraryView extends StatelessWidget {
           child: viewModel.isLoading
               ? const ShimmerLoadingList()
               : viewModel.subscriptions.isEmpty
-                  ? const EmptyState(
-                      icon: HugeIcon(icon: HugeIcons.strokeRoundedPodcast),
+                  ? EmptyState(
+                      icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedPodcast,
+                        size: 64,
+                        color: context.theme.secondary,
+                      ),
                       title: 'No subscriptions yet',
                       subtitle: 'Subscribe to podcasts to see them here',
                     )

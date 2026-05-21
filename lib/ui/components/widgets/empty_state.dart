@@ -26,13 +26,17 @@ class EmptyState extends StatelessWidget {
         gapH16,
         Text(
           title,
-          style: context.theme.textTheme.titleMedium
-              .copyWith(fontSize: 18, color: context.theme.onSurfaceVariant),
+          style: context.theme.textTheme.titleMedium.copyWith(
+            color: context.theme.onSurfaceVariant,
+          ),
         ),
         gapH8,
-        Text(subtitle,
-            style: context.theme.textTheme.bodyMedium
-                .copyWith(color: context.theme.onSurfaceVariant)),
+        Text(
+          subtitle,
+          style: context.theme.textTheme.bodyMedium.copyWith(
+            color: context.theme.onSurfaceVariant,
+          ),
+        ),
       ],
     );
   }

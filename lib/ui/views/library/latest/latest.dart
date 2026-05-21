@@ -25,6 +25,7 @@ import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
 import 'package:poddr/ui/components/widgets/collection_filter_list.dart';
 import 'package:poddr/ui/views/library/latest/latest_view_model.dart';
+import 'package:poddr/ui/components/navigation/destinations.dart';
 import 'package:provider/provider.dart';
 
 class LatestEpisodesView extends StatelessWidget {
@@ -52,24 +53,9 @@ class LatestEpisodesView extends StatelessWidget {
                 ? [
                     PoddrLibraryNav(
                       currentRoute: '/library/latest',
-                      segments: [
-                        LibrarySegment(
-                          label: 'Subscriptions',
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedBook01),
-                          route: '/library/subscriptions',
-                        ),
-                        LibrarySegment(
-                          label: 'Latest',
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedClock01),
-                          route: '/library/latest',
-                        ),
-                        LibrarySegment(
-                          label: 'Downloads',
-                          icon:
-                              HugeIcon(icon: HugeIcons.strokeRoundedDownload01),
-                          route: '/library/downloads',
-                        ),
-                      ],
+                      segments: librarySubNav
+                          .map((item) => LibrarySegment.fromNavItem(item))
+                          .toList(),
                     ),
                   ]
                 : null,
@@ -122,32 +108,20 @@ class LatestEpisodesView extends StatelessWidget {
                   : [
                       PoddrLibraryNav(
                         currentRoute: '/library/latest',
-                        segments: [
-                          LibrarySegment(
-                            label: 'Subscriptions',
-                            icon: HugeIcon(icon: HugeIcons.strokeRoundedBook01),
-                            route: '/library/subscriptions',
-                          ),
-                          LibrarySegment(
-                            label: 'Latest',
-                            icon:
-                                HugeIcon(icon: HugeIcons.strokeRoundedClock01),
-                            route: '/library/latest',
-                          ),
-                          LibrarySegment(
-                            label: 'Downloads',
-                            icon: HugeIcon(
-                                icon: HugeIcons.strokeRoundedDownload01),
-                            route: '/library/downloads',
-                          ),
-                        ],
+                        segments: librarySubNav
+                            .map((item) => LibrarySegment.fromNavItem(item))
+                            .toList(),
                       ),
                     ],
             ),
           ),
           child: viewModel.episodes.isEmpty
-              ? const EmptyState(
-                  icon: HugeIcon(icon: HugeIcons.strokeRoundedRss),
+              ? EmptyState(
+                  icon: HugeIcon(
+                    icon: HugeIcons.strokeRoundedRss,
+                    size: 64,
+                    color: context.theme.secondary,
+                  ),
                   title: 'No episodes yet',
                   subtitle:
                       'New episodes from your subscriptions will appear here',

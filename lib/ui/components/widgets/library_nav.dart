@@ -13,6 +13,14 @@ class LibrarySegment {
     required this.icon,
     required this.route,
   });
+
+  factory LibrarySegment.fromNavItem(dynamic item) {
+    return LibrarySegment(
+      label: item.label,
+      icon: item.icon,
+      route: item.route,
+    );
+  }
 }
 
 class PoddrLibraryNav extends StatelessWidget {
@@ -105,19 +113,6 @@ class _SegmentedBarState extends State<_SegmentedBar> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     segment.icon,
-                    if (widget.showLabels) ...[
-                      const SizedBox(width: 6),
-                      Text(
-                        segment.label,
-                        style: theme.textTheme.labelLarge.copyWith(
-                          color: isActive
-                              ? theme.secondary
-                              : theme.onSurfaceVariant,
-                          fontWeight:
-                              isActive ? FontWeight.w600 : FontWeight.w500,
-                        ),
-                      ),
-                    ],
                     if (widget.showLabels) ...[
                       const SizedBox(width: 6),
                       Text(

@@ -193,8 +193,12 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                     SliverToBoxAdapter(child: BottomPaddingFix()),
                   ],
                 )
-              : const EmptyState(
-                  icon: HugeIcon(icon: HugeIcons.strokeRoundedPodcast),
+              : EmptyState(
+                  icon: HugeIcon(
+                    icon: HugeIcons.strokeRoundedPodcast,
+                    size: 64,
+                    color: context.theme.secondary,
+                  ),
                   title: 'Podcast not found',
                   subtitle: 'This podcast could not be loaded',
                 ),
