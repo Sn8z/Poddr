@@ -1,0 +1,35 @@
+name: Build Snap
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build from'
+        default: 'main'
+        required: true
+        type: string
+
+concurrency:
+  group: build-snap-${{ github.workflow }}-${{ github.event.inputs.branch || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-snap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Build snap
+        uses: snapcore/action-build@v1
+        id: snapcraft
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: poddr-snap
+          path: ${{ steps.snapcraft.outputs.snap }}
+          if-no-files-found: error
+          retention-days: 30

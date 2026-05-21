@@ -1,0 +1,46 @@
+name: Build Windows
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build from'
+        default: 'main'
+        required: true
+        type: string
+
+concurrency:
+  group: build-windows-${{ github.workflow }}-${{ github.event.inputs.branch || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Install fastforge
+        run: dart pub global activate fastforge
+
+      - name: Build EXE installer
+        run: dart pub global run fastforge release --name windows
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: poddr-windows
+          path: dist/*.exe
+          if-no-files-found: error
+          retention-days: 30

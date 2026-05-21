@@ -1,0 +1,32 @@
+name: poddr
+version: "3.0.0+1"
+summary: A cross-platform podcast player
+description: |
+  Poddr is a modern podcast player.
+  Browse podcast feeds, manage your subscriptions and enjoy seamless playback with media key support.
+confinement: strict
+base: core22
+
+parts:
+  poddr:
+    plugin: flutter
+    source: .
+    build-packages:
+      - clang
+      - cmake
+    build-snaps:
+      - flutter
+
+apps:
+  poddr:
+    command: poddr
+    extensions: [gnome]
+    plugs:
+      - network
+      - network-bind
+      - audio-playback
+      - removable-media
+    slots:
+      mpris:
+        interface: mpris
+        name: poddr

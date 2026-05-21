@@ -1,0 +1,50 @@
+output: dist/
+releases:
+  - name: windows
+    jobs:
+      - name: windows-exe
+        package:
+          target: exe
+          platform: windows
+        build:
+          target: exe
+          platform: windows
+  - name: linux
+    jobs:
+      - name: linux-deb
+        package:
+          target: deb
+          platform: linux
+        build:
+          target: deb
+          platform: linux
+      - name: linux-rpm
+        package:
+          target: rpm
+          platform: linux
+        build:
+          target: rpm
+          platform: linux
+      - name: linux-appimage
+        package:
+          target: appimage
+          platform: linux
+        build:
+          target: appimage
+          platform: linux
+      - name: linux-pacman
+        package:
+          target: pacman
+          platform: linux
+        build:
+          target: pacman
+          platform: linux
+  - name: macos
+    jobs:
+      - name: macos-dmg
+        package:
+          target: dmg
+          platform: macos
+        build:
+          target: dmg
+          platform: macos

@@ -1,0 +1,75 @@
+name: Build Linux
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build from'
+        default: 'main'
+        required: true
+        type: string
+
+concurrency:
+  group: build-linux-${{ github.workflow }}-${{ github.event.inputs.branch || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Install fastforge
+        run: dart pub global activate fastforge
+
+      - name: Build Linux packages
+        run: dart pub global run fastforge release --name linux
+
+      - name: Upload DEB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: poddr-linux-deb
+          path: dist/*.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload RPM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: poddr-linux-rpm
+          path: dist/*.rpm
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload AppImage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: poddr-linux-appimage
+          path: dist/*.AppImage
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload Pacman artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: poddr-linux-pacman
+          path: dist/*.pkg.tar.zst
+          if-no-files-found: error
+          retention-days: 30
