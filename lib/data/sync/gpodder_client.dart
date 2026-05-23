@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:poddr/core/log.dart';
@@ -83,9 +84,13 @@ class GpodderClient {
         error("HTTP $statusCode for $path: $res", name: logName);
         throw ApiException('Server returned error (code $statusCode)');
       }
+    } on ApiException {
+      rethrow;
+    } on http.ClientException catch (e) {
+      throw NetworkException(e.message);
+    } on TimeoutException {
+      throw NetworkException('Request timed out');
     } catch (e) {
-      if (e is ApiException) rethrow;
-      if (e is NetworkException) rethrow;
       throw ApiException('Unexpected error: $e');
     }
   }
@@ -127,11 +132,14 @@ class GpodderClient {
   }
 
   Future<bool> login() async {
-    try {
-      debug("Attempting login to $_serverUrl", name: logName);
+    debug("Attempting login to $_serverUrl", name: logName);
 
+    try {
       final String url = '$_baseUrl/api/2/auth/$_encodedUsername/login.json';
-      final res = await _httpClient.post(Uri.parse(url), headers: _authHeaders);
+      final res = await _httpClient.post(
+        Uri.parse(url),
+        headers: _authHeaders,
+      );
 
       if (res.statusCode == 200) {
         final cookies = res.headers['set-cookie'];
@@ -147,16 +155,31 @@ class GpodderClient {
         }
         info("Login successful but no session cookie found", name: logName);
         return true;
-      } else if (res.statusCode == 401) {
+      }
+
+      if (res.statusCode == 401) {
         error("Login failed: Invalid credentials", name: logName);
         throw UnauthorizedException();
-      } else {
-        error("Login failed with status: ${res.statusCode}", name: logName);
-        return false;
       }
+
+      if (res.statusCode >= 500) {
+        error("Login failed with server error: ${res.statusCode}", name: logName);
+        throw ServerErrorException(res.statusCode);
+      }
+
+      error("Login failed with status: ${res.statusCode}", name: logName);
+      throw ApiException('Login returned status ${res.statusCode}');
+    } on ApiException {
+      rethrow;
+    } on http.ClientException catch (e) {
+      error("Login network error: $e", name: logName);
+      throw NetworkException(e.message);
+    } on TimeoutException {
+      error("Login timed out", name: logName);
+      throw NetworkException('Login request timed out');
     } catch (e) {
       error("Login error: $e", name: logName);
-      return false;
+      throw ApiException('Unexpected login error: $e');
     }
   }
 

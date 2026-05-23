@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/info_row.dart';
-import 'package:poddr/ui/components/widgets/status_message.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
@@ -35,10 +34,146 @@ class SyncSection extends StatelessWidget {
 
         if (sync.isConfigured) {
           return _buildConfiguredView(context, sync, setup);
-        } else {
-          return _buildSetupView(context, sync, setup);
         }
+        return _buildSetupView(context, sync, setup);
       },
+    );
+  }
+
+  Widget _buildStatusBanner({
+    required BuildContext context,
+    required String message,
+    bool isError = false,
+    bool isWarning = false,
+  }) {
+    final theme = context.theme;
+    final Color bgColor;
+    final Color borderColor;
+    final Color iconColor;
+
+    if (isError) {
+      bgColor = theme.errorContainer.withAlpha(50);
+      borderColor = theme.error.withAlpha(77);
+      iconColor = theme.error;
+    } else if (isWarning) {
+      bgColor = theme.tertiaryContainer.withAlpha(50);
+      borderColor = theme.tertiary.withAlpha(77);
+      iconColor = theme.tertiary;
+    } else {
+      bgColor = theme.primaryContainer.withAlpha(50);
+      borderColor = theme.primary.withAlpha(77);
+      iconColor = theme.primary;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: borderColor, width: 1),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          HugeIcon(
+            icon: isError
+                ? HugeIcons.strokeRoundedAlert01
+                : HugeIcons.strokeRoundedAlertSquare,
+            size: 18,
+            color: iconColor,
+          ),
+          gapW12,
+          Expanded(
+            child: Text(
+              message,
+              style: context.theme.textTheme.bodySmall.copyWith(
+                color: iconColor,
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConnectedHeader(BuildContext context, SyncProvider sync) {
+    final theme = context.theme;
+    final isSyncing = sync.status == SyncStatus.syncing;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            theme.primary.withAlpha(20),
+            theme.primary.withAlpha(10),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: theme.primary.withAlpha(50),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: isSyncing
+                  ? theme.tertiary.withAlpha(40)
+                  : theme.primary.withAlpha(40),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: isSyncing
+                ? Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: PoddrSpinner(
+                      size: 24,
+                      strokeWidth: 2.5,
+                      color: theme.tertiary,
+                    ),
+                  )
+                : HugeIcon(
+                    icon: HugeIcons.strokeRoundedCloud,
+                    color: theme.primary,
+                  ),
+          ),
+          gapW12,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isSyncing ? 'Syncing...' : 'Connected',
+                  style: context.theme.textTheme.titleMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: isSyncing ? theme.tertiary : theme.primary,
+                  ),
+                ),
+                gapH4,
+                Text(
+                  '${sync.username} @ ${sync.serverUrl}',
+                  style: context.theme.textTheme.bodyMedium.copyWith(
+                    color: theme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (!isSyncing)
+            PoddrIconButton(
+              icon: HugeIcon(
+                icon: HugeIcons.strokeRoundedRefresh,
+              ),
+              onPressed: sync.isLoading ? null : () => sync.syncNow(),
+            ),
+        ],
+      ),
     );
   }
 
@@ -49,68 +184,7 @@ class SyncSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                theme.primary.withAlpha(20),
-                theme.primary.withAlpha(10),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: theme.primary.withAlpha(50),
-              width: 1,
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: theme.primary.withAlpha(40),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedCloud,
-                  color: theme.primary,
-                ),
-              ),
-              gapW12,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Connected',
-                      style: context.theme.textTheme.titleMedium.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.primary,
-                      ),
-                    ),
-                    gapH4,
-                    Text(
-                      '${setup.username} @ ${setup.server}',
-                      style: context.theme.textTheme.bodyMedium.copyWith(
-                        color: theme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              PoddrIconButton(
-                icon: HugeIcon(
-                  icon: HugeIcons.strokeRoundedRefresh,
-                ),
-                onPressed: sync.isLoading ? null : () => sync.syncNow(),
-              ),
-            ],
-          ),
-        ),
+        _buildConnectedHeader(context, sync),
         gapH32,
         PoddrInfoRow(
           icon: HugeIcon(
@@ -184,13 +258,15 @@ class SyncSection extends StatelessWidget {
             ],
           ),
         ),
-        if (sync.errorMessage != null && sync.errorMessage!.isNotEmpty) ...[
+        if (sync.statusDescription != null &&
+            sync.statusDescription!.isNotEmpty) ...[
           gapH16,
-          PoddrStatusMessage(message: sync.errorMessage!, isError: true),
-        ],
-        if (sync.statusMessage != null && sync.statusMessage!.isNotEmpty) ...[
-          gapH16,
-          PoddrStatusMessage(message: sync.statusMessage!),
+          _buildStatusBanner(
+            context: context,
+            message: sync.statusDescription!,
+            isError: sync.statusIsError,
+            isWarning: sync.statusIsWarning,
+          ),
         ],
       ],
     );
@@ -199,6 +275,21 @@ class SyncSection extends StatelessWidget {
   Widget _buildSetupView(
       BuildContext context, SyncProvider sync, SyncSetupProvider setup) {
     final theme = context.theme;
+    final isWorking = sync.isLoading;
+    final String? statusMessage;
+
+    if (sync.status == SyncStatus.connecting) {
+      statusMessage = sync.statusDescription ?? 'Connecting to sync server...';
+    } else if (sync.status == SyncStatus.retrying) {
+      statusMessage = sync.statusDescription ?? 'Retrying...';
+    } else if (sync.status == SyncStatus.credentialsInvalid) {
+      statusMessage =
+          sync.statusDescription ?? 'Invalid username or password';
+    } else if (sync.status == SyncStatus.disconnected) {
+      statusMessage = sync.statusDescription;
+    } else {
+      statusMessage = null;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -256,7 +347,7 @@ class SyncSection extends StatelessWidget {
         ),
         gapH24,
         PoddrFilledButton(
-          onPressed: sync.isLoading
+          onPressed: isWorking
               ? null
               : () => sync.connect(
                     serverUrl: setup.server.trim(),
@@ -269,7 +360,7 @@ class SyncSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (sync.isLoading) ...[
+              if (isWorking) ...[
                 SizedBox(
                   width: 18,
                   height: 18,
@@ -282,26 +373,31 @@ class SyncSection extends StatelessWidget {
                 const SizedBox(width: 8),
               ] else
                 HugeIcon(icon: HugeIcons.strokeRoundedLink01),
-              if (sync.isLoading) const SizedBox(width: 8),
-              Text(sync.isLoading ? 'Connecting...' : 'Connect'),
+              if (isWorking) const SizedBox(width: 8),
+              Text(isWorking ? 'Connecting...' : 'Connect'),
             ],
           ),
         ),
-        if (sync.errorMessage != null && sync.errorMessage!.isNotEmpty) ...[
+        if (statusMessage != null) ...[
           gapH16,
-          PoddrStatusMessage(message: sync.errorMessage!, isError: true),
-        ],
-        if (sync.statusMessage != null && sync.statusMessage!.isNotEmpty) ...[
-          gapH16,
-          PoddrStatusMessage(message: sync.statusMessage!),
+          _buildStatusBanner(
+            context: context,
+            message: statusMessage,
+            isError: sync.statusIsError,
+            isWarning: sync.statusIsWarning,
+          ),
         ],
         gapH24,
-        PoddrStatusMessage(
-            message:
-                'Your credentials are only stored locally on this device and securely transmitted to the sync server. Poddr does not have access to your password or sync data.'),
+        _buildStatusBanner(
+          context: context,
+          message:
+              'Your credentials are only stored locally on this device and securely transmitted to the sync server. Poddr does not have access to your password or sync data.',
+        ),
         gapH16,
-        PoddrStatusMessage(
-            message: "Supports gPodder compatible sync servers."),
+        _buildStatusBanner(
+          context: context,
+          message: 'Supports gPodder compatible sync servers.',
+        ),
       ],
     );
   }

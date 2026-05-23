@@ -13,6 +13,15 @@ import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/core/validators.dart';
 
+enum SyncStatus {
+  disconnected,
+  connecting,
+  retrying,
+  credentialsInvalid,
+  connected,
+  syncing,
+}
+
 class SyncProvider extends ChangeNotifier {
   static const String logName = "SyncProvider";
   static const Duration _subscriptionSyncInterval = Duration(minutes: 30);
@@ -38,19 +47,31 @@ class SyncProvider extends ChangeNotifier {
   bool _syncEnabled = false;
   bool get isSyncEnabled => _syncEnabled;
 
-  bool get isLoading => _isSyncingSubscriptions || _isSyncingEpisodes;
+  bool get isLoading =>
+      _status == SyncStatus.connecting ||
+      _status == SyncStatus.retrying ||
+      _status == SyncStatus.syncing ||
+      _isSyncingSubscriptions ||
+      _isSyncingEpisodes;
 
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
+  SyncStatus _status = SyncStatus.disconnected;
+  SyncStatus get status => _status;
 
-  String? _statusMessage;
-  String? get statusMessage => _statusMessage;
+  String? _statusDescription;
+  String? get statusDescription => _statusDescription;
+
+  bool _statusIsError = false;
+  bool get statusIsError => _statusIsError;
+
+  bool _statusIsWarning = false;
+  bool get statusIsWarning => _statusIsWarning;
+
+  bool get isConfigured =>
+      _status == SyncStatus.connected ||
+      _status == SyncStatus.syncing;
 
   DateTime? _lastSyncTimeCache;
   DateTime? get lastSyncTime => _lastSyncTimeCache;
-
-  bool _isConfigured = false;
-  bool get isConfigured => _isConfigured;
 
   String? _serverUrl;
   String get serverUrl => _serverUrl ?? '';
@@ -151,31 +172,32 @@ class SyncProvider extends ChangeNotifier {
 
   Future<void> _loginAndSyncClient() async {
     if (_client == null) return;
-    _statusMessage = 'Connecting to sync server...';
-    notifyListeners();
+    _updateStatus(SyncStatus.connecting, 'Connecting to sync server...');
 
     try {
       final success = await _loginWithRetry();
       if (success) {
+        await _settings.setSyncEnabled(true);
         await _client!.registerDevice();
         _startTimers();
         await syncAll();
-        _isConfigured = true;
-        _statusMessage = 'Connected to sync server';
+        _updateStatus(SyncStatus.connected);
         await loadDevices();
-      } else {
-        _isConfigured = false;
-        _errorMessage =
-            'Failed to connect to sync server after multiple attempts';
-        error(_errorMessage!, name: logName);
       }
     } catch (e) {
-      _isConfigured = false;
-      _errorMessage = 'Failed to configure sync';
+      _updateStatus(SyncStatus.disconnected);
       error('Failed to configure sync: $e', name: logName);
     } finally {
       notifyListeners();
     }
+  }
+
+  void _updateStatus(SyncStatus status, [String? description, bool isError = false]) {
+    _status = status;
+    _statusDescription = description;
+    _statusIsError = isError || status == SyncStatus.credentialsInvalid;
+    _statusIsWarning = !_statusIsError && status == SyncStatus.retrying;
+    notifyListeners();
   }
 
   Future<bool> _loginWithRetry() async {
@@ -202,7 +224,7 @@ class SyncProvider extends ChangeNotifier {
 
     for (int attempt = 0;; attempt++) {
       if (!_syncEnabled) {
-        debug('Sync disabled, stopping login attempts', name: logName);
+        _updateStatus(SyncStatus.disconnected);
         return false;
       }
 
@@ -215,18 +237,23 @@ class SyncProvider extends ChangeNotifier {
           return true;
         }
       } on UnauthorizedException {
-        error('Login failed: Invalid credentials, stopping retry loop',
-            name: logName);
+        _updateStatus(SyncStatus.credentialsInvalid);
+        error('Login failed: Invalid credentials', name: logName);
         return false;
+      } on NetworkException catch (e) {
+        error('Login failed (network): $e, will retry', name: logName);
+      } on ServerErrorException catch (e) {
+        error('Login failed (server ${e.statusCode}), will retry',
+            name: logName);
       } catch (e) {
-        error('Login failed: ${e.toString()}, will retry', name: logName);
+        error('Login failed: $e, will retry', name: logName);
       }
 
       if (attempt >= _initialRetryAttempts && attempt % 5 == 0) {
-        debug('Login failed, still retrying... (attempt $attempt)',
-            name: logName);
-        _errorMessage = 'Login failed, retrying in ${delay.inSeconds}s...';
-        notifyListeners();
+        _updateStatus(
+            SyncStatus.retrying, 'Retrying in ${delay.inSeconds}s...');
+      } else if (_status != SyncStatus.retrying) {
+        _updateStatus(SyncStatus.retrying);
       }
 
       if (!delay.isNegative) {
@@ -251,8 +278,7 @@ class SyncProvider extends ChangeNotifier {
           return null;
         }
       }
-      _errorMessage = 'Authentication failed during operation';
-      notifyListeners();
+      _updateStatus(SyncStatus.credentialsInvalid);
       return null;
     } catch (e) {
       error('Operation failed: $e', name: logName);
@@ -313,19 +339,14 @@ class SyncProvider extends ChangeNotifier {
     required String deviceName,
   }) async {
     if (serverUrl.isEmpty || username.isEmpty || password.isEmpty) {
-      _statusMessage = 'Please fill in all required fields';
-      notifyListeners();
+      _updateStatus(SyncStatus.disconnected, 'Please fill in all required fields', true);
       return;
     }
 
     if (!isValidUrl(serverUrl, requireHttps: true)) {
-      _errorMessage = 'Sync server must use HTTPS';
-      notifyListeners();
+      _updateStatus(SyncStatus.disconnected, 'Sync server must use HTTPS', true);
       return;
     }
-
-    _statusMessage = '';
-    notifyListeners();
 
     await configure(
       serverUrl: serverUrl,
@@ -333,8 +354,6 @@ class SyncProvider extends ChangeNotifier {
       password: password,
       deviceName: deviceName,
     );
-
-    notifyListeners();
   }
 
   Future<void> configure({
@@ -347,16 +366,14 @@ class SyncProvider extends ChangeNotifier {
       await _secureSettings.setSyncServerUrl(serverUrl);
       await _secureSettings.setSyncUsername(username);
       await _secureSettings.setSyncPassword(password);
-      await _settings.setSyncEnabled(true);
       _syncEnabled = true;
 
       await _setupClient();
 
       await _loginAndSyncClient();
     } catch (e) {
-      _errorMessage = 'Failed to configure sync: $e';
-      _isConfigured = false;
-      error(_errorMessage!, name: logName);
+      _updateStatus(SyncStatus.disconnected, 'Failed to configure sync: $e', true);
+      error('Failed to configure sync: $e', name: logName);
     }
   }
 
@@ -387,8 +404,7 @@ class SyncProvider extends ChangeNotifier {
   }
 
   Future<void> syncAll() async {
-    _statusMessage = 'Syncing subscriptions and episodes...';
-    notifyListeners();
+    _updateStatus(SyncStatus.syncing);
 
     await Future.wait([
       syncSubscriptions(),
@@ -396,6 +412,7 @@ class SyncProvider extends ChangeNotifier {
     ]);
 
     await _refreshLastSyncTime();
+    _updateStatus(SyncStatus.connected);
   }
 
   Future<void> syncSubscriptions() async {
@@ -405,7 +422,6 @@ class SyncProvider extends ChangeNotifier {
       return;
     }
     _isSyncingSubscriptions = true;
-    notifyListeners();
     try {
       await _executeWithAuthRetry(() async {
         final lastSync = await _settings.getSyncLastSubscriptionSync();
@@ -419,7 +435,6 @@ class SyncProvider extends ChangeNotifier {
         return true;
       });
     } catch (e) {
-      _errorMessage = 'Subscription sync failed';
       error('Subscription sync failed: $e', name: logName);
     } finally {
       _isSyncingSubscriptions = false;
@@ -594,7 +609,6 @@ class SyncProvider extends ChangeNotifier {
         return true;
       });
     } catch (e) {
-      _errorMessage = 'Episode sync failed';
       error('Episode sync failed: $e', name: logName);
     } finally {
       _isSyncingEpisodes = false;
@@ -767,18 +781,12 @@ class SyncProvider extends ChangeNotifier {
   }
 
   Future<void> disconnectUi() async {
-    _statusMessage = null;
-    notifyListeners();
-
     await disconnect();
 
-    _isConfigured = false;
-    _errorMessage = null;
     _syncDeviceCaption = '';
     _devices = null;
     _syncGroups = null;
-    _statusMessage = 'Disconnected from sync server';
-    notifyListeners();
+    _updateStatus(SyncStatus.disconnected, 'Disconnected from sync server');
   }
 
   Future<void> disconnect() async {
@@ -793,44 +801,37 @@ class SyncProvider extends ChangeNotifier {
   }
 
   Future<void> syncNow() async {
-    _statusMessage = '';
-    _errorMessage = null;
-    notifyListeners();
-
     await syncAll();
-
-    _statusMessage = 'Last sync: ${_lastSyncTimeCache?.toLocal() ?? 'Never'}';
-    notifyListeners();
   }
 
   Future<void> fullResync() async {
     if (_client == null) return;
-    _statusMessage = 'Full re-sync in progress...';
-    notifyListeners();
+    _updateStatus(SyncStatus.syncing, 'Full re-sync in progress...');
 
     try {
-      await _executeWithAuthRetry(() async {
+      final success = await _executeWithAuthRetry(() async {
         await _settings.setSyncLastSubscriptionSync(0);
         await _settings.setSyncLastEpisodeSync(0);
         await _syncRepository.clearPendingSubscriptionActions();
         await _syncRepository.clearPendingEpisodeActions();
         await syncAll();
-        _statusMessage = 'Full re-sync complete';
         return true;
       });
+
+      if (success != true && _status == SyncStatus.syncing) {
+        _updateStatus(SyncStatus.connected);
+      }
     } catch (e) {
-      _errorMessage = 'Full re-sync failed: $e';
-      error(_errorMessage!, name: logName);
+      if (_status != SyncStatus.credentialsInvalid) {
+        _updateStatus(SyncStatus.connected, 'Full re-sync failed: $e', true);
+      }
+      error('Full re-sync failed: $e', name: logName);
     } finally {
       notifyListeners();
     }
   }
 
   Future<void> selectSyncDevice(String targetDeviceId) async {
-    _statusMessage = '';
-    _errorMessage = null;
-    notifyListeners();
-
     bool success;
     if (targetDeviceId.isEmpty) {
       success = await clearSyncDevice();
@@ -838,14 +839,15 @@ class SyncProvider extends ChangeNotifier {
       success = await setSyncDevice(targetDeviceId);
     }
 
-    _statusMessage =
-        success ? 'Sync device updated' : 'Failed to update sync device';
+    _updateStatus(
+      SyncStatus.connected,
+      success ? 'Sync device updated' : 'Failed to update sync device',
+      !success,
+    );
 
     if (success) {
       await loadDevices();
     }
-
-    notifyListeners();
   }
 
   @override
