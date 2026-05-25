@@ -12,6 +12,7 @@ class PoddrListItem extends StatefulWidget {
     this.onTap,
     this.actions = const [],
     this.isActive = false,
+    this.semanticLabel,
   });
   final String? title;
   final String? subtitle;
@@ -20,6 +21,7 @@ class PoddrListItem extends StatefulWidget {
   final VoidCallback? onTap;
   final List<Widget> actions;
   final bool isActive;
+  final String? semanticLabel;
 
   @override
   State<PoddrListItem> createState() => _PoddrListItemState();
@@ -29,76 +31,79 @@ class _PoddrListItemState extends State<PoddrListItem> {
   bool _isHovered = false;
   bool _isFocused = false;
 
+  bool get _enabled => widget.onTap != null;
+
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (event) {
-        setState(() {
-          _isHovered = true;
-        });
-      },
-      onExit: (event) {
-        setState(() {
-          _isHovered = false;
-        });
-      },
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: Focus(
-          onKeyEvent: (node, event) {
-            if (event is KeyDownEvent &&
-                event.logicalKey == LogicalKeyboardKey.enter) {
-              widget.onTap?.call();
-              node.unfocus();
-              return KeyEventResult.handled;
-            }
-            return KeyEventResult.ignored;
-          },
-          onFocusChange: (focused) {
-            setState(() {
-              _isFocused = focused;
-            });
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-            padding: const EdgeInsets.all(8),
-            margin: const EdgeInsets.all(8),
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: _isHovered || _isFocused || widget.isActive
-                  ? context.theme.surfaceContainerHigh
-                  : context.theme.surfaceContainer,
-              gradient: widget.isActive
-                  ? LinearGradient(
-                      colors: [
-                        context.theme.primary.withAlpha(50),
-                        context.theme.primary.withAlpha(10),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
-                  : null,
-              border: Border(
-                left: BorderSide(
-                    width: 8,
-                    color: widget.isActive
-                        ? context.theme.primary
-                        : const Color(0x00000000)),
+    return Semantics(
+      label: widget.semanticLabel ?? widget.title,
+      button: true,
+      enabled: _enabled,
+      child: MouseRegion(
+        cursor: _enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+        onEnter: (_) {
+          setState(() {
+            _isHovered = true;
+          });
+        },
+        onExit: (_) {
+          setState(() {
+            _isHovered = false;
+          });
+        },
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Focus(
+            onKeyEvent: (node, event) {
+              if (_enabled &&
+                  event is KeyDownEvent &&
+                  (event.logicalKey == LogicalKeyboardKey.enter ||
+                      event.logicalKey == LogicalKeyboardKey.space)) {
+                widget.onTap?.call();
+                return KeyEventResult.handled;
+              }
+              return KeyEventResult.ignored;
+            },
+            onFocusChange: (focused) {
+              setState(() {
+                _isFocused = focused;
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              padding: const EdgeInsets.all(4),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                color: _isHovered || _isFocused || widget.isActive
+                    ? context.theme.surfaceContainer
+                    : context.theme.surfaceContainerLow,
+                gradient: widget.isActive
+                    ? LinearGradient(
+                        colors: [
+                          context.theme.primary.withAlpha(50),
+                          context.theme.primary.withAlpha(10),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                    : null,
+                border: Border(
+                  left: BorderSide(
+                      width: 8,
+                      color: widget.isActive
+                          ? context.theme.primary
+                          : const Color(0x00000000)),
+                ),
               ),
-            ),
-            child: Row(
-              children: [
-                if (widget.leading != null)
-                  SizedBox.fromSize(
-                    size: const Size.square(48),
-                    child: widget.leading,
-                  ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  if (widget.leading != null)
+                    SizedBox.fromSize(
+                      size: const Size.square(48),
+                      child: widget.leading,
+                    ),
+                  Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,9 +130,9 @@ class _PoddrListItemState extends State<PoddrListItem> {
                       ],
                     ),
                   ),
-                ),
-                ...widget.actions,
-              ],
+                  ...widget.actions,
+                ],
+              ),
             ),
           ),
         ),

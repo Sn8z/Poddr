@@ -29,7 +29,12 @@ class SpeedButton extends StatelessWidget {
       2.0,
     ];
 
+    final speed = context.select<MediaProvider, double>(
+      (e) => e.speed,
+    );
+
     return PoddrIconButton(
+      semanticLabel: 'Playback speed, ${speed.toStringAsFixed(2)}x',
       onPressed: () {
         showPoddrDialog(
           context: context,

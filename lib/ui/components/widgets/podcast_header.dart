@@ -14,7 +14,6 @@ class PodcastHeader extends StatelessWidget {
   final Widget? collections;
   final List<Widget> actions;
   final Widget? bottom;
-  final double shrinkRatio;
 
   const PodcastHeader({
     super.key,
@@ -26,27 +25,122 @@ class PodcastHeader extends StatelessWidget {
     this.collections,
     this.actions = const [],
     this.bottom,
-    this.shrinkRatio = 0.0,
   });
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < Breakpoints.mobileScreen;
+
+    if (isMobile) {
+      return SliverPersistentHeader(
+        pinned: true,
+        delegate: _PodcastHeaderDelegate(
+          imageUrl: imageUrl,
+          title: title,
+          subtitle: subtitle,
+          isLoading: isLoading,
+          metadata: metadata,
+          collections: collections,
+          actions: actions,
+          bottom: bottom,
+        ),
+      );
+    }
+
+    return PinnedHeaderSliver(
+      child: Semantics(
+        header: true,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          clipBehavior: Clip.antiAlias,
+          child: Container(
+            color: context.theme.surfaceContainer,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        context.theme.primaryContainer.withAlpha(100),
+                        context.theme.primaryContainer.withAlpha(30),
+                      ],
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: _DesktopLayout(
+                    imageUrl: imageUrl,
+                    title: title,
+                    subtitle: subtitle,
+                    isLoading: isLoading,
+                    metadata: metadata,
+                    collections: collections,
+                    actions: actions,
+                  ),
+                ),
+                if (bottom != null) bottom!,
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PodcastHeaderDelegate extends SliverPersistentHeaderDelegate {
+  _PodcastHeaderDelegate({
+    required this.imageUrl,
+    required this.title,
+    required this.subtitle,
+    required this.isLoading,
+    this.metadata,
+    this.collections,
+    required this.actions,
+    this.bottom,
+  });
+
+  final String? imageUrl;
+  final String? title;
+  final String? subtitle;
+  final bool isLoading;
+  final Widget? metadata;
+  final Widget? collections;
+  final List<Widget> actions;
+  final Widget? bottom;
+
+  static const _minExtent = 104.0;
+  static const _maxExtent = 400.0;
+
+  @override
+  double get minExtent => _minExtent;
+
+  @override
+  double get maxExtent => _maxExtent;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final theme = context.theme;
+    final progress = (shrinkOffset / (_maxExtent - _minExtent)).clamp(0.0, 1.0);
 
     return Semantics(
       header: true,
       child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        borderRadius: BorderRadius.circular(16),
         clipBehavior: Clip.antiAlias,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isMobile = constraints.maxWidth < Breakpoints.mobileScreen;
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                  Container(
-                    decoration: BoxDecoration(
+        child: Container(
+          color: theme.surfaceContainer,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -56,19 +150,17 @@ class PodcastHeader extends StatelessWidget {
                       ],
                     ),
                   ),
-                  padding: const EdgeInsets.all(16.0),
-                  child: isMobile
-                      ? _MobileLayout(
-                          imageUrl: imageUrl,
-                          title: title,
-                          subtitle: subtitle,
-                          isLoading: isLoading,
-                          metadata: metadata,
-                          collections: collections,
-                          actions: actions,
-                          shrinkRatio: shrinkRatio,
-                        )
-                      : _DesktopLayout(
+                  padding: EdgeInsets.lerp(
+                    const EdgeInsets.all(16),
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    progress,
+                  ) ?? const EdgeInsets.all(16),
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      Opacity(
+                        opacity: 1.0 - progress,
+                        child: _MobileLayout(
                           imageUrl: imageUrl,
                           title: title,
                           subtitle: subtitle,
@@ -77,14 +169,38 @@ class PodcastHeader extends StatelessWidget {
                           collections: collections,
                           actions: actions,
                         ),
+                      ),
+                      Opacity(
+                        opacity: progress,
+                        child: _CompactHeader(
+                          imageUrl: imageUrl,
+                          title: title,
+                          isLoading: isLoading,
+                          actions: actions,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                if (bottom != null) bottom!,
-              ],
-            );
-          },
+              ),
+              if (bottom != null) bottom!,
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  @override
+  bool shouldRebuild(_PodcastHeaderDelegate oldDelegate) {
+    return imageUrl != oldDelegate.imageUrl ||
+        title != oldDelegate.title ||
+        subtitle != oldDelegate.subtitle ||
+        isLoading != oldDelegate.isLoading ||
+        metadata != oldDelegate.metadata ||
+        collections != oldDelegate.collections ||
+        actions != oldDelegate.actions ||
+        bottom != oldDelegate.bottom;
   }
 }
 
@@ -96,7 +212,6 @@ class _MobileLayout extends StatelessWidget {
   final Widget? metadata;
   final Widget? collections;
   final List<Widget> actions;
-  final double shrinkRatio;
 
   const _MobileLayout({
     required this.imageUrl,
@@ -106,45 +221,34 @@ class _MobileLayout extends StatelessWidget {
     this.metadata,
     this.collections,
     required this.actions,
-    this.shrinkRatio = 0.0,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = context.theme;
-    final imageSize = 120.0 * (1 - shrinkRatio);
-    final gap12 = 12.0 * (1 - shrinkRatio);
-    final gap8 = 8.0 * (1 - shrinkRatio);
-    final metadataOpacity = 1 - shrinkRatio;
+    const imageSize = 120.0;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         RepaintBoundary(
-          child: AnimatedOpacity(
-            opacity: 1 - shrinkRatio,
-            duration: const Duration(milliseconds: 150),
-            curve: Curves.easeOut,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.easeOut,
-              height: imageSize,
-              width: imageSize,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: isLoading
-                  ? const ShimmerBox()
-                  : PoddrImage(
-                      imageUrl: imageUrl ?? "",
-                      fit: BoxFit.cover,
-                    ),
+          child: Container(
+            height: imageSize,
+            width: imageSize,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
             ),
+            child: isLoading
+                ? const ShimmerBox()
+                : PoddrImage(
+                    imageUrl: imageUrl ?? "",
+                    fit: BoxFit.cover,
+                  ),
           ),
         ),
-        SizedBox(height: gap12),
+        gapH12,
         Text(
           title ?? "",
           style: theme.textTheme.titleLarge.copyWith(
@@ -155,7 +259,7 @@ class _MobileLayout extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         if (subtitle != null && subtitle!.isNotEmpty) ...[
-          SizedBox(height: gap12 > 4 ? 4.0 : gap12),
+          gapH4,
           Text(
             subtitle!,
             style: theme.textTheme.titleSmall.copyWith(
@@ -166,62 +270,80 @@ class _MobileLayout extends StatelessWidget {
           ),
         ],
         if (metadata != null) ...[
-          RepaintBoundary(
-            child: AnimatedOpacity(
-              opacity: metadataOpacity,
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.easeOut,
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.easeOut,
-                alignment: Alignment.topCenter,
-                child: SizedBox(height: metadataOpacity * 32, child: metadata!),
-              ),
-            ),
-          ),
+          gapH8,
+          metadata!,
         ],
         if (actions.isNotEmpty) ...[
-          RepaintBoundary(
-            child: AnimatedOpacity(
-              opacity: 1 - shrinkRatio,
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.easeOut,
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.easeOut,
-                alignment: Alignment.topCenter,
-                child: SizedBox(
-                  height: gap8 + (1 - shrinkRatio) * 32,
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 4,
-                    alignment: WrapAlignment.center,
-                    children: actions,
-                  ),
-                ),
-              ),
-            ),
+          gapH8,
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            alignment: WrapAlignment.center,
+            children: actions,
           ),
         ],
         if (collections != null) ...[
-          RepaintBoundary(
-            child: AnimatedOpacity(
-              opacity: 1 - shrinkRatio,
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.easeOut,
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.easeOut,
-                alignment: Alignment.topCenter,
-                child: SizedBox(
-                  height: gap12 + (1 - shrinkRatio) * 40,
-                  child: collections!,
-                ),
-              ),
-            ),
-          ),
+          gapH12,
+          collections!,
         ],
       ],
+    );
+  }
+}
+
+class _CompactHeader extends StatelessWidget {
+  final String? imageUrl;
+  final String? title;
+  final bool isLoading;
+  final List<Widget> actions;
+
+  const _CompactHeader({
+    required this.imageUrl,
+    required this.title,
+    required this.isLoading,
+    required this.actions,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.theme;
+
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: SizedBox(
+              width: 32,
+              height: 32,
+              child: isLoading
+                  ? const ShimmerBox()
+                  : PoddrImage(
+                      imageUrl: imageUrl ?? "",
+                      fit: BoxFit.cover,
+                    ),
+            ),
+          ),
+          gapW12,
+          Expanded(
+            child: Text(
+              title ?? "",
+              style: theme.textTheme.titleMedium.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.primary,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          if (actions.isNotEmpty)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: actions,
+            ),
+        ],
+      ),
     );
   }
 }

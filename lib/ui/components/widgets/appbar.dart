@@ -17,38 +17,40 @@ class PoddrAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    return Semantics(
-      header: true,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              color: theme.surfaceContainerHigh,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: DefaultTextStyle(
-                      style: context.theme.textTheme.titleLarge.copyWith(
-                        fontWeight: FontWeight.bold,
+    return PinnedHeaderSliver(
+      child: Semantics(
+        header: true,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                color: theme.surfaceContainerHigh,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: DefaultTextStyle(
+                        style: context.theme.textTheme.titleLarge.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        child: title,
                       ),
-                      child: title,
                     ),
-                  ),
-                  if (actions != null) ...actions!,
-                ],
+                    if (actions != null) ...actions!,
+                  ],
+                ),
               ),
-            ),
-            if (bottom != null) bottom!,
-          ],
+              if (bottom != null) bottom!,
+            ],
+          ),
         ),
       ),
     );

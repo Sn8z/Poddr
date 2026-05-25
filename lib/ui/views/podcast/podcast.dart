@@ -22,7 +22,6 @@ import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/podcast_header.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
-import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
@@ -38,20 +37,6 @@ class PodcastDetailsView extends StatefulWidget {
 }
 
 class _PodcastDetailsViewState extends State<PodcastDetailsView> {
-  late final ValueNotifier<double> _shrinkRatioNotifier;
-
-  @override
-  void initState() {
-    super.initState();
-    _shrinkRatioNotifier = ValueNotifier<double>(0.0);
-  }
-
-  @override
-  void dispose() {
-    _shrinkRatioNotifier.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -61,147 +46,165 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
         final podcast = podcastProvider.podcast;
 
         return PageLayout(
-          shrinkRatioNotifier: _shrinkRatioNotifier,
-          header: ListenableBuilder(
-            listenable: _shrinkRatioNotifier,
-            builder: (context, _) {
-              return PodcastHeader(
-                imageUrl: podcast?.image,
-                title: podcast?.title,
-                subtitle: podcast?.author,
-                isLoading: podcastProvider.isLoading,
-                metadata: podcast != null
-                    ? _buildMetadataRow(context, podcast)
-                    : null,
-                collections: CollectionsSection(rss: widget.rss),
-                actions: [
-                  PoddrAddSubscriptionBtn(rss: widget.rss),
-                  PoddrIconButton(
-                    icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
-                    size: 20,
-                    onPressed: () {
-                      showPoddrDialog(
-                        context: context,
-                        builder: (dialogContext) {
-                          return PoddrDialog(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  podcast?.title ?? "Podcast",
-                                  style: context.theme.textTheme.headlineSmall,
-                                ),
-                                PoddrHTML(html: podcast?.description ?? ""),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  if (podcast?.link != null && podcast!.link!.isNotEmpty) ...[
-                    PoddrIconButton(
-                      icon: HugeIcon(icon: HugeIcons.strokeRoundedGlobe),
-                      onPressed: () async {
-                        final uri = Uri.parse(podcast.link ?? "");
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri,
-                              mode: LaunchMode.externalApplication);
-                        }
-                      },
-                    ),
-                  ],
-                ],
-                shrinkRatio: _shrinkRatioNotifier.value,
-                bottom: PoddrAppBarOptions(
-                  title: LayoutBuilder(
-                    builder: (layoutContext, constraints) {
-                      if (constraints.maxWidth > Breakpoints.tabletScreen) {
-                        return Row(
-                          children: [
-                            PoddrIconButton(
-                              icon:
-                                  HugeIcon(icon: HugeIcons.strokeRoundedFilter),
-                              onPressed: () {
-                                _showFilterSortDialog(context, podcastProvider);
-                              },
-                            ),
-                            gapW8,
-                            Expanded(
-                              child: PoddrTextInput(
-                                controller: podcastProvider.filterController,
-                                hintText: "Type to filter episodes...",
-                                onChanged: (value) {
-                                  podcastProvider.setFilter(value);
-                                },
-                                suffixIcon: podcastProvider.filter.isNotEmpty
-                                    ? PoddrIconButton(
-                                        icon: HugeIcon(
-                                            icon: HugeIcons
-                                                .strokeRoundedCancel01),
-                                        size: 20,
-                                        onPressed: () {
-                                          podcastProvider.setFilter('');
-                                        },
-                                      )
-                                    : null,
+          slivers: [
+            PodcastHeader(
+              imageUrl: podcast?.image,
+              title: podcast?.title,
+              subtitle: podcast?.author,
+              isLoading: podcastProvider.isLoading,
+              metadata:
+                  podcast != null ? _buildMetadataRow(context, podcast) : null,
+              collections: CollectionsSection(rss: widget.rss),
+              actions: [
+                PoddrAddSubscriptionBtn(rss: widget.rss),
+                PoddrIconButton(
+                  icon:
+                      HugeIcon(icon: HugeIcons.strokeRoundedInformationSquare),
+                  size: 20,
+                  onPressed: () {
+                    showPoddrDialog(
+                      context: context,
+                      builder: (dialogContext) {
+                        return PoddrDialog(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                podcast?.title ?? "Podcast",
+                                style: context.theme.textTheme.headlineSmall,
                               ),
-                            ),
-                          ],
+                              PoddrHTML(html: podcast?.description ?? ""),
+                            ],
+                          ),
                         );
-                      } else {
-                        return Row(
-                          children: [
-                            PoddrIconButton(
-                              icon:
-                                  HugeIcon(icon: HugeIcons.strokeRoundedFilter),
-                              onPressed: () {
-                                _showFilterSortDialog(context, podcastProvider);
-                              },
-                            ),
-                          ],
-                        );
+                      },
+                    );
+                  },
+                ),
+                if (podcast?.link != null && podcast!.link!.isNotEmpty) ...[
+                  PoddrIconButton(
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedGlobe),
+                    onPressed: () async {
+                      final uri = Uri.parse(podcast.link ?? "");
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri,
+                            mode: LaunchMode.externalApplication);
                       }
                     },
                   ),
+                ],
+              ],
+              bottom: PoddrAppBarOptions(
+                title: LayoutBuilder(
+                  builder: (layoutContext, constraints) {
+                    if (constraints.maxWidth > Breakpoints.tabletScreen) {
+                      return Row(
+                        children: [
+                          PoddrIconButton(
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedFilter),
+                            onPressed: () {
+                              _showFilterSortDialog(context, podcastProvider);
+                            },
+                          ),
+                          gapW8,
+                          Expanded(
+                            child: PoddrTextInput(
+                              controller: podcastProvider.filterController,
+                              hintText: "Type to filter episodes...",
+                              onChanged: (value) {
+                                podcastProvider.setFilter(value);
+                              },
+                              suffixIcon: podcastProvider.filter.isNotEmpty
+                                  ? PoddrIconButton(
+                                      icon: HugeIcon(
+                                          icon:
+                                              HugeIcons.strokeRoundedCancel01),
+                                      size: 20,
+                                      onPressed: () {
+                                        podcastProvider.setFilter('');
+                                      },
+                                    )
+                                  : null,
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Row(
+                        children: [
+                          PoddrIconButton(
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedFilter),
+                            onPressed: () {
+                              _showFilterSortDialog(context, podcastProvider);
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 ),
-              );
-            },
-          ),
-          child: podcastProvider.isLoading || podcastProvider.podcast != null
-              ? CustomScrollView(
-                  slivers: [
-                    sliverGapH16,
-                    if (podcastProvider.isLoading)
+              ),
+            ),
+            ...(podcastProvider.isLoading || podcastProvider.podcast != null
+                ? [
+                    if (podcastProvider.isLoading) ...[
+                      sliverGapH16,
                       const SliverToBoxAdapter(
                         child: ShimmerLoadingList(height: 48),
-                      )
-                    else
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              return Episode(
-                                  episode: podcastProvider.episodes[index]);
-                            },
-                            childCount: podcastProvider.episodes.length,
-                          ),
-                        ),
                       ),
-                    SliverToBoxAdapter(child: BottomPaddingFix()),
-                  ],
-                )
-              : EmptyState(
-                  icon: HugeIcon(
-                    icon: HugeIcons.strokeRoundedPodcast,
-                    size: 64,
-                    color: context.theme.secondary,
-                  ),
-                  title: 'Podcast not found',
-                  subtitle: 'This podcast could not be loaded',
-                ),
+                    ] else
+                      SliverMainAxisGroup(
+                        slivers: [
+                          sliverGapH16,
+                          DecoratedSliver(
+                            decoration: BoxDecoration(
+                              color: context.theme.surfaceContainerLow,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              ),
+                            ),
+                            sliver: const SliverToBoxAdapter(
+                                child: SizedBox(height: 16)),
+                          ),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                return Episode(
+                                    episode: podcastProvider.episodes[index]);
+                              },
+                              childCount: podcastProvider.episodes.length,
+                            ),
+                          ),
+                          DecoratedSliver(
+                            decoration: BoxDecoration(
+                              color: context.theme.surfaceContainerLow,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(16),
+                                bottomRight: Radius.circular(16),
+                              ),
+                            ),
+                            sliver: const SliverToBoxAdapter(
+                                child: SizedBox(height: 16)),
+                          ),
+                        ],
+                      ),
+                  ]
+                : [
+                    SliverToBoxAdapter(
+                      child: EmptyState(
+                        icon: HugeIcon(
+                          icon: HugeIcons.strokeRoundedPodcast,
+                          size: 64,
+                          color: context.theme.secondary,
+                        ),
+                        title: 'No podcast found',
+                        subtitle: 'The podcast could not be loaded.',
+                      ),
+                    ),
+                  ]),
+          ],
         );
       },
     );

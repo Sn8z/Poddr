@@ -91,9 +91,12 @@ class LargePlayer extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     const QueueButton(),
+                                    gapW8,
                                     const SpeedButton(),
-                                    const PlayerViewButton(),
+                                    gapW8,
                                     const VolumeSlider(),
+                                    gapW8,
+                                    const PlayerViewButton(),
                                   ],
                                 ),
                               ),

@@ -10,10 +10,8 @@ import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
-import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/views/discover/discover_view_model.dart';
 
-import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/box.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
@@ -37,57 +35,56 @@ class PodcastDiscoveryView extends StatelessWidget {
       create: (_) => DiscoverViewModel(),
       builder: (context, child) {
         return PageLayout(
-          header: PoddrAppBar(
-            title: const Text('Podcasts'),
-            bottom: PoddrAppBarOptions(
-              actions: [
-                PoddrOutlinedButton(
-                  child: Text(context.watch<DiscoverViewModel>().country),
-                  onPressed: () {
-                    final discoveryProvider = context.read<DiscoverViewModel>();
+          slivers: [
+            PoddrAppBar(
+              title: const Text('Podcasts'),
+              bottom: PoddrAppBarOptions(
+                actions: [
+                  PoddrOutlinedButton(
+                    child: Text(context.watch<DiscoverViewModel>().country),
+                    onPressed: () {
+                      final discoveryProvider =
+                          context.read<DiscoverViewModel>();
 
-                    showPoddrDialog(
-                      context: context,
-                      builder: (dialogContext) {
-                        return _CountrySelectionDialog(
-                          discoveryProvider: discoveryProvider,
-                          dialogContext: dialogContext,
-                        );
-                      },
-                    );
-                  },
-                ),
-                gapW8,
-                PoddrOutlinedButton(
-                  child: Text(context.watch<DiscoverViewModel>().genre),
-                  onPressed: () {
-                    final discoveryProvider = context.read<DiscoverViewModel>();
+                      showPoddrDialog(
+                        context: context,
+                        builder: (dialogContext) {
+                          return _CountrySelectionDialog(
+                            discoveryProvider: discoveryProvider,
+                            dialogContext: dialogContext,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  gapW8,
+                  PoddrOutlinedButton(
+                    child: Text(context.watch<DiscoverViewModel>().genre),
+                    onPressed: () {
+                      final discoveryProvider =
+                          context.read<DiscoverViewModel>();
 
-                    showPoddrDialog(
-                      context: context,
-                      builder: (dialogContext) {
-                        return _GenreSelectionDialog(
-                          discoveryProvider: discoveryProvider,
-                          dialogContext: dialogContext,
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
+                      showPoddrDialog(
+                        context: context,
+                        builder: (dialogContext) {
+                          return _GenreSelectionDialog(
+                            discoveryProvider: discoveryProvider,
+                            dialogContext: dialogContext,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-          child: CustomScrollView(
-            slivers: [
-              sliverGapH16,
-              const SliverToBoxAdapter(child: LatestEpisodes()),
-              sliverGapH16,
-              const SliverToBoxAdapter(child: RecentlyPlayedEpisodes()),
-              sliverGapH16,
-              const SliverToBoxAdapter(child: TrendingPodcasts()),
-              SliverToBoxAdapter(child: BottomPaddingFix()),
-            ],
-          ),
+            sliverGapH16,
+            const LatestEpisodes(),
+            sliverGapH16,
+            const RecentlyPlayedEpisodesSliver(),
+            sliverGapH16,
+            const TrendingPodcastsSliver(),
+          ],
         );
       },
     );
@@ -282,15 +279,15 @@ class LatestEpisodes extends StatelessWidget {
   }
 }
 
-class RecentlyPlayedEpisodes extends StatelessWidget {
-  const RecentlyPlayedEpisodes({super.key});
+class RecentlyPlayedEpisodesSliver extends StatelessWidget {
+  const RecentlyPlayedEpisodesSliver({super.key});
 
   @override
   Widget build(BuildContext context) {
     final historyProvider = context.watch<HistoryProvider>();
 
     if (historyProvider.history.isEmpty) {
-      return const SizedBox.shrink();
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
     return ContentBox(
@@ -358,8 +355,15 @@ class RecentlyPlayedEpisodes extends StatelessWidget {
   }
 }
 
-class TrendingPodcasts extends StatelessWidget {
-  const TrendingPodcasts({super.key});
+class TrendingPodcastsSliver extends StatelessWidget {
+  const TrendingPodcastsSliver({super.key});
+
+  static int _calcCrossAxisCount(double width) {
+    if (width < 600) return 2;
+    if (width < 900) return 3;
+    if (width < 1200) return 4;
+    return 5;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -369,7 +373,7 @@ class TrendingPodcasts extends StatelessWidget {
         MediaQuery.of(context).size.width < Breakpoints.mobileScreen;
 
     if (charts.charts.isEmpty) {
-      return const SizedBox.shrink();
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
     if (charts.isLoading) {
@@ -389,61 +393,72 @@ class TrendingPodcasts extends StatelessWidget {
       );
     }
 
-    return PoddrBox(
-      child: isMobile
-          ? ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: charts.charts.length,
-              itemBuilder: (context, index) {
-                return PoddrListItem(
-                  leading: Container(
-                    clipBehavior: Clip.antiAlias,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
-                    ),
-                    child: PoddrImage(
-                        imageUrl: charts.charts[index].image ?? '',
-                        maxHeightDiskCache: 300),
+    return isMobile
+        ? SliverMainAxisGroup(
+            slivers: [
+              DecoratedSliver(
+                decoration: BoxDecoration(
+                  color: context.theme.surfaceContainerLow,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
                   ),
-                  title: charts.charts[index].title,
-                  subtitle: charts.charts[index].rss,
-                  onTap: () {
-                    final rss =
-                        Uri.encodeComponent(charts.charts[index].rss ?? '');
-                    context.push('/podcasts/$rss');
+                ),
+                sliver: const SliverToBoxAdapter(child: SizedBox(height: 16)),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return PoddrListItem(
+                      leading: Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                        child: PoddrImage(
+                            imageUrl: charts.charts[index].image ?? '',
+                            maxHeightDiskCache: 300),
+                      ),
+                      title: charts.charts[index].title,
+                      subtitle: charts.charts[index].rss,
+                      onTap: () {
+                        final rss =
+                            Uri.encodeComponent(charts.charts[index].rss ?? '');
+                        context.push('/podcasts/$rss');
+                      },
+                      actions: [
+                        PoddrAddSubscriptionBtn(rss: charts.charts[index].rss),
+                      ],
+                    );
                   },
-                  actions: [
-                    PoddrAddSubscriptionBtn(rss: charts.charts[index].rss),
-                  ],
-                );
-              },
-            )
-          : LayoutBuilder(
-              builder: (context, constraints) {
-                int crossAxisCount;
-                final width = constraints.maxWidth;
-
-                if (width < 600) {
-                  crossAxisCount = 2;
-                } else if (width < 900) {
-                  crossAxisCount = 3;
-                } else if (width < 1200) {
-                  crossAxisCount = 4;
-                } else {
-                  crossAxisCount = 5;
-                }
-
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
+                  childCount: charts.charts.length,
+                ),
+              ),
+              DecoratedSliver(
+                decoration: BoxDecoration(
+                  color: context.theme.surfaceContainerLow,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
                   ),
-                  itemCount: charts.charts.length,
-                  itemBuilder: (context, index) {
+                ),
+                sliver: const SliverToBoxAdapter(child: SizedBox(height: 16)),
+              ),
+            ],
+          )
+        : SliverLayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount =
+                  _calcCrossAxisCount(constraints.crossAxisExtent);
+              return SliverGrid(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 0.9,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
                     return PoddrGridItem(
                       onTap: () {
                         final rss =
@@ -468,9 +483,10 @@ class TrendingPodcasts extends StatelessWidget {
                       ],
                     );
                   },
-                );
-              },
-            ),
-    );
+                  childCount: charts.charts.length,
+                ),
+              );
+            },
+          );
   }
 }

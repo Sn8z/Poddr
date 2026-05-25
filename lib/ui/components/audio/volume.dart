@@ -1,5 +1,5 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
@@ -24,6 +24,7 @@ class VolumeSlider extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         PoddrIconButton(
+          semanticLabel: volume == 0 ? 'Unmute' : 'Mute',
           icon: switch (volume.round()) {
             <= 0 => HugeIcon(
                 icon: HugeIcons.strokeRoundedVolumeOff,
@@ -64,6 +65,8 @@ class VolumeSlider extends StatelessWidget {
               max: 100.0,
               thumbVisibility: PoddrThumbVisibility.onInteraction,
               trackHeight: 6,
+              semanticLabel: 'Volume',
+              valueLabel: '${volume.round()}%',
               onChanged: mediaProvider.setVolume,
             ),
           ),

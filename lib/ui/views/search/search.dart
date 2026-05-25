@@ -4,14 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/components/widgets/add_subscription_btn.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
-import 'package:poddr/ui/components/widgets/content_box.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
-import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/views/search/search_view_model.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
@@ -28,34 +26,40 @@ class SearchView extends StatelessWidget {
         final searchResults = searchProvider.searchResults;
 
         return PageLayout(
-          header: PoddrAppBar(
-            title: PoddrTextInput(
-              hintText: 'Search',
-              fontSize: 16,
-              onSubmit: (value) {
-                searchProvider.searchPodcast(value);
-              },
+          slivers: [
+            PoddrAppBar(
+              title: PoddrTextInput(
+                hintText: 'Search',
+                fontSize: 16,
+                onSubmit: (value) {
+                  searchProvider.searchPodcast(value);
+                },
+              ),
             ),
-          ),
-          child: searchProvider.isLoading
-              ? const ShimmerLoadingList()
+            ...searchProvider.isLoading
+              ? [const SliverToBoxAdapter(child: ShimmerLoadingList())]
               : searchResults.isEmpty
-                  ? EmptyState(
-                      icon: HugeIcon(
-                        icon: HugeIcons.strokeRoundedSearch01,
-                        size: 64,
-                        color: context.theme.secondary,
+                  ? [
+                      SliverToBoxAdapter(
+                        child: EmptyState(
+                          icon: HugeIcon(
+                            icon: HugeIcons.strokeRoundedSearch01,
+                            size: 64,
+                            color: context.theme.secondary,
+                          ),
+                          title: 'No results found',
+                          subtitle: 'Try searching for a different term',
+                        ),
                       ),
-                      title: 'No results found',
-                      subtitle: 'Try searching for a different term',
-                    )
-                  : SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          gapH16,
-                          ContentBox(
-                            children: searchResults.map((result) {
+                    ]
+                  : [
+                      sliverGapH16,
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final result = searchResults[index];
                               return PoddrListItem(
                                 leading: Container(
                                   clipBehavior: Clip.antiAlias,
@@ -78,12 +82,13 @@ class SearchView extends StatelessWidget {
                                   PoddrAddSubscriptionBtn(rss: result.rss),
                                 ],
                               );
-                            }).toList(),
+                            },
+                            childCount: searchResults.length,
                           ),
-                          const BottomPaddingFix(),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
+                  ],
         );
       },
     );

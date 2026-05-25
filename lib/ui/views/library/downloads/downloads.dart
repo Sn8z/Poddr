@@ -16,13 +16,11 @@ import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
-import 'package:poddr/ui/components/widgets/poddr_confirm_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
-import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
@@ -55,174 +53,186 @@ class DownloadsView extends StatelessWidget {
             MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
 
         return PageLayout(
-          header: PoddrAppBar(
-            title: const Text('Downloads'),
-            actions: isDesktop
-                ? [
-                    PoddrLibraryNav(
-                      currentRoute: '/library/downloads',
-                      segments: librarySubNav
-                          .map((item) => LibrarySegment.fromNavItem(item))
-                          .toList(),
-                    ),
-                  ]
-                : null,
-            bottom: PoddrAppBarOptions(
-              title: isDesktop
-                  ? Row(
-                      children: [
-                        PoddrIconButton(
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedFilter),
-                          size: 20,
-                          onPressed: () {
-                            _showFilterSortDialog(context, viewModel);
-                          },
-                        ),
-                        gapW8,
-                        Expanded(
-                          child: PoddrTextInput(
-                            controller: viewModel.filterController,
-                            hintText: "Type to filter downloads...",
-                            onChanged: (value) {
-                              viewModel.setFilter(value);
-                            },
-                            suffixIcon: viewModel.filter.isNotEmpty
-                                ? PoddrIconButton(
-                                    icon: HugeIcon(
-                                      icon: HugeIcons.strokeRoundedCancel01,
-                                    ),
-                                    size: 20,
-                                    onPressed: () {
-                                      viewModel.setFilter('');
-                                    },
-                                  )
-                                : null,
-                          ),
-                        ),
-                        gapW8,
-                        PoddrOutlinedButton(
-                          child: Text("Clear all"),
-                          onPressed: () {
-                            _showClearAllDialog(context, viewModel);
-                          },
-                        ),
-                      ],
-                    )
-                  : Row(
-                      children: [
-                        PoddrIconButton(
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedFilter),
-                          size: 20,
-                          onPressed: () {
-                            _showFilterSortDialog(context, viewModel);
-                          },
-                        ),
-                        const Spacer(),
-                        PoddrOutlinedButton(
-                          child: Text("Clear all"),
-                          onPressed: () {
-                            _showClearAllDialog(context, viewModel);
-                          },
-                        ),
-                      ],
-                    ),
+          slivers: [
+            PoddrAppBar(
+              title: const Text('Downloads'),
               actions: isDesktop
-                  ? []
-                  : [
+                  ? [
                       PoddrLibraryNav(
                         currentRoute: '/library/downloads',
                         segments: librarySubNav
                             .map((item) => LibrarySegment.fromNavItem(item))
                             .toList(),
                       ),
-                    ],
-            ),
-          ),
-          child: viewModel.isLoading
-              ? const ShimmerLoadingList()
-              : downloads.isEmpty
-                  ? EmptyState(
-                      icon: HugeIcon(
-                        icon: HugeIcons.strokeRoundedDownload01,
-                        size: 64,
-                        color: context.theme.secondary,
-                      ),
-                      title: 'No downloads yet',
-                      subtitle: 'Download episodes to listen offline',
-                    )
-                  : CustomScrollView(
-                      slivers: [
-                        sliverGapH16,
-                        if (downloads.isNotEmpty)
-                          SliverToBoxAdapter(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 12, bottom: 8),
-                              child: Text(
-                                "Episodes (${downloads.length})",
-                                style: context.theme.textTheme.titleMedium
-                                    .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: context.theme.primary,
-                                ),
-                              ),
+                    ]
+                  : null,
+              bottom: PoddrAppBarOptions(
+                title: isDesktop
+                    ? Row(
+                        children: [
+                          PoddrIconButton(
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedFilter),
+                            size: 20,
+                            onPressed: () {
+                              _showFilterSortDialog(context, viewModel);
+                            },
+                          ),
+                          gapW8,
+                          Expanded(
+                            child: PoddrTextInput(
+                              controller: viewModel.filterController,
+                              hintText: "Type to filter downloads...",
+                              onChanged: (value) {
+                                viewModel.setFilter(value);
+                              },
+                              suffixIcon: viewModel.filter.isNotEmpty
+                                  ? PoddrIconButton(
+                                      icon: HugeIcon(
+                                        icon: HugeIcons.strokeRoundedCancel01,
+                                      ),
+                                      size: 20,
+                                      onPressed: () {
+                                        viewModel.setFilter('');
+                                      },
+                                    )
+                                  : null,
                             ),
                           ),
-                        SliverPadding(
-                          padding: const EdgeInsets.all(12),
-                          sliver: SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                final download = downloads[index];
-                                return PoddrListItem(
-                                  title: download.title,
-                                  subtitle: download.podcastTitle,
-                                  leading: Container(
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: const BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(12)),
-                                    ),
-                                    child: PoddrImage(
-                                        imageUrl: download.imageUrl,
-                                        maxHeightDiskCache: 300),
-                                  ),
-                                  onTap: () {
-                                    viewModel.loadMedia(
-                                      audioUrl: download.audioUrl,
-                                      videoUrl: download.videoUrl,
-                                      episodeTitle: download.title,
-                                      podcastTitle: download.podcastTitle,
-                                      podcastRSS: download.podcastRSS,
-                                      description: download.description,
-                                      artUri: download.imageUrl,
-                                      album: download.title,
-                                      artist: download.podcastTitle,
-                                    );
-                                  },
-                                  actions: [
-                                    Text(
-                                      convertDurationToString(
-                                        Duration(seconds: download.duration),
-                                      ),
-                                      style: context.theme.textTheme.bodySmall,
-                                    ),
-                                    EpisodeHistoryCircle(
-                                        audioUrl: download.audioUrl),
-                                    DownloadButton(
-                                      episode:
-                                          viewModel.toPodcastEpisode(download)!,
-                                    ),
-                                  ],
-                                );
-                              },
-                              childCount: downloads.length,
+                          gapW8,
+                          PoddrOutlinedButton(
+                            child: Text("Clear all"),
+                            onPressed: () {
+                              _showClearAllDialog(context, viewModel);
+                            },
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          PoddrIconButton(
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedFilter),
+                            size: 20,
+                            onPressed: () {
+                              _showFilterSortDialog(context, viewModel);
+                            },
+                          ),
+                          const Spacer(),
+                          PoddrOutlinedButton(
+                            child: Text("Clear all"),
+                            onPressed: () {
+                              _showClearAllDialog(context, viewModel);
+                            },
+                          ),
+                        ],
+                      ),
+                actions: isDesktop
+                    ? []
+                    : [
+                        PoddrLibraryNav(
+                          currentRoute: '/library/downloads',
+                          segments: librarySubNav
+                              .map((item) => LibrarySegment.fromNavItem(item))
+                              .toList(),
+                        ),
+                      ],
+              ),
+            ),
+            ...viewModel.isLoading
+                ? [const SliverToBoxAdapter(child: ShimmerLoadingList())]
+                : downloads.isEmpty
+                    ? [
+                        SliverToBoxAdapter(
+                          child: EmptyState(
+                            icon: HugeIcon(
+                              icon: HugeIcons.strokeRoundedDownload01,
+                              size: 64,
+                              color: context.theme.secondary,
                             ),
+                            title: 'No downloads yet',
+                            subtitle: 'Download episodes to listen offline',
                           ),
                         ),
-                        SliverToBoxAdapter(child: BottomPaddingFix()),
+                      ]
+                    : [
+                        SliverMainAxisGroup(
+                          slivers: [
+                            sliverGapH16,
+                            DecoratedSliver(
+                              decoration: BoxDecoration(
+                                color: context.theme.surfaceContainerLow,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16),
+                                ),
+                              ),
+                              sliver: const SliverToBoxAdapter(
+                                  child: SizedBox(height: 16)),
+                            ),
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final download = downloads[index];
+                                  return PoddrListItem(
+                                    title: download.title,
+                                    subtitle: download.podcastTitle,
+                                    leading: Container(
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(12)),
+                                      ),
+                                      child: PoddrImage(
+                                          imageUrl: download.imageUrl,
+                                          maxHeightDiskCache: 300),
+                                    ),
+                                    onTap: () {
+                                      viewModel.loadMedia(
+                                        audioUrl: download.audioUrl,
+                                        videoUrl: download.videoUrl,
+                                        episodeTitle: download.title,
+                                        podcastTitle: download.podcastTitle,
+                                        podcastRSS: download.podcastRSS,
+                                        description: download.description,
+                                        artUri: download.imageUrl,
+                                        album: download.title,
+                                        artist: download.podcastTitle,
+                                      );
+                                    },
+                                    actions: [
+                                      Text(
+                                        convertDurationToString(
+                                          Duration(seconds: download.duration),
+                                        ),
+                                        style:
+                                            context.theme.textTheme.bodySmall,
+                                      ),
+                                      EpisodeHistoryCircle(
+                                          audioUrl: download.audioUrl),
+                                      DownloadButton(
+                                        episode: viewModel
+                                            .toPodcastEpisode(download)!,
+                                      ),
+                                    ],
+                                  );
+                                },
+                                childCount: downloads.length,
+                              ),
+                            ),
+                            DecoratedSliver(
+                              decoration: BoxDecoration(
+                                color: context.theme.surfaceContainerLow,
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                ),
+                              ),
+                              sliver: const SliverToBoxAdapter(
+                                  child: SizedBox(height: 16)),
+                            ),
+                          ],
+                        ),
                       ],
-                    ),
+          ],
         );
       },
     );
@@ -312,15 +322,34 @@ void _showClearAllDialog(BuildContext context, DownloadsViewModel viewModel) {
   showPoddrDialog(
     context: context,
     builder: (dialogContext) {
-      return PoddrConfirmDialog(
-        title: 'Clear all downloads?',
-        message:
-            'This will delete ${viewModel.downloads.length} downloaded episode(s).',
-        confirmLabel: 'Delete all',
-        onConfirm: () {
-          viewModel.clearAllDownloads();
-          Navigator.pop(dialogContext);
-        },
+      return PoddrDialog(
+        header: Text(
+          'Clear all downloads?',
+          style: dialogContext.theme.textTheme.headlineSmall.copyWith(
+            fontWeight: FontWeight.bold,
+            color: dialogContext.theme.secondary,
+          ),
+        ),
+        actions: [
+          PoddrTextButton(
+            label: 'Cancel',
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+          PoddrTextButton(
+            label: 'Delete all',
+            onPressed: () {
+              viewModel.clearAllDownloads();
+              Navigator.pop(dialogContext);
+            },
+            color: dialogContext.theme.error,
+          ),
+        ],
+        child: Text(
+          'This will delete ${viewModel.downloads.length} downloaded episode(s).',
+          style: dialogContext.theme.textTheme.bodyMedium.copyWith(
+            color: dialogContext.theme.onSurfaceVariant,
+          ),
+        ),
       );
     },
   );

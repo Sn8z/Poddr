@@ -7,7 +7,6 @@ class PoddrIconButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
   final double size;
-  final double? iconSize;
   final double? padding;
   final Color? color;
   final Color? hoverColor;
@@ -21,7 +20,6 @@ class PoddrIconButton extends StatefulWidget {
     required this.onPressed,
     this.onLongPress,
     this.size = 20,
-    this.iconSize,
     this.padding,
     this.color,
     this.hoverColor,
@@ -42,7 +40,6 @@ class _PoddrIconButtonState extends State<PoddrIconButton> {
   bool get _enabled => widget.onPressed != null;
 
   double get _effectivePadding => widget.padding ?? 8;
-  double get _effectiveIconSize => widget.iconSize ?? widget.size;
 
   @override
   void dispose() {
@@ -125,7 +122,7 @@ class _PoddrIconButtonState extends State<PoddrIconButton> {
                 child: Center(
                   child: IconTheme(
                     data: IconThemeData(
-                      size: _effectiveIconSize,
+                      size: widget.size,
                       color: iconColor,
                     ),
                     child: widget.icon,

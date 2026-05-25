@@ -7,7 +7,6 @@ import 'package:poddr/models/collection.dart';
 import 'package:poddr/ui/views/settings/collections/collections_view_model.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
-import 'package:poddr/ui/components/widgets/poddr_confirm_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_progress.dart';
@@ -112,11 +111,31 @@ class _CollectionsView extends StatelessWidget {
       PodcastCollection collection, CollectionsViewModel viewModel) async {
     final confirmed = await showPoddrDialog<bool>(
       context: context,
-      builder: (dialogContext) => PoddrConfirmDialog(
-        title: 'Delete Collection',
-        message: 'Are you sure you want to delete "${collection.name}"?',
-        confirmLabel: 'Delete',
-        onConfirm: () => Navigator.of(dialogContext).pop(true),
+      builder: (dialogContext) => PoddrDialog(
+        header: Text(
+          'Delete Collection',
+          style: dialogContext.theme.textTheme.headlineSmall.copyWith(
+            fontWeight: FontWeight.bold,
+            color: dialogContext.theme.secondary,
+          ),
+        ),
+        actions: [
+          PoddrTextButton(
+            label: 'Cancel',
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+          PoddrTextButton(
+            label: 'Delete',
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            color: dialogContext.theme.error,
+          ),
+        ],
+        child: Text(
+          'Are you sure you want to delete "${collection.name}"?',
+          style: dialogContext.theme.textTheme.bodyMedium.copyWith(
+            color: dialogContext.theme.onSurfaceVariant,
+          ),
+        ),
       ),
     );
 

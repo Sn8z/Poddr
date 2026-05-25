@@ -16,7 +16,6 @@ import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/library_nav.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
-import 'package:poddr/ui/components/widgets/bottom_padding.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
@@ -46,132 +45,160 @@ class LibraryView extends StatelessWidget {
             MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
 
         return PageLayout(
-          header: PoddrAppBar(
-            title: const Text('Subscriptions'),
-            actions: isDesktop
-                ? [
-                    PoddrLibraryNav(
-                      currentRoute: '/library/subscriptions',
-                      segments: librarySubNav
-                          .map((item) => LibrarySegment.fromNavItem(item))
-                          .toList(),
-                    ),
-                  ]
-                : null,
-            bottom: PoddrAppBarOptions(
-              title: isDesktop
-                  ? Row(
-                      children: [
-                        PoddrIconButton(
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
-                          size: 20,
-                          onPressed: () {
-                            _showFilterSortDialog(context, viewModel);
-                          },
-                        ),
-                        gapW8,
-                        Expanded(
-                          child: PoddrTextInput(
-                            controller: viewModel.filterController,
-                            hintText: "Type to filter podcasts...",
-                            onChanged: (value) {
-                              viewModel.setFilter(value);
-                            },
-                            suffixIcon: viewModel.filter.isNotEmpty
-                                ? PoddrIconButton(
-                                    icon: HugeIcon(
-                                        icon: HugeIcons.strokeRoundedCancel01),
-                                    size: 20,
-                                    onPressed: () {
-                                      viewModel.setFilter('');
-                                    },
-                                  )
-                                : null,
-                          ),
-                        ),
-                      ],
-                    )
-                  : Row(
-                      children: [
-                        PoddrIconButton(
-                          icon: HugeIcon(icon: HugeIcons.strokeRoundedCancel01),
-                          size: 20,
-                          onPressed: () {
-                            _showFilterSortDialog(context, viewModel);
-                          },
-                        ),
-                      ],
-                    ),
+          slivers: [
+            PoddrAppBar(
+              title: const Text('Subscriptions'),
               actions: isDesktop
-                  ? []
-                  : [
+                  ? [
                       PoddrLibraryNav(
                         currentRoute: '/library/subscriptions',
                         segments: librarySubNav
                             .map((item) => LibrarySegment.fromNavItem(item))
                             .toList(),
                       ),
-                    ],
-            ),
-          ),
-          child: viewModel.isLoading
-              ? const ShimmerLoadingList()
-              : viewModel.subscriptions.isEmpty
-                  ? EmptyState(
-                      icon: HugeIcon(
-                        icon: HugeIcons.strokeRoundedPodcast,
-                        size: 64,
-                        color: context.theme.secondary,
-                      ),
-                      title: 'No subscriptions yet',
-                      subtitle: 'Subscribe to podcasts to see them here',
-                    )
-                  : CustomScrollView(
-                      slivers: [
-                        sliverGapH16,
-                        SliverPadding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          sliver: SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                final Podcast podcast =
-                                    viewModel.subscriptions[index];
-                                return PoddrListItem(
-                                  title: podcast.title ?? 'Missing Title',
-                                  subtitle: podcast.author ?? 'Missing Author',
-                                  onTap: () {
-                                    final rss =
-                                        Uri.encodeComponent(podcast.rss ?? '');
-                                    context.push('/podcasts/$rss');
-                                  },
-                                  leading: Container(
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: PoddrImage(
-                                      imageUrl: podcast.image ?? '',
-                                      fit: BoxFit.cover,
-                                      maxHeightDiskCache: 300,
-                                    ),
-                                  ),
-                                  actions: [
-                                    PoddrIconButton(
-                                      onPressed: () {},
-                                      icon: HugeIcon(
-                                          icon: HugeIcons
-                                              .strokeRoundedMoreVertical),
-                                    ),
-                                  ],
-                                );
+                    ]
+                  : null,
+              bottom: PoddrAppBarOptions(
+                title: isDesktop
+                    ? Row(
+                        children: [
+                          PoddrIconButton(
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedFilter),
+                            size: 20,
+                            onPressed: () {
+                              _showFilterSortDialog(context, viewModel);
+                            },
+                          ),
+                          gapW8,
+                          Expanded(
+                            child: PoddrTextInput(
+                              controller: viewModel.filterController,
+                              hintText: "Type to filter podcasts...",
+                              onChanged: (value) {
+                                viewModel.setFilter(value);
                               },
-                              childCount: viewModel.subscriptions.length,
+                              suffixIcon: viewModel.filter.isNotEmpty
+                                  ? PoddrIconButton(
+                                      icon: HugeIcon(
+                                          icon:
+                                              HugeIcons.strokeRoundedCancel01),
+                                      size: 20,
+                                      onPressed: () {
+                                        viewModel.setFilter('');
+                                      },
+                                    )
+                                  : null,
                             ),
                           ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          PoddrIconButton(
+                            icon: HugeIcon(icon: HugeIcons.strokeRoundedFilter),
+                            size: 20,
+                            onPressed: () {
+                              _showFilterSortDialog(context, viewModel);
+                            },
+                          ),
+                        ],
+                      ),
+                actions: isDesktop
+                    ? []
+                    : [
+                        PoddrLibraryNav(
+                          currentRoute: '/library/subscriptions',
+                          segments: librarySubNav
+                              .map((item) => LibrarySegment.fromNavItem(item))
+                              .toList(),
                         ),
-                        SliverToBoxAdapter(child: BottomPaddingFix()),
                       ],
-                    ),
+              ),
+            ),
+            ...viewModel.isLoading
+                ? [const SliverToBoxAdapter(child: ShimmerLoadingList())]
+                : viewModel.subscriptions.isEmpty
+                    ? [
+                        SliverToBoxAdapter(
+                          child: EmptyState(
+                            icon: HugeIcon(
+                              icon: HugeIcons.strokeRoundedPodcast,
+                              size: 64,
+                              color: context.theme.secondary,
+                            ),
+                            title: 'No subscriptions yet',
+                            subtitle: 'Subscribe to podcasts to see them here',
+                          ),
+                        ),
+                      ]
+                    : [
+                        SliverMainAxisGroup(
+                          slivers: [
+                            sliverGapH16,
+                            DecoratedSliver(
+                              decoration: BoxDecoration(
+                                color: context.theme.surfaceContainerLow,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16),
+                                ),
+                              ),
+                              sliver: const SliverToBoxAdapter(
+                                  child: SizedBox(height: 16)),
+                            ),
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final Podcast podcast =
+                                      viewModel.subscriptions[index];
+                                  return PoddrListItem(
+                                    title: podcast.title ?? 'Missing Title',
+                                    subtitle:
+                                        podcast.author ?? 'Missing Author',
+                                    onTap: () {
+                                      final rss = Uri.encodeComponent(
+                                          podcast.rss ?? '');
+                                      context.push('/podcasts/$rss');
+                                    },
+                                    leading: Container(
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: PoddrImage(
+                                        imageUrl: podcast.image ?? '',
+                                        fit: BoxFit.cover,
+                                        maxHeightDiskCache: 300,
+                                      ),
+                                    ),
+                                    actions: [
+                                      PoddrIconButton(
+                                        onPressed: () {},
+                                        icon: HugeIcon(
+                                            icon: HugeIcons
+                                                .strokeRoundedMoreVertical),
+                                      ),
+                                    ],
+                                  );
+                                },
+                                childCount: viewModel.subscriptions.length,
+                              ),
+                            ),
+                            DecoratedSliver(
+                              decoration: BoxDecoration(
+                                color: context.theme.surfaceContainerLow,
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                ),
+                              ),
+                              sliver: const SliverToBoxAdapter(
+                                  child: SizedBox(height: 16)),
+                            ),
+                          ],
+                        ),
+                      ],
+          ],
         );
       },
     );

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/media/media_provider.dart';
+import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:provider/provider.dart';
 
 class SkipButton extends StatelessWidget {
@@ -18,30 +19,17 @@ class SkipButton extends StatelessWidget {
       (provider) => provider.canGoNext,
     );
 
-    return MouseRegion(
-      cursor: canGoNext ? SystemMouseCursors.click : SystemMouseCursors.basic,
-      child: GestureDetector(
-        onTap: () {
-          canGoNext ? context.read<MediaProvider>().skipToNext() : null;
-        },
-        child: SizedBox.fromSize(
-          size: Size.square(size),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Center(
-                 child: HugeIcon(
-                   icon: HugeIcons.strokeRoundedForward01,
-                   size: size * 0.8,
-                   color: canGoNext
-                       ? context.theme.primary
-                       : context.theme.onSurfaceVariant.withAlpha(50),
-                 ),
-              ),
-            ],
-          ),
-        ),
+    return PoddrIconButton(
+      icon: HugeIcon(
+        icon: HugeIcons.strokeRoundedForward01,
+        size: size * 0.8,
       ),
+      size: size,
+      padding: 0,
+      color: canGoNext ? context.theme.primary : context.theme.onSurfaceVariant,
+      onPressed:
+          canGoNext ? () => context.read<MediaProvider>().skipToNext() : null,
+      semanticLabel: 'Next episode',
     );
   }
 }

@@ -22,6 +22,7 @@ class QueueButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PoddrIconButton(
       icon: HugeIcon(icon: HugeIcons.strokeRoundedQueue02),
+      semanticLabel: 'Queue',
       onPressed: () {
         showPoddrDialog(
           context: context,
