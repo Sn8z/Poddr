@@ -26,7 +26,7 @@ import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:poddr/core/external_links.dart';
 
 class PodcastDetailsView extends StatefulWidget {
   const PodcastDetailsView({super.key, required this.rss});
@@ -86,11 +86,7 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                   PoddrIconButton(
                     icon: HugeIcon(icon: HugeIcons.strokeRoundedGlobe),
                     onPressed: () async {
-                      final uri = Uri.parse(podcast.link ?? "");
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri,
-                            mode: LaunchMode.externalApplication);
-                      }
+                      await launchExternalUrl(podcast.link ?? "");
                     },
                   ),
                 ],

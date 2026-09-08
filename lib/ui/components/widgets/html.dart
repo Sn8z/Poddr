@@ -1,11 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
-import 'package:poddr/core/log.dart';
+import 'package:poddr/core/external_links.dart';
 import 'package:poddr/data/parsers/html_parser.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PoddrHTML extends StatelessWidget {
-  static const String logName = "PoddrHTML";
   final String html;
   final double fontSize;
 
@@ -21,13 +19,7 @@ class PoddrHTML extends StatelessWidget {
     final widgets = HtmlParser.parse(
       html,
       onLinkTap: (url) async {
-        final uri = Uri.tryParse(url);
-        if (uri == null) return;
-        try {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        } catch (e) {
-          error(e.toString(), name: logName, error: e);
-        }
+        await launchExternalUrl(url);
       },
     );
 

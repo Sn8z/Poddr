@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
-import 'package:poddr/core/log.dart';
 import 'package:poddr/core/theme/poddr_theme_data.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/views/settings/collections/collections_settings.dart';
@@ -14,7 +13,7 @@ import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/services/theme.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:poddr/core/external_links.dart';
 import 'package:poddr/ui/views/settings/sync/sync_settings.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
@@ -71,12 +70,7 @@ class SettingsView extends StatelessWidget {
               ),
               title: "GitHub Sponsor",
               onTap: () async {
-                try {
-                  await launchUrl(
-                      Uri.parse("https://github.com/sponsors/Sn8z"));
-                } catch (e) {
-                  error('Error launching URL: $e', name: 'SettingsView');
-                }
+                await launchExternalUrl("https://github.com/sponsors/Sn8z");
               },
             ),
             PoddrListItem(
@@ -84,12 +78,8 @@ class SettingsView extends StatelessWidget {
                 icon: HugeIcons.strokeRoundedWallet01,
               ),
               title: "Paypal",
-              onTap: () {
-                try {
-                  launchUrl(Uri.parse("https://www.paypal.com/paypalme/sn8z"));
-                } catch (e) {
-                  error('Error launching URL: $e', name: 'SettingsView');
-                }
+              onTap: () async {
+                await launchExternalUrl("https://www.paypal.com/paypalme/sn8z");
               },
             ),
             PoddrListItem(
@@ -97,12 +87,8 @@ class SettingsView extends StatelessWidget {
                 icon: HugeIcons.strokeRoundedCoffee01,
               ),
               title: "Ko-Fi",
-              onTap: () {
-                try {
-                  launchUrl(Uri.parse("https://ko-fi.com/sneitz"));
-                } catch (e) {
-                  error('Error launching URL: $e', name: 'SettingsView');
-                }
+              onTap: () async {
+                await launchExternalUrl("https://ko-fi.com/sneitz");
               },
             ),
           ],
@@ -116,12 +102,8 @@ class SettingsView extends StatelessWidget {
                 icon: HugeIcons.strokeRoundedBug01,
               ),
               title: "Issues",
-              onTap: () {
-                try {
-                  launchUrl(Uri.parse("https://github.com/Sn8z/Poddr/issues"));
-                } catch (e) {
-                  error('Error launching URL: $e', name: 'SettingsView');
-                }
+              onTap: () async {
+                await launchExternalUrl("https://github.com/Sn8z/Poddr/issues");
               },
             ),
             PoddrListItem(
