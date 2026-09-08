@@ -42,7 +42,7 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
+# Android Studio build files
 /android/app/debug
 /android/app/profile
 /android/app/release
@@ -50,3 +50,24 @@ app.*.map.json
 
 # Android signing
 android/key.properties
+android/local.properties
+*.jks
+*.keystore
+
+# Certificates / provisioning (Apple / Play signing)
+*.pem
+*.p12
+*.key
+*.mobileprovision
+*.provisionprofile
+
+# Google Services (Firebase, Crashlytics, etc.)
+google-services.json
+GoogleService-Info.plist
+service-account*.json
+firebase-adminsdk*.json
+
+# Env files with secrets
+.env
+.env.*
+!.env.example
