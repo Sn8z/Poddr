@@ -1,5 +1,5 @@
 flutter_launcher_icons:
-  image_path: "assets/images/icon.png"
+  image_path: "assets/images/logo.png"
   android: true
   ios: true
   adaptive_icon_background: "assets/images/logo_background.png"

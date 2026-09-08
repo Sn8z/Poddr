@@ -69,7 +69,7 @@ If you want to make a onetime donation there's two different ways, either [PayPa
 
 <hr>
 <div align="center">
-<img src="logo/PNG&JPG/Asset 3-8.png" width="80">
+<img src="assets/images/logo.png" width="80">
 
 ### A big thanks to [Radu Dan](https://www.instagram.com/radudangratian/) for creating the logo for Poddr!
 </div>
