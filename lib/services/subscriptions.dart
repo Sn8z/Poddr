@@ -233,6 +233,7 @@ class SubscriptionProvider extends ChangeNotifier {
       return _FeedResult(effectiveRss, fullPodcast.episodes);
     } catch (e, st) {
       error("Failed to fetch $rss", name: logName, error: e, stackTrace: st);
+      debug("Fetch $rss failed: $e", name: logName);
       await _subscriptionRepository.markAsBroken(rss);
       return null;
     }

@@ -119,7 +119,8 @@ class PoddrHttpClient extends http.BaseClient {
           attempt++;
           continue;
         }
-        error('Unexpected error in GET $url: $e', name: 'PoddrHttpClient');
+        error('Unexpected error in GET $url', name: 'PoddrHttpClient');
+        debug('GET $url failed: $e', name: 'PoddrHttpClient');
         throw ApiException('Network error occurred');
       }
     }

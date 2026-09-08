@@ -186,7 +186,8 @@ class SyncProvider extends ChangeNotifier {
       }
     } catch (e) {
       _updateStatus(SyncStatus.disconnected);
-      error('Failed to configure sync: $e', name: logName);
+      error('Failed to configure sync', name: logName);
+      debug('Configure sync failed: $e', name: logName);
     } finally {
       notifyListeners();
     }
@@ -241,12 +242,15 @@ class SyncProvider extends ChangeNotifier {
         error('Login failed: Invalid credentials', name: logName);
         return false;
       } on NetworkException catch (e) {
-        error('Login failed (network): $e, will retry', name: logName);
+        error('Login failed (network), will retry', name: logName);
+        debug('Login network detail: $e', name: logName);
       } on ServerErrorException catch (e) {
         error('Login failed (server ${e.statusCode}), will retry',
             name: logName);
+        debug('Login server detail: $e', name: logName);
       } catch (e) {
-        error('Login failed: $e, will retry', name: logName);
+        error('Login failed, will retry', name: logName);
+        debug('Login detail: $e', name: logName);
       }
 
       if (attempt >= _initialRetryAttempts && attempt % 5 == 0) {
@@ -274,14 +278,16 @@ class SyncProvider extends ChangeNotifier {
         try {
           return await operation();
         } catch (e) {
-          error('Operation failed again after login: $e', name: logName);
+          error('Operation failed again after login', name: logName);
+          debug('Operation detail after login: $e', name: logName);
           return null;
         }
       }
       _updateStatus(SyncStatus.credentialsInvalid);
       return null;
     } catch (e) {
-      error('Operation failed: $e', name: logName);
+      error('Operation failed', name: logName);
+      debug('Operation detail: $e', name: logName);
       return null;
     }
   }
@@ -326,7 +332,8 @@ class SyncProvider extends ChangeNotifier {
         }
       }
     } catch (e) {
-      error('Failed to load devices: $e', name: logName);
+      error('Failed to load devices', name: logName);
+      debug('Load devices detail: $e', name: logName);
     } finally {
       notifyListeners();
     }
@@ -373,7 +380,8 @@ class SyncProvider extends ChangeNotifier {
       await _loginAndSyncClient();
     } catch (e) {
       _updateStatus(SyncStatus.disconnected, 'Failed to configure sync: $e', true);
-      error('Failed to configure sync: $e', name: logName);
+      error('Failed to configure sync', name: logName);
+      debug('Configure sync detail: $e', name: logName);
     }
   }
 
@@ -383,14 +391,18 @@ class SyncProvider extends ChangeNotifier {
 
     _subscriptionSyncTimer?.cancel();
     _subscriptionSyncTimer = Timer.periodic(_subscriptionSyncInterval, (_) {
-      syncSubscriptions().catchError(
-          (e) => error("Periodic sub sync failed: $e", name: logName));
+      syncSubscriptions().catchError((e) {
+        error("Periodic sub sync failed", name: logName);
+        debug("Periodic sub sync detail: $e", name: logName);
+      });
     });
 
     _episodeSyncTimer?.cancel();
     _episodeSyncTimer = Timer.periodic(_episodeSyncInterval, (_) {
-      syncEpisodes().catchError(
-          (e) => error("Periodic episode sync failed: $e", name: logName));
+      syncEpisodes().catchError((e) {
+        error("Periodic episode sync failed", name: logName);
+        debug("Periodic episode sync detail: $e", name: logName);
+      });
     });
   }
 
@@ -435,7 +447,8 @@ class SyncProvider extends ChangeNotifier {
         return true;
       });
     } catch (e) {
-      error('Subscription sync failed: $e', name: logName);
+      error('Subscription sync failed', name: logName);
+      debug('Subscription sync detail: $e', name: logName);
     } finally {
       _isSyncingSubscriptions = false;
       notifyListeners();
@@ -609,7 +622,8 @@ class SyncProvider extends ChangeNotifier {
         return true;
       });
     } catch (e) {
-      error('Episode sync failed: $e', name: logName);
+      error('Episode sync failed', name: logName);
+      debug('Episode sync detail: $e', name: logName);
     } finally {
       _isSyncingEpisodes = false;
       notifyListeners();
@@ -825,7 +839,8 @@ class SyncProvider extends ChangeNotifier {
       if (_status != SyncStatus.credentialsInvalid) {
         _updateStatus(SyncStatus.connected, 'Full re-sync failed: $e', true);
       }
-      error('Full re-sync failed: $e', name: logName);
+      error('Full re-sync failed', name: logName);
+      debug('Full re-sync detail: $e', name: logName);
     } finally {
       notifyListeners();
     }

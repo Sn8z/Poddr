@@ -33,8 +33,9 @@ class ElectronMigration {
           subscribedAt,
         );
       } catch (e, stackTrace) {
-        error('Failed to migrate subscription for $rss: $e',
+        error('Failed to migrate subscription for $rss',
             name: logName, error: e, stackTrace: stackTrace);
+        debug('Migration for $rss failed: $e', name: logName);
       }
     }
   }
@@ -53,8 +54,9 @@ class ElectronMigration {
         return decoded;
       }
     } catch (e, stackTrace) {
-      error('Failed to read favourites: $e',
+      error('Failed to read favourites',
           name: logName, error: e, stackTrace: stackTrace);
+      debug('Read favourites failed: $e', name: logName);
     }
     return {};
   }

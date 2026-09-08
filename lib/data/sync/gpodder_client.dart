@@ -81,7 +81,8 @@ class GpodderClient {
       } else if (statusCode >= 500) {
         throw ServerErrorException(statusCode);
       } else {
-        error("HTTP $statusCode for $path: $res", name: logName);
+        error("HTTP $statusCode for $path", name: logName);
+        debug("Response body for $path: $res", name: logName);
         throw ApiException('Server returned error (code $statusCode)');
       }
     } on ApiException {
@@ -147,9 +148,8 @@ class GpodderClient {
           final sessionMatch = RegExp(r'sessionid=([^;]+)').firstMatch(cookies);
           if (sessionMatch != null) {
             _sessionId = sessionMatch.group(1);
-            info(
-                "Login successful, session ID: ${_sessionId!.substring(0, 8)}...",
-                name: logName);
+            info("Login successful", name: logName);
+            debug("Login session: $_sessionId", name: logName);
             return true;
           }
         }
@@ -172,13 +172,15 @@ class GpodderClient {
     } on ApiException {
       rethrow;
     } on http.ClientException catch (e) {
-      error("Login network error: $e", name: logName);
+      error("Login network error", name: logName);
+      debug("Login network detail: $e", name: logName);
       throw NetworkException(e.message);
     } on TimeoutException {
       error("Login timed out", name: logName);
       throw NetworkException('Login request timed out');
     } catch (e) {
-      error("Login error: $e", name: logName);
+      error("Login error", name: logName);
+      debug("Login detail: $e", name: logName);
       throw ApiException('Unexpected login error: $e');
     }
   }
@@ -191,7 +193,8 @@ class GpodderClient {
       info("Logged out", name: logName);
       return true;
     } catch (e) {
-      error("Logout error: $e", name: logName);
+      error("Logout error", name: logName);
+      debug("Logout detail: $e", name: logName);
       _sessionId = null;
       return false;
     }
