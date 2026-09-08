@@ -8,17 +8,26 @@ on:
         default: 'main'
         required: true
         type: string
+      flutter-version:
+        description: 'Flutter version (empty = latest stable, e.g. 3.35.3 to reproduce)'
+        default: ''
+        required: false
+        type: string
 
 concurrency:
-  group: build-windows-${{ github.workflow }}-${{ github.event.inputs.branch || github.ref }}
+  group: build-windows-${{ github.event.inputs.branch || github.ref }}-${{ github.event.inputs.flutter-version || 'stable' }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build-windows:
     runs-on: windows-latest
+    timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.inputs.branch || github.ref }}
 
@@ -26,7 +35,14 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: ${{ github.event.inputs.flutter-version }}
           cache: true
+
+      - name: Show versions
+        run: |
+          flutter --version
+          dart --version
+          dart pub global list
 
       - name: Install dependencies
         run: flutter pub get
@@ -38,7 +54,7 @@ jobs:
         run: dart pub global run fastforge release --name windows
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: poddr-windows
           path: dist/*.exe

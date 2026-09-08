@@ -5,7 +5,10 @@ description: |
   Poddr is a modern podcast player.
   Browse podcast feeds, manage your subscriptions and enjoy seamless playback with media key support.
 confinement: strict
-base: core22
+grade: stable
+license: GPL-3.0
+icon: assets/images/logo.png
+base: core24
 
 parts:
   poddr:
@@ -26,6 +29,13 @@ apps:
       - network-bind
       - audio-playback
       - removable-media
+      - desktop
+      - desktop-legacy
+      - gsettings
+      - wayland
+      - x11
+      - opengl
+      - home
     slots:
       mpris:
         interface: mpris
