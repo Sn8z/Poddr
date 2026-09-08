@@ -1,0 +1,62 @@
+name: Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to audit'
+        default: 'main'
+        required: true
+        type: string
+      flutter-version:
+        description: 'Flutter version (empty = latest stable, e.g. 3.35.3 to reproduce)'
+        default: ''
+        required: false
+        type: string
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: audit-${{ github.event.inputs.branch || github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.inputs.branch || github.head_ref || github.ref }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ github.event.inputs.flutter-version }}
+          cache: true
+
+      - name: Show versions
+        run: |
+          flutter --version
+          dart --version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Format check
+        run: dart format --set-exit-if-changed lib test
+        continue-on-error: true
+
+      - name: Vulnerability audit
+        run: flutter pub audit || true
+
+      - name: Outdated report
+        run: flutter pub outdated --mode=null-safety || true
