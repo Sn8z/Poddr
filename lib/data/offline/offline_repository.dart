@@ -38,7 +38,11 @@ abstract class IOfflineRepository {
   Future<void> downloadEpisode(
     PodcastEpisode episode, {
     required Function(double) onProgress,
-    required Function() onCancel,
+    required bool Function() isCancelled,
     required PoddrHttpClient client,
   });
+
+  Future<void> discardPartials(PodcastEpisode episode);
+
+  Future<int> sweepDownloadDir();
 }

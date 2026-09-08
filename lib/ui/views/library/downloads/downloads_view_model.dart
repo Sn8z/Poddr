@@ -59,7 +59,19 @@ class DownloadsViewModel extends ChangeNotifier {
   bool get isLoading => _offlineProvider.isLoading;
   Map<String, double> get downloadProgress => _offlineProvider.downloadProgress;
   Set<String> get downloading => _offlineProvider.downloading;
+  Set<String> get paused => _offlineProvider.paused;
+  Map<String, DownloadStatus> get downloadStatus =>
+      _offlineProvider.downloadStatus;
+  Map<String, String> get downloadErrors => _offlineProvider.downloadErrors;
+  Map<String, double> get downloadSpeeds => _offlineProvider.downloadSpeeds;
+  Map<String, Duration> get downloadEtas => _offlineProvider.downloadEtas;
   List<PodcastEpisode> get downloadQueue => _offlineProvider.downloadQueue;
+
+  Future<void> pauseDownload(String audioUrl) =>
+      _offlineProvider.pauseDownload(audioUrl);
+
+  Future<void> resumeDownload(PodcastEpisode episode) =>
+      _offlineProvider.resumeDownload(episode);
 
   void loadMedia({
     required String audioUrl,
