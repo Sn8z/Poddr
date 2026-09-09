@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/log.dart';
@@ -54,16 +55,36 @@ class OfflineProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  String? _error;
-  String? get errorMessage => _error;
+  StreamSubscription<List<OfflineEpisode>>? _watchSubscription;
+  bool _disposed = false;
 
   OfflineProvider({IOfflineRepository? repository})
       : _repository = repository ?? DriftOfflineRepository() {
     _init();
   }
 
+  @override
+  void dispose() {
+    _disposed = true;
+    _watchSubscription?.cancel();
+    super.dispose();
+  }
+
   Future<void> _init() async {
-    await getDownloads();
+    _isLoading = true;
+    _watchSubscription = _repository.watchAllEpisodes().listen(
+      (episodes) {
+        _downloads = episodes;
+        _isLoading = false;
+        if (!_disposed) notifyListeners();
+      },
+      onError: (e) {
+        error('Failed to watch downloads', name: logName);
+        debug('Watch downloads detail: $e', name: logName);
+        _isLoading = false;
+        if (!_disposed) notifyListeners();
+      },
+    );
     try {
       final reclaimed = await _repository.sweepDownloadDir();
       if (reclaimed > 0) {
@@ -82,14 +103,12 @@ class OfflineProvider extends ChangeNotifier {
   Future<void> getDownloads() async {
     try {
       _isLoading = true;
-      _error = null;
       notifyListeners();
 
       _downloads = await _repository.getAll();
     } catch (e, stackTrace) {
       error('Failed to get downloads',
           name: logName, error: e, stackTrace: stackTrace);
-      _error = e.toString();
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -206,7 +225,6 @@ class OfflineProvider extends ChangeNotifier {
       info('Download completed: ${episode.title}', name: logName);
       _statuses.remove(audioUrl);
       _statusErrors.remove(audioUrl);
-      await getDownloads();
     } on DownloadCancelledException {
       if (_paused.contains(audioUrl)) {
         _statuses[audioUrl] = DownloadStatus.paused;
@@ -225,7 +243,6 @@ class OfflineProvider extends ChangeNotifier {
             name: logName, error: e, stackTrace: stackTrace);
         _statuses[audioUrl] = DownloadStatus.failed;
         _statusErrors[audioUrl] = e.toString();
-        _error = e.toString();
       }
       notifyListeners();
     } finally {
@@ -328,11 +345,9 @@ class OfflineProvider extends ChangeNotifier {
       await _repository.remove(audioUrl);
       _paused.remove(audioUrl);
       _clearTransferState(audioUrl);
-      await getDownloads();
     } catch (e, stackTrace) {
       error('Failed to remove download',
           name: logName, error: e, stackTrace: stackTrace);
-      _error = e.toString();
       notifyListeners();
       rethrow;
     }
@@ -372,7 +387,6 @@ class OfflineProvider extends ChangeNotifier {
     } catch (e, stackTrace) {
       error('Failed to clear all downloads',
           name: logName, error: e, stackTrace: stackTrace);
-      _error = e.toString();
     } finally {
       _isLoading = false;
       notifyListeners();

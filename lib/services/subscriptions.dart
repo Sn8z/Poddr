@@ -31,8 +31,12 @@ class SubscriptionProvider extends ChangeNotifier {
   List<PodcastEpisode> get latestEpisodes => _latestEpisodes;
 
   Set<String> _loadedFeeds = {};
+  final Set<String> _failedFeeds = {};
   bool _isLoadingLatest = false;
   bool get isLoadingLatest => _isLoadingLatest;
+  bool _disposed = false;
+
+  StreamSubscription<List<Podcast>>? _watchSubscription;
 
   SubscriptionProvider({
     IPodcastRepository? podcastRepository,
@@ -42,24 +46,42 @@ class SubscriptionProvider extends ChangeNotifier {
         _subscriptionRepository =
             subscriptionRepository ?? DriftSubscriptionRepository(),
         _syncRepository = syncRepository ?? DriftSyncRepository() {
-    _getSubscriptions();
+    _isLoading = true;
+    _watchSubscription = _subscriptionRepository.watchAllSubscriptions().listen(
+      (subs) async {
+        try {
+          _subscriptions = subs;
+          _subscriptionIdByRss =
+              await _subscriptionRepository.getAllSubscriptionIds();
+          _isLoading = false;
+          if (_disposed) return;
+          _notify();
+          await _updateLatestEpisodes();
+        } catch (e) {
+          error('Failed to refresh subscriptions', name: logName);
+          debug('Refresh subscriptions detail: $e', name: logName);
+          _isLoading = false;
+          _notify();
+        }
+      },
+      onError: (e, stackTrace) {
+        error('Failed to watch subscriptions', name: logName);
+        debug('Watch subscriptions detail: $e', name: logName);
+        _isLoading = false;
+        _notify();
+      },
+    );
   }
 
-  Future<void> _getSubscriptions() async {
-    try {
-      _isLoading = true;
-      notifyListeners();
+  @override
+  void dispose() {
+    _disposed = true;
+    _watchSubscription?.cancel();
+    super.dispose();
+  }
 
-      _subscriptions = await _subscriptionRepository.getSubscriptions();
-      _subscriptionIdByRss =
-          await _subscriptionRepository.getAllSubscriptionIds();
-      await _updateLatestEpisodes();
-    } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+  void _notify() {
+    if (!_disposed) notifyListeners();
   }
 
   Future<void> addSubscription({
@@ -78,14 +100,20 @@ class SubscriptionProvider extends ChangeNotifier {
       );
 
       if (!fromSync) {
-        await _syncRepository.addPendingSubscriptionAction(rss, 'add');
+        try {
+          await _syncRepository.addPendingSubscriptionAction(rss, 'add');
+        } catch (e) {
+          error('Failed to queue sync action', name: logName);
+          debug('Queue sync detail: $e', name: logName);
+        }
       }
 
-      await _getSubscriptions();
-    } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
-    } finally {
       info("Added subscription $rss", name: logName);
+      await _addFeedEpisodes(rss);
+    } catch (e, stackTrace) {
+      error('Failed to add subscription',
+          name: logName, error: e, stackTrace: stackTrace);
+      debug('Add subscription detail: $e', name: logName);
     }
   }
 
@@ -104,8 +132,9 @@ class SubscriptionProvider extends ChangeNotifier {
         image: podcast.image,
         fromSync: fromSync,
       );
-    } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+    } catch (e) {
+      error('Failed to add subscription silently', name: logName);
+      debug('Add subscription detail: $e', name: logName);
       return false;
     }
   }
@@ -128,19 +157,27 @@ class SubscriptionProvider extends ChangeNotifier {
       );
 
       if (!fromSync) {
-        await _syncRepository.addPendingSubscriptionAction(rss, 'add');
+        try {
+          await _syncRepository.addPendingSubscriptionAction(rss, 'add');
+        } catch (e) {
+          error('Failed to queue sync action', name: logName);
+          debug('Queue sync detail: $e', name: logName);
+        }
       }
 
-      await _getSubscriptions();
+      info("Added subscription $rss", name: logName);
+      await _addFeedEpisodes(rss);
       return true;
-    } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+    } catch (e) {
+      error('Failed to add subscription directly', name: logName);
+      debug('Add subscription detail: $e', name: logName);
       return false;
     }
   }
 
-  Future<void> refresh() async {
-    await _getSubscriptions();
+  Future<void> refresh({bool force = false}) async {
+    if (force) _failedFeeds.clear();
+    await _updateLatestEpisodes();
   }
 
   Future<int?> getSubscriptionId(String rss) async {
@@ -158,15 +195,48 @@ class SubscriptionProvider extends ChangeNotifier {
       await _subscriptionRepository.removeSubscription(rss);
 
       if (!fromSync) {
-        await _syncRepository.addPendingSubscriptionAction(rss, 'remove');
+        try {
+          await _syncRepository.addPendingSubscriptionAction(rss, 'remove');
+        } catch (e) {
+          error('Failed to queue sync action', name: logName);
+          debug('Queue sync detail: $e', name: logName);
+        }
       }
 
-      await _getSubscriptions();
-    } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
-    } finally {
       info("Finished removing $rss", name: logName);
+      _dropFeedEpisodes(rss);
+    } catch (e, stackTrace) {
+      error('Failed to remove subscription',
+          name: logName, error: e, stackTrace: stackTrace);
+      debug('Remove subscription detail: $e', name: logName);
     }
+  }
+
+  bool _isSubscribed(String rss) {
+    return _subscriptions
+        .any((sub) => sub.rss == rss || sub.newFeedUrl == rss);
+  }
+
+  Future<void> _addFeedEpisodes(String rss) async {
+    _loadedFeeds.add(rss);
+    final result = await _fetchFeed(rss);
+    if (result == null) {
+      _loadedFeeds.remove(rss);
+      _failedFeeds.add(rss);
+      return;
+    }
+    if (!_isSubscribed(result.rss) && !_isSubscribed(rss)) return;
+    _latestEpisodes.addAll(result.episodes);
+    _loadedFeeds.add(result.rss);
+    _sortAndLimit();
+    _notify();
+  }
+
+  void _dropFeedEpisodes(String rss) {
+    _latestEpisodes.removeWhere((ep) => ep.podcastRSS == rss);
+    _loadedFeeds.remove(rss);
+    _failedFeeds.remove(rss);
+    _notify();
   }
 
   Future<void> _updateLatestEpisodes() async {
@@ -176,38 +246,54 @@ class SubscriptionProvider extends ChangeNotifier {
     if (newRssSet.isEmpty && _loadedFeeds.isNotEmpty) {
       _latestEpisodes = [];
       _loadedFeeds = {};
-      notifyListeners();
+      _failedFeeds.clear();
+      _notify();
       return;
     }
 
-    final added = newRssSet.difference(_loadedFeeds);
+    final added =
+        newRssSet.difference(_loadedFeeds).difference(_failedFeeds);
     final removed = _loadedFeeds.difference(newRssSet);
 
     if (added.isEmpty && removed.isEmpty) return;
 
     _isLoadingLatest = true;
-    notifyListeners();
+    _notify();
 
-    if (removed.isNotEmpty) {
-      _latestEpisodes.removeWhere((ep) => removed.contains(ep.podcastRSS));
-      _loadedFeeds.removeAll(removed);
-    }
+    try {
+      if (removed.isNotEmpty) {
+        _latestEpisodes.removeWhere((ep) => removed.contains(ep.podcastRSS));
+        _loadedFeeds.removeAll(removed);
+        _failedFeeds.removeAll(removed);
+      }
 
-    final results = await Future.wait(
-      added.map((rss) => _fetchFeed(rss)),
-    );
+      for (final rss in added) {
+        _loadedFeeds.add(rss);
+      }
+      final fetched = await Future.wait(
+        added.map((rss) async => (rss: rss, result: await _fetchFeed(rss))),
+      );
 
-    for (final result in results) {
-      if (result != null) {
+      for (final entry in fetched) {
+        final result = entry.result;
+        if (result == null) {
+          _loadedFeeds.remove(entry.rss);
+          _failedFeeds.add(entry.rss);
+          continue;
+        }
+        if (!_isSubscribed(result.rss) && !_isSubscribed(entry.rss)) {
+          _loadedFeeds.remove(entry.rss);
+          continue;
+        }
         _latestEpisodes.addAll(result.episodes);
         _loadedFeeds.add(result.rss);
       }
+
+      _sortAndLimit();
+    } finally {
+      _isLoadingLatest = false;
+      _notify();
     }
-
-    _sortAndLimit();
-
-    _isLoadingLatest = false;
-    notifyListeners();
   }
 
   Future<_FeedResult?> _fetchFeed(String rss) async {
@@ -217,14 +303,22 @@ class SubscriptionProvider extends ChangeNotifier {
       String effectiveRss = rss;
       final newFeedUrl = fullPodcast.newFeedUrl;
 
-      await _subscriptionRepository.updateSubscription(
-        rss: rss,
-        title: fullPodcast.title,
-        description: fullPodcast.description,
-        author: fullPodcast.author,
-        imageUrl: fullPodcast.image,
-        newRss: (newFeedUrl != null && newFeedUrl != rss) ? newFeedUrl : null,
-      );
+      final known = _subscriptions.where((sub) => sub.rss == rss).firstOrNull;
+      if (known == null ||
+          known.title != fullPodcast.title ||
+          known.description != fullPodcast.description ||
+          known.author != fullPodcast.author ||
+          known.image != fullPodcast.image ||
+          (newFeedUrl != null && newFeedUrl != rss)) {
+        await _subscriptionRepository.updateSubscription(
+          rss: rss,
+          title: fullPodcast.title,
+          description: fullPodcast.description,
+          author: fullPodcast.author,
+          imageUrl: fullPodcast.image,
+          newRss: (newFeedUrl != null && newFeedUrl != rss) ? newFeedUrl : null,
+        );
+      }
 
       if (newFeedUrl != null && newFeedUrl != rss) {
         effectiveRss = newFeedUrl;

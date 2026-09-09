@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/db/drift/database.dart';
@@ -16,22 +18,46 @@ class HistoryProvider extends ChangeNotifier {
   List<PodcastEpisode> _history = [];
   List<PodcastEpisode> get history => _history;
 
+  StreamSubscription<List<PodcastEpisode>>? _watchSubscription;
+  bool _disposed = false;
+
   HistoryProvider({IHistoryRepository? historyRepository})
       : _historyRepository = historyRepository ?? DriftHistoryRepository() {
-    getHistory();
+    _isLoading = true;
+    _watchSubscription = _historyRepository.watchAllHistory().listen(
+      (items) {
+        _history = items;
+        _isLoading = false;
+        _notify();
+      },
+      onError: (e) {
+        error('Failed to watch history', name: logName);
+        debug('Watch history detail: $e', name: logName);
+        _isLoading = false;
+        _notify();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    _watchSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _notify() {
+    if (!_disposed) notifyListeners();
   }
 
   Future<void> getHistory() async {
     try {
-      _isLoading = true;
-      notifyListeners();
-
       _history = await _historyRepository.getHistory();
+      _notify();
     } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+      error('Failed to get history',
+          name: logName, error: e, stackTrace: stackTrace);
+      debug('Get history detail: $e', name: logName);
     }
   }
 
@@ -46,7 +72,7 @@ class HistoryProvider extends ChangeNotifier {
     String? videoUrl,
   ) async {
     try {
-      final newItem = await _historyRepository.addHistory(
+      await _historyRepository.addHistory(
         audioUrl,
         title,
         description,
@@ -56,12 +82,10 @@ class HistoryProvider extends ChangeNotifier {
         duration,
         videoUrl,
       );
-      if (newItem != null) {
-        _history.insert(0, newItem);
-        notifyListeners();
-      }
     } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      error('Failed to add to history',
+          name: logName, error: e, stackTrace: stackTrace);
+      debug('Add to history detail: $e', name: logName);
     }
   }
 
@@ -73,8 +97,9 @@ class HistoryProvider extends ChangeNotifier {
         position,
         duration,
       );
-    } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+    } catch (e) {
+      error('Failed to update progress', name: logName);
+      debug('Update progress detail: $e', name: logName);
     }
   }
 
@@ -82,7 +107,9 @@ class HistoryProvider extends ChangeNotifier {
     try {
       return await _historyRepository.getProgress(audioUrl);
     } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      error('Failed to get progress',
+          name: logName, error: e, stackTrace: stackTrace);
+      debug('Get progress detail: $e', name: logName);
       return null;
     }
   }
@@ -91,7 +118,9 @@ class HistoryProvider extends ChangeNotifier {
     try {
       return _historyRepository.watchProgressByAudioUrl(audioUrl);
     } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      error('Failed to watch progress',
+          name: logName, error: e, stackTrace: stackTrace);
+      debug('Watch progress detail: $e', name: logName);
       return const Stream.empty();
     }
   }
@@ -99,10 +128,10 @@ class HistoryProvider extends ChangeNotifier {
   Future<void> removeHistory(String audioUrl) async {
     try {
       await _historyRepository.removeHistory(audioUrl);
-      _history.removeWhere((ep) => ep.audioUrl == audioUrl);
-      notifyListeners();
     } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
+      error('Failed to remove history',
+          name: logName, error: e, stackTrace: stackTrace);
+      debug('Remove history detail: $e', name: logName);
     }
   }
 }
