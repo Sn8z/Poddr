@@ -44,6 +44,7 @@ class DriftOfflineRepository implements IOfflineRepository {
   };
 
   static final RegExp _safeExtension = RegExp(r'^[a-z0-9]{2,5}$');
+  static const int maxDownloadBytes = 10 * 1024 * 1024 * 1024;
 
   static String? _extensionFromUrl(String url) {
     try {
@@ -421,12 +422,22 @@ class DriftOfflineRepository implements IOfflineRepository {
         }
         sink.add(chunk);
         written += chunk.length;
+        if (resumeOffset + written > maxDownloadBytes) {
+          await closeSink();
+          if (await partFile.exists()) await partFile.delete();
+          throw DownloadFailedException(null, 'Download too large');
+        }
         onChunk(chunk.length);
       }
       await sink.flush();
       await closeSink();
     } catch (e) {
       await closeSink();
+      if (e is FileSystemException &&
+          (e.osError?.errorCode == 28 || e.osError?.errorCode == 112)) {
+        error('Download failed: no space left on device', name: logName);
+        throw DownloadFailedException(null, 'No space left on device');
+      }
       rethrow;
     }
 

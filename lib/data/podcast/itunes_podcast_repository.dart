@@ -8,6 +8,7 @@ import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
 class ITunesPodcastRepository implements IPodcastRepository {
+  static const int maxFeedBytes = 5 * 1024 * 1024;
   final String logName = "ItunesPodcastRepository";
   final String baseUrl = "https://itunes.apple.com";
   final PoddrHttpClient _http = PoddrHttpClient.shared;
@@ -97,6 +98,12 @@ class ITunesPodcastRepository implements IPodcastRepository {
       debug("Feed return code ${response.statusCode}", name: logName);
 
       if (response.statusCode == 200) {
+        final feedSize = response.contentLength ?? response.bodyBytes.length;
+        if (feedSize > maxFeedBytes) {
+          error('Feed rejected: response too large', name: logName);
+          debug('Rejected $rss with $feedSize bytes', name: logName);
+          throw ApiException("Feed too large");
+        }
         final content = response.body;
         return await compute((_) => PoddrPodcastParser.parse(content, rss), null);
       } else {

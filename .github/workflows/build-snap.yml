@@ -8,14 +8,8 @@ on:
         default: 'main'
         required: true
         type: string
-      flutter-version:
-        description: 'Flutter version (note: snap uses Flutter from core24, input is for consistency only)'
-        default: ''
-        required: false
-        type: string
-
 concurrency:
-  group: build-snap-${{ github.event.inputs.branch || github.ref }}-${{ github.event.inputs.flutter-version || 'stable' }}
+  group: build-snap-${{ github.event.inputs.branch || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -30,9 +24,6 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.inputs.branch || github.ref }}
-
-      - name: Note Flutter version
-        run: echo "Requested ${{ github.event.inputs.flutter-version || 'latest stable' }} – snap uses Flutter from core24, input ignored for now"
 
       - name: Build snap
         uses: canonical/action-build@v1

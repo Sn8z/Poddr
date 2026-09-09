@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
 import 'package:poddr/models/episode.dart';
@@ -60,9 +61,10 @@ class PodcastViewModel extends ChangeNotifier {
       _podcast = null;
 
       _podcast = await _podcastRepository.getFeed(rss);
-    } catch (error, stackTrace) {
-      debugPrint(error.toString());
-      debugPrint(stackTrace.toString());
+    } catch (e, stackTrace) {
+      error('Failed to load podcast',
+          name: 'PodcastViewModel', error: e, stackTrace: stackTrace);
+      debug('Load podcast detail: $e', name: 'PodcastViewModel');
     } finally {
       _isLoading = false;
       notifyListeners();
