@@ -27,7 +27,7 @@ dependencies:
   drift_flutter: ^0.3.0
   path_provider: ^2.1.5
   cached_network_image: ^3.4.1
-  file_picker: ^12.0.0-beta.3
+  file_picker: ^12.0.0
   hugeicons: ^1.1.7
   url_launcher: ^6.3.2
   flutter_secure_storage: ^10.0.0

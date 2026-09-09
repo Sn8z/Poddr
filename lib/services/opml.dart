@@ -1,39 +1,62 @@
-import 'dart:io';
+import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:poddr/core/log.dart';
+import 'package:poddr/core/validators.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:xml/xml.dart';
 
 class OpmlService {
   static const String logName = "OpmlService";
+  static const int maxImportBytes = 5 * 1024 * 1024;
+  static const int importBatchSize = 3;
+
   static List<String> parseOpml(String xmlString) {
     final urls = <String>[];
+    final seen = <String>{};
+    final document = XmlDocument.parse(xmlString);
 
-    try {
-      final document = XmlDocument.parse(xmlString);
-      final outlines = document.findAllElements('outline');
-
-      for (final outline in outlines) {
-        final type = outline.getAttribute('type');
-        final xmlUrl = outline.getAttribute('xmlUrl');
-        final url = outline.getAttribute('url');
-
-        if (type == 'rss' && xmlUrl != null) {
-          urls.add(xmlUrl);
-        } else if (xmlUrl != null && xmlUrl.startsWith('http')) {
-          urls.add(xmlUrl);
-        } else if (url != null && (url.contains('rss') || url.contains('feed'))) {
-          urls.add(url);
-        }
+    for (final outline in document.findAllElements('outline')) {
+      final type = outline.getAttribute('type')?.toLowerCase();
+      final xmlUrl = outline.getAttribute('xmlUrl') ??
+          outline.getAttribute('xmlURL') ??
+          outline.getAttribute('xmlurl');
+      if (xmlUrl == null) continue;
+      if (type != null && type != 'rss' && type != 'link') continue;
+      final candidate = xmlUrl.trim();
+      if (isValidUrl(candidate) && seen.add(normalizeFeedUrl(candidate))) {
+        urls.add(candidate);
       }
-      debug("Parsed OPML, found ${urls.length} URLs", name: logName);
-    } catch (e) {
-      debug("OPML parse error: $e", name: logName);
     }
 
-    return urls.toSet().toList();
+    return urls;
+  }
+
+  static String normalizeFeedUrl(String url) {
+    final trimmed = url.trim();
+    try {
+      final uri = Uri.parse(trimmed);
+      var path = uri.path;
+      while (path.endsWith('/') && path.length > 1) {
+        path = path.substring(0, path.length - 1);
+      }
+      if (path == '/') path = '';
+      return uri.replace(host: uri.host.toLowerCase(), path: path).toString();
+    } catch (_) {
+      return trimmed;
+    }
+  }
+
+  static String rfc822(DateTime date) {
+    const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    final d = date.toUtc();
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${weekdays[d.weekday - 1]}, ${two(d.day)} ${months[d.month - 1]} '
+        '${d.year} ${two(d.hour)}:${two(d.minute)}:${two(d.second)} GMT';
   }
 
   static String generateOpml(List<Podcast> subscriptions) {
@@ -46,20 +69,22 @@ class OpmlService {
       builder.attribute('version', '2.0');
       builder.element('head', nest: () {
         builder.element('title', nest: 'Poddr Subscriptions');
-        builder.element('dateCreated', nest: DateTime.now().toIso8601String());
+        builder.element('dateCreated', nest: rfc822(DateTime.now()));
       });
       builder.element('body', nest: () {
         for (final podcast in subscriptions) {
+          final rss = podcast.rss?.trim() ?? '';
+          if (rss.isEmpty) continue;
           builder.element('outline', nest: () {
             builder.attribute('type', 'rss');
             builder.attribute('text', podcast.title ?? '');
             builder.attribute('title', podcast.title ?? '');
-            builder.attribute('xmlUrl', podcast.rss ?? '');
+            builder.attribute('xmlUrl', rss);
+            if (podcast.link != null && podcast.link!.isNotEmpty) {
+              builder.attribute('htmlUrl', podcast.link!);
+            }
             if (podcast.description != null) {
               builder.attribute('description', podcast.description!);
-            }
-            if (podcast.image != null) {
-              builder.attribute('htmlUrl', podcast.image!);
             }
           });
         }
@@ -69,120 +94,131 @@ class OpmlService {
     return builder.buildDocument().toXmlString(pretty: true);
   }
 
-  Future<String> importOpml(
-    List<Podcast> existingSubscriptions,
-    Future<bool> Function(String rss) addSubscription,
-  ) async {
+  Future<({List<String> newUrls, int skippedCount, String? stopMessage})?>
+      pickAndParse(List<Podcast> existingSubscriptions) async {
     debug("Starting OPML import", name: logName);
     try {
-      final result = await FilePicker.pickFiles(
+      final picked = await FilePicker.pickFile(
+        dialogTitle: 'Import OPML file',
         type: FileType.custom,
         allowedExtensions: ['opml', 'xml'],
-        withData: true,
       );
 
-      if (result == null || result.files.isEmpty) {
+      if (picked == null) {
         debug("OPML import cancelled by user", name: logName);
-        return '';
+        return null;
       }
 
-      debug("OPML file picked: ${result.files.first.name}", name: logName);
-      final file = result.files.first;
-      final content = file.bytes;
-      if (content == null) {
-        return 'Could not read file';
+      final size = picked.lengthSync() ?? await picked.length();
+      if (size > maxImportBytes) {
+        error('OPML import rejected: file too large', name: logName);
+        return (newUrls: <String>[], skippedCount: 0, stopMessage: 'File too large');
       }
 
-      final xmlString = String.fromCharCodes(content);
-      final rssUrls = parseOpml(xmlString);
+      debug("OPML file picked: ${picked.name}", name: logName);
+      final xmlString =
+          utf8.decode(await picked.readAsBytes(), allowMalformed: true);
+
+      List<String> rssUrls;
+      try {
+        rssUrls = parseOpml(xmlString);
+      } catch (e) {
+        error('OPML import failed: unparseable file', name: logName);
+        debug('OPML parse detail: $e', name: logName);
+        return (newUrls: <String>[], skippedCount: 0, stopMessage: 'Could not parse OPML file');
+      }
 
       if (rssUrls.isEmpty) {
-        return 'No feeds found in OPML';
+        return (newUrls: <String>[], skippedCount: 0, stopMessage: 'No feeds found in OPML');
       }
 
-      final existingRss = existingSubscriptions.map((p) => p.rss).toSet();
-      final newRssUrls = rssUrls.where((rss) => !existingRss.contains(rss)).toList();
+      final existingRss = {
+        for (final p in existingSubscriptions)
+          if (p.rss != null) normalizeFeedUrl(p.rss!),
+      };
+      final newRssUrls = [
+        for (final rss in rssUrls)
+          if (!existingRss.contains(normalizeFeedUrl(rss))) rss,
+      ];
 
       if (newRssUrls.isEmpty) {
-        return 'All feeds already subscribed';
+        return (newUrls: <String>[], skippedCount: rssUrls.length, stopMessage: 'All feeds already subscribed');
       }
 
-      int successCount = 0;
-      for (final rss in newRssUrls) {
-        final success = await addSubscription(rss);
-        if (success) successCount++;
-      }
-
-      final failedCount = newRssUrls.length - successCount;
-      final skippedCount = rssUrls.length - newRssUrls.length;
-
-      debug("Import results: $successCount success, $failedCount failed, $skippedCount skipped",
-          name: logName);
-
-      if (failedCount > 0 && skippedCount > 0) {
-        return 'Imported $successCount feeds ($failedCount failed, $skippedCount already subscribed)';
-      } else if (failedCount > 0) {
-        return 'Imported $successCount of ${newRssUrls.length} feeds ($failedCount failed)';
-      } else if (skippedCount > 0) {
-        return 'Imported $successCount feeds ($skippedCount already subscribed)';
-      } else {
-        return 'Imported $successCount feeds';
-      }
+      return (
+        newUrls: newRssUrls,
+        skippedCount: rssUrls.length - newRssUrls.length,
+        stopMessage: null,
+      );
     } catch (e) {
-      error("OPML import failed: $e", name: logName);
-      return 'Import failed: $e';
+      error('OPML import failed', name: logName);
+      debug('OPML import detail: $e', name: logName);
+      return (newUrls: <String>[], skippedCount: 0, stopMessage: 'Import failed');
     }
   }
 
-  Future<String> exportOpml(List<Podcast> subscriptions) async {
+  Future<String> importUrls(
+    List<String> newRssUrls,
+    Future<bool> Function(String rss) addSubscription, {
+    void Function(int done, int total)? onProgress,
+    bool Function()? isCancelled,
+  }) async {
+    var completed = 0;
+    var successCount = 0;
+    for (var i = 0; i < newRssUrls.length; i += importBatchSize) {
+      if (isCancelled?.call() ?? false) {
+        debug("OPML import cancelled by user", name: logName);
+        return 'Import cancelled';
+      }
+      final batch = newRssUrls.skip(i).take(importBatchSize);
+      final results = await Future.wait(batch.map(addSubscription));
+      successCount += results.where((r) => r).length;
+      completed += batch.length;
+      onProgress?.call(completed, newRssUrls.length);
+    }
+
+    final failedCount = newRssUrls.length - successCount;
+    debug("Import results: $successCount success, $failedCount failed",
+        name: logName);
+
+    if (failedCount > 0) {
+      return 'Imported $successCount of ${newRssUrls.length} feeds ($failedCount failed)';
+    }
+    return 'Imported $successCount feeds';
+  }
+
+  Future<String?> exportOpml(List<Podcast> subscriptions) async {
     debug("Starting OPML export for ${subscriptions.length} subscriptions",
         name: logName);
     try {
-      if (subscriptions.isEmpty) {
+      final writable = subscriptions
+          .where((p) => (p.rss?.trim() ?? '').isNotEmpty)
+          .toList();
+      if (writable.isEmpty) {
         debug("No subscriptions to export", name: logName);
         return 'No subscriptions to export';
       }
 
-      final opmlContent = generateOpml(subscriptions);
-      final bytes = Uint8List.fromList(opmlContent.codeUnits);
+      final opmlContent = generateOpml(writable);
+      final saved = await FilePicker.saveFile(
+        dialogTitle: 'Save OPML file',
+        fileName: 'poddr_export.opml',
+        bytes: utf8.encode(opmlContent),
+        mimeType: 'application/xml',
+        type: FileType.custom,
+        allowedExtensions: ['opml'],
+      );
 
-      if (kIsWeb) {
-        final result = await FilePicker.saveFile(
-          dialogTitle: 'Save OPML file',
-          fileName: 'poddr_export.opml',
-          type: FileType.custom,
-          allowedExtensions: ['opml'],
-          bytes: bytes,
-        );
-
-        if (result != null) {
-          info("Exported ${subscriptions.length} feeds", name: logName);
-          return 'Exported ${subscriptions.length} feeds';
-        } else {
-          debug("OPML export cancelled by user", name: logName);
-          return '';
-        }
-      } else {
-        final result = await FilePicker.saveFile(
-          dialogTitle: 'Save OPML file',
-          fileName: 'poddr_export.opml',
-          type: FileType.custom,
-          allowedExtensions: ['opml'],
-        );
-
-        if (result != null) {
-          final file = File(result);
-          await file.writeAsString(opmlContent);
-          info("Exported ${subscriptions.length} feeds", name: logName);
-          return 'Exported ${subscriptions.length} feeds';
-        } else {
-          debug("OPML export cancelled by user", name: logName);
-          return '';
-        }
+      if (saved == null) {
+        debug("OPML export cancelled by user", name: logName);
+        return null;
       }
+      info("Exported ${writable.length} feeds", name: logName);
+      return 'Exported ${writable.length} feeds';
     } catch (e) {
-      error("OPML export failed: $e", name: logName);
-      return 'Export failed: $e';
+      error('OPML export failed', name: logName);
+      debug('OPML export detail: $e', name: logName);
+      return 'Export failed';
     }
   }
 }
