@@ -10,7 +10,7 @@ import 'package:poddr/models/podcast.dart';
 class ITunesPodcastRepository implements IPodcastRepository {
   final String logName = "ItunesPodcastRepository";
   final String baseUrl = "https://itunes.apple.com";
-  final PoddrHttpClient _http = PoddrHttpClient();
+  final PoddrHttpClient _http = PoddrHttpClient.shared;
 
   @override
   Future<List<Podcast>> search(String query) async {

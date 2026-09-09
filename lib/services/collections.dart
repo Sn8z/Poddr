@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/collections/drift_collections_repository.dart';
@@ -18,6 +19,8 @@ class CollectionsProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  StreamSubscription? _pairsSubscription;
+
   Stream<List<PodcastCollection>> get collectionsStream =>
       _repository.watchAllCollections();
 
@@ -33,10 +36,18 @@ class CollectionsProvider extends ChangeNotifier {
   }
  
   void _initSubscriptionCollectionWatcher() {
-    _repository.watchAllSubscriptionCollectionPairs().listen((pairs) {
+    _pairsSubscription = _repository
+        .watchAllSubscriptionCollectionPairs()
+        .listen((pairs) {
       _subscriptionToCollections = pairs;
       notifyListeners();
     });
+  }
+
+  @override
+  void dispose() {
+    _pairsSubscription?.cancel();
+    super.dispose();
   }
  
   Future<void> loadCollections() async {

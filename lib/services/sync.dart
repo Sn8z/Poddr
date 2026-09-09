@@ -809,6 +809,7 @@ class SyncProvider extends ChangeNotifier {
     await _syncRepository.clearPendingEpisodeActions();
     await _stopTimers();
     await _client?.logout();
+    _client?.dispose();
     _client = null;
     await _settings.setSyncEnabled(false);
     await _secureSettings.clearSyncPassword();
@@ -867,7 +868,11 @@ class SyncProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    _stopTimers();
+    _subscriptionSyncTimer?.cancel();
+    _subscriptionSyncTimer = null;
+    _episodeSyncTimer?.cancel();
+    _episodeSyncTimer = null;
+    _timersStarted = false;
     _client?.dispose();
     super.dispose();
   }

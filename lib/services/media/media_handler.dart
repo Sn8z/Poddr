@@ -34,6 +34,8 @@ class PoddrMediaHandler extends BaseAudioHandler
   late final StreamSubscription<bool> _bufferingSub;
   late final StreamSubscription<double> _volumeSub;
   late final StreamSubscription<String> _errorSub;
+  StreamSubscription? _noisySub;
+  StreamSubscription? _devicesSub;
 
   Stream<double> get volume => _player.player.stream.volume;
 
@@ -94,12 +96,12 @@ class PoddrMediaHandler extends BaseAudioHandler
     await audioSession.configure(const AudioSessionConfiguration.music());
     audioSession.setActive(true);
 
-    audioSession.becomingNoisyEventStream.listen((_) {
+    _noisySub = audioSession.becomingNoisyEventStream.listen((_) {
       info("Headphones disconnected", name: logName);
       _player.pause();
     });
 
-    audioSession.devicesChangedEventStream.listen((event) {
+    _devicesSub = audioSession.devicesChangedEventStream.listen((event) {
       debug('Devices added: ${event.devicesAdded}', name: logName);
       debug('Devices removed: ${event.devicesRemoved}', name: logName);
     });
@@ -530,6 +532,8 @@ class PoddrMediaHandler extends BaseAudioHandler
     await _bufferingSub.cancel();
     await _volumeSub.cancel();
     await _errorSub.cancel();
+    await _noisySub?.cancel();
+    await _devicesSub?.cancel();
     _eventController.close();
     await _player.dispose();
   }

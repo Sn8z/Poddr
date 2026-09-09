@@ -27,6 +27,8 @@ class PoddrHttpClient extends http.BaseClient {
   static const int _maxCacheEntries = 200;
   static const int _maxCacheSizeBytes = 50 * 1024 * 1024; // 50MB
 
+  static final PoddrHttpClient shared = PoddrHttpClient();
+
   PoddrHttpClient({Duration? cacheTtl}) : _cacheTtl = cacheTtl ?? _defaultCacheTtl;
 
   @override
