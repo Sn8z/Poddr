@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/core/external_links.dart';
-import 'package:poddr/data/parsers/html_parser.dart';
+import 'package:poddr/ui/utils/html_parser.dart';
 
 class PoddrHTML extends StatelessWidget {
   final String html;

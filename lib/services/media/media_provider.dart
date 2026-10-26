@@ -276,8 +276,8 @@ class MediaProvider extends ChangeNotifier {
 
     Duration startPosition = Duration.zero;
     final progress = await _historyProvider!.getProgress(audioUrl);
-    if (progress != null && !progress["isFinished"]) {
-      startPosition = Duration(seconds: progress["position"]);
+    if (progress != null && !progress.isFinished) {
+      startPosition = Duration(seconds: progress.position);
     }
 
     String playUrl = audioUrl;

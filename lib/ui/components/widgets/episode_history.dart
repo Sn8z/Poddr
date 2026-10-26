@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
-import 'package:poddr/data/db/drift/database.dart';
+import 'package:poddr/models/progress.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/ui/components/widgets/poddr_progress.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +23,7 @@ class EpisodeHistory extends StatelessWidget {
     return SizedBox(
       height: height,
       width: width ?? double.infinity,
-      child: StreamBuilder<ListeningHistoryData?>(
+      child: StreamBuilder<EpisodeProgress?>(
         stream: context.read<HistoryProvider>().watchProgressByAudioUrl(audioUrl),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -69,7 +69,7 @@ class EpisodeHistoryCircle extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: StreamBuilder<ListeningHistoryData?>(
+      child: StreamBuilder<EpisodeProgress?>(
         stream: context.read<HistoryProvider>().watchProgressByAudioUrl(audioUrl),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

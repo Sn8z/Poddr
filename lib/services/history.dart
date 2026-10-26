@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/log.dart';
-import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/data/history/drift_history_repository.dart';
 import 'package:poddr/data/history/history_repository.dart';
 import 'package:poddr/models/episode.dart';
+import 'package:poddr/models/progress.dart';
 
 class HistoryProvider extends ChangeNotifier {
   static const String logName = "HistoryProvider";
@@ -103,9 +103,16 @@ class HistoryProvider extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>?> getProgress(String audioUrl) async {
+  Future<EpisodeProgress?> getProgress(String audioUrl) async {
     try {
-      return await _historyRepository.getProgress(audioUrl);
+      final progress = await _historyRepository.getProgress(audioUrl);
+      if (progress == null) return null;
+
+      return EpisodeProgress(
+        position: progress['position'] as int,
+        duration: progress['duration'] as int,
+        isFinished: progress['isFinished'] as bool,
+      );
     } catch (e, stackTrace) {
       error('Failed to get progress',
           name: logName, error: e, stackTrace: stackTrace);
@@ -114,9 +121,19 @@ class HistoryProvider extends ChangeNotifier {
     }
   }
 
-  Stream<ListeningHistoryData?> watchProgressByAudioUrl(String audioUrl) {
+  Stream<EpisodeProgress?> watchProgressByAudioUrl(String audioUrl) {
     try {
-      return _historyRepository.watchProgressByAudioUrl(audioUrl);
+      return _historyRepository
+          .watchProgressByAudioUrl(audioUrl)
+          .map(
+            (row) => row == null
+                ? null
+                : EpisodeProgress(
+                    position: row.position,
+                    duration: row.duration,
+                    isFinished: row.isFinished,
+                  ),
+          );
     } catch (e, stackTrace) {
       error('Failed to watch progress',
           name: logName, error: e, stackTrace: stackTrace);
