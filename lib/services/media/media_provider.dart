@@ -12,7 +12,8 @@ import 'package:poddr/services/sync.dart';
 class MediaProvider extends ChangeNotifier {
   static const String logName = "MediaProvider";
 
-  final PoddrMediaHandler _mediaHandler = PoddrMediaHandler();
+  late final PoddrMediaHandler _mediaHandler =
+      PoddrMediaHandler(resolver: _resolveQueueItem);
 
   HistoryProvider? _historyProvider;
   OfflineProvider? _offlineProvider;
@@ -63,7 +64,6 @@ class MediaProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  String _lastAudioUrl = "";
   DateTime? _lastProgressSave;
 
   List<PodcastEpisode> get mediaQueue => _mediaHandler.mediaQueue;
@@ -88,11 +88,44 @@ class MediaProvider extends ChangeNotifier {
     _syncProvider = syncProvider;
   }
 
+  Future<({String? audioSource, String? videoSource, Duration startPosition})?>
+      _resolveQueueItem(String audioUrl) async {
+    try {
+      Duration startPosition = Duration.zero;
+      if (_historyProvider != null) {
+        final progress = await _historyProvider!.getProgress(audioUrl);
+        if (progress != null && !progress.isFinished) {
+          startPosition = Duration(seconds: progress.position);
+        }
+      }
+
+      String? audioSource;
+      String? videoSource;
+      if (_offlineProvider != null) {
+        audioSource = await _offlineProvider!.getLocalPath(audioUrl);
+        videoSource = await _offlineProvider!.getVideoLocalPath(audioUrl);
+      }
+
+      return (
+        audioSource: audioSource,
+        videoSource: videoSource,
+        startPosition: startPosition,
+      );
+    } catch (e, stackTrace) {
+      error('Failed to resolve queue playback',
+          name: logName, error: e, stackTrace: stackTrace);
+      return null;
+    }
+  }
+
   void _initMediaListeners() async {
     _mediaItemSub = _mediaHandler.mediaItem.listen((mediaItem) {
       if (mediaItem == null) return;
 
-      _lastAudioUrl = mediaItem.id;
+      if (mediaItem.id != _audioUrl && _audioUrl.isNotEmpty) {
+        _saveAllProgress(episodeUrl: _audioUrl, position: _position);
+      }
+
       _audioUrl = mediaItem.id;
       _episodeTitle = mediaItem.title;
       _podcastTitle = mediaItem.artist ?? mediaItem.album ?? "";
@@ -114,11 +147,6 @@ class MediaProvider extends ChangeNotifier {
           _saveAllProgress();
           break;
         case AudioEvent.mediaItemChanged:
-          _saveAllProgress(
-            episodeUrl: _lastAudioUrl,
-            position: _position,
-          );
-          break;
         case AudioEvent.play:
           break;
       }
@@ -162,17 +190,19 @@ class MediaProvider extends ChangeNotifier {
     super.dispose();
   }
 
-  void play() async => await _mediaHandler.play();
+  Future<void> play() async => await _mediaHandler.play();
 
-  void pause() async => await _mediaHandler.pause();
+  Future<void> pause() async => await _mediaHandler.pause();
 
-  void playOrPause() async => await _mediaHandler.playOrPause();
+  Future<void> playOrPause() async => await _mediaHandler.playOrPause();
 
-  void stop() async => await _mediaHandler.stop();
+  Future<void> stop() async => await _mediaHandler.stop();
 
-  void seek(Duration position) async => await _mediaHandler.seek(position);
+  Future<void> seek(Duration position) async =>
+      await _mediaHandler.seek(position);
 
-  void setVolume(double volume) async => await _mediaHandler.setVolume(volume);
+  Future<void> setVolume(double volume) async =>
+      await _mediaHandler.setVolume(volume);
 
   void toggleMute() {
     if (_volume > 0) {
@@ -193,21 +223,22 @@ class MediaProvider extends ChangeNotifier {
     setVolume(newVolume);
   }
 
-  void setSpeed(double speed) async => await _mediaHandler.setSpeed(speed);
+  Future<void> setSpeed(double speed) async =>
+      await _mediaHandler.setSpeed(speed);
 
-  void skipToNext() async => await _mediaHandler.skipToNext();
+  Future<void> skipToNext() async => await _mediaHandler.skipToNext();
 
-  void skipToPrevious() async => await _mediaHandler.skipToPrevious();
+  Future<void> skipToPrevious() async => await _mediaHandler.skipToPrevious();
 
-  void skipToQueueItem(int index) async =>
+  Future<void> skipToQueueItem(int index) async =>
       await _mediaHandler.skipToQueueItem(index);
 
-  void removeQueueItem(int index) async =>
+  Future<void> removeQueueItem(int index) async =>
       await _mediaHandler.removeQueueItemAt(index);
 
-  void clearQueue() async => await _mediaHandler.clearQueue();
+  Future<void> clearQueue() async => await _mediaHandler.clearQueue();
 
-  void addToQueue({
+  Future<void> addToQueue({
     String? audioUrl,
     String? videoUrl,
     String? podcastTitle,
@@ -229,7 +260,12 @@ class MediaProvider extends ChangeNotifier {
       displayDescription: description ?? "Missing description",
       artist: artist ?? podcastTitle,
       artUri: Uri.parse(artUri ?? ""),
-      extras: {"podcastRSS": podcastRSS, "videoUrl": videoUrl},
+      extras: {
+        "podcastRSS": podcastRSS,
+        "videoUrl": videoUrl,
+        "audioUrl": audioUrl,
+        "description": description
+      },
     );
 
     await _mediaHandler.addQueueItem(media);
@@ -280,13 +316,13 @@ class MediaProvider extends ChangeNotifier {
       startPosition = Duration(seconds: progress.position);
     }
 
-    String playUrl = audioUrl;
-    String? playVideoUrl = videoUrl;
+    String playAudioSource = audioUrl;
+    String? playVideoSource = videoUrl;
 
     if (_offlineProvider != null) {
       final localPath = await _offlineProvider!.getLocalPath(audioUrl);
       if (localPath != null) {
-        playUrl = localPath;
+        playAudioSource = localPath;
         info("Playing audio from local file: $localPath", name: logName);
       }
 
@@ -294,15 +330,17 @@ class MediaProvider extends ChangeNotifier {
         final localVideoPath =
             await _offlineProvider!.getVideoLocalPath(audioUrl);
         if (localVideoPath != null) {
-          playVideoUrl = localVideoPath;
+          playVideoSource = localVideoPath;
           info("Playing video from local file: $localVideoPath", name: logName);
         }
       }
     }
 
     await _mediaHandler.loadMedia(
-      audioUrl: playUrl,
-      videoUrl: playVideoUrl,
+      audioUrl: audioUrl,
+      videoUrl: videoUrl,
+      audioSource: playAudioSource,
+      videoSource: playVideoSource,
       podcastTitle: podcastTitle,
       podcastRSS: podcastRSS,
       episodeTitle: episodeTitle,
@@ -322,7 +360,7 @@ class MediaProvider extends ChangeNotifier {
         podcastTitle ?? "",
         podcastRSS ?? "",
         _duration.inSeconds,
-        playVideoUrl,
+        videoUrl,
       );
     }
   }

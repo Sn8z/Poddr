@@ -9,10 +9,7 @@ class PoddrMediaPlayer {
   late final Player _player;
   Player get player => _player;
   VideoController? _videoController;
-  VideoController? get videoController {
-    _videoController ??= VideoController(_player);
-    return _videoController;
-  }
+  VideoController? get videoController => _videoController;
 
   PoddrMediaPlayer() {
     _player = Player(
@@ -22,6 +19,7 @@ class PoddrMediaPlayer {
         logLevel: MPVLogLevel.info,
       ),
     );
+    _videoController = VideoController(_player);
   }
 
   Future<void> init({

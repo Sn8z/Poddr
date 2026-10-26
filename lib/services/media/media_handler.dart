@@ -11,9 +11,15 @@ import 'package:poddr/services/media/media_player.dart';
 
 enum AudioEvent { play, pause, seek, stop, mediaItemChanged }
 
+typedef PlaybackResolver = Future<
+        ({String? audioSource, String? videoSource, Duration startPosition})?>
+    Function(String audioUrl);
+
 class PoddrMediaHandler extends BaseAudioHandler
     with QueueHandler, SeekHandler {
   static const String logName = "PoddrMediaHandler";
+
+  final PlaybackResolver? resolver;
 
   late final PoddrMediaPlayer _player = PoddrMediaPlayer();
 
@@ -57,8 +63,10 @@ class PoddrMediaHandler extends BaseAudioHandler
   AudioServiceRepeatMode _repeatMode = AudioServiceRepeatMode.none;
   AudioServiceRepeatMode get repeatMode => _repeatMode;
 
-  PoddrMediaHandler({IMediaRepository? mediaRepository})
-      : _mediaRepository = mediaRepository ?? SharedPrefsMediaRepository() {
+  PoddrMediaHandler({
+    this.resolver,
+    IMediaRepository? mediaRepository,
+  }) : _mediaRepository = mediaRepository ?? SharedPrefsMediaRepository() {
     _initPlayer();
     _initListeners();
     _initAudioSession();
@@ -267,6 +275,8 @@ class PoddrMediaHandler extends BaseAudioHandler
   Future<void> loadMedia({
     String? audioUrl,
     String? videoUrl,
+    String? audioSource,
+    String? videoSource,
     String? podcastTitle,
     String? podcastRSS,
     String? episodeTitle,
@@ -283,8 +293,11 @@ class PoddrMediaHandler extends BaseAudioHandler
 
     _emit(AudioEvent.mediaItemChanged);
 
+    final resolvedVideoSource = videoSource ?? videoUrl;
     final playbackUrl =
-        (videoUrl != null && videoUrl.isNotEmpty) ? videoUrl : audioUrl;
+        (resolvedVideoSource != null && resolvedVideoSource.isNotEmpty)
+            ? resolvedVideoSource
+            : (audioSource ?? audioUrl);
 
     final media = MediaItem(
       id: audioUrl,
@@ -296,6 +309,8 @@ class PoddrMediaHandler extends BaseAudioHandler
       extras: {
         "podcastRSS": podcastRSS,
         "videoUrl": videoUrl,
+        "audioUrl": audioUrl,
+        "description": description,
       },
     );
 
@@ -397,9 +412,13 @@ class PoddrMediaHandler extends BaseAudioHandler
     final media = _mediaQueue[index];
     final videoUrl = media.extras?['videoUrl'] as String?;
 
+    final resolved = await resolver?.call(media.id);
+
     await loadMedia(
       audioUrl: media.id,
       videoUrl: videoUrl,
+      audioSource: resolved?.audioSource,
+      videoSource: resolved?.videoSource,
       podcastTitle: media.artist,
       podcastRSS: media.extras?["podcastRSS"],
       episodeTitle: media.title,
@@ -407,7 +426,7 @@ class PoddrMediaHandler extends BaseAudioHandler
       description: media.displayDescription,
       artist: media.artist,
       artUri: media.artUri.toString(),
-      startPosition: Duration.zero,
+      startPosition: resolved?.startPosition ?? Duration.zero,
       autoplay: true,
     );
 
@@ -419,7 +438,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   @override
   Future<void> addQueueItem(MediaItem mediaItem) async {
     _mediaQueue.add(mediaItem);
-    queue.add(_mediaQueue);
+    queue.add(List.of(_mediaQueue));
     debug("Added to queue: ${mediaItem.id}", name: logName);
   }
 
@@ -429,7 +448,7 @@ class PoddrMediaHandler extends BaseAudioHandler
       _mediaQueue.add(item);
       debug("Added to queue: ${item.id}", name: logName);
     }
-    queue.add(_mediaQueue);
+    queue.add(List.of(_mediaQueue));
   }
 
   Future<void> addToQueue({
@@ -457,6 +476,8 @@ class PoddrMediaHandler extends BaseAudioHandler
       extras: {
         "podcastRSS": podcastRSS,
         "videoUrl": videoUrl,
+        "audioUrl": audioUrl,
+        "description": description,
       },
     );
 
@@ -470,7 +491,7 @@ class PoddrMediaHandler extends BaseAudioHandler
       return;
     }
     _mediaQueue.removeAt(index);
-    queue.add(_mediaQueue);
+    queue.add(List.of(_mediaQueue));
 
     if (_currentIndex >= index) {
       _currentIndex--;
@@ -481,7 +502,7 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   Future<void> clearQueue() async {
     _mediaQueue.clear();
-    queue.add(_mediaQueue);
+    queue.add(List.of(_mediaQueue));
     debug("Cleared queue", name: logName);
   }
 
@@ -516,7 +537,7 @@ class PoddrMediaHandler extends BaseAudioHandler
   @override
   Future<void> onTaskRemoved() async {
     debug("Task removed, saving position", name: logName);
-    _mediaRepository.setPosition(playbackState.value.updatePosition);
+    await _mediaRepository.setPosition(playbackState.value.updatePosition);
     await stop();
   }
 
