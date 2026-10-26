@@ -67,7 +67,16 @@ class OfflineProvider extends ChangeNotifier {
   void dispose() {
     _disposed = true;
     _watchSubscription?.cancel();
+    _cancelling.addAll(_downloading);
+    for (final client in _activeClients.values) {
+      client.close();
+    }
+    _activeClients.clear();
     super.dispose();
+  }
+
+  void _notify() {
+    if (!_disposed) notifyListeners();
   }
 
   Future<void> _init() async {
@@ -76,13 +85,13 @@ class OfflineProvider extends ChangeNotifier {
       (episodes) {
         _downloads = episodes;
         _isLoading = false;
-        if (!_disposed) notifyListeners();
+        if (!_disposed) _notify();
       },
       onError: (e) {
         error('Failed to watch downloads', name: logName);
         debug('Watch downloads detail: $e', name: logName);
         _isLoading = false;
-        if (!_disposed) notifyListeners();
+        if (!_disposed) _notify();
       },
     );
     try {
@@ -103,7 +112,7 @@ class OfflineProvider extends ChangeNotifier {
   Future<void> getDownloads() async {
     try {
       _isLoading = true;
-      notifyListeners();
+      _notify();
 
       _downloads = await _repository.getAll();
     } catch (e, stackTrace) {
@@ -111,7 +120,7 @@ class OfflineProvider extends ChangeNotifier {
           name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isLoading = false;
-      notifyListeners();
+      _notify();
     }
   }
 
@@ -156,7 +165,7 @@ class OfflineProvider extends ChangeNotifier {
       if (percent % 25 == 0 && percent <= 100) {
         debug('Download progress: $title - $percent%', name: logName);
       }
-      notifyListeners();
+      _notify();
     }
   }
 
@@ -172,6 +181,7 @@ class OfflineProvider extends ChangeNotifier {
   }
 
   Future<void> download(PodcastEpisode episode) async {
+    if (_disposed) return;
     final audioUrl = episode.audioUrl;
     if (_downloading.contains(audioUrl)) return;
 
@@ -179,7 +189,7 @@ class OfflineProvider extends ChangeNotifier {
         _downloadQueue.indexWhere((e) => e.audioUrl == audioUrl);
     if (queuedIndex != -1) {
       _downloadQueue.removeAt(queuedIndex);
-      notifyListeners();
+      _notify();
     }
 
     if (_downloading.length >= _maxConcurrentDownloads) {
@@ -187,19 +197,9 @@ class OfflineProvider extends ChangeNotifier {
         _downloadQueue.add(episode);
         _statuses[audioUrl] = DownloadStatus.queued;
         info('Added to download queue: ${episode.title}', name: logName);
-        notifyListeners();
+        _notify();
       }
       return;
-    }
-
-    final existing = await _repository.getByAudioUrl(audioUrl);
-    if (existing != null) {
-      final localFile = File(existing.localPath);
-      if (await localFile.exists()) {
-        info('Episode already downloaded: ${episode.title}', name: logName);
-        return;
-      }
-      await _repository.remove(audioUrl);
     }
 
     _downloading.add(audioUrl);
@@ -208,12 +208,23 @@ class OfflineProvider extends ChangeNotifier {
     _statuses[audioUrl] = DownloadStatus.downloading;
     _statusErrors.remove(audioUrl);
     _downloadProgress.putIfAbsent(audioUrl, () => 0.0);
-    notifyListeners();
+    _notify();
 
     final client = PoddrHttpClient();
     _activeClients[audioUrl] = client;
 
     try {
+      final existing = await _repository.getByAudioUrl(audioUrl);
+      if (existing != null) {
+        final localFile = File(existing.localPath);
+        if (await localFile.exists()) {
+          info('Episode already downloaded: ${episode.title}', name: logName);
+          _clearTransferState(audioUrl);
+          return;
+        }
+        await _repository.remove(audioUrl);
+      }
+
       await _repository.downloadEpisode(
         episode,
         onProgress: (progress) =>
@@ -244,7 +255,7 @@ class OfflineProvider extends ChangeNotifier {
         _statuses[audioUrl] = DownloadStatus.failed;
         _statusErrors[audioUrl] = e.toString();
       }
-      notifyListeners();
+      _notify();
     } finally {
       _downloading.remove(audioUrl);
       _activeClients.remove(audioUrl);
@@ -257,7 +268,7 @@ class OfflineProvider extends ChangeNotifier {
         _clearTransferState(audioUrl);
       }
       client.close();
-      notifyListeners();
+      _notify();
       _processQueue();
     }
   }
@@ -268,7 +279,7 @@ class OfflineProvider extends ChangeNotifier {
     _cancelling.add(audioUrl);
     _activeClients[audioUrl]?.close();
     _activeClients.remove(audioUrl);
-    notifyListeners();
+    _notify();
   }
 
   Future<void> resumeDownload(PodcastEpisode episode) async {
@@ -293,7 +304,7 @@ class OfflineProvider extends ChangeNotifier {
       _downloadQueue.removeAt(queuedIndex);
       _statuses.remove(audioUrl);
       info('Removed from queue: $audioUrl', name: logName);
-      notifyListeners();
+      _notify();
       return;
     }
 
@@ -303,7 +314,7 @@ class OfflineProvider extends ChangeNotifier {
     _activeClients[audioUrl]?.close();
     _activeClients.remove(audioUrl);
     _downloading.remove(audioUrl);
-    notifyListeners();
+    _notify();
 
     await Future.delayed(const Duration(milliseconds: 100));
 
@@ -326,7 +337,7 @@ class OfflineProvider extends ChangeNotifier {
       _cancelling.remove(audioUrl);
     }
 
-    notifyListeners();
+    _notify();
     _processQueue();
   }
 
@@ -337,7 +348,7 @@ class OfflineProvider extends ChangeNotifier {
       info('Processing queued download: ${episode.title}', name: logName);
       download(episode);
     }
-    notifyListeners();
+    _notify();
   }
 
   Future<void> remove(String audioUrl) async {
@@ -348,7 +359,7 @@ class OfflineProvider extends ChangeNotifier {
     } catch (e, stackTrace) {
       error('Failed to remove download',
           name: logName, error: e, stackTrace: stackTrace);
-      notifyListeners();
+      _notify();
       rethrow;
     }
   }
@@ -356,7 +367,7 @@ class OfflineProvider extends ChangeNotifier {
   Future<void> clearAll() async {
     try {
       _isLoading = true;
-      notifyListeners();
+      _notify();
 
       for (final url in List.from(_downloading)) {
         await cancelDownload(url);
@@ -389,7 +400,7 @@ class OfflineProvider extends ChangeNotifier {
           name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isLoading = false;
-      notifyListeners();
+      _notify();
     }
   }
 

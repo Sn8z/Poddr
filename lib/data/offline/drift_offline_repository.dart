@@ -206,7 +206,7 @@ class DriftOfflineRepository implements IOfflineRepository {
       await _discardPartialsForUrls(audioUrl, episode.videoUrl);
     }
     await (database.delete(database.offlineEpisodes)
-        ..where((t) => t.audioUrl.equals(audioUrl)))
+          ..where((t) => t.audioUrl.equals(audioUrl)))
         .go();
   }
 
@@ -215,7 +215,8 @@ class DriftOfflineRepository implements IOfflineRepository {
     await _discardPartialsForUrls(episode.audioUrl, episode.videoUrl);
   }
 
-  Future<void> _discardPartialsForUrls(String audioUrl, String? videoUrl) async {
+  Future<void> _discardPartialsForUrls(
+      String audioUrl, String? videoUrl) async {
     final downloadDir = Directory(await _getDownloadDir());
     for (final url in [audioUrl, if (videoUrl != null) videoUrl]) {
       final part = File('${downloadDir.path}/${_partFileName(url)}');
@@ -358,8 +359,7 @@ class DriftOfflineRepository implements IOfflineRepository {
     required void Function(int totalSize) onTotalKnown,
   }) async {
     final partFile = File('$downloadDir/${_partFileName(url)}');
-    final preExisting =
-        await partFile.exists() ? await partFile.length() : 0;
+    final preExisting = await partFile.exists() ? await partFile.length() : 0;
 
     http.StreamedResponse? response;
     var resumeOffset = 0;
@@ -516,8 +516,7 @@ class DriftOfflineRepository implements IOfflineRepository {
       audioSize = audio.fileSize;
 
       if (episode.hasVideo && episode.videoUrl != null) {
-        debug('Starting video download for: ${episode.title}',
-            name: logName);
+        debug('Starting video download for: ${episode.title}', name: logName);
 
         final video = await _fetchMedia(
           url: episode.videoUrl!,
@@ -532,8 +531,7 @@ class DriftOfflineRepository implements IOfflineRepository {
         );
         videoLocalPath = video.path;
 
-        info('Video download completed: ${episode.title}',
-            name: logName);
+        info('Video download completed: ${episode.title}', name: logName);
       }
 
       onProgress(1.0);
@@ -551,14 +549,12 @@ class DriftOfflineRepository implements IOfflineRepository {
         publicationDate: episode.publicationDate,
         videoUrl: episode.videoUrl,
         videoLocalPath: videoLocalPath,
-        videoFileSize: videoLocalPath != null
-            ? downloadedBytes - audioSize
-            : null,
+        videoFileSize:
+            videoLocalPath != null ? downloadedBytes - audioSize : null,
       );
     } catch (e) {
       if (e is DownloadCancelledException) {
-        info('Download cancelled: ${episode.title}',
-            name: logName);
+        info('Download cancelled: ${episode.title}', name: logName);
       } else {
         error('Download failed', name: logName);
         debug('Download detail: $e', name: logName);
@@ -568,8 +564,8 @@ class DriftOfflineRepository implements IOfflineRepository {
             if (await file.exists()) await file.delete();
           }
         }
-        rethrow;
       }
+      rethrow;
     } finally {
       // Client lifecycle managed by OfflineProvider
     }
