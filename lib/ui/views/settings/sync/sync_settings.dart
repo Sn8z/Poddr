@@ -588,10 +588,10 @@ class SyncSection extends StatelessWidget {
         ],
         child: Text(
           'This will:\n'
-          'Ã¢â‚¬Â¢ Clear all unsynced local changes\n'
-          'Ã¢â‚¬Â¢ Pull all current server subscriptions and episode history\n'
-          'Ã¢â‚¬Â¢ Preserve all local subscriptions\n'
-          'Ã¢â‚¬Â¢ Set sync timestamps to current time (only new data fetched next sync)',
+          '• Clear all unsynced local changes\n'
+          '• Pull all current server subscriptions and episode history\n'
+          '• Preserve all local subscriptions\n'
+          '• Set sync timestamps to current time (only new data fetched next sync)',
           style: context.theme.textTheme.bodyMedium,
         ),
       ),

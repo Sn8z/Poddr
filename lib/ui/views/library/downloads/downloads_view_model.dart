@@ -97,7 +97,7 @@ class DownloadsViewModel extends ChangeNotifier {
     );
   }
 
-  PodcastEpisode? toPodcastEpisode(OfflineEpisode data) {
+  PodcastEpisode toPodcastEpisode(OfflineEpisode data) {
     return _offlineProvider.toPodcastEpisode(data);
   }
 

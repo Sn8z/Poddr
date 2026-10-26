@@ -22,6 +22,8 @@ class LatestEpisodesViewModel extends ChangeNotifier {
   Set<int> _selectedCollectionIds = {};
   Set<int> get selectedCollectionIds => _selectedCollectionIds;
 
+  bool get isLoadingLatest => _source.isLoadingLatest;
+
   LatestEpisodesViewModel(this._source, this._collectionsProvider) {
     _source.addListener(notifyListeners);
     _collectionsProvider.addListener(notifyListeners);

@@ -164,8 +164,8 @@ class _PoddrSliderState extends State<PoddrSlider> with SingleTickerProviderStat
     widget.onChanged(value);
   }
 
-  void _handleKeyEvent(KeyEvent event) {
-    if (event is! KeyDownEvent || !widget.enabled) return;
+  bool _handleKeyEvent(KeyEvent event) {
+    if (event is! KeyDownEvent || !widget.enabled) return false;
 
     double step = widget.keyboardStep;
     if (step == 0) {
@@ -197,6 +197,7 @@ class _PoddrSliderState extends State<PoddrSlider> with SingleTickerProviderStat
       }
       widget.onChanged(newValue);
     }
+    return handled;
   }
 
   @override
@@ -277,8 +278,9 @@ class _PoddrSliderState extends State<PoddrSlider> with SingleTickerProviderStat
         child: Focus(
           focusNode: _focusNode,
           onKeyEvent: (node, event) {
-            _handleKeyEvent(event);
-            return KeyEventResult.handled;
+            return _handleKeyEvent(event)
+                ? KeyEventResult.handled
+                : KeyEventResult.ignored;
           },
           child: sliderContent,
         ),

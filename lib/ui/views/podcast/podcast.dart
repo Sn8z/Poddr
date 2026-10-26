@@ -382,7 +382,7 @@ class Episode extends StatelessWidget {
 
     final isCurrentEpisode =
         context.select<MediaProvider, bool>((mediaProvider) {
-      return mediaProvider.episodeTitle == episode.title;
+      return mediaProvider.audioUrl == episode.audioUrl;
     });
 
     return PoddrListItem(

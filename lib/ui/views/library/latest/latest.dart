@@ -13,6 +13,7 @@ import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
+import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/library_nav.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
@@ -119,16 +120,18 @@ class LatestEpisodesView extends StatelessWidget {
             ...viewModel.episodes.isEmpty
                 ? [
                     SliverToBoxAdapter(
-                      child: EmptyState(
-                        icon: HugeIcon(
-                          icon: HugeIcons.strokeRoundedRss,
-                          size: 64,
-                          color: context.theme.secondary,
-                        ),
-                        title: 'No episodes yet',
-                        subtitle:
-                            'New episodes from your subscriptions will appear here',
-                      ),
+                      child: viewModel.isLoadingLatest
+                          ? ShimmerLoadingList()
+                          : EmptyState(
+                              icon: HugeIcon(
+                                icon: HugeIcons.strokeRoundedRss,
+                                size: 64,
+                                color: context.theme.secondary,
+                              ),
+                              title: 'No episodes yet',
+                              subtitle:
+                                  'New episodes from your subscriptions will appear here',
+                            ),
                     ),
                   ]
                 : [

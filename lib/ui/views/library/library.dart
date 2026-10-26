@@ -171,14 +171,7 @@ class LibraryView extends StatelessWidget {
                                         maxHeightDiskCache: 300,
                                       ),
                                     ),
-                                    actions: [
-                                      PoddrIconButton(
-                                        onPressed: () {},
-                                        icon: HugeIcon(
-                                            icon: HugeIcons
-                                                .strokeRoundedMoreVertical),
-                                      ),
-                                    ],
+                                    actions: [],
                                   );
                                 },
                                 childCount: viewModel.subscriptions.length,

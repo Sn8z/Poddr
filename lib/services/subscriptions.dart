@@ -184,8 +184,11 @@ class SubscriptionProvider extends ChangeNotifier {
     return await _subscriptionRepository.getSubscriptionIdByRss(rss);
   }
 
+  final Map<String, Stream<int?>> _subscriptionIdStreams = {};
+
   Stream<int?> watchSubscriptionId(String rss) {
-    return _subscriptionRepository.watchSubscriptionIdByRss(rss);
+    return _subscriptionIdStreams.putIfAbsent(
+        rss, () => _subscriptionRepository.watchSubscriptionIdByRss(rss));
   }
 
   Future<void> removeSubscription(String rss, {bool fromSync = false}) async {

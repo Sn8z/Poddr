@@ -121,25 +121,29 @@ class HistoryProvider extends ChangeNotifier {
     }
   }
 
+  final Map<String, Stream<EpisodeProgress?>> _progressStreams = {};
+
   Stream<EpisodeProgress?> watchProgressByAudioUrl(String audioUrl) {
-    try {
-      return _historyRepository
-          .watchProgressByAudioUrl(audioUrl)
-          .map(
-            (row) => row == null
-                ? null
-                : EpisodeProgress(
-                    position: row.position,
-                    duration: row.duration,
-                    isFinished: row.isFinished,
-                  ),
-          );
-    } catch (e, stackTrace) {
-      error('Failed to watch progress',
-          name: logName, error: e, stackTrace: stackTrace);
-      debug('Watch progress detail: $e', name: logName);
-      return const Stream.empty();
-    }
+    return _progressStreams.putIfAbsent(audioUrl, () {
+      try {
+        return _historyRepository
+            .watchProgressByAudioUrl(audioUrl)
+            .map(
+              (row) => row == null
+                  ? null
+                  : EpisodeProgress(
+                      position: row.position,
+                      duration: row.duration,
+                      isFinished: row.isFinished,
+                    ),
+            );
+      } catch (e, stackTrace) {
+        error('Failed to watch progress',
+            name: logName, error: e, stackTrace: stackTrace);
+        debug('Watch progress detail: $e', name: logName);
+        return const Stream.empty();
+      }
+    });
   }
 
   Future<void> removeHistory(String audioUrl) async {

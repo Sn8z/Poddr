@@ -280,6 +280,7 @@ class _PoddrButtonState extends State<_PoddrButton> {
       enabled: _enabled,
       child: Focus(
         focusNode: _focusNode,
+        onFocusChange: (_) => setState(() {}),
         child: MouseRegion(
           cursor:
               _enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,

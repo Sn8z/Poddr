@@ -21,12 +21,17 @@ class CollectionsProvider extends ChangeNotifier {
 
   StreamSubscription? _pairsSubscription;
 
+  Stream<List<PodcastCollection>>? _collectionsStream;
   Stream<List<PodcastCollection>> get collectionsStream =>
-      _repository.watchAllCollections();
+      _collectionsStream ??= _repository.watchAllCollections();
+
+  final Map<int, Stream<List<PodcastCollection>>> _collectionStreams = {};
 
   Stream<List<PodcastCollection>> watchCollectionsForSubscription(
       int subscriptionId) {
-    return _repository.watchCollectionsForSubscription(subscriptionId);
+    return _collectionStreams.putIfAbsent(
+        subscriptionId,
+        () => _repository.watchCollectionsForSubscription(subscriptionId));
   }
 
   CollectionsProvider({ICollectionsRepository? repository})

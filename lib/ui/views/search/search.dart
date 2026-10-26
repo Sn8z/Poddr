@@ -38,7 +38,7 @@ class SearchView extends StatelessWidget {
             ),
             ...searchProvider.isLoading
               ? [const SliverToBoxAdapter(child: ShimmerLoadingList())]
-              : searchResults.isEmpty
+              : !searchProvider.hasSearched
                   ? [
                       SliverToBoxAdapter(
                         child: EmptyState(
@@ -47,11 +47,25 @@ class SearchView extends StatelessWidget {
                             size: 64,
                             color: context.theme.secondary,
                           ),
-                          title: 'No results found',
-                          subtitle: 'Try searching for a different term',
+                          title: 'Search podcasts',
+                          subtitle: 'Type a term to find podcasts',
                         ),
                       ),
                     ]
+                  : searchResults.isEmpty
+                      ? [
+                          SliverToBoxAdapter(
+                            child: EmptyState(
+                              icon: HugeIcon(
+                                icon: HugeIcons.strokeRoundedSearch01,
+                                size: 64,
+                                color: context.theme.secondary,
+                              ),
+                              title: 'No results found',
+                              subtitle: 'Try searching for a different term',
+                            ),
+                          ),
+                        ]
                   : [
                       sliverGapH16,
                       SliverPadding(

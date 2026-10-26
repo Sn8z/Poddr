@@ -69,14 +69,14 @@ class DiscoverViewModel extends ChangeNotifier {
     await getCharts();
   }
 
-  void setCountry(String code) async {
+  Future<void> setCountry(String code) async {
     _countryCode = code;
     await getCharts();
     await _settingsRepository.saveCountryCode(code);
     info("Set country to: $code", name: logName);
   }
 
-  void setGenre(String genre) async {
+  Future<void> setGenre(String genre) async {
     _genreID = genre;
     await getCharts();
     await _settingsRepository.saveGenreID(genre);
@@ -90,9 +90,13 @@ class DiscoverViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    charts = await _podcastRepository.getCharts(_countryCode, _genreID);
-
-    _isLoading = false;
-    notifyListeners();
+    try {
+      charts = await _podcastRepository.getCharts(_countryCode, _genreID);
+    } catch (e, s) {
+      error("Failed to fetch charts", name: logName, error: e, stackTrace: s);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

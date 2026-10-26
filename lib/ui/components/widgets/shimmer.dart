@@ -118,9 +118,9 @@ class ShimmerLoadingList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(4, (i) {
+      children: List.generate(itemCount, (i) {
         return Padding(
-          padding: EdgeInsets.only(bottom: i < 3 ? 20 : 0),
+          padding: EdgeInsets.only(bottom: i < itemCount - 1 ? 20 : 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

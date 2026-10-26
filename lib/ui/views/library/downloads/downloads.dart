@@ -210,7 +210,7 @@ class DownloadsView extends StatelessWidget {
                                           audioUrl: download.audioUrl),
                                       DownloadButton(
                                         episode: viewModel
-                                            .toPodcastEpisode(download)!,
+                                            .toPodcastEpisode(download),
                                       ),
                                     ],
                                   );

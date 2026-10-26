@@ -80,6 +80,7 @@ class _PoddrIconButtonState extends State<PoddrIconButton> {
       enabled: _enabled,
       child: Focus(
         focusNode: _focusNode,
+        onFocusChange: (_) => setState(() {}),
         onKeyEvent: (node, event) {
           if (_enabled &&
               event is KeyDownEvent &&

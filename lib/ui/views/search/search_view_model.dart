@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
 import 'package:poddr/models/podcast.dart';
@@ -15,17 +16,25 @@ class SearchViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  bool _hasSearched = false;
+  bool get hasSearched => _hasSearched;
+
   SearchViewModel({IPodcastRepository? podcastRepository})
       : _podcastRepository = podcastRepository ?? ITunesPodcastRepository();
 
   Future<void> searchPodcast(String query) async {
+    _hasSearched = true;
     _isLoading = true;
     notifyListeners();
 
-    searchResults = await _podcastRepository.search(query);
-
-    _isLoading = false;
-    notifyListeners();
+    try {
+      searchResults = await _podcastRepository.search(query);
+    } catch (e, s) {
+      error("Search failed", name: logName, error: e, stackTrace: s);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<List<Podcast>> getCharts(String code, String genre) async {
