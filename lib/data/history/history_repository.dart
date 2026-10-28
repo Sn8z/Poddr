@@ -15,7 +15,12 @@ abstract class IHistoryRepository {
 
   Future<List<PodcastEpisode>> getHistory();
 
-  Future<void> updateProgress(String audioUrl, int position, int duration);
+  Future<void> updateProgress(
+    String audioUrl,
+    int position,
+    int duration, {
+    bool markFinished = true,
+  });
 
   Future<Map<String, dynamic>?> getProgress(String audioUrl);
 

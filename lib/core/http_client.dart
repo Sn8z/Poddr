@@ -29,7 +29,8 @@ class PoddrHttpClient extends http.BaseClient {
 
   static final PoddrHttpClient shared = PoddrHttpClient();
 
-  PoddrHttpClient({Duration? cacheTtl}) : _cacheTtl = cacheTtl ?? _defaultCacheTtl;
+  PoddrHttpClient({Duration? cacheTtl})
+      : _cacheTtl = cacheTtl ?? _defaultCacheTtl;
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) {
@@ -41,7 +42,8 @@ class PoddrHttpClient extends http.BaseClient {
   }
 
   @override
-  Future<http.Response> get(Uri url, {Map<String, String>? headers, bool skipCache = false}) async {
+  Future<http.Response> get(Uri url,
+      {Map<String, String>? headers, bool skipCache = false}) async {
     final urlKey = url.toString();
 
     if (skipCache) {
@@ -51,7 +53,7 @@ class PoddrHttpClient extends http.BaseClient {
 
     _CacheEntry? cached = _cache[urlKey];
     if (cached != null && cached.isExpired(_cacheTtl)) {
-      _cache.remove(urlKey);
+      _removeCached(urlKey);
       cached = null;
     }
 
@@ -82,6 +84,7 @@ class PoddrHttpClient extends http.BaseClient {
 
         if (response.statusCode == 200) {
           final entry = _CacheEntry.fromResponse(response);
+          _removeCached(urlKey);
           _cache[urlKey] = entry;
           _currentCacheSize += entry.body.length;
 
@@ -89,11 +92,8 @@ class PoddrHttpClient extends http.BaseClient {
                   _currentCacheSize > _maxCacheSizeBytes) &&
               _cache.isNotEmpty) {
             final oldestKey = _cache.keys.reduce((a, b) =>
-                _cache[a]!.timestamp.isBefore(_cache[b]!.timestamp)
-                    ? a
-                    : b);
-            _currentCacheSize -= _cache[oldestKey]!.body.length;
-            _cache.remove(oldestKey);
+                _cache[a]!.timestamp.isBefore(_cache[b]!.timestamp) ? a : b);
+            _removeCached(oldestKey);
           }
         }
 
@@ -162,6 +162,13 @@ class PoddrHttpClient extends http.BaseClient {
       }
     }
     throw NetworkException('Max retries exceeded for HEAD $url');
+  }
+
+  void _removeCached(String key) {
+    final entry = _cache.remove(key);
+    if (entry == null) return;
+    _currentCacheSize -= entry.body.length;
+    if (_currentCacheSize < 0) _currentCacheSize = 0;
   }
 
   @override

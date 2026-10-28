@@ -49,7 +49,8 @@ class GpodderClient {
       http.Response response;
       switch (method.toUpperCase()) {
         case 'GET':
-          response = await _httpClient.get(uri, headers: headers, skipCache: true);
+          response =
+              await _httpClient.get(uri, headers: headers, skipCache: true);
           break;
         case 'POST':
           response =
@@ -149,7 +150,6 @@ class GpodderClient {
           if (sessionMatch != null) {
             _sessionId = sessionMatch.group(1);
             info("Login successful", name: logName);
-            debug("Login session: $_sessionId", name: logName);
             return true;
           }
         }
@@ -163,7 +163,8 @@ class GpodderClient {
       }
 
       if (res.statusCode >= 500) {
-        error("Login failed with server error: ${res.statusCode}", name: logName);
+        error("Login failed with server error: ${res.statusCode}",
+            name: logName);
         throw ServerErrorException(res.statusCode);
       }
 

@@ -12,6 +12,7 @@ class Podcast {
   final bool explicit;
   final List<PodcastEpisode> episodes;
   final String? newFeedUrl;
+  final bool broken;
 
   // Podcast 2.0 fields
   final bool locked;
@@ -38,6 +39,7 @@ class Podcast {
     this.explicit = false,
     this.episodes = const [],
     this.newFeedUrl,
+    this.broken = false,
     this.locked = false,
     this.funding = const [],
     this.chapters,
@@ -61,6 +63,7 @@ class Podcast {
     bool? explicit,
     List<PodcastEpisode>? episodes,
     String? newFeedUrl,
+    bool? broken,
     bool? locked,
     List<Map<String, String>>? funding,
     Map<String, String>? chapters,
@@ -83,6 +86,7 @@ class Podcast {
       explicit: explicit ?? this.explicit,
       episodes: episodes ?? this.episodes,
       newFeedUrl: newFeedUrl ?? this.newFeedUrl,
+      broken: broken ?? this.broken,
       locked: locked ?? this.locked,
       funding: funding ?? this.funding,
       chapters: chapters ?? this.chapters,
@@ -97,6 +101,6 @@ class Podcast {
 
   @override
   String toString() {
-    return 'Podcast{title: $title, author: $author, episodes: ${episodes.length}, locked: $locked, funding: ${funding.length}}';
+    return 'Podcast{title: $title, author: $author, episodes: ${episodes.length}, broken: $broken, locked: $locked, funding: ${funding.length}}';
   }
 }

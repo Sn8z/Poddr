@@ -180,6 +180,24 @@ class SubscriptionProvider extends ChangeNotifier {
     await _updateLatestEpisodes();
   }
 
+  Future<void> retryFeed(String rss) async {
+    _failedFeeds.remove(rss);
+    _loadedFeeds.remove(rss);
+    try {
+      await _updateLatestEpisodes();
+    } catch (e, stackTrace) {
+      error('Failed to retry feed $rss',
+          name: logName, error: e, stackTrace: stackTrace);
+    }
+  }
+
+  PodcastEpisode? findEpisodeByUrl(String audioUrl) {
+    for (final episode in _latestEpisodes) {
+      if (episode.audioUrl == audioUrl) return episode;
+    }
+    return null;
+  }
+
   Future<int?> getSubscriptionId(String rss) async {
     return await _subscriptionRepository.getSubscriptionIdByRss(rss);
   }
@@ -216,8 +234,7 @@ class SubscriptionProvider extends ChangeNotifier {
   }
 
   bool _isSubscribed(String rss) {
-    return _subscriptions
-        .any((sub) => sub.rss == rss || sub.newFeedUrl == rss);
+    return _subscriptions.any((sub) => sub.rss == rss || sub.newFeedUrl == rss);
   }
 
   Future<void> _addFeedEpisodes(String rss) async {
@@ -254,8 +271,7 @@ class SubscriptionProvider extends ChangeNotifier {
       return;
     }
 
-    final added =
-        newRssSet.difference(_loadedFeeds).difference(_failedFeeds);
+    final added = newRssSet.difference(_loadedFeeds).difference(_failedFeeds);
     final removed = _loadedFeeds.difference(newRssSet);
 
     if (added.isEmpty && removed.isEmpty) return;
@@ -308,6 +324,7 @@ class SubscriptionProvider extends ChangeNotifier {
 
       final known = _subscriptions.where((sub) => sub.rss == rss).firstOrNull;
       if (known == null ||
+          known.broken ||
           known.title != fullPodcast.title ||
           known.description != fullPodcast.description ||
           known.author != fullPodcast.author ||
@@ -337,6 +354,10 @@ class SubscriptionProvider extends ChangeNotifier {
   }
 
   void _sortAndLimit() {
+    final seen = <String>{};
+    _latestEpisodes =
+        _latestEpisodes.where((episode) => seen.add(episode.audioUrl)).toList();
+
     _latestEpisodes.sort((a, b) {
       final dateA = a.publicationDate ?? DateTime.fromMillisecondsSinceEpoch(0);
       final dateB = b.publicationDate ?? DateTime.fromMillisecondsSinceEpoch(0);

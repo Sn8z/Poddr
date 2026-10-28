@@ -171,7 +171,23 @@ class LibraryView extends StatelessWidget {
                                         maxHeightDiskCache: 300,
                                       ),
                                     ),
-                                    actions: [],
+                                    actions: [
+                                      if (podcast.broken)
+                                        PoddrIconButton(
+                                          icon: HugeIcon(
+                                            icon:
+                                                HugeIcons.strokeRoundedRefresh,
+                                            color: context.theme.error,
+                                          ),
+                                          size: 18,
+                                          semanticLabel:
+                                              'Feed unavailable, retry',
+                                          onPressed: () {
+                                            viewModel.retrySubscription(
+                                                podcast.rss ?? '');
+                                          },
+                                        ),
+                                    ],
                                   );
                                 },
                                 childCount: viewModel.subscriptions.length,

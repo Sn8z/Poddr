@@ -51,6 +51,7 @@ Future<void> _checkRotation() async {
 Future<void> _writeToFile(String message) async {
   if (_logFile == null) return;
   try {
+    await _checkRotation();
     await _logFile!.writeAsString('$message\n', mode: FileMode.append);
   } catch (e) {
     developer.log('Failed to write to log file: $e', name: 'PoddrLog');
@@ -62,7 +63,7 @@ void _log(LogLevel level, String message,
   final timestamp = DateTime.now().toIso8601String();
   final levelStr = level.name.toUpperCase();
   final nameStr = name != null ? '[$name]' : '';
-  final formatted = '[$timestamp] [$levelStr]$nameStr $message';
+  var formatted = '[$timestamp] [$levelStr]$nameStr $message';
 
   if (kReleaseMode && level == LogLevel.debug) {
     return;
@@ -71,13 +72,15 @@ void _log(LogLevel level, String message,
   developer.log(message,
       name: name ?? 'Poddr', error: error, stackTrace: stackTrace);
 
-  if (level != LogLevel.debug) {
-    _init().then((_) => _writeToFile(formatted));
+  if (level == LogLevel.error && error != null) {
+    formatted = '$formatted Error: $error';
+    if (stackTrace != null) {
+      formatted = '$formatted\n$stackTrace';
+    }
   }
 
-  if (error != null && stackTrace != null && level == LogLevel.error) {
-    final errorMsg = '[$timestamp] [ERROR][$name] Error: $error\n$stackTrace';
-    _init().then((_) => _writeToFile(errorMsg));
+  if (level != LogLevel.debug) {
+    _init().then((_) => _writeToFile(formatted));
   }
 }
 

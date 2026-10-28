@@ -90,16 +90,69 @@ class HistoryProvider extends ChangeNotifier {
   }
 
   Future<void> updateProgress(
-      String audioUrl, int position, int duration) async {
+    String audioUrl,
+    int position,
+    int duration, {
+    bool markFinished = true,
+  }) async {
     try {
       await _historyRepository.updateProgress(
         audioUrl,
         position,
         duration,
+        markFinished: markFinished,
       );
     } catch (e) {
       error('Failed to update progress', name: logName);
       debug('Update progress detail: $e', name: logName);
+    }
+  }
+
+  Future<void> applyRemoteProgress({
+    required String audioUrl,
+    required int position,
+    int duration = 0,
+    PodcastEpisode? episode,
+  }) async {
+    try {
+      final existing = await _historyRepository.getProgress(audioUrl);
+
+      if (existing == null && episode == null) {
+        debug('Skipping remote progress for unknown episode $audioUrl',
+            name: logName);
+        return;
+      }
+
+      if (existing == null && episode != null) {
+        await addToHistory(
+          episode.audioUrl,
+          episode.title ?? '',
+          episode.description ?? '',
+          episode.imageUrl ?? '',
+          episode.podcastTitle ?? '',
+          episode.podcastRSS ?? '',
+          episode.duration?.inSeconds ?? duration,
+          episode.videoUrl,
+        );
+      }
+
+      final existingDuration = existing?['duration'] as int? ?? 0;
+      final effectiveDuration = duration > 0
+          ? duration
+          : (existingDuration > 0
+              ? existingDuration
+              : episode?.duration?.inSeconds ?? 0);
+
+      await _historyRepository.updateProgress(
+        audioUrl,
+        position,
+        effectiveDuration,
+        markFinished: false,
+      );
+    } catch (e, stackTrace) {
+      error('Failed to apply remote progress',
+          name: logName, error: e, stackTrace: stackTrace);
+      debug('Apply remote progress detail: $e', name: logName);
     }
   }
 
@@ -126,9 +179,7 @@ class HistoryProvider extends ChangeNotifier {
   Stream<EpisodeProgress?> watchProgressByAudioUrl(String audioUrl) {
     return _progressStreams.putIfAbsent(audioUrl, () {
       try {
-        return _historyRepository
-            .watchProgressByAudioUrl(audioUrl)
-            .map(
+        return _historyRepository.watchProgressByAudioUrl(audioUrl).map(
               (row) => row == null
                   ? null
                   : EpisodeProgress(

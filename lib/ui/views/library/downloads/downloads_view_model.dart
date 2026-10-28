@@ -101,13 +101,9 @@ class DownloadsViewModel extends ChangeNotifier {
     return _offlineProvider.toPodcastEpisode(data);
   }
 
-  void remove(String audioUrl) {
-    _offlineProvider.remove(audioUrl);
-  }
+  Future<bool> remove(String audioUrl) => _offlineProvider.remove(audioUrl);
 
-  void clearAllDownloads() {
-    _offlineProvider.clearAll();
-  }
+  Future<bool> clearAllDownloads() => _offlineProvider.clearAll();
 
   int getQueuePosition(String audioUrl) {
     return _offlineProvider.getQueuePosition(audioUrl);

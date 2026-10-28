@@ -67,8 +67,7 @@ class SyncProvider extends ChangeNotifier {
   bool get statusIsWarning => _statusIsWarning;
 
   bool get isConfigured =>
-      _status == SyncStatus.connected ||
-      _status == SyncStatus.syncing;
+      _status == SyncStatus.connected || _status == SyncStatus.syncing;
 
   DateTime? _lastSyncTimeCache;
   DateTime? get lastSyncTime => _lastSyncTimeCache;
@@ -193,7 +192,8 @@ class SyncProvider extends ChangeNotifier {
     }
   }
 
-  void _updateStatus(SyncStatus status, [String? description, bool isError = false]) {
+  void _updateStatus(SyncStatus status,
+      [String? description, bool isError = false]) {
     _status = status;
     _statusDescription = description;
     _statusIsError = isError || status == SyncStatus.credentialsInvalid;
@@ -346,12 +346,14 @@ class SyncProvider extends ChangeNotifier {
     required String deviceName,
   }) async {
     if (serverUrl.isEmpty || username.isEmpty || password.isEmpty) {
-      _updateStatus(SyncStatus.disconnected, 'Please fill in all required fields', true);
+      _updateStatus(
+          SyncStatus.disconnected, 'Please fill in all required fields', true);
       return;
     }
 
     if (!isValidUrl(serverUrl, requireHttps: true)) {
-      _updateStatus(SyncStatus.disconnected, 'Sync server must use HTTPS', true);
+      _updateStatus(
+          SyncStatus.disconnected, 'Sync server must use HTTPS', true);
       return;
     }
 
@@ -379,7 +381,8 @@ class SyncProvider extends ChangeNotifier {
 
       await _loginAndSyncClient();
     } catch (e) {
-      _updateStatus(SyncStatus.disconnected, 'Failed to configure sync: $e', true);
+      _updateStatus(
+          SyncStatus.disconnected, 'Failed to configure sync: $e', true);
       error('Failed to configure sync', name: logName);
       debug('Configure sync detail: $e', name: logName);
     }
@@ -646,9 +649,15 @@ class SyncProvider extends ChangeNotifier {
   }
 
   Future<void> _applyEpisodeActionToHistory(
-      String episodeUrl, String actionType, int position) async {
+      String episodeUrl, String actionType, int position, int duration) async {
     if (actionType == 'play') {
-      await _historyProvider?.updateProgress(episodeUrl, position, 0);
+      final episode = _subscriptionProvider?.findEpisodeByUrl(episodeUrl);
+      await _historyProvider?.applyRemoteProgress(
+        audioUrl: episodeUrl,
+        position: position,
+        duration: duration,
+        episode: episode,
+      );
     } else if (actionType == 'new') {
       await _historyProvider?.removeHistory(episodeUrl);
     }
@@ -663,6 +672,7 @@ class SyncProvider extends ChangeNotifier {
       final episodeUrl = action['episode'] as String?;
       final actionType = action['action'] as String?;
       final position = _parseIntSafely(action['position']) ?? 0;
+      final duration = _parseIntSafely(action['total']) ?? 0;
       final timestamp = _parseIntSafely(action['timestamp']) ?? 0;
 
       if (episodeUrl == null) continue;
@@ -671,6 +681,7 @@ class SyncProvider extends ChangeNotifier {
           (remoteHistory[episodeUrl]!['timestamp'] as int) < timestamp) {
         remoteHistory[episodeUrl] = {
           'position': position,
+          'duration': duration,
           'action': actionType,
           'timestamp': timestamp,
         };
@@ -682,8 +693,9 @@ class SyncProvider extends ChangeNotifier {
       final data = entry.value;
       final actionType = data['action'] as String?;
       final position = data['position'] as int? ?? 0;
+      final duration = data['duration'] as int? ?? 0;
       await _applyEpisodeActionToHistory(
-          episodeUrl, actionType ?? '', position);
+          episodeUrl, actionType ?? '', position, duration);
     }
   }
 

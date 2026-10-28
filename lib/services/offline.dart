@@ -253,7 +253,8 @@ class OfflineProvider extends ChangeNotifier {
         error('Failed to download episode',
             name: logName, error: e, stackTrace: stackTrace);
         _statuses[audioUrl] = DownloadStatus.failed;
-        _statusErrors[audioUrl] = e.toString();
+        _statusErrors[audioUrl] =
+            e is DownloadException ? e.message : 'Download failed';
       }
       _notify();
     } finally {
@@ -351,20 +352,23 @@ class OfflineProvider extends ChangeNotifier {
     _notify();
   }
 
-  Future<void> remove(String audioUrl) async {
+  Future<bool> remove(String audioUrl) async {
     try {
       await _repository.remove(audioUrl);
       _paused.remove(audioUrl);
       _clearTransferState(audioUrl);
+      _notify();
+      return true;
     } catch (e, stackTrace) {
       error('Failed to remove download',
           name: logName, error: e, stackTrace: stackTrace);
       _notify();
-      rethrow;
+      return false;
     }
   }
 
-  Future<void> clearAll() async {
+  Future<bool> clearAll() async {
+    var success = true;
     try {
       _isLoading = true;
       _notify();
@@ -376,7 +380,13 @@ class OfflineProvider extends ChangeNotifier {
       for (final url in List.from(_paused)) {
         final episode = _activeEpisodes[url];
         if (episode != null) {
-          await _repository.discardPartials(episode);
+          try {
+            await _repository.discardPartials(episode);
+          } catch (e, stackTrace) {
+            success = false;
+            error('Failed to discard partial download',
+                name: logName, error: e, stackTrace: stackTrace);
+          }
         }
         _clearTransferState(url);
       }
@@ -391,17 +401,21 @@ class OfflineProvider extends ChangeNotifier {
       _downloadQueue.clear();
 
       for (final download in List.from(_downloads)) {
-        await remove(download.audioUrl);
+        if (!await remove(download.audioUrl)) success = false;
       }
 
-      info('Cleared all downloads', name: logName);
+      if (success) {
+        info('Cleared all downloads', name: logName);
+      }
     } catch (e, stackTrace) {
+      success = false;
       error('Failed to clear all downloads',
           name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isLoading = false;
       _notify();
     }
+    return success;
   }
 
   int getTotalDownloadSize() {

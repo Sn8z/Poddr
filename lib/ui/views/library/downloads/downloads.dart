@@ -8,6 +8,7 @@ import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
+import 'package:poddr/ui/components/widgets/poddr_error_dialog.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/library_nav.dart';
@@ -337,9 +338,16 @@ void _showClearAllDialog(BuildContext context, DownloadsViewModel viewModel) {
           ),
           PoddrTextButton(
             label: 'Delete all',
-            onPressed: () {
-              viewModel.clearAllDownloads();
+            onPressed: () async {
               Navigator.pop(dialogContext);
+              final success = await viewModel.clearAllDownloads();
+              if (!success && context.mounted) {
+                await showPoddrErrorDialog(
+                  context: context,
+                  message:
+                      'Some downloads could not be removed. Please check your storage and try again.',
+                );
+              }
             },
             color: dialogContext.theme.error,
           ),

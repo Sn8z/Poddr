@@ -81,16 +81,20 @@ class DriftHistoryRepository implements IHistoryRepository {
   Future<void> updateProgress(
     String audioUrl,
     int position,
-    int duration,
-  ) async {
-    final bool isFinished = (position / duration) >= .9;
+    int duration, {
+    bool markFinished = true,
+  }) async {
+    final safePosition = position < 0 ? 0 : position;
+    final hasValidDuration = duration > 0;
     await (database.update(database.listeningHistory)
           ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
         .write(
       ListeningHistoryCompanion(
-        position: Value(position),
-        duration: Value(duration),
-        isFinished: Value(isFinished),
+        position: Value(safePosition),
+        duration: hasValidDuration ? Value(duration) : const Value.absent(),
+        isFinished: hasValidDuration && markFinished
+            ? Value((safePosition / duration) >= .9)
+            : const Value.absent(),
         listenedAt: Value(DateTime.now()),
       ),
     );

@@ -23,6 +23,7 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
         description: sub.description,
         author: sub.author,
         image: sub.imageUrl,
+        broken: sub.broken,
       );
     }).toList();
   }
@@ -70,13 +71,14 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
     await (database.update(database.podcastSubscription)
           ..where((sub) => sub.rss.equals(rss)))
         .write(PodcastSubscriptionCompanion(
-          title: title != null ? Value(title) : const Value.absent(),
-          description: description != null ? Value(description) : const Value.absent(),
-          author: author != null ? Value(author) : const Value.absent(),
-          imageUrl: imageUrl != null ? Value(imageUrl) : const Value.absent(),
-          rss: newRss != null ? Value(newRss) : const Value.absent(),
-          broken: const Value(false),
-        ));
+      title: title != null ? Value(title) : const Value.absent(),
+      description:
+          description != null ? Value(description) : const Value.absent(),
+      author: author != null ? Value(author) : const Value.absent(),
+      imageUrl: imageUrl != null ? Value(imageUrl) : const Value.absent(),
+      rss: newRss != null ? Value(newRss) : const Value.absent(),
+      broken: const Value(false),
+    ));
   }
 
   @override
@@ -85,8 +87,8 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
     await (database.update(database.podcastSubscription)
           ..where((sub) => sub.rss.equals(rss)))
         .write(PodcastSubscriptionCompanion(
-          broken: Value(broken),
-        ));
+      broken: Value(broken),
+    ));
   }
 
   @override
@@ -117,14 +119,18 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
   @override
   Stream<List<Podcast>> watchAllSubscriptions() {
     debug("Watching all subscriptions", name: logName);
-    return database.select(database.podcastSubscription)
+    return database
+        .select(database.podcastSubscription)
         .watch()
-        .map((subs) => subs.map((sub) => Podcast(
-              title: sub.title,
-              rss: sub.rss,
-              description: sub.description,
-              author: sub.author,
-              image: sub.imageUrl,
-            )).toList());
+        .map((subs) => subs
+            .map((sub) => Podcast(
+                  title: sub.title,
+                  rss: sub.rss,
+                  description: sub.description,
+                  author: sub.author,
+                  image: sub.imageUrl,
+                  broken: sub.broken,
+                ))
+            .toList());
   }
 }

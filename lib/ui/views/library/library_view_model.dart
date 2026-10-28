@@ -55,6 +55,10 @@ class LibraryViewModel extends ChangeNotifier {
     await _subscriptionProvider.addSubscription(rss: rss);
   }
 
+  Future<void> retrySubscription(String rss) async {
+    await _subscriptionProvider.retryFeed(rss);
+  }
+
   void setFilter(String value) {
     _filter = value;
     if (filterController.text != value) {

@@ -3,6 +3,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/offline.dart';
+import 'package:poddr/ui/components/widgets/poddr_error_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_progress.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,9 @@ class DownloadButton extends StatelessWidget {
     final isQueued = offlineProvider.downloadQueue.any(
       (e) => e.audioUrl == episode.audioUrl,
     );
+    final downloadFailed = offlineProvider.downloadStatus[episode.audioUrl] ==
+        DownloadStatus.failed;
+    final downloadError = offlineProvider.downloadErrors[episode.audioUrl];
 
     if (isDownloading) {
       return SizedBox(
@@ -93,15 +97,44 @@ class DownloadButton extends StatelessWidget {
       );
     }
 
-    if (isDownloaded) {
+    if (downloadFailed) {
       return PoddrIconButton(
         onPressed: () {
-          offlineProvider.remove(episode.audioUrl);
+          offlineProvider.download(episode);
+        },
+        onLongPress: downloadError == null
+            ? null
+            : () => showPoddrErrorDialog(
+                  context: context,
+                  message: downloadError,
+                  title: 'Download failed',
+                ),
+        icon: HugeIcon(
+          icon: HugeIcons.strokeRoundedRefresh,
+          color: context.theme.error,
+        ),
+        size: iconSize,
+        semanticLabel: downloadError ?? 'Download failed, tap to retry',
+      );
+    }
+
+    if (isDownloaded) {
+      return PoddrIconButton(
+        onPressed: () async {
+          final removed = await offlineProvider.remove(episode.audioUrl);
+          if (!removed && context.mounted) {
+            await showPoddrErrorDialog(
+              context: context,
+              message:
+                  'The downloaded episode could not be removed. Please try again.',
+            );
+          }
         },
         icon: HugeIcon(
           icon: HugeIcons.strokeRoundedCancel01,
         ),
         size: iconSize,
+        semanticLabel: 'Delete download',
       );
     }
 
