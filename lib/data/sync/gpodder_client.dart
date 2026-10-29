@@ -82,7 +82,7 @@ class GpodderClient {
       } else if (statusCode >= 500) {
         throw ServerErrorException(statusCode);
       } else {
-        error("HTTP $statusCode for $path", name: logName);
+        debug("HTTP $statusCode for $path", name: logName);
         debug("Response body for $path: $res", name: logName);
         throw ApiException('Server returned error (code $statusCode)');
       }
@@ -158,30 +158,27 @@ class GpodderClient {
       }
 
       if (res.statusCode == 401) {
-        error("Login failed: Invalid credentials", name: logName);
+        debug("Login returned 401", name: logName);
         throw UnauthorizedException();
       }
 
       if (res.statusCode >= 500) {
-        error("Login failed with server error: ${res.statusCode}",
-            name: logName);
+        debug("Login returned server error: ${res.statusCode}", name: logName);
         throw ServerErrorException(res.statusCode);
       }
 
-      error("Login failed with status: ${res.statusCode}", name: logName);
+      debug("Login returned status: ${res.statusCode}", name: logName);
       throw ApiException('Login returned status ${res.statusCode}');
     } on ApiException {
       rethrow;
     } on http.ClientException catch (e) {
-      error("Login network error", name: logName);
-      debug("Login network detail: $e", name: logName);
+      debug("Login network error: $e", name: logName);
       throw NetworkException(e.message);
     } on TimeoutException {
-      error("Login timed out", name: logName);
+      debug("Login timed out", name: logName);
       throw NetworkException('Login request timed out');
     } catch (e) {
-      error("Login error", name: logName);
-      debug("Login detail: $e", name: logName);
+      debug("Login error: $e", name: logName);
       throw ApiException('Unexpected login error: $e');
     }
   }
@@ -194,8 +191,7 @@ class GpodderClient {
       info("Logged out", name: logName);
       return true;
     } catch (e) {
-      error("Logout error", name: logName);
-      debug("Logout detail: $e", name: logName);
+      warning("Logout failed: $e", name: logName);
       _sessionId = null;
       return false;
     }

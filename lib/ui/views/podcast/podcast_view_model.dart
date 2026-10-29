@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:poddr/core/async_state.dart';
+import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
@@ -9,11 +11,15 @@ import 'package:poddr/ui/utils/sort_fields.dart';
 class PodcastViewModel extends ChangeNotifier {
   final IPodcastRepository _podcastRepository;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  AsyncState<Podcast> _podcastState = const AsyncInitial();
+  AsyncState<Podcast> get podcastState => _podcastState;
 
-  Podcast? _podcast;
-  Podcast? get podcast => _podcast;
+  Podcast? get podcast => switch (_podcastState) {
+        AsyncData(:final value) => value,
+        _ => null,
+      };
+
+  bool get isLoading => _podcastState is AsyncLoading;
 
   String? _currentRss;
   String? get currentRss => _currentRss;
@@ -41,34 +47,45 @@ class PodcastViewModel extends ChangeNotifier {
   }
 
   List<PodcastEpisode> get episodes {
-    if (_podcast == null) return [];
+    final podcast = this.podcast;
+    if (podcast == null) return [];
     return filterAndSortEpisodes(
-      episodes: _podcast!.episodes,
+      episodes: podcast.episodes,
       filter: _filter,
       sortField: _sortField,
       sortDirection: _sortDirection,
     );
   }
 
-  Future<void> getPodcast(String rss) async {
-    if (_currentRss == rss) return;
+  Future<void> getPodcast(String rss, {bool force = false}) async {
+    if (!force && _currentRss == rss) return;
+
+    _currentRss = rss;
+    _podcastState = const AsyncLoading();
+    notifyListeners();
 
     try {
-      _isLoading = true;
-      notifyListeners();
-
-      _currentRss = rss;
-      _podcast = null;
-
-      _podcast = await _podcastRepository.getFeed(rss);
-    } catch (e, stackTrace) {
+      final podcast = await _podcastRepository.getFeed(rss);
+      _podcastState = AsyncData(podcast);
+    } on PoddrException catch (e, stackTrace) {
       error('Failed to load podcast',
           name: 'PodcastViewModel', error: e, stackTrace: stackTrace);
-      debug('Load podcast detail: $e', name: 'PodcastViewModel');
+      _podcastState = AsyncError(e.userMessage);
+    } catch (e, stackTrace) {
+      error('Failed to load podcast unexpectedly',
+          name: 'PodcastViewModel', error: e, stackTrace: stackTrace);
+      _podcastState = const AsyncError(
+        'This podcast could not be loaded. Please try again.',
+      );
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> retry() async {
+    final rss = _currentRss;
+    if (rss == null) return;
+    await getPodcast(rss, force: true);
   }
 
   void setFilter(String value) {

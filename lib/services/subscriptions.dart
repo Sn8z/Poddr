@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:poddr/core/log.dart';
+import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
 import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
@@ -32,6 +33,12 @@ class SubscriptionProvider extends ChangeNotifier {
 
   Set<String> _loadedFeeds = {};
   final Set<String> _failedFeeds = {};
+  Set<String> get failedFeeds => Set.unmodifiable(_failedFeeds);
+  int get failedFeedCount => _failedFeeds.length;
+
+  String? _lastError;
+  String? get lastError => _lastError;
+
   bool _isLoadingLatest = false;
   bool get isLoadingLatest => _isLoadingLatest;
   bool _disposed = false;
@@ -84,7 +91,7 @@ class SubscriptionProvider extends ChangeNotifier {
     if (!_disposed) notifyListeners();
   }
 
-  Future<void> addSubscription({
+  Future<bool> addSubscription({
     required String rss,
     bool fromSync = false,
   }) async {
@@ -102,18 +109,21 @@ class SubscriptionProvider extends ChangeNotifier {
       if (!fromSync) {
         try {
           await _syncRepository.addPendingSubscriptionAction(rss, 'add');
-        } catch (e) {
-          error('Failed to queue sync action', name: logName);
-          debug('Queue sync detail: $e', name: logName);
+        } catch (e, stackTrace) {
+          error('Failed to queue sync action',
+              name: logName, error: e, stackTrace: stackTrace);
         }
       }
 
       info("Added subscription $rss", name: logName);
+      _lastError = null;
       await _addFeedEpisodes(rss);
+      return true;
     } catch (e, stackTrace) {
       error('Failed to add subscription',
           name: logName, error: e, stackTrace: stackTrace);
-      debug('Add subscription detail: $e', name: logName);
+      _lastError = friendlyErrorMessage(e);
+      return false;
     }
   }
 
@@ -132,9 +142,10 @@ class SubscriptionProvider extends ChangeNotifier {
         image: podcast.image,
         fromSync: fromSync,
       );
-    } catch (e) {
-      error('Failed to add subscription silently', name: logName);
-      debug('Add subscription detail: $e', name: logName);
+    } catch (e, stackTrace) {
+      error('Failed to add subscription silently',
+          name: logName, error: e, stackTrace: stackTrace);
+      _lastError = friendlyErrorMessage(e);
       return false;
     }
   }
@@ -159,24 +170,33 @@ class SubscriptionProvider extends ChangeNotifier {
       if (!fromSync) {
         try {
           await _syncRepository.addPendingSubscriptionAction(rss, 'add');
-        } catch (e) {
-          error('Failed to queue sync action', name: logName);
-          debug('Queue sync detail: $e', name: logName);
+        } catch (e, stackTrace) {
+          error('Failed to queue sync action',
+              name: logName, error: e, stackTrace: stackTrace);
         }
       }
 
       info("Added subscription $rss", name: logName);
+      _lastError = null;
       await _addFeedEpisodes(rss);
       return true;
-    } catch (e) {
-      error('Failed to add subscription directly', name: logName);
-      debug('Add subscription detail: $e', name: logName);
+    } catch (e, stackTrace) {
+      error('Failed to add subscription directly',
+          name: logName, error: e, stackTrace: stackTrace);
+      _lastError = friendlyErrorMessage(e);
       return false;
     }
   }
 
   Future<void> refresh({bool force = false}) async {
     if (force) _failedFeeds.clear();
+    await _updateLatestEpisodes();
+  }
+
+  /// Retries every feed that failed to refresh.
+  Future<void> retryFailedFeeds() async {
+    if (_failedFeeds.isEmpty) return;
+    _failedFeeds.clear();
     await _updateLatestEpisodes();
   }
 
@@ -209,7 +229,7 @@ class SubscriptionProvider extends ChangeNotifier {
         rss, () => _subscriptionRepository.watchSubscriptionIdByRss(rss));
   }
 
-  Future<void> removeSubscription(String rss, {bool fromSync = false}) async {
+  Future<bool> removeSubscription(String rss, {bool fromSync = false}) async {
     try {
       info("Removing $rss", name: logName);
 
@@ -218,18 +238,21 @@ class SubscriptionProvider extends ChangeNotifier {
       if (!fromSync) {
         try {
           await _syncRepository.addPendingSubscriptionAction(rss, 'remove');
-        } catch (e) {
-          error('Failed to queue sync action', name: logName);
-          debug('Queue sync detail: $e', name: logName);
+        } catch (e, stackTrace) {
+          error('Failed to queue sync action',
+              name: logName, error: e, stackTrace: stackTrace);
         }
       }
 
       info("Finished removing $rss", name: logName);
+      _lastError = null;
       _dropFeedEpisodes(rss);
+      return true;
     } catch (e, stackTrace) {
       error('Failed to remove subscription',
           name: logName, error: e, stackTrace: stackTrace);
-      debug('Remove subscription detail: $e', name: logName);
+      _lastError = friendlyErrorMessage(e);
+      return false;
     }
   }
 
@@ -347,7 +370,6 @@ class SubscriptionProvider extends ChangeNotifier {
       return _FeedResult(effectiveRss, fullPodcast.episodes);
     } catch (e, st) {
       error("Failed to fetch $rss", name: logName, error: e, stackTrace: st);
-      debug("Fetch $rss failed: $e", name: logName);
       await _subscriptionRepository.markAsBroken(rss);
       return null;
     }

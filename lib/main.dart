@@ -40,6 +40,10 @@ void main() async {
     return true;
   };
 
+  // Replace the default red error screen with a friendly, non-technical
+  // fallback. The technical error was already logged by FlutterError.onError.
+  ErrorWidget.builder = (_) => const _FriendlyErrorFallback();
+
   final GoRouter router = PoddrRouter.router;
 
   runApp(
@@ -121,6 +125,38 @@ class Poddr extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+/// Last-resort UI when a widget fails to build. It must not depend on the
+/// app's providers, theme, or routing, because any of those may be broken.
+class _FriendlyErrorFallback extends StatelessWidget {
+  const _FriendlyErrorFallback();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Directionality(
+      textDirection: TextDirection.ltr,
+      child: ColoredBox(
+        color: Color(0xFF121212),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: Text(
+              'Something went wrong while showing this screen.\n'
+              'Your data is safe. Try going back or restarting Poddr.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFFE0E0E0),
+                fontSize: 14,
+                height: 1.5,
+                decoration: TextDecoration.none,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

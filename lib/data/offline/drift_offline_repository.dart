@@ -164,7 +164,6 @@ class DriftOfflineRepository implements IOfflineRepository {
     required int duration,
     required int fileSize,
     DateTime? publicationDate,
-    // Video support
     String? videoUrl,
     String? videoLocalPath,
     int? videoFileSize,
@@ -196,7 +195,7 @@ class DriftOfflineRepository implements IOfflineRepository {
       if (await audioFile.exists()) {
         await audioFile.delete();
       }
-      // Delete video file if exists
+
       if (episode.videoLocalPath != null) {
         final videoFile = File(episode.videoLocalPath!);
         if (await videoFile.exists()) {
@@ -390,7 +389,6 @@ class DriftOfflineRepository implements IOfflineRepository {
 
     final contentType = _normalizeContentType(response.headers['content-type']);
     if (contentType != null && contentType.startsWith('text/')) {
-      error('Download rejected: unexpected content type', name: logName);
       debug('Rejected $label with content type: $contentType', name: logName);
       if (await partFile.exists()) await partFile.delete();
       throw DownloadFailedException(response.statusCode, 'Unexpected content');
@@ -435,8 +433,7 @@ class DriftOfflineRepository implements IOfflineRepository {
       await closeSink();
       if (e is FileSystemException &&
           (e.osError?.errorCode == 28 || e.osError?.errorCode == 112)) {
-        error('Download failed: no space left on device', name: logName);
-        throw DownloadFailedException(null, 'No space left on device');
+        throw InsufficientSpaceException('No space left on device');
       }
       rethrow;
     }
@@ -496,8 +493,7 @@ class DriftOfflineRepository implements IOfflineRepository {
           videoTotal =
               int.tryParse(videoHead.headers['content-length'] ?? '') ?? 0;
         } catch (e) {
-          error('Failed to get video size', name: logName);
-          debug('Video size detail: $e', name: logName);
+          debug('Failed to get video size: $e', name: logName);
         }
       }
 
@@ -556,7 +552,6 @@ class DriftOfflineRepository implements IOfflineRepository {
       if (e is DownloadCancelledException) {
         info('Download cancelled: ${episode.title}', name: logName);
       } else {
-        error('Download failed', name: logName);
         debug('Download detail: $e', name: logName);
         for (final path in [localPath, videoLocalPath]) {
           if (path != null) {
@@ -566,8 +561,6 @@ class DriftOfflineRepository implements IOfflineRepository {
         }
       }
       rethrow;
-    } finally {
-      // Client lifecycle managed by OfflineProvider
-    }
+    } finally {}
   }
 }

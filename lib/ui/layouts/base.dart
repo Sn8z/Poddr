@@ -4,6 +4,7 @@ import 'package:poddr/ui/components/audio/large_player.dart';
 import 'package:poddr/ui/components/audio/small_player.dart';
 import 'package:poddr/ui/components/navigation/bottombar.dart';
 import 'package:poddr/ui/components/navigation/sidebar.dart';
+import 'package:poddr/ui/components/widgets/background_status_badge.dart';
 
 import 'package:poddr/ui/utils/breakpoints.dart';
 
@@ -59,6 +60,7 @@ class BasePage extends StatelessWidget {
                   ],
                 ),
               ),
+              const BackgroundStatusBadge(stretch: true),
               PoddrBottomBar(state: state),
             ],
           );

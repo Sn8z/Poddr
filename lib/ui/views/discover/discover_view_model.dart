@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:poddr/core/async_state.dart';
+import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
@@ -20,16 +22,16 @@ class DiscoverViewModel extends ChangeNotifier {
   final ICountryRepository _countryRepository;
   final IGenreRepository _genreRepository;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  AsyncState<List<Podcast>> _chartsState = const AsyncInitial();
+  AsyncState<List<Podcast>> get chartsState => _chartsState;
 
   String _countryCode = '';
   String get countryCode => _countryCode;
   String get country {
     final country = _countryRepository.getCountries().firstWhere(
-      (element) => element.code == _countryCode,
-      orElse: () => const Country(code: 'us', name: 'United States'),
-    );
+          (element) => element.code == _countryCode,
+          orElse: () => const Country(code: 'us', name: 'United States'),
+        );
     return country.name;
   }
 
@@ -39,15 +41,13 @@ class DiscoverViewModel extends ChangeNotifier {
   String get genreID => _genreID;
   String get genre {
     final genre = _genreRepository.getGenres().firstWhere(
-      (element) => element.id == _genreID,
-      orElse: () => const Genre(id: '', name: 'All'),
-    );
+          (element) => element.id == _genreID,
+          orElse: () => const Genre(id: '', name: 'All'),
+        );
     return genre.name;
   }
 
   List<Genre> get genres => _genreRepository.getGenres();
-
-  List<Podcast> charts = [];
 
   DiscoverViewModel({
     IPodcastRepository? podcastRepository,
@@ -84,19 +84,28 @@ class DiscoverViewModel extends ChangeNotifier {
   }
 
   Future<void> getCharts() async {
-    debug(
-        "Fetching charts for country: $_countryCode and genre: $_genreID",
+    debug("Fetching charts for country: $_countryCode and genre: $_genreID",
         name: logName);
-    _isLoading = true;
+    _chartsState = const AsyncLoading();
     notifyListeners();
 
     try {
-      charts = await _podcastRepository.getCharts(_countryCode, _genreID);
-    } catch (e, s) {
-      error("Failed to fetch charts", name: logName, error: e, stackTrace: s);
+      final charts = await _podcastRepository.getCharts(_countryCode, _genreID);
+      _chartsState = AsyncData(charts);
+    } on PoddrException catch (e, stackTrace) {
+      error("Failed to fetch charts",
+          name: logName, error: e, stackTrace: stackTrace);
+      _chartsState = AsyncError(e.userMessage);
+    } catch (e, stackTrace) {
+      error("Failed to fetch charts unexpectedly",
+          name: logName, error: e, stackTrace: stackTrace);
+      _chartsState = const AsyncError(
+        'Charts could not be loaded. Please try again.',
+      );
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
   }
+
+  Future<void> retryCharts() => getCharts();
 }

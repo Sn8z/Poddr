@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 import 'package:poddr/models/episode.dart';
@@ -9,6 +10,7 @@ import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/collections_section.dart';
 import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
+import 'package:poddr/ui/components/widgets/error_state.dart';
 import 'package:poddr/ui/components/widgets/html.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
@@ -20,7 +22,6 @@ import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/podcast_header.dart';
-import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
@@ -142,64 +143,60 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
                 ),
               ),
             ),
-            ...(podcastProvider.isLoading || podcastProvider.podcast != null
-                ? [
-                    if (podcastProvider.isLoading) ...[
-                      sliverGapH16,
-                      const SliverToBoxAdapter(
-                        child: ShimmerLoadingList(height: 48),
-                      ),
-                    ] else
-                      SliverMainAxisGroup(
-                        slivers: [
-                          sliverGapH16,
-                          DecoratedSliver(
-                            decoration: BoxDecoration(
-                              color: context.theme.surfaceContainerLow,
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16),
-                              ),
-                            ),
-                            sliver: const SliverToBoxAdapter(
-                                child: SizedBox(height: 16)),
-                          ),
-                          SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                return Episode(
-                                    episode: podcastProvider.episodes[index]);
-                              },
-                              childCount: podcastProvider.episodes.length,
-                            ),
-                          ),
-                          DecoratedSliver(
-                            decoration: BoxDecoration(
-                              color: context.theme.surfaceContainerLow,
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(16),
-                                bottomRight: Radius.circular(16),
-                              ),
-                            ),
-                            sliver: const SliverToBoxAdapter(
-                                child: SizedBox(height: 16)),
-                          ),
-                        ],
-                      ),
-                  ]
-                : [
-                    SliverToBoxAdapter(
-                      child: EmptyState(
-                        icon: HugeIcon(
-                          icon: HugeIcons.strokeRoundedPodcast,
-                          size: 64,
-                          color: context.theme.secondary,
-                        ),
-                        title: 'No podcast found',
-                        subtitle: 'The podcast could not be loaded.',
-                      ),
+            ...switch (podcastProvider.podcastState) {
+              AsyncInitial() || AsyncLoading() => [
+                  sliverGapH16,
+                  const SliverToBoxAdapter(
+                    child: ShimmerLoadingList(height: 48),
+                  ),
+                ],
+              AsyncError(:final message) => [
+                  SliverToBoxAdapter(
+                    child: ErrorState(
+                      message: message,
+                      onRetry: podcastProvider.retry,
                     ),
-                  ]),
+                  ),
+                ],
+              AsyncData() => [
+                  SliverMainAxisGroup(
+                    slivers: [
+                      sliverGapH16,
+                      DecoratedSliver(
+                        decoration: BoxDecoration(
+                          color: context.theme.surfaceContainerLow,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                        ),
+                        sliver: const SliverToBoxAdapter(
+                            child: SizedBox(height: 16)),
+                      ),
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            return Episode(
+                                episode: podcastProvider.episodes[index]);
+                          },
+                          childCount: podcastProvider.episodes.length,
+                        ),
+                      ),
+                      DecoratedSliver(
+                        decoration: BoxDecoration(
+                          color: context.theme.surfaceContainerLow,
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(16),
+                          ),
+                        ),
+                        sliver: const SliverToBoxAdapter(
+                            child: SizedBox(height: 16)),
+                      ),
+                    ],
+                  ),
+                ],
+            },
           ],
         );
       },

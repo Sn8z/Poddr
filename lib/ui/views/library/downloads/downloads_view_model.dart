@@ -105,6 +105,8 @@ class DownloadsViewModel extends ChangeNotifier {
 
   Future<bool> clearAllDownloads() => _offlineProvider.clearAll();
 
+  String? get lastError => _offlineProvider.lastError;
+
   int getQueuePosition(String audioUrl) {
     return _offlineProvider.getQueuePosition(audioUrl);
   }

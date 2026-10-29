@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/subscriptions.dart';
+import 'package:poddr/ui/components/widgets/poddr_error_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:provider/provider.dart';
 
@@ -33,15 +34,28 @@ class PoddrAddSubscriptionBtn extends StatelessWidget {
             ? context.theme.primary
             : context.theme.onSurfaceVariant,
       ),
-      onPressed: () {
+      onPressed: () async {
         final subscriptionProvider = context.read<SubscriptionProvider>();
+        final bool success;
 
         if (isSubscription) {
           final podcast =
               subcriptions.firstWhere((podcast) => podcast.rss == rss);
-          subscriptionProvider.removeSubscription(podcast.rss ?? '');
+          success =
+              await subscriptionProvider.removeSubscription(podcast.rss ?? '');
         } else {
-          subscriptionProvider.addSubscription(rss: rss!);
+          success = await subscriptionProvider.addSubscription(rss: rss!);
+        }
+
+        if (!success && context.mounted) {
+          await showPoddrErrorDialog(
+            context: context,
+            title: isSubscription
+                ? 'Could not unsubscribe'
+                : 'Could not subscribe',
+            message: subscriptionProvider.lastError ??
+                'Something went wrong. Please try again.',
+          );
         }
       },
       size: size,

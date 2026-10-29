@@ -35,6 +35,7 @@ class _OpmlView extends StatelessWidget {
     final isLoading = viewModel.isLoading;
     final statusMessage = viewModel.statusMessage;
     final importProgress = viewModel.importProgress;
+    final isError = viewModel.isError;
 
     return Column(
       children: [
@@ -73,7 +74,9 @@ class _OpmlView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
               statusMessage,
-              style: context.theme.textTheme.bodySmall,
+              style: context.theme.textTheme.bodySmall.copyWith(
+                color: isError ? context.theme.error : null,
+              ),
             ),
           ),
       ],

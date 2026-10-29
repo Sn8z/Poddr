@@ -20,6 +20,8 @@ enum SyncStatus {
   credentialsInvalid,
   connected,
   syncing,
+  warning,
+  error,
 }
 
 class SyncProvider extends ChangeNotifier {
@@ -30,6 +32,7 @@ class SyncProvider extends ChangeNotifier {
   static const Duration _maxLoginDelay = Duration(minutes: 5);
   static const int _initialRetryAttempts = 5;
   static const int _episodeBatchSize = 30;
+  static const int _maxSyncFailuresBeforeError = 3;
 
   final ISettingsRepository _settings;
   final SecureSettingsRepository _secureSettings;
@@ -46,6 +49,8 @@ class SyncProvider extends ChangeNotifier {
   bool _timersStarted = false;
   bool _syncEnabled = false;
   bool get isSyncEnabled => _syncEnabled;
+  int _subscriptionSyncFailures = 0;
+  int _episodeSyncFailures = 0;
 
   bool get isLoading =>
       _status == SyncStatus.connecting ||
@@ -66,8 +71,13 @@ class SyncProvider extends ChangeNotifier {
   bool _statusIsWarning = false;
   bool get statusIsWarning => _statusIsWarning;
 
+  bool get hasEscalatedFailure => _status == SyncStatus.error;
+
   bool get isConfigured =>
-      _status == SyncStatus.connected || _status == SyncStatus.syncing;
+      _status == SyncStatus.connected ||
+      _status == SyncStatus.syncing ||
+      _status == SyncStatus.warning ||
+      _status == SyncStatus.error;
 
   DateTime? _lastSyncTimeCache;
   DateTime? get lastSyncTime => _lastSyncTimeCache;
@@ -180,7 +190,6 @@ class SyncProvider extends ChangeNotifier {
         await _client!.registerDevice();
         _startTimers();
         await syncAll();
-        _updateStatus(SyncStatus.connected);
         await loadDevices();
       }
     } catch (e) {
@@ -196,9 +205,47 @@ class SyncProvider extends ChangeNotifier {
       [String? description, bool isError = false]) {
     _status = status;
     _statusDescription = description;
-    _statusIsError = isError || status == SyncStatus.credentialsInvalid;
-    _statusIsWarning = !_statusIsError && status == SyncStatus.retrying;
+    _statusIsError = isError ||
+        status == SyncStatus.credentialsInvalid ||
+        status == SyncStatus.error;
+    _statusIsWarning = !_statusIsError &&
+        (status == SyncStatus.retrying || status == SyncStatus.warning);
     notifyListeners();
+  }
+
+  void _recordSyncOutcome({
+    bool? subscriptionSuccess,
+    bool? episodeSuccess,
+  }) {
+    if (subscriptionSuccess != null) {
+      _subscriptionSyncFailures =
+          subscriptionSuccess ? 0 : _subscriptionSyncFailures + 1;
+    }
+    if (episodeSuccess != null) {
+      _episodeSyncFailures = episodeSuccess ? 0 : _episodeSyncFailures + 1;
+    }
+    _refreshSyncStatus();
+  }
+
+  void _refreshSyncStatus() {
+    if (_status == SyncStatus.credentialsInvalid) return;
+
+    final failures = _subscriptionSyncFailures > _episodeSyncFailures
+        ? _subscriptionSyncFailures
+        : _episodeSyncFailures;
+
+    if (failures == 0) {
+      _updateStatus(SyncStatus.connected);
+      return;
+    }
+
+    final shouldEscalate = failures >= _maxSyncFailuresBeforeError;
+    _updateStatus(
+      shouldEscalate ? SyncStatus.error : SyncStatus.warning,
+      shouldEscalate
+          ? 'Sync is failing repeatedly. Check your connection.'
+          : 'Some sync tasks failed. Will retry automatically.',
+    );
   }
 
   Future<bool> _loginWithRetry() async {
@@ -239,18 +286,15 @@ class SyncProvider extends ChangeNotifier {
         }
       } on UnauthorizedException {
         _updateStatus(SyncStatus.credentialsInvalid);
-        error('Login failed: Invalid credentials', name: logName);
+        warning('Login failed: invalid credentials', name: logName);
         return false;
       } on NetworkException catch (e) {
-        error('Login failed (network), will retry', name: logName);
-        debug('Login network detail: $e', name: logName);
+        debug('Login attempt failed (network), will retry: $e', name: logName);
       } on ServerErrorException catch (e) {
-        error('Login failed (server ${e.statusCode}), will retry',
+        debug('Login attempt failed (server ${e.statusCode}), will retry: $e',
             name: logName);
-        debug('Login server detail: $e', name: logName);
       } catch (e) {
-        error('Login failed, will retry', name: logName);
-        debug('Login detail: $e', name: logName);
+        debug('Login attempt failed, will retry: $e', name: logName);
       }
 
       if (attempt >= _initialRetryAttempts && attempt % 5 == 0) {
@@ -277,17 +321,17 @@ class SyncProvider extends ChangeNotifier {
       if (loginSuccess) {
         try {
           return await operation();
-        } catch (e) {
-          error('Operation failed again after login', name: logName);
-          debug('Operation detail after login: $e', name: logName);
+        } catch (e, stackTrace) {
+          error('Operation failed again after login',
+              name: logName, error: e, stackTrace: stackTrace);
           return null;
         }
       }
       _updateStatus(SyncStatus.credentialsInvalid);
       return null;
-    } catch (e) {
-      error('Operation failed', name: logName);
-      debug('Operation detail: $e', name: logName);
+    } catch (e, stackTrace) {
+      error('Operation failed',
+          name: logName, error: e, stackTrace: stackTrace);
       return null;
     }
   }
@@ -393,19 +437,18 @@ class SyncProvider extends ChangeNotifier {
     _timersStarted = true;
 
     _subscriptionSyncTimer?.cancel();
-    _subscriptionSyncTimer = Timer.periodic(_subscriptionSyncInterval, (_) {
-      syncSubscriptions().catchError((e) {
-        error("Periodic sub sync failed", name: logName);
-        debug("Periodic sub sync detail: $e", name: logName);
-      });
+    _subscriptionSyncTimer =
+        Timer.periodic(_subscriptionSyncInterval, (_) async {
+      if (_isSyncingSubscriptions) return;
+      final success = await syncSubscriptions();
+      _recordSyncOutcome(subscriptionSuccess: success);
     });
 
     _episodeSyncTimer?.cancel();
-    _episodeSyncTimer = Timer.periodic(_episodeSyncInterval, (_) {
-      syncEpisodes().catchError((e) {
-        error("Periodic episode sync failed", name: logName);
-        debug("Periodic episode sync detail: $e", name: logName);
-      });
+    _episodeSyncTimer = Timer.periodic(_episodeSyncInterval, (_) async {
+      if (_isSyncingEpisodes) return;
+      final success = await syncEpisodes();
+      _recordSyncOutcome(episodeSuccess: success);
     });
   }
 
@@ -418,47 +461,55 @@ class SyncProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> syncAll() async {
+  Future<bool> syncAll() async {
     _updateStatus(SyncStatus.syncing);
 
-    await Future.wait([
+    final results = await Future.wait([
       syncSubscriptions(),
       syncEpisodes(),
     ]);
+    final subscriptionSuccess = results[0];
+    final episodeSuccess = results[1];
+    final success = subscriptionSuccess && episodeSuccess;
 
     await _refreshLastSyncTime();
-    _updateStatus(SyncStatus.connected);
+    _recordSyncOutcome(
+      subscriptionSuccess: subscriptionSuccess,
+      episodeSuccess: episodeSuccess,
+    );
+
+    return success;
   }
 
-  Future<void> syncSubscriptions() async {
+  Future<bool> syncSubscriptions() async {
     if (_isSyncingSubscriptions ||
         _client == null ||
         _subscriptionProvider == null) {
-      return;
+      return true;
     }
     _isSyncingSubscriptions = true;
+    var success = false;
     try {
-      await _executeWithAuthRetry(() async {
+      final result = await _executeWithAuthRetry(() async {
         final lastSync = await _settings.getSyncLastSubscriptionSync();
 
         if (lastSync == 0) {
-          await _performFullSubscriptionSync();
-        } else {
-          await _performDeltaSubscriptionSync(lastSync);
+          return await _performFullSubscriptionSync();
         }
-
-        return true;
+        return await _performDeltaSubscriptionSync(lastSync);
       });
-    } catch (e) {
-      error('Subscription sync failed', name: logName);
-      debug('Subscription sync detail: $e', name: logName);
+      success = result == true;
+    } catch (e, stackTrace) {
+      error('Subscription sync failed',
+          name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isSyncingSubscriptions = false;
       notifyListeners();
     }
+    return success;
   }
 
-  Future<void> _performFullSubscriptionSync() async {
+  Future<bool> _performFullSubscriptionSync() async {
     final serverUrls = await _client!.getAllSubscriptions();
     final localSubscriptions = _subscriptionProvider?.subscriptions ?? [];
     final localUrls = localSubscriptions
@@ -466,19 +517,31 @@ class SyncProvider extends ChangeNotifier {
         .where((url) => url.isNotEmpty)
         .toSet();
 
+    var remoteApplySucceeded = true;
     for (final url in serverUrls) {
       if (!localUrls.contains(url)) {
-        await _subscriptionProvider?.addSubscription(rss: url, fromSync: true);
+        final added = await _subscriptionProvider?.addSubscription(
+              rss: url,
+              fromSync: true,
+            ) ??
+            false;
+        if (added) {
+          localUrls.add(url);
+        } else {
+          remoteApplySucceeded = false;
+          warning('Failed to apply remote subscription $url', name: logName);
+        }
       }
     }
 
+    if (!remoteApplySucceeded) return false;
+
     final localOnly =
         localUrls.where((url) => !serverUrls.contains(url)).toList();
-    for (final url in localOnly) {
-      await _syncRepository.addPendingSubscriptionAction(url, 'add');
-    }
-
     if (localOnly.isNotEmpty) {
+      for (final url in localOnly) {
+        await _syncRepository.addPendingSubscriptionAction(url, 'add');
+      }
       await _client!
           .uploadSubscriptionChanges(add: localOnly.toList(), remove: []);
     }
@@ -487,9 +550,10 @@ class SyncProvider extends ChangeNotifier {
     await _settings.setSyncLastSubscriptionSync(now);
     await _refreshLastSyncTime();
     await _syncRepository.clearPendingSubscriptionActions();
+    return true;
   }
 
-  Future<void> _performDeltaSubscriptionSync(int lastSync) async {
+  Future<bool> _performDeltaSubscriptionSync(int lastSync) async {
     final changes = await _client!.getSubscriptionChanges(since: lastSync);
 
     final localSubscriptions = _subscriptionProvider?.subscriptions ?? [];
@@ -540,19 +604,42 @@ class SyncProvider extends ChangeNotifier {
       }
     }
 
+    var remoteApplySucceeded = true;
     for (final entry in actionMap.entries) {
       final url = entry.key;
       final actionData = entry.value;
       final action = actionData['action'] as String;
 
       if (action == 'add' && !localUrls.contains(url)) {
-        await _subscriptionProvider?.addSubscription(rss: url, fromSync: true);
-        localUrls.add(url);
+        final added = await _subscriptionProvider?.addSubscription(
+              rss: url,
+              fromSync: true,
+            ) ??
+            false;
+        if (added) {
+          localUrls.add(url);
+        } else {
+          remoteApplySucceeded = false;
+          warning('Failed to apply remote subscription add $url',
+              name: logName);
+        }
       } else if (action == 'remove' && localUrls.contains(url)) {
-        await _subscriptionProvider?.removeSubscription(url, fromSync: true);
-        localUrls.remove(url);
+        final removed = await _subscriptionProvider?.removeSubscription(
+              url,
+              fromSync: true,
+            ) ??
+            false;
+        if (removed) {
+          localUrls.remove(url);
+        } else {
+          remoteApplySucceeded = false;
+          warning('Failed to apply remote subscription remove $url',
+              name: logName);
+        }
       }
     }
+
+    if (!remoteApplySucceeded) return false;
 
     final localPendingToUpload = <Map<String, dynamic>>[];
     for (final pending in pendingChanges) {
@@ -588,15 +675,17 @@ class SyncProvider extends ChangeNotifier {
     }
 
     await _syncRepository.clearPendingSubscriptionActions();
+    return true;
   }
 
-  Future<void> syncEpisodes() async {
+  Future<bool> syncEpisodes() async {
     if (_isSyncingEpisodes || _client == null || _historyProvider == null) {
-      return;
+      return true;
     }
     _isSyncingEpisodes = true;
+    var success = false;
     try {
-      await _executeWithAuthRetry(() async {
+      final result = await _executeWithAuthRetry(() async {
         final lastSync = await _settings.getSyncLastEpisodeSync();
 
         final serverActions = await _client!.getEpisodeActions(since: lastSync);
@@ -624,13 +713,15 @@ class SyncProvider extends ChangeNotifier {
         }
         return true;
       });
-    } catch (e) {
-      error('Episode sync failed', name: logName);
-      debug('Episode sync detail: $e', name: logName);
+      success = result == true;
+    } catch (e, stackTrace) {
+      error('Episode sync failed',
+          name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isSyncingEpisodes = false;
       notifyListeners();
     }
+    return success;
   }
 
   int? _parseIntSafely(dynamic value) {
@@ -710,13 +801,17 @@ class SyncProvider extends ChangeNotifier {
         "Recording episode action: $action for $episodeUrl at position $position",
         name: logName);
 
-    await _syncRepository.addPendingEpisodeAction(
-      podcastRss: podcastRss,
-      episodeUrl: episodeUrl,
-      action: action,
-      position: position,
-      timestamp: DateTime.now().toUtc(),
-    );
+    try {
+      await _syncRepository.addPendingEpisodeAction(
+        podcastRss: podcastRss,
+        episodeUrl: episodeUrl,
+        action: action,
+        position: position,
+        timestamp: DateTime.now().toUtc(),
+      );
+    } catch (e) {
+      warning('Failed to queue episode action: $e', name: logName);
+    }
   }
 
   Future<List<Map<String, dynamic>>?> getDevices() async {
@@ -836,24 +931,20 @@ class SyncProvider extends ChangeNotifier {
     _updateStatus(SyncStatus.syncing, 'Full re-sync in progress...');
 
     try {
-      final success = await _executeWithAuthRetry(() async {
-        await _settings.setSyncLastSubscriptionSync(0);
-        await _settings.setSyncLastEpisodeSync(0);
-        await _syncRepository.clearPendingSubscriptionActions();
-        await _syncRepository.clearPendingEpisodeActions();
-        await syncAll();
-        return true;
-      });
-
-      if (success != true && _status == SyncStatus.syncing) {
-        _updateStatus(SyncStatus.connected);
-      }
-    } catch (e) {
+      await _settings.setSyncLastSubscriptionSync(0);
+      await _settings.setSyncLastEpisodeSync(0);
+      await _syncRepository.clearPendingSubscriptionActions();
+      await _syncRepository.clearPendingEpisodeActions();
+      await syncAll();
+    } catch (e, stackTrace) {
+      error('Full re-sync failed',
+          name: logName, error: e, stackTrace: stackTrace);
       if (_status != SyncStatus.credentialsInvalid) {
-        _updateStatus(SyncStatus.connected, 'Full re-sync failed: $e', true);
+        _updateStatus(
+          SyncStatus.error,
+          'Full re-sync failed. Please try again.',
+        );
       }
-      error('Full re-sync failed', name: logName);
-      debug('Full re-sync detail: $e', name: logName);
     } finally {
       notifyListeners();
     }

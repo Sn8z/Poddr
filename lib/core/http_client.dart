@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:poddr/core/exceptions.dart';
@@ -17,7 +18,9 @@ class PoddrHttpClient extends http.BaseClient {
 
   final http.Client _inner = http.Client();
   static const Duration _defaultTimeout = Duration(seconds: 30);
-  static const int _maxRetries = 3;
+  static const int _maxAttempts = 3;
+  static const Duration _baseRetryDelay = Duration(milliseconds: 400);
+  static const int _maxRetryDelayMs = 4000;
   static const Duration _defaultCacheTtl = Duration(hours: 1);
 
   final Map<String, _CacheEntry> _cache = {};
@@ -46,122 +49,134 @@ class PoddrHttpClient extends http.BaseClient {
       {Map<String, String>? headers, bool skipCache = false}) async {
     final urlKey = url.toString();
 
-    if (skipCache) {
-      final response = await super.get(url, headers: headers);
-      return response;
-    }
-
-    _CacheEntry? cached = _cache[urlKey];
-    if (cached != null && cached.isExpired(_cacheTtl)) {
-      _removeCached(urlKey);
-      cached = null;
-    }
-
-    int attempt = 0;
-    while (attempt < _maxRetries) {
-      try {
-        final requestHeaders = <String, String>{...?headers};
-
-        if (cached != null) {
-          if (cached.etag != null) {
-            requestHeaders['If-None-Match'] = cached.etag!;
-          }
-          if (cached.lastModified != null) {
-            requestHeaders['If-Modified-Since'] = cached.lastModified!;
-          }
-        }
-
-        final response = await super.get(url, headers: requestHeaders);
-
-        if (response.statusCode == 304 && cached != null) {
-          return http.Response(
-            cached.body,
-            cached.statusCode,
-            headers: cached.headers,
-            request: response.request,
-          );
-        }
-
-        if (response.statusCode == 200) {
-          final entry = _CacheEntry.fromResponse(response);
-          _removeCached(urlKey);
-          _cache[urlKey] = entry;
-          _currentCacheSize += entry.body.length;
-
-          while ((_cache.length > _maxCacheEntries ||
-                  _currentCacheSize > _maxCacheSizeBytes) &&
-              _cache.isNotEmpty) {
-            final oldestKey = _cache.keys.reduce((a, b) =>
-                _cache[a]!.timestamp.isBefore(_cache[b]!.timestamp) ? a : b);
-            _removeCached(oldestKey);
-          }
-        }
-
-        if (response.statusCode >= 500 && attempt < _maxRetries - 1) {
-          attempt++;
-          continue;
-        }
-
-        return response;
-      } on TimeoutException {
-        if (attempt < _maxRetries - 1) {
-          attempt++;
-          continue;
-        }
-        throw NetworkException('Request timed out');
-      } on http.ClientException catch (e) {
-        if (attempt < _maxRetries - 1) {
-          attempt++;
-          continue;
-        }
-        throw NetworkException(e.message);
-      } catch (e) {
-        if (e is ApiException) rethrow;
-        if (attempt < _maxRetries - 1) {
-          attempt++;
-          continue;
-        }
-        error('Unexpected error in GET $url', name: 'PoddrHttpClient');
-        debug('GET $url failed: $e', name: 'PoddrHttpClient');
-        throw ApiException('Network error occurred');
+    _CacheEntry? cached;
+    if (!skipCache) {
+      cached = _cache[urlKey];
+      if (cached != null && cached.isExpired(_cacheTtl)) {
+        _removeCached(urlKey);
+        cached = null;
       }
     }
-    throw NetworkException('Max retries exceeded for GET $url');
+
+    final requestHeaders = <String, String>{...?headers};
+    if (cached != null) {
+      if (cached.etag != null) {
+        requestHeaders['If-None-Match'] = cached.etag!;
+      }
+      if (cached.lastModified != null) {
+        requestHeaders['If-Modified-Since'] = cached.lastModified!;
+      }
+    }
+
+    final response = await _sendWithRetry(
+      () => super.get(url, headers: requestHeaders),
+      method: 'GET',
+      url: url,
+    );
+
+    if (!skipCache && cached != null && response.statusCode == 304) {
+      return http.Response(
+        cached.body,
+        cached.statusCode,
+        headers: cached.headers,
+        request: response.request,
+      );
+    }
+
+    if (!skipCache && response.statusCode == 200) {
+      final entry = _CacheEntry.fromResponse(response);
+      _removeCached(urlKey);
+      _cache[urlKey] = entry;
+      _currentCacheSize += entry.body.length;
+
+      while ((_cache.length > _maxCacheEntries ||
+              _currentCacheSize > _maxCacheSizeBytes) &&
+          _cache.isNotEmpty) {
+        final oldestKey = _cache.keys.reduce((a, b) =>
+            _cache[a]!.timestamp.isBefore(_cache[b]!.timestamp) ? a : b);
+        _removeCached(oldestKey);
+      }
+    }
+
+    return response;
   }
 
   @override
-  Future<http.Response> head(Uri url, {Map<String, String>? headers}) async {
-    int attempt = 0;
-    while (attempt < _maxRetries) {
+  Future<http.Response> head(Uri url, {Map<String, String>? headers}) {
+    return _sendWithRetry(
+      () => super.head(url, headers: headers),
+      method: 'HEAD',
+      url: url,
+    );
+  }
+
+  Future<http.Response> _sendWithRetry(
+    Future<http.Response> Function() send, {
+    required String method,
+    required Uri url,
+  }) async {
+    for (var attempt = 0; attempt < _maxAttempts; attempt++) {
+      final isLastAttempt = attempt == _maxAttempts - 1;
+
       try {
-        final response = await super.head(url, headers: headers);
-        if (response.statusCode >= 500 && attempt < _maxRetries - 1) {
-          attempt++;
-          continue;
+        final response = await send();
+        if (!_isTransientStatus(response.statusCode) || isLastAttempt) {
+          return response;
         }
-        return response;
+
+        debug(
+          '$method $url returned ${response.statusCode}, '
+          'retrying (${attempt + 1}/$_maxAttempts)',
+          name: 'PoddrHttpClient',
+        );
+        await _waitBeforeRetry(attempt, response);
       } on TimeoutException {
-        if (attempt < _maxRetries - 1) {
-          attempt++;
-          continue;
+        if (isLastAttempt) {
+          throw NetworkException('Request timed out');
         }
-        throw NetworkException('Request timed out');
+        debug(
+          '$method $url timed out, retrying (${attempt + 1}/$_maxAttempts)',
+          name: 'PoddrHttpClient',
+        );
+        await _waitBeforeRetry(attempt, null);
       } on http.ClientException catch (e) {
-        if (attempt < _maxRetries - 1) {
-          attempt++;
-          continue;
+        if (isLastAttempt) {
+          throw NetworkException(e.message);
         }
-        throw NetworkException(e.message);
+        debug(
+          '$method $url failed (${e.message}), '
+          'retrying (${attempt + 1}/$_maxAttempts)',
+          name: 'PoddrHttpClient',
+        );
+        await _waitBeforeRetry(attempt, null);
       } catch (e) {
-        if (e is ApiException) rethrow;
-        if (attempt < _maxRetries - 1) {
-          attempt++;
-          continue;
-        }
-        throw ApiException('Unexpected error: $e');
+        if (e is PoddrException) rethrow;
+        throw ApiException('Unexpected network error: $e');
       }
     }
-    throw NetworkException('Max retries exceeded for HEAD $url');
+
+    throw NetworkException('Max retries exceeded for $method $url');
+  }
+
+  bool _isTransientStatus(int statusCode) {
+    return statusCode == 408 || statusCode == 429 || statusCode >= 500;
+  }
+
+  Future<void> _waitBeforeRetry(int attempt, http.Response? response) async {
+    final retryAfter = response?.headers['retry-after'];
+    final retryAfterSeconds =
+        retryAfter == null ? null : int.tryParse(retryAfter.trim());
+
+    if (retryAfterSeconds != null) {
+      final seconds = retryAfterSeconds.clamp(1, 10);
+      await Future.delayed(Duration(seconds: seconds));
+      return;
+    }
+
+    final backoffMs = _baseRetryDelay.inMilliseconds * (1 << attempt);
+    final jitterMs = Random().nextInt(250);
+    final delayMs = (backoffMs + jitterMs).clamp(0, _maxRetryDelayMs);
+    await Future.delayed(Duration(milliseconds: delayMs));
   }
 
   void _removeCached(String key) {

@@ -12,6 +12,7 @@ import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_progress.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
+import 'package:poddr/ui/components/widgets/status_banner.dart';
 import 'package:poddr/ui/views/settings/sync/sync_settings_view_model.dart';
 import 'package:poddr/ui/utils/string_converter.dart';
 
@@ -40,81 +41,52 @@ class SyncSection extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBanner({
-    required BuildContext context,
-    required String message,
-    bool isError = false,
-    bool isWarning = false,
-  }) {
-    final theme = context.theme;
-    final Color bgColor;
-    final Color borderColor;
-    final Color iconColor;
-
-    if (isError) {
-      bgColor = theme.errorContainer.withAlpha(50);
-      borderColor = theme.error.withAlpha(77);
-      iconColor = theme.error;
-    } else if (isWarning) {
-      bgColor = theme.tertiaryContainer.withAlpha(50);
-      borderColor = theme.tertiary.withAlpha(77);
-      iconColor = theme.tertiary;
-    } else {
-      bgColor = theme.primaryContainer.withAlpha(50);
-      borderColor = theme.primary.withAlpha(77);
-      iconColor = theme.primary;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: borderColor, width: 1),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          HugeIcon(
-            icon: isError
-                ? HugeIcons.strokeRoundedAlert01
-                : HugeIcons.strokeRoundedAlertSquare,
-            size: 18,
-            color: iconColor,
-          ),
-          gapW12,
-          Expanded(
-            child: Text(
-              message,
-              style: context.theme.textTheme.bodySmall.copyWith(
-                color: iconColor,
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  StatusSeverity _severityFor(SyncProvider sync) {
+    if (sync.statusIsError) return StatusSeverity.error;
+    if (sync.statusIsWarning) return StatusSeverity.warning;
+    return StatusSeverity.info;
   }
 
   Widget _buildConnectedHeader(BuildContext context, SyncProvider sync) {
     final theme = context.theme;
-    final isSyncing = sync.status == SyncStatus.syncing;
+    final status = sync.status;
+    final isSyncing = status == SyncStatus.syncing;
+    final isError = sync.statusIsError;
+    final isWarning = sync.statusIsWarning;
+
+    final headerColor = isError
+        ? theme.error
+        : (isWarning || isSyncing)
+            ? theme.tertiary
+            : theme.primary;
+
+    final String headerLabel;
+    if (isSyncing) {
+      headerLabel = 'Syncing...';
+    } else if (status == SyncStatus.credentialsInvalid) {
+      headerLabel = 'Sign-in required';
+    } else if (isError) {
+      headerLabel = 'Sync error';
+    } else if (isWarning) {
+      headerLabel = 'Sync needs attention';
+    } else {
+      headerLabel = 'Connected';
+    }
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            theme.primary.withAlpha(20),
-            theme.primary.withAlpha(10),
+            headerColor.withAlpha(20),
+            headerColor.withAlpha(10),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: theme.primary.withAlpha(50),
+          color: headerColor.withAlpha(50),
           width: 1,
         ),
       ),
@@ -124,9 +96,7 @@ class SyncSection extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: isSyncing
-                  ? theme.tertiary.withAlpha(40)
-                  : theme.primary.withAlpha(40),
+              color: headerColor.withAlpha(40),
               borderRadius: BorderRadius.circular(12),
             ),
             child: isSyncing
@@ -135,12 +105,14 @@ class SyncSection extends StatelessWidget {
                     child: PoddrSpinner(
                       size: 24,
                       strokeWidth: 2.5,
-                      color: theme.tertiary,
+                      color: headerColor,
                     ),
                   )
                 : HugeIcon(
-                    icon: HugeIcons.strokeRoundedCloud,
-                    color: theme.primary,
+                    icon: isError
+                        ? HugeIcons.strokeRoundedAlertSquare
+                        : HugeIcons.strokeRoundedCloud,
+                    color: headerColor,
                   ),
           ),
           gapW12,
@@ -149,10 +121,10 @@ class SyncSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isSyncing ? 'Syncing...' : 'Connected',
+                  headerLabel,
                   style: context.theme.textTheme.titleMedium.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: isSyncing ? theme.tertiary : theme.primary,
+                    color: headerColor,
                   ),
                 ),
                 gapH4,
@@ -261,11 +233,9 @@ class SyncSection extends StatelessWidget {
         if (sync.statusDescription != null &&
             sync.statusDescription!.isNotEmpty) ...[
           gapH16,
-          _buildStatusBanner(
-            context: context,
+          StatusBanner(
             message: sync.statusDescription!,
-            isError: sync.statusIsError,
-            isWarning: sync.statusIsWarning,
+            severity: _severityFor(sync),
           ),
         ],
       ],
@@ -283,8 +253,10 @@ class SyncSection extends StatelessWidget {
     } else if (sync.status == SyncStatus.retrying) {
       statusMessage = sync.statusDescription ?? 'Retrying...';
     } else if (sync.status == SyncStatus.credentialsInvalid) {
-      statusMessage =
-          sync.statusDescription ?? 'Invalid username or password';
+      statusMessage = sync.statusDescription ?? 'Invalid username or password';
+    } else if (sync.status == SyncStatus.warning ||
+        sync.status == SyncStatus.error) {
+      statusMessage = sync.statusDescription;
     } else if (sync.status == SyncStatus.disconnected) {
       statusMessage = sync.statusDescription;
     } else {
@@ -380,22 +352,18 @@ class SyncSection extends StatelessWidget {
         ),
         if (statusMessage != null) ...[
           gapH16,
-          _buildStatusBanner(
-            context: context,
+          StatusBanner(
             message: statusMessage,
-            isError: sync.statusIsError,
-            isWarning: sync.statusIsWarning,
+            severity: _severityFor(sync),
           ),
         ],
         gapH24,
-        _buildStatusBanner(
-          context: context,
+        const StatusBanner(
           message:
               'Your credentials are only stored locally on this device and securely transmitted to the sync server. Poddr does not have access to your password or sync data.',
         ),
         gapH16,
-        _buildStatusBanner(
-          context: context,
+        const StatusBanner(
           message: 'Supports gPodder compatible sync servers.',
         ),
       ],

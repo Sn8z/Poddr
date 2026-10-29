@@ -3,6 +3,7 @@ import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:poddr/ui/components/audio/media_thumbnail.dart';
 import 'package:poddr/ui/components/navigation/destinations.dart';
+import 'package:poddr/ui/components/widgets/background_status_badge.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
 
 class PoddrSideBar extends StatelessWidget {
@@ -64,6 +65,7 @@ class PoddrSideBar extends StatelessWidget {
                   }).toList(),
                 ),
               ),
+              BackgroundStatusBadge(expanded: shouldExpand),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: AspectRatio(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/offline/drift_offline_repository.dart';
 import 'package:poddr/data/offline/offline_repository.dart';
@@ -39,6 +40,17 @@ class OfflineProvider extends ChangeNotifier {
 
   final Map<String, String> _statusErrors = {};
   Map<String, String> get downloadErrors => _statusErrors;
+
+  final Map<String, PodcastEpisode> _failedEpisodes = {};
+  Map<String, PodcastEpisode> get failedEpisodes =>
+      Map.unmodifiable(_failedEpisodes);
+  int get failedDownloadCount => _failedEpisodes.length;
+
+  static const int _maxDownloadAttempts = 3;
+  static const Duration _baseRetryDelay = Duration(milliseconds: 600);
+
+  String? _lastError;
+  String? get lastError => _lastError;
 
   final Map<String, double> _speeds = {};
   Map<String, double> get downloadSpeeds => _speeds;
@@ -173,11 +185,70 @@ class OfflineProvider extends ChangeNotifier {
     _downloadProgress.remove(audioUrl);
     _statuses.remove(audioUrl);
     _statusErrors.remove(audioUrl);
+    _failedEpisodes.remove(audioUrl);
     _speeds.remove(audioUrl);
     _etas.remove(audioUrl);
     _lastProgress.remove(audioUrl);
     _lastProgressTime.remove(audioUrl);
     _notifiedProgress.remove(audioUrl);
+  }
+
+  bool _isTransientDownloadFailure(Object error) {
+    if (error is DownloadCancelledException ||
+        error is InsufficientSpaceException) {
+      return false;
+    }
+    if (error is NetworkException || error is ServerErrorException) {
+      return true;
+    }
+    if (error is TimeoutException ||
+        error is http.ClientException ||
+        error is SocketException) {
+      return true;
+    }
+    if (error is DownloadFailedException) {
+      final statusCode = error.statusCode;
+      if (statusCode == null) return false;
+      return statusCode == 408 || statusCode == 429 || statusCode >= 500;
+    }
+    return false;
+  }
+
+  Future<void> _downloadWithRetry(PodcastEpisode episode, String audioUrl,
+      PoddrHttpClient client, String title) async {
+    for (var attempt = 0;; attempt++) {
+      try {
+        await _repository.downloadEpisode(
+          episode,
+          onProgress: (progress) => _trackProgress(audioUrl, title, progress),
+          isCancelled: () => _cancelling.contains(audioUrl),
+          client: client,
+        );
+        return;
+      } catch (e) {
+        final isLastAttempt = attempt >= _maxDownloadAttempts - 1;
+        final wasInterrupted =
+            _paused.contains(audioUrl) || _cancelling.contains(audioUrl);
+
+        if (isLastAttempt ||
+            wasInterrupted ||
+            !_isTransientDownloadFailure(e)) {
+          rethrow;
+        }
+
+        final delay = _baseRetryDelay * (attempt + 1);
+        info(
+          'Download attempt ${attempt + 1} failed for $title, '
+          'retrying in ${delay.inMilliseconds}ms',
+          name: logName,
+        );
+        await Future.delayed(delay);
+
+        if (_paused.contains(audioUrl) || _cancelling.contains(audioUrl)) {
+          throw DownloadCancelledException();
+        }
+      }
+    }
   }
 
   Future<void> download(PodcastEpisode episode) async {
@@ -205,6 +276,8 @@ class OfflineProvider extends ChangeNotifier {
     _downloading.add(audioUrl);
     _activeEpisodes[audioUrl] = episode;
     _paused.remove(audioUrl);
+    _failedEpisodes.remove(audioUrl);
+    _lastError = null;
     _statuses[audioUrl] = DownloadStatus.downloading;
     _statusErrors.remove(audioUrl);
     _downloadProgress.putIfAbsent(audioUrl, () => 0.0);
@@ -225,15 +298,15 @@ class OfflineProvider extends ChangeNotifier {
         await _repository.remove(audioUrl);
       }
 
-      await _repository.downloadEpisode(
+      await _downloadWithRetry(
         episode,
-        onProgress: (progress) =>
-            _trackProgress(audioUrl, episode.title ?? '', progress),
-        isCancelled: () => _cancelling.contains(audioUrl),
-        client: client,
+        audioUrl,
+        client,
+        episode.title ?? '',
       );
 
       info('Download completed: ${episode.title}', name: logName);
+      _failedEpisodes.remove(audioUrl);
       _statuses.remove(audioUrl);
       _statusErrors.remove(audioUrl);
     } on DownloadCancelledException {
@@ -253,8 +326,9 @@ class OfflineProvider extends ChangeNotifier {
         error('Failed to download episode',
             name: logName, error: e, stackTrace: stackTrace);
         _statuses[audioUrl] = DownloadStatus.failed;
-        _statusErrors[audioUrl] =
-            e is DownloadException ? e.message : 'Download failed';
+        _statusErrors[audioUrl] = friendlyErrorMessage(e);
+        _failedEpisodes[audioUrl] = episode;
+        _lastError = friendlyErrorMessage(e);
       }
       _notify();
     } finally {
@@ -290,6 +364,23 @@ class OfflineProvider extends ChangeNotifier {
     _lastProgress.remove(episode.audioUrl);
     _lastProgressTime.remove(episode.audioUrl);
     await download(episode);
+  }
+
+  Future<void> retryFailedDownloads() async {
+    final episodes = List<PodcastEpisode>.from(_failedEpisodes.values);
+    if (episodes.isEmpty) return;
+
+    for (final episode in episodes) {
+      _failedEpisodes.remove(episode.audioUrl);
+      _statuses.remove(episode.audioUrl);
+      _statusErrors.remove(episode.audioUrl);
+    }
+    _lastError = null;
+    _notify();
+
+    for (final episode in episodes) {
+      await download(episode);
+    }
   }
 
   Future<void> cancelDownload(String audioUrl) async {
@@ -357,11 +448,13 @@ class OfflineProvider extends ChangeNotifier {
       await _repository.remove(audioUrl);
       _paused.remove(audioUrl);
       _clearTransferState(audioUrl);
+      _lastError = null;
       _notify();
       return true;
     } catch (e, stackTrace) {
       error('Failed to remove download',
           name: logName, error: e, stackTrace: stackTrace);
+      _lastError = friendlyErrorMessage(e);
       _notify();
       return false;
     }
@@ -394,6 +487,8 @@ class OfflineProvider extends ChangeNotifier {
       _activeEpisodes.clear();
       _statuses.clear();
       _statusErrors.clear();
+      _failedEpisodes.clear();
+      _lastError = null;
 
       for (final queued in List.from(_downloadQueue)) {
         _clearTransferState(queued.audioUrl);
@@ -409,6 +504,7 @@ class OfflineProvider extends ChangeNotifier {
       }
     } catch (e, stackTrace) {
       success = false;
+      _lastError = friendlyErrorMessage(e);
       error('Failed to clear all downloads',
           name: logName, error: e, stackTrace: stackTrace);
     } finally {

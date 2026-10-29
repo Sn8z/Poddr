@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/subscriptions.dart';
@@ -14,6 +16,8 @@ import 'package:poddr/ui/views/discover/discover_view_model.dart';
 
 import 'package:poddr/ui/components/widgets/box.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
+import 'package:poddr/ui/components/widgets/empty_state.dart';
+import 'package:poddr/ui/components/widgets/error_state.dart';
 import 'package:poddr/ui/components/widgets/image.dart';
 import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/components/widgets/grid_item.dart';
@@ -368,15 +372,23 @@ class TrendingPodcastsSliver extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final charts = context.watch<DiscoverViewModel>();
+    final state = charts.chartsState;
 
     final isMobile =
         MediaQuery.of(context).size.width < Breakpoints.mobileScreen;
 
-    if (charts.charts.isEmpty) {
-      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    if (state is AsyncError<List<Podcast>>) {
+      return ContentBox(
+        children: [
+          ErrorState(
+            message: state.message,
+            onRetry: charts.retryCharts,
+          ),
+        ],
+      );
     }
 
-    if (charts.isLoading) {
+    if (state is! AsyncData<List<Podcast>>) {
       return ContentBox(
         children: [
           ...List.generate(
@@ -388,6 +400,24 @@ class TrendingPodcastsSliver extends StatelessWidget {
                 ),
               );
             },
+          ),
+        ],
+      );
+    }
+
+    final podcasts = state.value;
+
+    if (podcasts.isEmpty) {
+      return ContentBox(
+        children: [
+          EmptyState(
+            icon: HugeIcon(
+              icon: HugeIcons.strokeRoundedPodcast,
+              size: 48,
+              color: context.theme.secondary,
+            ),
+            title: 'No charts available',
+            subtitle: 'Try another country or genre',
           ),
         ],
       );
@@ -416,22 +446,22 @@ class TrendingPodcastsSliver extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(12)),
                         ),
                         child: PoddrImage(
-                            imageUrl: charts.charts[index].image ?? '',
+                            imageUrl: podcasts[index].image ?? '',
                             maxHeightDiskCache: 300),
                       ),
-                      title: charts.charts[index].title,
-                      subtitle: charts.charts[index].rss,
+                      title: podcasts[index].title,
+                      subtitle: podcasts[index].rss,
                       onTap: () {
                         final rss =
-                            Uri.encodeComponent(charts.charts[index].rss ?? '');
+                            Uri.encodeComponent(podcasts[index].rss ?? '');
                         context.push('/podcasts/$rss');
                       },
                       actions: [
-                        PoddrAddSubscriptionBtn(rss: charts.charts[index].rss),
+                        PoddrAddSubscriptionBtn(rss: podcasts[index].rss),
                       ],
                     );
                   },
-                  childCount: charts.charts.length,
+                  childCount: podcasts.length,
                 ),
               ),
               DecoratedSliver(
@@ -462,7 +492,7 @@ class TrendingPodcastsSliver extends StatelessWidget {
                     return PoddrGridItem(
                       onTap: () {
                         final rss =
-                            Uri.encodeComponent(charts.charts[index].rss ?? '');
+                            Uri.encodeComponent(podcasts[index].rss ?? '');
                         context.push('/podcasts/$rss');
                       },
                       leading: Container(
@@ -472,18 +502,18 @@ class TrendingPodcastsSliver extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: PoddrImage(
-                          imageUrl: charts.charts[index].image ?? '',
+                          imageUrl: podcasts[index].image ?? '',
                           maxHeightDiskCache: 300,
                         ),
                       ),
-                      title: charts.charts[index].title,
-                      subtitle: charts.charts[index].link,
+                      title: podcasts[index].title,
+                      subtitle: podcasts[index].link,
                       actions: [
-                        PoddrAddSubscriptionBtn(rss: charts.charts[index].rss),
+                        PoddrAddSubscriptionBtn(rss: podcasts[index].rss),
                       ],
                     );
                   },
-                  childCount: charts.charts.length,
+                  childCount: podcasts.length,
                 ),
               );
             },

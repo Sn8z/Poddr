@@ -82,10 +82,9 @@ class HistoryProvider extends ChangeNotifier {
         duration,
         videoUrl,
       );
-    } catch (e, stackTrace) {
-      error('Failed to add to history',
-          name: logName, error: e, stackTrace: stackTrace);
-      debug('Add to history detail: $e', name: logName);
+    } catch (e) {
+      warning('Failed to add to history: $e', name: logName);
+      debug('Add to history detail', name: logName);
     }
   }
 
@@ -103,8 +102,7 @@ class HistoryProvider extends ChangeNotifier {
         markFinished: markFinished,
       );
     } catch (e) {
-      error('Failed to update progress', name: logName);
-      debug('Update progress detail: $e', name: logName);
+      warning('Failed to update progress: $e', name: logName);
     }
   }
 
@@ -149,10 +147,8 @@ class HistoryProvider extends ChangeNotifier {
         effectiveDuration,
         markFinished: false,
       );
-    } catch (e, stackTrace) {
-      error('Failed to apply remote progress',
-          name: logName, error: e, stackTrace: stackTrace);
-      debug('Apply remote progress detail: $e', name: logName);
+    } catch (e) {
+      warning('Failed to apply remote progress: $e', name: logName);
     }
   }
 

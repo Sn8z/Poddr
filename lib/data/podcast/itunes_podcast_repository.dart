@@ -13,107 +13,132 @@ class ITunesPodcastRepository implements IPodcastRepository {
   final String baseUrl = "https://itunes.apple.com";
   final PoddrHttpClient _http = PoddrHttpClient.shared;
 
+  Never _throwForStatus(int statusCode, String action) {
+    if (statusCode == 404) {
+      throw NotFoundException('$action: resource not found');
+    }
+    if (statusCode == 408 || statusCode == 429 || statusCode >= 500) {
+      throw ServerErrorException(
+        statusCode,
+        '$action failed with status $statusCode',
+      );
+    }
+    throw ApiException(
+      '$action failed with status $statusCode',
+      userMessage: 'The podcast service rejected the request. '
+          'Please try again.',
+    );
+  }
+
   @override
   Future<List<Podcast>> search(String query) async {
+    final searchUrl = "$baseUrl/search?term=$query&media=podcast";
+    debug("Searching for $searchUrl", name: logName);
+
+    final response = await _http.get(Uri.parse(searchUrl));
+    if (response.statusCode != 200) {
+      _throwForStatus(response.statusCode, 'Search');
+    }
+
     try {
-      final searchUrl = "$baseUrl/search?term=$query&media=podcast";
-      debug("Searching for $searchUrl", name: logName);
-      final response = await _http.get(Uri.parse(searchUrl));
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final feeds = <Podcast>[];
-        for (var item in data['results']) {
-          final Podcast feed = Podcast(
-            rss: item['feedUrl'],
-            title: item['trackName'] ?? item['trackCensoredName'],
-            image: item['artworkUrl600'] ?? item['artworkUrl100'],
-            author: item['artistName'],
-          );
-          feeds.add(feed);
-        }
-        return feeds;
-      } else {
-        throw ApiException("Search return code ${response.statusCode}");
+      final data = json.decode(response.body);
+      final feeds = <Podcast>[];
+      for (var item in data['results']) {
+        final Podcast feed = Podcast(
+          rss: item['feedUrl'],
+          title: item['trackName'] ?? item['trackCensoredName'],
+          image: item['artworkUrl600'] ?? item['artworkUrl100'],
+          author: item['artistName'],
+        );
+        feeds.add(feed);
       }
-    } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
-      rethrow;
+      return feeds;
+    } catch (e) {
+      throw ApiException(
+        'Could not parse search response: $e',
+        userMessage: 'Search results could not be read. Please try again.',
+      );
     }
   }
 
   @override
   Future<List<Podcast>> getCharts(String country, String genre) async {
+    final chartsUrl =
+        "$baseUrl/$country/rss/toppodcasts/limit=50/explicit=true/genre=$genre/json";
+    debug("Checking charts for $chartsUrl", name: logName);
+
+    final response = await _http.get(Uri.parse(chartsUrl));
+    if (response.statusCode != 200) {
+      _throwForStatus(response.statusCode, 'Charts');
+    }
+
     try {
-      final chartsUrl =
-          "$baseUrl/$country/rss/toppodcasts/limit=50/explicit=true/genre=$genre/json";
-      debug("Checking charts for $chartsUrl", name: logName);
-      final response = await _http.get(Uri.parse(chartsUrl));
+      final data = json.decode(response.body);
+      final entries = data['feed']?['entry'] as List<dynamic>?;
+      if (entries == null || entries.isEmpty) return [];
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final entries = data['feed']?['entry'] as List<dynamic>?;
-        if (entries == null || entries.isEmpty) return [];
+      final ids = entries
+          .map((e) => e['id']?['attributes']?['im:id'])
+          .where((id) => id != null)
+          .join(',');
 
-        final ids = entries
-            .map((e) => e['id']?['attributes']?['im:id'])
-            .where((id) => id != null)
-            .join(',');
+      final lookupUrl = "$baseUrl/lookup?id=$ids&entity=podcast";
+      final lookupResponse = await _http.get(Uri.parse(lookupUrl));
 
-        final lookupUrl = "$baseUrl/lookup?id=$ids&entity=podcast";
-        final lookupResponse = await _http.get(Uri.parse(lookupUrl));
-
-        if (lookupResponse.statusCode == 200) {
-          final lookupData = json.decode(lookupResponse.body);
-          final results = lookupData['results'] as List<dynamic>?;
-          if (results == null) return [];
-          final feeds = <Podcast>[];
-          for (var result in results) {
-            final Podcast feed = Podcast(
-              rss: result['feedUrl'],
-              title: result['trackName'] ?? result['trackCensoredName'],
-              image: result['artworkUrl600'] ?? result['artworkUrl100'],
-              author: result['artistName'],
-            );
-            feeds.add(feed);
-          }
-          return feeds;
-        } else {
-          throw ApiException("Could not get lookup");
-        }
-      } else {
-        throw ApiException("Could not get charts");
+      if (lookupResponse.statusCode != 200) {
+        _throwForStatus(lookupResponse.statusCode, 'Charts lookup');
       }
-    } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
-      rethrow;
+
+      final lookupData = json.decode(lookupResponse.body);
+      final results = lookupData['results'] as List<dynamic>?;
+      if (results == null) return [];
+
+      return results.map((result) {
+        return Podcast(
+          rss: result['feedUrl'],
+          title: result['trackName'] ?? result['trackCensoredName'],
+          image: result['artworkUrl600'] ?? result['artworkUrl100'],
+          author: result['artistName'],
+        );
+      }).toList();
+    } catch (e) {
+      if (e is PoddrException) rethrow;
+      throw ApiException(
+        'Could not parse charts response: $e',
+        userMessage: 'Charts could not be loaded. Please try again.',
+      );
     }
   }
 
   @override
   Future<Podcast> getFeed(String rss) async {
+    debug("Getting feed $rss", name: logName);
+
+    final response = await _http.get(Uri.parse(rss));
+    debug("Feed return code ${response.statusCode}", name: logName);
+
+    if (response.statusCode != 200) {
+      _throwForStatus(response.statusCode, 'Feed $rss');
+    }
+
+    final feedSize = response.contentLength ?? response.bodyBytes.length;
+    if (feedSize > maxFeedBytes) {
+      debug('Rejected $rss with $feedSize bytes', name: logName);
+      throw ApiException(
+        'Feed too large ($feedSize bytes): $rss',
+        userMessage: 'This podcast feed is too large to load.',
+      );
+    }
+
     try {
-      debug("Getting feed $rss", name: logName);
-
-      final response = await _http.get(Uri.parse(rss));
-      debug("Feed return code ${response.statusCode}", name: logName);
-
-      if (response.statusCode == 200) {
-        final feedSize = response.contentLength ?? response.bodyBytes.length;
-        if (feedSize > maxFeedBytes) {
-          error('Feed rejected: response too large', name: logName);
-          debug('Rejected $rss with $feedSize bytes', name: logName);
-          throw ApiException("Feed too large");
-        }
-        final content = response.body;
-        return await compute((_) => PoddrPodcastParser.parse(content, rss), null);
-      } else {
-        error("Feed return code ${response.statusCode}", name: logName);
-        throw ApiException("Could not get feed");
-      }
-    } catch (e, stackTrace) {
-      error(e.toString(), name: logName, error: e, stackTrace: stackTrace);
-      if (e is ApiException) rethrow;
-      throw ApiException("Something went wrong when getting the feed");
+      final content = response.body;
+      return await compute((_) => PoddrPodcastParser.parse(content, rss), null);
+    } catch (e) {
+      if (e is PoddrException) rethrow;
+      throw ApiException(
+        'Could not parse feed $rss: $e',
+        userMessage: 'This podcast feed could not be read.',
+      );
     }
   }
 }

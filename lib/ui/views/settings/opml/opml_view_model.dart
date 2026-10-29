@@ -12,13 +12,15 @@ class OpmlViewModel extends ChangeNotifier {
   String? _statusMessage;
   String? get statusMessage => _statusMessage;
 
+  bool _isError = false;
+  bool get isError => _isError;
+
   double? _importProgress;
   double? get importProgress => _importProgress;
 
   List<String> _pendingUrls = [];
   int _pendingSkipped = 0;
-  int? get pendingNewCount =>
-      _pendingUrls.isEmpty ? null : _pendingUrls.length;
+  int? get pendingNewCount => _pendingUrls.isEmpty ? null : _pendingUrls.length;
   int get pendingSkippedCount => _pendingSkipped;
 
   bool _cancelImport = false;
@@ -42,7 +44,7 @@ class OpmlViewModel extends ChangeNotifier {
         return false;
       }
       if (preview.stopMessage != null) {
-        _setStatus(preview.stopMessage);
+        _setStatus(preview.stopMessage, isError: preview.isError);
         return false;
       }
       _pendingUrls = preview.newUrls;
@@ -74,7 +76,7 @@ class OpmlViewModel extends ChangeNotifier {
         },
         isCancelled: () => _cancelImport,
       );
-      _setStatus(result);
+      _setStatus(result.message, isError: result.isError);
     } finally {
       _importProgress = null;
       _setLoading(false);
@@ -101,14 +103,15 @@ class OpmlViewModel extends ChangeNotifier {
       final result = await _opmlService.exportOpml(
         _subscriptionProvider.subscriptions,
       );
-      _setStatus(result);
+      _setStatus(result.message, isError: result.isError);
     } finally {
       _setLoading(false);
     }
   }
 
-  void _setStatus(String? message) {
+  void _setStatus(String? message, {bool isError = false}) {
     _statusMessage = message;
+    _isError = isError;
     notifyListeners();
   }
 

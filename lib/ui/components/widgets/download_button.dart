@@ -125,8 +125,9 @@ class DownloadButton extends StatelessWidget {
           if (!removed && context.mounted) {
             await showPoddrErrorDialog(
               context: context,
-              message:
-                  'The downloaded episode could not be removed. Please try again.',
+              message: offlineProvider.lastError ??
+                  'The downloaded episode could not be removed. '
+                      'Please try again.',
             );
           }
         },

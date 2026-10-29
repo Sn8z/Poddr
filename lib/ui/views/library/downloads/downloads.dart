@@ -20,6 +20,7 @@ import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
+import 'package:poddr/ui/components/widgets/status_banner.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
@@ -49,6 +50,8 @@ class DownloadsView extends StatelessWidget {
           DownloadsViewModel(offline, media, subscriptions, collections),
       builder: (context, child) {
         final viewModel = context.watch<DownloadsViewModel>();
+        final offlineProvider = context.watch<OfflineProvider>();
+        final failedDownloadCount = offlineProvider.failedDownloadCount;
         final downloads = viewModel.downloads;
         final isDesktop =
             MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
@@ -138,6 +141,20 @@ class DownloadsView extends StatelessWidget {
                       ],
               ),
             ),
+            if (failedDownloadCount > 0)
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                sliver: SliverToBoxAdapter(
+                  child: StatusBanner(
+                    severity: StatusSeverity.warning,
+                    message: failedDownloadCount == 1
+                        ? '1 download failed.'
+                        : '$failedDownloadCount downloads failed.',
+                    actionLabel: 'Retry all',
+                    onAction: offlineProvider.retryFailedDownloads,
+                  ),
+                ),
+              ),
             ...viewModel.isLoading
                 ? [const SliverToBoxAdapter(child: ShimmerLoadingList())]
                 : downloads.isEmpty
@@ -344,8 +361,9 @@ void _showClearAllDialog(BuildContext context, DownloadsViewModel viewModel) {
               if (!success && context.mounted) {
                 await showPoddrErrorDialog(
                   context: context,
-                  message:
-                      'Some downloads could not be removed. Please check your storage and try again.',
+                  message: viewModel.lastError ??
+                      'Some downloads could not be removed. '
+                          'Please check your storage and try again.',
                 );
               }
             },

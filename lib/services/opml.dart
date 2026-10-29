@@ -50,8 +50,18 @@ class OpmlService {
   static String rfc822(DateTime date) {
     const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     final d = date.toUtc();
     String two(int n) => n.toString().padLeft(2, '0');
@@ -94,8 +104,13 @@ class OpmlService {
     return builder.buildDocument().toXmlString(pretty: true);
   }
 
-  Future<({List<String> newUrls, int skippedCount, String? stopMessage})?>
-      pickAndParse(List<Podcast> existingSubscriptions) async {
+  Future<
+      ({
+        List<String> newUrls,
+        int skippedCount,
+        String? stopMessage,
+        bool isError,
+      })?> pickAndParse(List<Podcast> existingSubscriptions) async {
     debug("Starting OPML import", name: logName);
     try {
       final picked = await FilePicker.pickFile(
@@ -112,7 +127,12 @@ class OpmlService {
       final size = picked.lengthSync() ?? await picked.length();
       if (size > maxImportBytes) {
         error('OPML import rejected: file too large', name: logName);
-        return (newUrls: <String>[], skippedCount: 0, stopMessage: 'File too large');
+        return (
+          newUrls: <String>[],
+          skippedCount: 0,
+          stopMessage: 'File too large',
+          isError: true,
+        );
       }
 
       debug("OPML file picked: ${picked.name}", name: logName);
@@ -125,11 +145,21 @@ class OpmlService {
       } catch (e) {
         error('OPML import failed: unparseable file', name: logName);
         debug('OPML parse detail: $e', name: logName);
-        return (newUrls: <String>[], skippedCount: 0, stopMessage: 'Could not parse OPML file');
+        return (
+          newUrls: <String>[],
+          skippedCount: 0,
+          stopMessage: 'Could not parse OPML file',
+          isError: true,
+        );
       }
 
       if (rssUrls.isEmpty) {
-        return (newUrls: <String>[], skippedCount: 0, stopMessage: 'No feeds found in OPML');
+        return (
+          newUrls: <String>[],
+          skippedCount: 0,
+          stopMessage: 'No feeds found in OPML',
+          isError: false,
+        );
       }
 
       final existingRss = {
@@ -142,22 +172,33 @@ class OpmlService {
       ];
 
       if (newRssUrls.isEmpty) {
-        return (newUrls: <String>[], skippedCount: rssUrls.length, stopMessage: 'All feeds already subscribed');
+        return (
+          newUrls: <String>[],
+          skippedCount: rssUrls.length,
+          stopMessage: 'All feeds already subscribed',
+          isError: false,
+        );
       }
 
       return (
         newUrls: newRssUrls,
         skippedCount: rssUrls.length - newRssUrls.length,
         stopMessage: null,
+        isError: false,
       );
-    } catch (e) {
-      error('OPML import failed', name: logName);
-      debug('OPML import detail: $e', name: logName);
-      return (newUrls: <String>[], skippedCount: 0, stopMessage: 'Import failed');
+    } catch (e, stackTrace) {
+      error('OPML import failed',
+          name: logName, error: e, stackTrace: stackTrace);
+      return (
+        newUrls: <String>[],
+        skippedCount: 0,
+        stopMessage: 'Import failed',
+        isError: true,
+      );
     }
   }
 
-  Future<String> importUrls(
+  Future<({String message, bool isError})> importUrls(
     List<String> newRssUrls,
     Future<bool> Function(String rss) addSubscription, {
     void Function(int done, int total)? onProgress,
@@ -168,7 +209,7 @@ class OpmlService {
     for (var i = 0; i < newRssUrls.length; i += importBatchSize) {
       if (isCancelled?.call() ?? false) {
         debug("OPML import cancelled by user", name: logName);
-        return 'Import cancelled';
+        return (message: 'Import cancelled', isError: false);
       }
       final batch = newRssUrls.skip(i).take(importBatchSize);
       final results = await Future.wait(batch.map(addSubscription));
@@ -182,21 +223,25 @@ class OpmlService {
         name: logName);
 
     if (failedCount > 0) {
-      return 'Imported $successCount of ${newRssUrls.length} feeds ($failedCount failed)';
+      return (
+        message:
+            'Imported $successCount of ${newRssUrls.length} feeds ($failedCount failed)',
+        isError: true,
+      );
     }
-    return 'Imported $successCount feeds';
+    return (message: 'Imported $successCount feeds', isError: false);
   }
 
-  Future<String?> exportOpml(List<Podcast> subscriptions) async {
+  Future<({String? message, bool isError})> exportOpml(
+      List<Podcast> subscriptions) async {
     debug("Starting OPML export for ${subscriptions.length} subscriptions",
         name: logName);
     try {
-      final writable = subscriptions
-          .where((p) => (p.rss?.trim() ?? '').isNotEmpty)
-          .toList();
+      final writable =
+          subscriptions.where((p) => (p.rss?.trim() ?? '').isNotEmpty).toList();
       if (writable.isEmpty) {
         debug("No subscriptions to export", name: logName);
-        return 'No subscriptions to export';
+        return (message: 'No subscriptions to export', isError: false);
       }
 
       final opmlContent = generateOpml(writable);
@@ -211,14 +256,14 @@ class OpmlService {
 
       if (saved == null) {
         debug("OPML export cancelled by user", name: logName);
-        return null;
+        return (message: null, isError: false);
       }
       info("Exported ${writable.length} feeds", name: logName);
-      return 'Exported ${writable.length} feeds';
-    } catch (e) {
-      error('OPML export failed', name: logName);
-      debug('OPML export detail: $e', name: logName);
-      return 'Export failed';
+      return (message: 'Exported ${writable.length} feeds', isError: false);
+    } catch (e, stackTrace) {
+      error('OPML export failed',
+          name: logName, error: e, stackTrace: stackTrace);
+      return (message: 'Export failed', isError: true);
     }
   }
 }

@@ -15,6 +15,7 @@ import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/library_nav.dart';
+import 'package:poddr/ui/components/widgets/status_banner.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
@@ -41,6 +42,8 @@ class LibraryView extends StatelessWidget {
           previous ?? LibraryViewModel(subscription, collections),
       builder: (context, child) {
         final viewModel = context.watch<LibraryViewModel>();
+        final subscriptionsProvider = context.watch<SubscriptionProvider>();
+        final failedFeedCount = subscriptionsProvider.failedFeedCount;
         final isDesktop =
             MediaQuery.sizeOf(context).width > Breakpoints.tabletScreen;
 
@@ -115,6 +118,20 @@ class LibraryView extends StatelessWidget {
                       ],
               ),
             ),
+            if (failedFeedCount > 0)
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                sliver: SliverToBoxAdapter(
+                  child: StatusBanner(
+                    severity: StatusSeverity.warning,
+                    message: failedFeedCount == 1
+                        ? '1 feed could not be refreshed.'
+                        : '$failedFeedCount feeds could not be refreshed.',
+                    actionLabel: 'Retry',
+                    onAction: subscriptionsProvider.retryFailedFeeds,
+                  ),
+                ),
+              ),
             ...viewModel.isLoading
                 ? [const SliverToBoxAdapter(child: ShimmerLoadingList())]
                 : viewModel.subscriptions.isEmpty

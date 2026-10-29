@@ -7,8 +7,18 @@ class PoddrPodcastParser {
   static const String logName = "PoddrPodcastParser";
 
   static const _months = {
-    'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
-    'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12,
+    'Jan': 1,
+    'Feb': 2,
+    'Mar': 3,
+    'Apr': 4,
+    'May': 5,
+    'Jun': 6,
+    'Jul': 7,
+    'Aug': 8,
+    'Sep': 9,
+    'Oct': 10,
+    'Nov': 11,
+    'Dec': 12,
   };
 
   static Podcast parse(String xmlString, String rssUrl) {
@@ -40,13 +50,13 @@ class PoddrPodcastParser {
         return _parseAtomFeed(feed, rssUrl);
       }
 
-      error("Invalid feed format: $rssUrl", name: logName);
+      debug("Invalid feed format: $rssUrl", name: logName);
       throw Exception("$rssUrl is not a valid RSS or Atom feed");
     } on XmlParserException {
-      error("XML parse error for $rssUrl", name: logName);
+      debug("XML parse error for $rssUrl", name: logName);
       throw Exception("Failed to parse podcast feed");
-    } catch (_) {
-      error("Failed to parse podcast feed: $rssUrl", name: logName);
+    } catch (e) {
+      debug("Failed to parse podcast feed $rssUrl: $e", name: logName);
       throw Exception("Failed to parse podcast feed");
     }
   }
@@ -76,7 +86,8 @@ class PoddrPodcastParser {
     final withoutDay = RegExp(
         r'^(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})\s+(\d{2}):(\d{2}):(\d{2})\s+([+-]\d{4})$');
 
-    Match? match = withDay.firstMatch(cleaned) ?? withoutDay.firstMatch(cleaned);
+    Match? match =
+        withDay.firstMatch(cleaned) ?? withoutDay.firstMatch(cleaned);
     if (match == null) return null;
 
     final day = int.tryParse(match.group(1)!);
@@ -87,8 +98,12 @@ class PoddrPodcastParser {
     final second = int.tryParse(match.group(6)!);
     final tz = match.group(7)!;
 
-    if (day == null || month == null || year == null ||
-        hour == null || minute == null || second == null) {
+    if (day == null ||
+        month == null ||
+        year == null ||
+        hour == null ||
+        minute == null ||
+        second == null) {
       return null;
     }
 
@@ -259,13 +274,13 @@ class PoddrPodcastParser {
     final author = _parseAuthor(channel);
     final newFeedUrl = _parseNewFeedUrl(channel);
     final effectiveRss = newFeedUrl ?? rss;
- 
+
     if (title == null || title.isEmpty) {
       warning("Podcast missing title", name: logName);
     } else {
       debug("Parsing podcast: $title", name: logName);
     }
- 
+
     return Podcast(
       title: title,
       description: _parseDescription(channel),
