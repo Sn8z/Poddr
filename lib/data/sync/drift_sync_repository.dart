@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:poddr/data/db/drift/database.dart';
+import 'package:poddr/data/db/drift/database.dart'
+    hide PendingEpisodeAction, PendingSubscriptionAction;
 import 'package:poddr/data/sync/sync_repository.dart';
 
 class DriftSyncRepository implements ISyncRepository {
@@ -26,20 +27,20 @@ class DriftSyncRepository implements ISyncRepository {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getPendingEpisodeActions() async {
+  Future<List<PendingEpisodeAction>> getPendingEpisodeActions() async {
     final results = await (_db.select(_db.pendingEpisodeActions)
           ..orderBy([(tbl) => OrderingTerm.asc(tbl.timestamp)]))
         .get();
 
     return results
-        .map((row) => {
-              'id': row.id,
-              'podcast': row.podcastRss,
-              'episode': row.episodeUrl,
-              'action': row.action,
-              'position': row.position,
-              'timestamp': row.timestamp.millisecondsSinceEpoch ~/ 1000,
-            })
+        .map((row) => (
+              id: row.id,
+              podcastRss: row.podcastRss,
+              episodeUrl: row.episodeUrl,
+              action: row.action,
+              position: row.position,
+              timestamp: row.timestamp.millisecondsSinceEpoch ~/ 1000,
+            ))
         .toList();
   }
 
@@ -70,17 +71,19 @@ class DriftSyncRepository implements ISyncRepository {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getPendingSubscriptionActions() async {
+  Future<List<PendingSubscriptionAction>>
+      getPendingSubscriptionActions() async {
     final results = await (_db.select(_db.pendingSubscriptionActions)
           ..orderBy([(tbl) => OrderingTerm.asc(tbl.timestamp)]))
         .get();
 
     return results
-        .map((row) => {
-              'rss': row.rss,
-              'action': row.action,
-              'timestamp': row.timestamp.millisecondsSinceEpoch ~/ 1000,
-            })
+        .map((row) => (
+              id: row.id,
+              rss: row.rss,
+              action: row.action,
+              timestamp: row.timestamp.millisecondsSinceEpoch ~/ 1000,
+            ))
         .toList();
   }
 

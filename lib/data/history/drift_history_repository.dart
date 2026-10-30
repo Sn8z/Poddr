@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/data/history/history_repository.dart';
 import 'package:poddr/models/episode.dart';
+import 'package:poddr/models/progress.dart';
 
 class DriftHistoryRepository implements IHistoryRepository {
   final PoddrDatabase database = PoddrDatabase();
@@ -101,35 +102,32 @@ class DriftHistoryRepository implements IHistoryRepository {
   }
 
   @override
-  Future<Map<String, dynamic>?> getProgress(String audioUrl) async {
+  Future<EpisodeProgress?> getProgress(String audioUrl) async {
     final history = await (database.select(database.listeningHistory)
           ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
         .getSingleOrNull();
 
-    if (history == null) {
-      return null;
-    } else {
-      return {
-        'title': history.title,
-        'description': history.description,
-        'audioUrl': history.audioUrl,
-        'videoUrl': history.videoUrl,
-        'imageUrl': history.imageUrl,
-        'podcastTitle': history.podcastTitle,
-        'podcastRSS': history.podcastRSS,
-        'position': history.position,
-        'duration': history.duration,
-        'isFinished': history.isFinished,
-        'listenedAt': history.listenedAt,
-      };
-    }
+    if (history == null) return null;
+
+    return EpisodeProgress(
+      position: history.position,
+      duration: history.duration,
+      isFinished: history.isFinished,
+    );
   }
 
   @override
-  Stream<ListeningHistoryData?> watchProgressByAudioUrl(String audioUrl) {
+  Stream<EpisodeProgress?> watchProgressByAudioUrl(String audioUrl) {
     return (database.select(database.listeningHistory)
           ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
-        .watchSingleOrNull();
+        .watchSingleOrNull()
+        .map((history) => history == null
+            ? null
+            : EpisodeProgress(
+                position: history.position,
+                duration: history.duration,
+                isFinished: history.isFinished,
+              ));
   }
 
   @override

@@ -594,40 +594,25 @@ class SyncProvider extends ChangeNotifier {
     final remoteTimestamp =
         changes['timestamp'] ?? (DateTime.now().millisecondsSinceEpoch ~/ 1000);
 
-    final actionMap = <String, Map<String, dynamic>>{};
+    final actionMap = <String, ({String action, int timestamp})>{};
 
     for (final url in remoteAdd) {
-      actionMap[url] = {
-        'action': 'add',
-        'timestamp': remoteTimestamp,
-        'source': 'remote',
-      };
+      actionMap[url] = (action: 'add', timestamp: remoteTimestamp);
     }
     for (final url in remoteRemove) {
       final existing = actionMap[url];
-      if (existing == null ||
-          remoteTimestamp > (existing['timestamp'] as int)) {
-        actionMap[url] = {
-          'action': 'remove',
-          'timestamp': remoteTimestamp,
-          'source': 'remote',
-        };
+      if (existing == null || remoteTimestamp > existing.timestamp) {
+        actionMap[url] = (action: 'remove', timestamp: remoteTimestamp);
       }
     }
 
     final pendingChanges =
         await _syncRepository.getPendingSubscriptionActions();
     for (final pending in pendingChanges) {
-      final url = pending['rss'] as String;
-      final action = pending['action'] as String;
-      final timestamp = pending['timestamp'] as int;
-      final existing = actionMap[url];
-      if (existing == null || timestamp > (existing['timestamp'] as int)) {
-        actionMap[url] = {
-          'action': action,
-          'timestamp': timestamp,
-          'source': 'local',
-        };
+      final existing = actionMap[pending.rss];
+      if (existing == null || pending.timestamp > existing.timestamp) {
+        actionMap[pending.rss] =
+            (action: pending.action, timestamp: pending.timestamp);
       }
     }
 
@@ -635,7 +620,7 @@ class SyncProvider extends ChangeNotifier {
     for (final entry in actionMap.entries) {
       final url = entry.key;
       final actionData = entry.value;
-      final action = actionData['action'] as String;
+      final action = actionData.action;
 
       if (action == 'add' && !localUrls.contains(url)) {
         final added = await _subscriptionProvider?.addSubscription(
@@ -668,26 +653,23 @@ class SyncProvider extends ChangeNotifier {
 
     if (!remoteApplySucceeded) return false;
 
-    final localPendingToUpload = <Map<String, dynamic>>[];
+    final localPendingToUpload = <PendingSubscriptionAction>[];
     for (final pending in pendingChanges) {
-      final url = pending['rss'] as String;
-      final action = pending['action'] as String;
-      final timestamp = pending['timestamp'] as int;
-      final surviving = actionMap[url];
+      final surviving = actionMap[pending.rss];
       if (surviving != null &&
-          surviving['action'] == action &&
-          surviving['timestamp'] == timestamp) {
+          surviving.action == pending.action &&
+          surviving.timestamp == pending.timestamp) {
         localPendingToUpload.add(pending);
       }
     }
 
     final addsToUpload = localPendingToUpload
-        .where((a) => a['action'] == 'add')
-        .map((a) => a['rss'] as String)
+        .where((a) => a.action == 'add')
+        .map((a) => a.rss)
         .toList();
     final removesToUpload = localPendingToUpload
-        .where((a) => a['action'] == 'remove')
-        .map((a) => a['rss'] as String)
+        .where((a) => a.action == 'remove')
+        .map((a) => a.rss)
         .toList();
 
     if (addsToUpload.isNotEmpty || removesToUpload.isNotEmpty) {
@@ -730,10 +712,19 @@ class SyncProvider extends ChangeNotifier {
             final end =
                 (i + batchSize < localActions.length) ? i + batchSize : null;
             final batch = localActions.sublist(i, end);
-            final result = await _client!.uploadEpisodeActions(batch);
+            final payload = batch
+                .map((action) => {
+                      'podcast': action.podcastRss,
+                      'episode': action.episodeUrl,
+                      'action': action.action,
+                      'position': action.position,
+                      'timestamp': action.timestamp,
+                    })
+                .toList();
+            final result = await _client!.uploadEpisodeActions(payload);
             lastTimestamp = result['timestamp'] ?? lastTimestamp;
-            await _syncRepository.deletePendingEpisodeActions(
-                batch.map((a) => a['id'] as int).toList());
+            await _syncRepository
+                .deletePendingEpisodeActions(batch.map((a) => a.id).toList());
           }
           await _settings.setSyncLastEpisodeSync(lastTimestamp);
           await _refreshLastSyncTime();

@@ -1,5 +1,5 @@
-import 'package:poddr/data/db/drift/database.dart';
 import 'package:poddr/models/episode.dart';
+import 'package:poddr/models/progress.dart';
 
 abstract class IHistoryRepository {
   Future<PodcastEpisode?> addHistory(
@@ -22,9 +22,9 @@ abstract class IHistoryRepository {
     bool markFinished = true,
   });
 
-  Future<Map<String, dynamic>?> getProgress(String audioUrl);
+  Future<EpisodeProgress?> getProgress(String audioUrl);
 
-  Stream<ListeningHistoryData?> watchProgressByAudioUrl(String audioUrl);
+  Stream<EpisodeProgress?> watchProgressByAudioUrl(String audioUrl);
 
   Stream<List<PodcastEpisode>> watchAllHistory();
 

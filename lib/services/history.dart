@@ -165,7 +165,7 @@ class HistoryProvider extends ChangeNotifier {
         );
       }
 
-      final existingDuration = existing?['duration'] as int? ?? 0;
+      final existingDuration = existing?.duration ?? 0;
       final effectiveDuration = duration > 0
           ? duration
           : (existingDuration > 0
@@ -185,14 +185,7 @@ class HistoryProvider extends ChangeNotifier {
 
   Future<EpisodeProgress?> getProgress(String audioUrl) async {
     try {
-      final progress = await _historyRepository.getProgress(audioUrl);
-      if (progress == null) return null;
-
-      return EpisodeProgress(
-        position: progress['position'] as int,
-        duration: progress['duration'] as int,
-        isFinished: progress['isFinished'] as bool,
-      );
+      return await _historyRepository.getProgress(audioUrl);
     } on PoddrException {
       rethrow;
     } catch (e) {
@@ -208,15 +201,7 @@ class HistoryProvider extends ChangeNotifier {
   Stream<EpisodeProgress?> watchProgressByAudioUrl(String audioUrl) {
     return _progressStreams.putIfAbsent(audioUrl, () {
       try {
-        return _historyRepository.watchProgressByAudioUrl(audioUrl).map(
-              (row) => row == null
-                  ? null
-                  : EpisodeProgress(
-                      position: row.position,
-                      duration: row.duration,
-                      isFinished: row.isFinished,
-                    ),
-            );
+        return _historyRepository.watchProgressByAudioUrl(audioUrl);
       } catch (e, stackTrace) {
         error('Failed to watch progress',
             name: logName, error: e, stackTrace: stackTrace);
