@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:poddr/core/async_state.dart';
 import 'package:poddr/models/episode.dart';
+import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
@@ -23,6 +25,11 @@ class LatestEpisodesViewModel extends ChangeNotifier {
   Set<int> get selectedCollectionIds => _selectedCollectionIds;
 
   bool get isLoadingLatest => _source.isLoadingLatest;
+
+  AsyncState<List<Podcast>> get subscriptionsState =>
+      _source.subscriptionsState;
+
+  Future<void> retrySubscriptions() => _source.retrySubscriptions();
 
   LatestEpisodesViewModel(this._source, this._collectionsProvider) {
     _source.addListener(notifyListeners);

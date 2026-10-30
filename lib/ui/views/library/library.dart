@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/collections.dart';
@@ -13,6 +14,8 @@ import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/empty_state.dart';
+import 'package:poddr/ui/components/widgets/error_state.dart';
+import 'package:poddr/ui/components/widgets/poddr_error_dialog.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/library_nav.dart';
 import 'package:poddr/ui/components/widgets/status_banner.dart';
@@ -132,98 +135,117 @@ class LibraryView extends StatelessWidget {
                   ),
                 ),
               ),
-            ...viewModel.isLoading
-                ? [const SliverToBoxAdapter(child: ShimmerLoadingList())]
-                : viewModel.subscriptions.isEmpty
-                    ? [
-                        SliverToBoxAdapter(
-                          child: EmptyState(
-                            icon: HugeIcon(
-                              icon: HugeIcons.strokeRoundedPodcast,
-                              size: 64,
-                              color: context.theme.secondary,
-                            ),
-                            title: 'No subscriptions yet',
-                            subtitle: 'Subscribe to podcasts to see them here',
+            ...switch (viewModel.subscriptionsState) {
+              AsyncInitial() || AsyncLoading() => [
+                  const SliverToBoxAdapter(child: ShimmerLoadingList()),
+                ],
+              AsyncError(:final message) => [
+                  SliverToBoxAdapter(
+                    child: ErrorState(
+                      message: message,
+                      onRetry: viewModel.retrySubscriptions,
+                    ),
+                  ),
+                ],
+              AsyncData() => viewModel.subscriptions.isEmpty
+                  ? [
+                      SliverToBoxAdapter(
+                        child: EmptyState(
+                          icon: HugeIcon(
+                            icon: HugeIcons.strokeRoundedPodcast,
+                            size: 64,
+                            color: context.theme.secondary,
                           ),
+                          title: 'No subscriptions yet',
+                          subtitle: 'Subscribe to podcasts to see them here',
                         ),
-                      ]
-                    : [
-                        SliverMainAxisGroup(
-                          slivers: [
-                            sliverGapH16,
-                            DecoratedSliver(
-                              decoration: BoxDecoration(
-                                color: context.theme.surfaceContainerLow,
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16),
-                                ),
+                      ),
+                    ]
+                  : [
+                      SliverMainAxisGroup(
+                        slivers: [
+                          sliverGapH16,
+                          DecoratedSliver(
+                            decoration: BoxDecoration(
+                              color: context.theme.surfaceContainerLow,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
                               ),
-                              sliver: const SliverToBoxAdapter(
-                                  child: SizedBox(height: 16)),
                             ),
-                            SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                (context, index) {
-                                  final Podcast podcast =
-                                      viewModel.subscriptions[index];
-                                  return PoddrListItem(
-                                    title: podcast.title ?? 'Missing Title',
-                                    subtitle:
-                                        podcast.author ?? 'Missing Author',
-                                    onTap: () {
-                                      final rss = Uri.encodeComponent(
-                                          podcast.rss ?? '');
-                                      context.push('/podcasts/$rss');
-                                    },
-                                    leading: Container(
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: PoddrImage(
-                                        imageUrl: podcast.image ?? '',
-                                        fit: BoxFit.cover,
-                                        maxHeightDiskCache: 300,
-                                      ),
+                            sliver: const SliverToBoxAdapter(
+                                child: SizedBox(height: 16)),
+                          ),
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final Podcast podcast =
+                                    viewModel.subscriptions[index];
+                                return PoddrListItem(
+                                  title: podcast.title ?? 'Missing Title',
+                                  subtitle: podcast.author ?? 'Missing Author',
+                                  onTap: () {
+                                    final rss =
+                                        Uri.encodeComponent(podcast.rss ?? '');
+                                    context.push('/podcasts/$rss');
+                                  },
+                                  leading: Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    actions: [
-                                      if (podcast.broken)
-                                        PoddrIconButton(
-                                          icon: HugeIcon(
-                                            icon:
-                                                HugeIcons.strokeRoundedRefresh,
-                                            color: context.theme.error,
-                                          ),
-                                          size: 18,
-                                          semanticLabel:
-                                              'Feed unavailable, retry',
-                                          onPressed: () {
-                                            viewModel.retrySubscription(
-                                                podcast.rss ?? '');
-                                          },
+                                    child: PoddrImage(
+                                      imageUrl: podcast.image ?? '',
+                                      fit: BoxFit.cover,
+                                      maxHeightDiskCache: 300,
+                                    ),
+                                  ),
+                                  actions: [
+                                    if (podcast.broken)
+                                      PoddrIconButton(
+                                        icon: HugeIcon(
+                                          icon: HugeIcons.strokeRoundedRefresh,
+                                          color: context.theme.error,
                                         ),
-                                    ],
-                                  );
-                                },
-                                childCount: viewModel.subscriptions.length,
+                                        size: 18,
+                                        semanticLabel:
+                                            'Feed unavailable, retry',
+                                        onPressed: () async {
+                                          final success =
+                                              await viewModel.retrySubscription(
+                                                  podcast.rss ?? '');
+                                          if (!success && context.mounted) {
+                                            await showPoddrErrorDialog(
+                                              context: context,
+                                              title: 'Could not refresh feed',
+                                              message: viewModel.lastError ??
+                                                  'This feed could not be refreshed. '
+                                                      'Please try again.',
+                                            );
+                                          }
+                                        },
+                                      ),
+                                  ],
+                                );
+                              },
+                              childCount: viewModel.subscriptions.length,
+                            ),
+                          ),
+                          DecoratedSliver(
+                            decoration: BoxDecoration(
+                              color: context.theme.surfaceContainerLow,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(16),
+                                bottomRight: Radius.circular(16),
                               ),
                             ),
-                            DecoratedSliver(
-                              decoration: BoxDecoration(
-                                color: context.theme.surfaceContainerLow,
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(16),
-                                  bottomRight: Radius.circular(16),
-                                ),
-                              ),
-                              sliver: const SliverToBoxAdapter(
-                                  child: SizedBox(height: 16)),
-                            ),
-                          ],
-                        ),
-                      ],
+                            sliver: const SliverToBoxAdapter(
+                                child: SizedBox(height: 16)),
+                          ),
+                        ],
+                      ),
+                    ],
+            },
           ],
         );
       },

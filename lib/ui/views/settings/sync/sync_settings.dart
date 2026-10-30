@@ -11,6 +11,7 @@ import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_progress.dart';
+import 'package:poddr/ui/components/widgets/poddr_error_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/status_banner.dart';
 import 'package:poddr/ui/views/settings/sync/sync_settings_view_model.dart';
@@ -372,9 +373,18 @@ class SyncSection extends StatelessWidget {
 
   Future<void> _showDeviceSelection(
       BuildContext context, SyncProvider sync) async {
-    await sync.loadDevices();
+    final loaded = await sync.loadDevices();
 
     if (!context.mounted) return;
+    if (!loaded) {
+      await showPoddrErrorDialog(
+        context: context,
+        title: 'Could not load devices',
+        message: 'Your sync devices could not be loaded. '
+            'Check your connection and try again.',
+      );
+      return;
+    }
 
     final devices = sync.devices;
     if (devices == null || devices.isEmpty) {
@@ -524,7 +534,15 @@ class SyncSection extends StatelessWidget {
     );
 
     if (selected != null && context.mounted) {
-      await sync.selectSyncDevice(selected);
+      final success = await sync.selectSyncDevice(selected);
+      if (!success && context.mounted) {
+        await showPoddrErrorDialog(
+          context: context,
+          title: 'Could not update sync device',
+          message: 'The sync device could not be updated. '
+              'Check your connection and try again.',
+        );
+      }
     }
   }
 

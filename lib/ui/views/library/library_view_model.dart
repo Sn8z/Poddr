@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:poddr/core/async_state.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/subscriptions.dart';
@@ -49,14 +50,23 @@ class LibraryViewModel extends ChangeNotifier {
     );
   }
 
+  AsyncState<List<Podcast>> get subscriptionsState =>
+      _subscriptionProvider.subscriptionsState;
+
   bool get isLoading => _subscriptionProvider.isLoading;
 
-  Future<void> addSubscription({required String rss}) async {
-    await _subscriptionProvider.addSubscription(rss: rss);
+  String? get lastError => _subscriptionProvider.lastError;
+
+  Future<bool> addSubscription({required String rss}) async {
+    return _subscriptionProvider.addSubscription(rss: rss);
   }
 
-  Future<void> retrySubscription(String rss) async {
-    await _subscriptionProvider.retryFeed(rss);
+  Future<bool> retrySubscription(String rss) async {
+    return _subscriptionProvider.retryFeed(rss);
+  }
+
+  Future<void> retrySubscriptions() {
+    return _subscriptionProvider.retrySubscriptions();
   }
 
   void setFilter(String value) {

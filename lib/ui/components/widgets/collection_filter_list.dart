@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'package:poddr/models/collection.dart';
+import 'package:poddr/core/async_state.dart';
 import 'package:poddr/services/collections.dart';
+import 'package:poddr/ui/components/widgets/error_state.dart';
 import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
+import 'package:poddr/ui/components/widgets/poddr_progress.dart';
 import 'package:poddr/ui/components/widgets/poddr_toggle.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
@@ -28,17 +30,22 @@ class PoddrCollectionFilterList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final collectionsProvider = context.read<CollectionsProvider>();
+    final collectionsProvider = context.watch<CollectionsProvider>();
+    final state = collectionsProvider.collectionsState;
 
-    return StreamBuilder<List<PodcastCollection>>(
-      stream: collectionsProvider.collectionsStream,
-      builder: (context, snapshot) {
-        final collections = snapshot.data ?? [];
-
-        return Column(
+    return switch (state) {
+      AsyncInitial() || AsyncLoading() => const Padding(
+          padding: EdgeInsets.all(16),
+          child: Center(child: PoddrSpinner()),
+        ),
+      AsyncError(:final message) => ErrorState(
+          message: message,
+          onRetry: collectionsProvider.loadCollections,
+        ),
+      AsyncData(:final value) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            for (var collection in collections)
+            for (var collection in value)
               PoddrToggle(
                 label: collection.name,
                 leading: Container(
@@ -62,8 +69,7 @@ class PoddrCollectionFilterList extends StatelessWidget {
               child: const Text("Clear all"),
             ),
           ],
-        );
-      },
-    );
+        ),
+    };
   }
 }

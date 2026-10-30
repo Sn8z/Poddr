@@ -203,8 +203,8 @@ class DownloadsView extends StatelessWidget {
                                           imageUrl: download.imageUrl,
                                           maxHeightDiskCache: 300),
                                     ),
-                                    onTap: () {
-                                      viewModel.loadMedia(
+                                    onTap: () async {
+                                      final success = await viewModel.loadMedia(
                                         audioUrl: download.audioUrl,
                                         videoUrl: download.videoUrl,
                                         episodeTitle: download.title,
@@ -215,6 +215,14 @@ class DownloadsView extends StatelessWidget {
                                         album: download.title,
                                         artist: download.podcastTitle,
                                       );
+                                      if (!success && context.mounted) {
+                                        await showPoddrErrorDialog(
+                                          context: context,
+                                          message: viewModel.playbackError ??
+                                              'This episode could not be '
+                                                  'played. Please try again.',
+                                        );
+                                      }
                                     },
                                     actions: [
                                       Text(

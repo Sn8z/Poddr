@@ -9,6 +9,7 @@ import 'package:poddr/ui/components/widgets/poddr_buttons.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_progress.dart';
+import 'package:poddr/ui/components/widgets/status_banner.dart';
 
 class OpmlSection extends StatelessWidget {
   const OpmlSection({super.key});
@@ -72,12 +73,15 @@ class _OpmlView extends StatelessWidget {
         if (statusMessage != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              statusMessage,
-              style: context.theme.textTheme.bodySmall.copyWith(
-                color: isError ? context.theme.error : null,
-              ),
-            ),
+            child: isError
+                ? StatusBanner(
+                    message: statusMessage,
+                    severity: StatusSeverity.error,
+                  )
+                : Text(
+                    statusMessage,
+                    style: context.theme.textTheme.bodySmall,
+                  ),
           ),
       ],
     );

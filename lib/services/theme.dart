@@ -38,11 +38,17 @@ class ThemeProvider extends ChangeNotifier {
 
   Future<void> _loadTheme() async {
     debug("Loading theme settings", name: logName);
-    _themeMode = await _settingsRepository.getThemeMode();
-    _color = await _settingsRepository.getColor();
-    debug("Loaded theme: mode=$_themeMode, color=$_color", name: logName);
-    _updateThemes();
-    notifyListeners();
+    try {
+      _themeMode = await _settingsRepository.getThemeMode();
+      _color = await _settingsRepository.getColor();
+      debug("Loaded theme: mode=$_themeMode, color=$_color", name: logName);
+      _updateThemes();
+    } catch (e, stackTrace) {
+      error('Failed to load theme settings',
+          name: logName, error: e, stackTrace: stackTrace);
+    } finally {
+      notifyListeners();
+    }
   }
 
   void _updateThemes() {
@@ -55,8 +61,12 @@ class ThemeProvider extends ChangeNotifier {
     _color = color;
     _updateThemes();
     notifyListeners();
-    await _settingsRepository.setColor(_color);
-    info("Color updated", name: logName);
+    try {
+      await _settingsRepository.setColor(_color);
+      info("Color updated", name: logName);
+    } catch (e) {
+      warning('Failed to persist theme color: $e', name: logName);
+    }
   }
 
   Future<void> setThemeMode(PoddrThemeMode mode) async {
@@ -64,7 +74,11 @@ class ThemeProvider extends ChangeNotifier {
     _themeMode = mode;
     _updateThemes();
     notifyListeners();
-    await _settingsRepository.setThemeMode(_themeMode);
-    info("Theme mode updated to $mode", name: logName);
+    try {
+      await _settingsRepository.setThemeMode(_themeMode);
+      info("Theme mode updated to $mode", name: logName);
+    } catch (e) {
+      warning('Failed to persist theme mode: $e', name: logName);
+    }
   }
 }

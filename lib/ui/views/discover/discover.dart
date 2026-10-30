@@ -3,6 +3,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_provider.dart';
@@ -24,6 +25,7 @@ import 'package:poddr/ui/components/widgets/grid_item.dart';
 import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_error_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/utils/breakpoints.dart';
@@ -212,7 +214,26 @@ class LatestEpisodes extends StatelessWidget {
         ),
       ],
       children: [
-        if (subscriptionProvider.isLoadingLatest)
+        if (subscriptionProvider.subscriptionsState is AsyncError)
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Latest episodes could not be loaded.",
+                  style: context.theme.textTheme.bodyLarge.copyWith(
+                    color: context.theme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              PoddrTextButton(
+                label: 'Retry',
+                onPressed: subscriptionProvider.retrySubscriptions,
+              ),
+            ],
+          )
+        else if (subscriptionProvider.isLoadingLatest ||
+            subscriptionProvider.subscriptionsState is AsyncInitial ||
+            subscriptionProvider.subscriptionsState is AsyncLoading)
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -261,18 +282,27 @@ class LatestEpisodes extends StatelessWidget {
                   subtitle: episode.author,
                   subtitleMaxLines: 1,
                   data: EpisodeHistory(audioUrl: episode.audioUrl),
-                  onTap: () {
-                    context.read<MediaProvider>().loadMedia(
-                          audioUrl: episode.audioUrl,
-                          videoUrl: episode.videoUrl,
-                          episodeTitle: episode.title,
-                          podcastTitle: episode.podcastTitle,
-                          podcastRSS: episode.podcastRSS,
-                          artUri: episode.imageUrl,
-                          artist: episode.podcastTitle,
-                          album: episode.podcastTitle,
-                          description: episode.description,
-                        );
+                  onTap: () async {
+                    final mediaProvider = context.read<MediaProvider>();
+                    final success = await mediaProvider.loadMedia(
+                      audioUrl: episode.audioUrl,
+                      videoUrl: episode.videoUrl,
+                      episodeTitle: episode.title,
+                      podcastTitle: episode.podcastTitle,
+                      podcastRSS: episode.podcastRSS,
+                      artUri: episode.imageUrl,
+                      artist: episode.podcastTitle,
+                      album: episode.podcastTitle,
+                      description: episode.description,
+                    );
+                    if (!success && context.mounted) {
+                      await showPoddrErrorDialog(
+                        context: context,
+                        message: mediaProvider.lastError ??
+                            'This episode could not be played. '
+                                'Please try again.',
+                      );
+                    }
                   },
                 );
               }).toList(),
@@ -289,71 +319,86 @@ class RecentlyPlayedEpisodesSliver extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final historyProvider = context.watch<HistoryProvider>();
+    final state = historyProvider.historyState;
 
-    if (historyProvider.history.isEmpty) {
+    if (state is AsyncData<List<PodcastEpisode>> && state.value.isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
     return ContentBox(
       title: "Continue listening",
       children: [
-        historyProvider.isLoading
-            ? SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                    5,
-                    (index) => Container(
-                      width: 200,
-                      height: 140,
-                      margin: const EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const ShimmerBox(),
+        switch (state) {
+          AsyncInitial() || AsyncLoading() => SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(
+                  5,
+                  (index) => Container(
+                    width: 200,
+                    height: 140,
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                    child: const ShimmerBox(),
                   ),
                 ),
-              )
-            : SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: historyProvider.history.map((history) {
-                    return PoddrGridItem(
-                      width: 200,
-                      height: 140,
-                      leading: Container(
-                        clipBehavior: Clip.antiAlias,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: PoddrImage(
-                            imageUrl: history.imageUrl ?? "",
-                            maxHeightDiskCache: 300),
-                      ),
-                      title: history.title,
-                      titleMaxLines: 1,
-                      subtitle: history.podcastTitle,
-                      subtitleMaxLines: 1,
-                      data: EpisodeHistory(audioUrl: history.audioUrl),
-                      onTap: () {
-                        context.read<MediaProvider>().loadMedia(
-                              audioUrl: history.audioUrl,
-                              videoUrl: history.videoUrl,
-                              episodeTitle: history.title,
-                              podcastTitle: history.podcastTitle,
-                              podcastRSS: history.podcastRSS,
-                              artUri: history.imageUrl,
-                              artist: history.podcastTitle,
-                              album: history.podcastTitle,
-                              description: history.description,
-                            );
-                      },
-                    );
-                  }).toList(),
-                ),
               ),
+            ),
+          AsyncError(:final message) => ErrorState(
+              message: message,
+              onRetry: historyProvider.retryHistory,
+            ),
+          AsyncData(:final value) => SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: value.map((history) {
+                  return PoddrGridItem(
+                    width: 200,
+                    height: 140,
+                    leading: Container(
+                      clipBehavior: Clip.antiAlias,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: PoddrImage(
+                          imageUrl: history.imageUrl ?? "",
+                          maxHeightDiskCache: 300),
+                    ),
+                    title: history.title,
+                    titleMaxLines: 1,
+                    subtitle: history.podcastTitle,
+                    subtitleMaxLines: 1,
+                    data: EpisodeHistory(audioUrl: history.audioUrl),
+                    onTap: () async {
+                      final mediaProvider = context.read<MediaProvider>();
+                      final success = await mediaProvider.loadMedia(
+                        audioUrl: history.audioUrl,
+                        videoUrl: history.videoUrl,
+                        episodeTitle: history.title,
+                        podcastTitle: history.podcastTitle,
+                        podcastRSS: history.podcastRSS,
+                        artUri: history.imageUrl,
+                        artist: history.podcastTitle,
+                        album: history.podcastTitle,
+                        description: history.description,
+                      );
+                      if (!success && context.mounted) {
+                        await showPoddrErrorDialog(
+                          context: context,
+                          message: mediaProvider.lastError ??
+                              'This episode could not be played. '
+                                  'Please try again.',
+                        );
+                      }
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+        },
       ],
     );
   }

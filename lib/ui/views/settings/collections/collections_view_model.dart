@@ -12,15 +12,16 @@ class CollectionsViewModel extends ChangeNotifier {
 
   String get newCollectionName => nameController.text;
   int get newCollectionColor => _newCollectionColor;
+  String? get lastError => _collectionsProvider.lastError;
 
   void setNewCollectionColor(int value) {
     _newCollectionColor = value;
     notifyListeners();
   }
 
-  Future<void> submitNewCollection() async {
+  Future<bool> submitNewCollection() async {
     final name = nameController.text.trim();
-    if (name.isEmpty) return;
+    if (name.isEmpty) return false;
 
     final success = await createCollection(name, _newCollectionColor);
     if (success) {
@@ -28,12 +29,11 @@ class CollectionsViewModel extends ChangeNotifier {
       _newCollectionColor = generateRandomColorInt();
       notifyListeners();
     }
+    return success;
   }
 
-  Future<bool> createCollection(String name, int color) async {
-    final result =
-        await _collectionsProvider.createCollection(name, color: color);
-    return result != null;
+  Future<bool> createCollection(String name, int color) {
+    return _collectionsProvider.createCollection(name, color: color);
   }
 
   Future<bool> updateCollectionName(int id, String name) async {

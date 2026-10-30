@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:audio_service/audio_service.dart';
+import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/log.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poddr/models/episode.dart';
+import 'package:poddr/models/progress.dart';
 import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_handler.dart';
 import 'package:poddr/services/offline.dart';
@@ -64,6 +66,9 @@ class MediaProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  String? _lastError;
+  String? get lastError => _lastError;
+
   DateTime? _lastProgressSave;
 
   List<PodcastEpisode> get mediaQueue => _mediaHandler.mediaQueue;
@@ -90,32 +95,42 @@ class MediaProvider extends ChangeNotifier {
 
   Future<({String? audioSource, String? videoSource, Duration startPosition})?>
       _resolveQueueItem(String audioUrl) async {
-    try {
-      Duration startPosition = Duration.zero;
-      if (_historyProvider != null) {
+    Duration startPosition = Duration.zero;
+    if (_historyProvider != null) {
+      try {
         final progress = await _historyProvider!.getProgress(audioUrl);
         if (progress != null && !progress.isFinished) {
           startPosition = Duration(seconds: progress.position);
         }
+      } catch (e) {
+        warning(
+          'Failed to read saved progress for queue playback, '
+          'starting from the beginning: $e',
+          name: logName,
+        );
       }
+    }
 
-      String? audioSource;
-      String? videoSource;
-      if (_offlineProvider != null) {
+    String? audioSource;
+    String? videoSource;
+    if (_offlineProvider != null) {
+      try {
         audioSource = await _offlineProvider!.getLocalPath(audioUrl);
         videoSource = await _offlineProvider!.getVideoLocalPath(audioUrl);
+      } catch (e) {
+        warning(
+          'Failed to resolve a downloaded copy for queue playback, '
+          'using the stream URL: $e',
+          name: logName,
+        );
       }
-
-      return (
-        audioSource: audioSource,
-        videoSource: videoSource,
-        startPosition: startPosition,
-      );
-    } catch (e, stackTrace) {
-      error('Failed to resolve queue playback',
-          name: logName, error: e, stackTrace: stackTrace);
-      return null;
     }
+
+    return (
+      audioSource: audioSource,
+      videoSource: videoSource,
+      startPosition: startPosition,
+    );
   }
 
   void _initMediaListeners() async {
@@ -238,7 +253,7 @@ class MediaProvider extends ChangeNotifier {
 
   Future<void> clearQueue() async => await _mediaHandler.clearQueue();
 
-  Future<void> addToQueue({
+  Future<bool> addToQueue({
     String? audioUrl,
     String? videoUrl,
     String? podcastTitle,
@@ -251,24 +266,38 @@ class MediaProvider extends ChangeNotifier {
   }) async {
     debug("Adding to queue", name: logName);
 
-    if (audioUrl == null) return;
+    if (audioUrl == null) {
+      _lastError = 'This episode cannot be added to the queue.';
+      return false;
+    }
 
-    final media = MediaItem(
-      id: audioUrl,
-      title: episodeTitle ?? "Missing title",
-      album: album ?? "Missing album",
-      displayDescription: description ?? "Missing description",
-      artist: artist ?? podcastTitle,
-      artUri: Uri.parse(artUri ?? ""),
-      extras: {
-        "podcastRSS": podcastRSS,
-        "videoUrl": videoUrl,
-        "audioUrl": audioUrl,
-        "description": description
-      },
-    );
+    try {
+      final media = MediaItem(
+        id: audioUrl,
+        title: episodeTitle ?? "Missing title",
+        album: album ?? "Missing album",
+        displayDescription: description ?? "Missing description",
+        artist: artist ?? podcastTitle,
+        artUri: Uri.parse(artUri ?? ""),
+        extras: {
+          "podcastRSS": podcastRSS,
+          "videoUrl": videoUrl,
+          "audioUrl": audioUrl,
+          "description": description
+        },
+      );
 
-    await _mediaHandler.addQueueItem(media);
+      await _mediaHandler.addQueueItem(media);
+      _lastError = null;
+      return true;
+    } catch (e, stackTrace) {
+      error('Failed to add episode to queue',
+          name: logName, error: e, stackTrace: stackTrace);
+      _lastError = e is PoddrException
+          ? e.userMessage
+          : 'This episode could not be added to the queue. Please try again.';
+      return false;
+    }
   }
 
   Future<void> cycleRepeatMode() async {
@@ -296,7 +325,7 @@ class MediaProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> loadMedia({
+  Future<bool> loadMedia({
     String? audioUrl,
     String? videoUrl,
     String? episodeTitle,
@@ -307,61 +336,95 @@ class MediaProvider extends ChangeNotifier {
     String? album,
     String? description,
   }) async {
-    if (audioUrl == null) return;
-    if (_historyProvider == null) return;
+    if (audioUrl == null) {
+      _lastError = 'This episode cannot be played.';
+      return false;
+    }
+    if (_historyProvider == null) {
+      _lastError = 'Playback is not ready yet. Please try again.';
+      return false;
+    }
 
     Duration startPosition = Duration.zero;
-    final progress = await _historyProvider!.getProgress(audioUrl);
-    if (progress != null && !progress.isFinished) {
-      startPosition = Duration(seconds: progress.position);
+    EpisodeProgress? progress;
+    try {
+      progress = await _historyProvider!.getProgress(audioUrl);
+      if (progress != null && !progress.isFinished) {
+        startPosition = Duration(seconds: progress.position);
+      }
+    } catch (e) {
+      warning(
+        'Failed to read saved progress for $audioUrl, '
+        'starting from the beginning: $e',
+        name: logName,
+      );
     }
 
     String playAudioSource = audioUrl;
     String? playVideoSource = videoUrl;
 
     if (_offlineProvider != null) {
-      final localPath = await _offlineProvider!.getLocalPath(audioUrl);
-      if (localPath != null) {
-        playAudioSource = localPath;
-        info("Playing audio from local file: $localPath", name: logName);
-      }
-
-      if (videoUrl != null) {
-        final localVideoPath =
-            await _offlineProvider!.getVideoLocalPath(audioUrl);
-        if (localVideoPath != null) {
-          playVideoSource = localVideoPath;
-          info("Playing video from local file: $localVideoPath", name: logName);
+      try {
+        final localPath = await _offlineProvider!.getLocalPath(audioUrl);
+        if (localPath != null) {
+          playAudioSource = localPath;
+          info("Playing audio from local file: $localPath", name: logName);
         }
+
+        if (videoUrl != null) {
+          final localVideoPath =
+              await _offlineProvider!.getVideoLocalPath(audioUrl);
+          if (localVideoPath != null) {
+            playVideoSource = localVideoPath;
+            info("Playing video from local file: $localVideoPath",
+                name: logName);
+          }
+        }
+      } catch (e) {
+        warning(
+          'Failed to resolve a downloaded copy for $audioUrl, '
+          'using the stream URL: $e',
+          name: logName,
+        );
       }
     }
 
-    await _mediaHandler.loadMedia(
-      audioUrl: audioUrl,
-      videoUrl: videoUrl,
-      audioSource: playAudioSource,
-      videoSource: playVideoSource,
-      podcastTitle: podcastTitle,
-      podcastRSS: podcastRSS,
-      episodeTitle: episodeTitle,
-      album: album,
-      description: description,
-      artist: artist,
-      artUri: artUri,
-      startPosition: startPosition,
-    );
-
-    if (progress == null) {
-      _historyProvider!.addToHistory(
-        audioUrl,
-        episodeTitle ?? "Missing title",
-        description ?? "Missing description",
-        artUri ?? "",
-        podcastTitle ?? "",
-        podcastRSS ?? "",
-        _duration.inSeconds,
-        videoUrl,
+    try {
+      await _mediaHandler.loadMedia(
+        audioUrl: audioUrl,
+        videoUrl: videoUrl,
+        audioSource: playAudioSource,
+        videoSource: playVideoSource,
+        podcastTitle: podcastTitle,
+        podcastRSS: podcastRSS,
+        episodeTitle: episodeTitle,
+        album: album,
+        description: description,
+        artist: artist,
+        artUri: artUri,
+        startPosition: startPosition,
       );
+      _lastError = null;
+      if (progress == null) {
+        _historyProvider!.addToHistory(
+          audioUrl,
+          episodeTitle ?? "Missing title",
+          description ?? "Missing description",
+          artUri ?? "",
+          podcastTitle ?? "",
+          podcastRSS ?? "",
+          _duration.inSeconds,
+          videoUrl,
+        );
+      }
+      return true;
+    } catch (e, stackTrace) {
+      error('Failed to load media',
+          name: logName, error: e, stackTrace: stackTrace);
+      _lastError = e is PoddrException
+          ? e.userMessage
+          : 'This episode could not be played. Please try again.';
+      return false;
     }
   }
 

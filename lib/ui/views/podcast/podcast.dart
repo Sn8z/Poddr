@@ -19,6 +19,7 @@ import 'package:poddr/ui/views/podcast/podcast_view_model.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
+import 'package:poddr/ui/components/widgets/poddr_error_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/podcast_header.dart';
@@ -424,18 +425,28 @@ class Episode extends StatelessWidget {
           },
         ),
         PoddrIconButton(
-          onPressed: () {
-            context.read<MediaProvider>().addToQueue(
-                  audioUrl: episode.audioUrl,
-                  videoUrl: episode.videoUrl,
-                  episodeTitle: episode.title,
-                  podcastTitle: episode.podcastTitle,
-                  podcastRSS: podcastProvider.podcast!.rss ?? "Missing RSS",
-                  description: episode.description,
-                  artUri: podcastProvider.podcast!.image,
-                  album: episode.title,
-                  artist: podcastProvider.podcast!.author,
-                );
+          onPressed: () async {
+            final mediaProvider = context.read<MediaProvider>();
+            final podcast = podcastProvider.podcast;
+            final success = await mediaProvider.addToQueue(
+              audioUrl: episode.audioUrl,
+              videoUrl: episode.videoUrl,
+              episodeTitle: episode.title,
+              podcastTitle: episode.podcastTitle,
+              podcastRSS: podcast?.rss ?? "Missing RSS",
+              description: episode.description,
+              artUri: podcast?.image,
+              album: episode.title,
+              artist: podcast?.author,
+            );
+            if (!success && context.mounted) {
+              await showPoddrErrorDialog(
+                context: context,
+                message: mediaProvider.lastError ??
+                    'This episode could not be added to the queue. '
+                        'Please try again.',
+              );
+            }
           },
           icon: const HugeIcon(icon: HugeIcons.strokeRoundedMusicNote01),
         ),
@@ -445,18 +456,27 @@ class Episode extends StatelessWidget {
         ),
         DownloadButton(episode: episode),
       ],
-      onTap: () {
-        context.read<MediaProvider>().loadMedia(
-              audioUrl: episode.audioUrl,
-              videoUrl: episode.videoUrl,
-              episodeTitle: episode.title,
-              podcastTitle: episode.podcastTitle,
-              podcastRSS: podcastProvider.podcast!.rss ?? "Missing RSS",
-              description: episode.description,
-              artUri: podcastProvider.podcast!.image,
-              album: episode.title,
-              artist: podcastProvider.podcast!.author,
-            );
+      onTap: () async {
+        final mediaProvider = context.read<MediaProvider>();
+        final podcast = podcastProvider.podcast;
+        final success = await mediaProvider.loadMedia(
+          audioUrl: episode.audioUrl,
+          videoUrl: episode.videoUrl,
+          episodeTitle: episode.title,
+          podcastTitle: episode.podcastTitle,
+          podcastRSS: podcast?.rss ?? "Missing RSS",
+          description: episode.description,
+          artUri: podcast?.image,
+          album: episode.title,
+          artist: podcast?.author,
+        );
+        if (!success && context.mounted) {
+          await showPoddrErrorDialog(
+            context: context,
+            message: mediaProvider.lastError ??
+                'This episode could not be played. Please try again.',
+          );
+        }
       },
     );
   }

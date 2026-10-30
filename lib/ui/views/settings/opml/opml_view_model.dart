@@ -1,8 +1,11 @@
 import 'package:flutter/widgets.dart';
+import 'package:poddr/core/log.dart';
 import 'package:poddr/services/opml.dart';
 import 'package:poddr/services/subscriptions.dart';
 
 class OpmlViewModel extends ChangeNotifier {
+  static const String logName = "OpmlViewModel";
+
   final OpmlService _opmlService = OpmlService();
   final SubscriptionProvider _subscriptionProvider;
 
@@ -14,6 +17,9 @@ class OpmlViewModel extends ChangeNotifier {
 
   bool _isError = false;
   bool get isError => _isError;
+
+  String? _lastError;
+  String? get lastError => _lastError;
 
   double? _importProgress;
   double? get importProgress => _importProgress;
@@ -51,21 +57,30 @@ class OpmlViewModel extends ChangeNotifier {
       _pendingSkipped = preview.skippedCount;
       _setStatus('${preview.newUrls.length} new feeds found');
       return true;
+    } catch (e, stackTrace) {
+      error('Failed to prepare OPML import',
+          name: logName, error: e, stackTrace: stackTrace);
+      _setStatus(
+        'The OPML file could not be read. Please try again.',
+        isError: true,
+      );
+      return false;
     } finally {
       _setLoading(false);
     }
   }
 
-  Future<void> runPendingImport() async {
+  Future<bool> runPendingImport() async {
     final urls = _pendingUrls;
     _pendingUrls = [];
     _pendingSkipped = 0;
     if (urls.isEmpty) {
       _setStatus(null);
-      return;
+      return false;
     }
     _setLoading(true);
 
+    var success = false;
     try {
       final result = await _opmlService.importUrls(
         urls,
@@ -76,13 +91,27 @@ class OpmlViewModel extends ChangeNotifier {
         },
         isCancelled: () => _cancelImport,
       );
+      success = !result.isError;
       _setStatus(result.message, isError: result.isError);
+    } catch (e, stackTrace) {
+      error('Failed to import OPML feeds',
+          name: logName, error: e, stackTrace: stackTrace);
+      _setStatus(
+        'The import could not be completed. Please try again.',
+        isError: true,
+      );
     } finally {
       _importProgress = null;
       _setLoading(false);
     }
 
-    await _subscriptionProvider.refresh(force: true);
+    try {
+      await _subscriptionProvider.refresh(force: true);
+    } catch (e, stackTrace) {
+      error('Failed to refresh subscriptions after import',
+          name: logName, error: e, stackTrace: stackTrace);
+    }
+    return success;
   }
 
   void dismissPendingImport() {
@@ -95,7 +124,7 @@ class OpmlViewModel extends ChangeNotifier {
     _cancelImport = true;
   }
 
-  Future<void> exportOpml() async {
+  Future<bool> exportOpml() async {
     _setLoading(true);
     _setStatus('Generating OPML...');
 
@@ -103,7 +132,20 @@ class OpmlViewModel extends ChangeNotifier {
       final result = await _opmlService.exportOpml(
         _subscriptionProvider.subscriptions,
       );
+      if (result.message == null) {
+        _setStatus(null);
+        return false;
+      }
       _setStatus(result.message, isError: result.isError);
+      return !result.isError;
+    } catch (e, stackTrace) {
+      error('Failed to export OPML',
+          name: logName, error: e, stackTrace: stackTrace);
+      _setStatus(
+        'The OPML file could not be exported. Please try again.',
+        isError: true,
+      );
+      return false;
     } finally {
       _setLoading(false);
     }
@@ -112,6 +154,7 @@ class OpmlViewModel extends ChangeNotifier {
   void _setStatus(String? message, {bool isError = false}) {
     _statusMessage = message;
     _isError = isError;
+    _lastError = isError ? message : null;
     notifyListeners();
   }
 

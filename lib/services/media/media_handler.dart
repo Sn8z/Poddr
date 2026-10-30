@@ -81,7 +81,7 @@ class PoddrMediaHandler extends BaseAudioHandler
 
       final audioUrl = await _mediaRepository.getAudioUrl();
       if (audioUrl.isNotEmpty) {
-        loadMedia(
+        await loadMedia(
           audioUrl: audioUrl,
           videoUrl: await _mediaRepository.getVideoUrl(),
           episodeTitle: await _mediaRepository.getEpisodeTitle(),

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:poddr/core/async_state.dart';
+import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/history/drift_history_repository.dart';
 import 'package:poddr/data/history/history_repository.dart';
@@ -18,6 +20,12 @@ class HistoryProvider extends ChangeNotifier {
   List<PodcastEpisode> _history = [];
   List<PodcastEpisode> get history => _history;
 
+  AsyncState<List<PodcastEpisode>> _historyState = const AsyncLoading();
+  AsyncState<List<PodcastEpisode>> get historyState => _historyState;
+
+  String? _lastError;
+  String? get lastError => _lastError;
+
   StreamSubscription<List<PodcastEpisode>>? _watchSubscription;
   bool _disposed = false;
 
@@ -27,12 +35,18 @@ class HistoryProvider extends ChangeNotifier {
     _watchSubscription = _historyRepository.watchAllHistory().listen(
       (items) {
         _history = items;
+        _historyState = AsyncData(items);
         _isLoading = false;
         _notify();
       },
-      onError: (e) {
-        error('Failed to watch history', name: logName);
-        debug('Watch history detail: $e', name: logName);
+      onError: (Object e, StackTrace stackTrace) {
+        error('Failed to watch history',
+            name: logName, error: e, stackTrace: stackTrace);
+        _historyState = AsyncError(
+          e is PoddrException
+              ? e.userMessage
+              : 'Listening history could not be loaded. Please try again.',
+        );
         _isLoading = false;
         _notify();
       },
@@ -51,15 +65,32 @@ class HistoryProvider extends ChangeNotifier {
   }
 
   Future<void> getHistory() async {
+    _isLoading = true;
+    _historyState = const AsyncLoading();
+    _notify();
+
     try {
-      _history = await _historyRepository.getHistory();
-      _notify();
-    } catch (e, stackTrace) {
+      final items = await _historyRepository.getHistory();
+      _history = items;
+      _historyState = AsyncData(items);
+      _lastError = null;
+    } on PoddrException catch (e, stackTrace) {
       error('Failed to get history',
           name: logName, error: e, stackTrace: stackTrace);
-      debug('Get history detail: $e', name: logName);
+      _historyState = AsyncError(e.userMessage);
+    } catch (e, stackTrace) {
+      error('Failed to get history unexpectedly',
+          name: logName, error: e, stackTrace: stackTrace);
+      _historyState = const AsyncError(
+        'Listening history could not be loaded. Please try again.',
+      );
+    } finally {
+      _isLoading = false;
+      _notify();
     }
   }
+
+  Future<void> retryHistory() => getHistory();
 
   Future<void> addToHistory(
     String audioUrl,
@@ -162,11 +193,13 @@ class HistoryProvider extends ChangeNotifier {
         duration: progress['duration'] as int,
         isFinished: progress['isFinished'] as bool,
       );
-    } catch (e, stackTrace) {
-      error('Failed to get progress',
-          name: logName, error: e, stackTrace: stackTrace);
-      debug('Get progress detail: $e', name: logName);
-      return null;
+    } on PoddrException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(
+        'Failed to read progress for $audioUrl: $e',
+        userMessage: 'Your listening progress could not be loaded.',
+      );
     }
   }
 
@@ -193,13 +226,19 @@ class HistoryProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> removeHistory(String audioUrl) async {
+  Future<bool> removeHistory(String audioUrl) async {
     try {
       await _historyRepository.removeHistory(audioUrl);
+      _lastError = null;
+      return true;
     } catch (e, stackTrace) {
       error('Failed to remove history',
           name: logName, error: e, stackTrace: stackTrace);
-      debug('Remove history detail: $e', name: logName);
+      _lastError = e is PoddrException
+          ? e.userMessage
+          : 'The episode could not be removed from your history. '
+              'Please try again.';
+      return false;
     }
   }
 }

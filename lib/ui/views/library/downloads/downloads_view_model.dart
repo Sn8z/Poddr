@@ -73,7 +73,7 @@ class DownloadsViewModel extends ChangeNotifier {
   Future<void> resumeDownload(PodcastEpisode episode) =>
       _offlineProvider.resumeDownload(episode);
 
-  void loadMedia({
+  Future<bool> loadMedia({
     required String audioUrl,
     required String episodeTitle,
     required String podcastTitle,
@@ -84,7 +84,7 @@ class DownloadsViewModel extends ChangeNotifier {
     String? artist,
     String? videoUrl,
   }) {
-    _mediaProvider.loadMedia(
+    return _mediaProvider.loadMedia(
       audioUrl: audioUrl,
       videoUrl: videoUrl,
       episodeTitle: episodeTitle,
@@ -106,6 +106,7 @@ class DownloadsViewModel extends ChangeNotifier {
   Future<bool> clearAllDownloads() => _offlineProvider.clearAll();
 
   String? get lastError => _offlineProvider.lastError;
+  String? get playbackError => _mediaProvider.lastError;
 
   int getQueuePosition(String audioUrl) {
     return _offlineProvider.getQueuePosition(audioUrl);

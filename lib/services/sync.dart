@@ -128,11 +128,20 @@ class SyncProvider extends ChangeNotifier {
   }
 
   Future<void> _init() async {
-    _syncEnabled = await _settings.getSyncEnabled();
-    if (!_syncEnabled) return;
+    try {
+      _syncEnabled = await _settings.getSyncEnabled();
+      if (!_syncEnabled) return;
 
-    await _setupClient();
-    _loginAndSyncClient();
+      await _setupClient();
+      unawaited(_loginAndSyncClient());
+    } catch (e, stackTrace) {
+      error('Failed to initialize sync',
+          name: logName, error: e, stackTrace: stackTrace);
+      _updateStatus(
+        SyncStatus.error,
+        'Sync could not be started. Please try again.',
+      );
+    }
   }
 
   Future<void> _refreshLastSyncTime() async {
@@ -179,23 +188,30 @@ class SyncProvider extends ChangeNotifier {
     );
   }
 
-  Future<void> _loginAndSyncClient() async {
-    if (_client == null) return;
+  Future<bool> _loginAndSyncClient() async {
+    if (_client == null) return false;
     _updateStatus(SyncStatus.connecting, 'Connecting to sync server...');
 
     try {
       final success = await _loginWithRetry();
-      if (success) {
-        await _settings.setSyncEnabled(true);
-        await _client!.registerDevice();
-        _startTimers();
-        await syncAll();
-        await loadDevices();
+      if (!success) return false;
+
+      await _settings.setSyncEnabled(true);
+      await _client!.registerDevice();
+      _startTimers();
+      await syncAll();
+      await loadDevices();
+      return true;
+    } catch (e, stackTrace) {
+      error('Failed to configure sync',
+          name: logName, error: e, stackTrace: stackTrace);
+      if (_status != SyncStatus.credentialsInvalid) {
+        _updateStatus(
+          SyncStatus.error,
+          'Sync could not be set up. Please try again.',
+        );
       }
-    } catch (e) {
-      _updateStatus(SyncStatus.disconnected);
-      error('Failed to configure sync', name: logName);
-      debug('Configure sync failed: $e', name: logName);
+      return false;
     } finally {
       notifyListeners();
     }
@@ -336,7 +352,7 @@ class SyncProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> loadDevices({bool forceRefresh = false}) async {
+  Future<bool> loadDevices({bool forceRefresh = false}) async {
     try {
       if (forceRefresh || _devices == null || _syncGroups == null) {
         _devices = await _executeWithAuthRetry(() => _client!.getDevices());
@@ -344,46 +360,52 @@ class SyncProvider extends ChangeNotifier {
             await _executeWithAuthRetry(() => _client!.getSyncDevices());
       }
 
-      if (_devices != null && _syncGroups != null) {
-        final currentDeviceId = await _settings.getSyncDeviceId();
-        final groups = _syncGroups!['synchronized'] as List? ?? [];
-        String? syncDeviceId;
+      if (_devices == null || _syncGroups == null) {
+        error('Failed to load sync devices', name: logName);
+        return false;
+      }
 
-        for (final group in groups) {
-          if (group is List) {
-            for (final id in group) {
-              if (id != currentDeviceId) {
-                syncDeviceId = id as String;
-                break;
-              }
+      final currentDeviceId = await _settings.getSyncDeviceId();
+      final groups = _syncGroups!['synchronized'] as List? ?? [];
+      String? syncDeviceId;
+
+      for (final group in groups) {
+        if (group is List) {
+          for (final id in group) {
+            if (id != currentDeviceId) {
+              syncDeviceId = id as String;
+              break;
             }
           }
-          if (syncDeviceId != null) break;
         }
-
-        if (syncDeviceId != null && _devices != null) {
-          final device = _devices!.firstWhere(
-            (d) => d['id'] == syncDeviceId,
-            orElse: () => {},
-          );
-          _targetSyncDeviceId = syncDeviceId;
-          _targetSyncDeviceName = device['caption'] ?? syncDeviceId;
-          _syncDeviceCaption = _targetSyncDeviceName!;
-        } else {
-          _targetSyncDeviceId = null;
-          _targetSyncDeviceName = null;
-          _syncDeviceCaption = '';
-        }
+        if (syncDeviceId != null) break;
       }
-    } catch (e) {
-      error('Failed to load devices', name: logName);
-      debug('Load devices detail: $e', name: logName);
+
+      if (syncDeviceId != null) {
+        final device = _devices!.firstWhere(
+          (d) => d['id'] == syncDeviceId,
+          orElse: () => {},
+        );
+        _targetSyncDeviceId = syncDeviceId;
+        _targetSyncDeviceName = device['caption'] ?? syncDeviceId;
+        _syncDeviceCaption = _targetSyncDeviceName!;
+      } else {
+        _targetSyncDeviceId = null;
+        _targetSyncDeviceName = null;
+        _syncDeviceCaption = '';
+      }
+
+      return true;
+    } catch (e, stackTrace) {
+      error('Failed to load devices',
+          name: logName, error: e, stackTrace: stackTrace);
+      return false;
     } finally {
       notifyListeners();
     }
   }
 
-  Future<void> connect({
+  Future<bool> connect({
     required String serverUrl,
     required String username,
     required String password,
@@ -392,16 +414,16 @@ class SyncProvider extends ChangeNotifier {
     if (serverUrl.isEmpty || username.isEmpty || password.isEmpty) {
       _updateStatus(
           SyncStatus.disconnected, 'Please fill in all required fields', true);
-      return;
+      return false;
     }
 
     if (!isValidUrl(serverUrl, requireHttps: true)) {
       _updateStatus(
           SyncStatus.disconnected, 'Sync server must use HTTPS', true);
-      return;
+      return false;
     }
 
-    await configure(
+    return configure(
       serverUrl: serverUrl,
       username: username,
       password: password,
@@ -409,7 +431,7 @@ class SyncProvider extends ChangeNotifier {
     );
   }
 
-  Future<void> configure({
+  Future<bool> configure({
     required String serverUrl,
     required String username,
     required String password,
@@ -423,12 +445,17 @@ class SyncProvider extends ChangeNotifier {
 
       await _setupClient();
 
-      await _loginAndSyncClient();
-    } catch (e) {
+      return await _loginAndSyncClient();
+    } catch (e, stackTrace) {
+      error('Failed to configure sync',
+          name: logName, error: e, stackTrace: stackTrace);
+      _syncEnabled = false;
       _updateStatus(
-          SyncStatus.disconnected, 'Failed to configure sync: $e', true);
-      error('Failed to configure sync', name: logName);
-      debug('Configure sync detail: $e', name: logName);
+        SyncStatus.disconnected,
+        friendlyErrorMessage(e),
+        true,
+      );
+      return false;
     }
   }
 
@@ -750,7 +777,11 @@ class SyncProvider extends ChangeNotifier {
         episode: episode,
       );
     } else if (actionType == 'new') {
-      await _historyProvider?.removeHistory(episodeUrl);
+      final removed = await _historyProvider?.removeHistory(episodeUrl);
+      if (removed == false) {
+        warning('Failed to apply remote episode removal for $episodeUrl',
+            name: logName);
+      }
     }
   }
 
@@ -901,33 +932,86 @@ class SyncProvider extends ChangeNotifier {
     return success;
   }
 
-  Future<void> disconnectUi() async {
-    await disconnect();
+  Future<bool> disconnectUi() async {
+    final success = await disconnect();
 
     _syncDeviceCaption = '';
     _devices = null;
     _syncGroups = null;
-    _updateStatus(SyncStatus.disconnected, 'Disconnected from sync server');
+    _updateStatus(
+      SyncStatus.disconnected,
+      success
+          ? 'Disconnected from sync server'
+          : 'Disconnected, but some local sync data could not be cleared.',
+      !success,
+    );
+    return success;
   }
 
-  Future<void> disconnect() async {
+  Future<bool> disconnect() async {
     _syncEnabled = false;
-    await _syncRepository.clearPendingSubscriptionActions();
-    await _syncRepository.clearPendingEpisodeActions();
+    var success = true;
+
+    try {
+      await _syncRepository.clearPendingSubscriptionActions();
+    } catch (e) {
+      success = false;
+      warning('Failed to clear pending subscription actions: $e',
+          name: logName);
+    }
+    try {
+      await _syncRepository.clearPendingEpisodeActions();
+    } catch (e) {
+      success = false;
+      warning('Failed to clear pending episode actions: $e', name: logName);
+    }
+
     await _stopTimers();
-    await _client?.logout();
+
+    try {
+      await _client?.logout();
+    } catch (e) {
+      success = false;
+      warning('Failed to log out of sync server: $e', name: logName);
+    }
     _client?.dispose();
     _client = null;
-    await _settings.setSyncEnabled(false);
-    await _secureSettings.clearSyncPassword();
+
+    try {
+      await _settings.setSyncEnabled(false);
+    } catch (e) {
+      success = false;
+      warning('Failed to persist sync disabled state: $e', name: logName);
+    }
+    try {
+      await _secureSettings.clearSyncPassword();
+    } catch (e) {
+      success = false;
+      warning('Failed to clear stored sync password: $e', name: logName);
+    }
+
+    return success;
   }
 
-  Future<void> syncNow() async {
-    await syncAll();
+  Future<bool> syncNow() async {
+    if (_client == null) {
+      _updateStatus(
+        SyncStatus.error,
+        'Sync is not connected. Please reconnect.',
+      );
+      return false;
+    }
+    return syncAll();
   }
 
-  Future<void> fullResync() async {
-    if (_client == null) return;
+  Future<bool> fullResync() async {
+    if (_client == null) {
+      _updateStatus(
+        SyncStatus.error,
+        'Sync is not connected. Please reconnect.',
+      );
+      return false;
+    }
     _updateStatus(SyncStatus.syncing, 'Full re-sync in progress...');
 
     try {
@@ -935,7 +1019,7 @@ class SyncProvider extends ChangeNotifier {
       await _settings.setSyncLastEpisodeSync(0);
       await _syncRepository.clearPendingSubscriptionActions();
       await _syncRepository.clearPendingEpisodeActions();
-      await syncAll();
+      return await syncAll();
     } catch (e, stackTrace) {
       error('Full re-sync failed',
           name: logName, error: e, stackTrace: stackTrace);
@@ -945,28 +1029,36 @@ class SyncProvider extends ChangeNotifier {
           'Full re-sync failed. Please try again.',
         );
       }
+      return false;
     } finally {
       notifyListeners();
     }
   }
 
-  Future<void> selectSyncDevice(String targetDeviceId) async {
-    bool success;
-    if (targetDeviceId.isEmpty) {
-      success = await clearSyncDevice();
-    } else {
-      success = await setSyncDevice(targetDeviceId);
+  Future<bool> selectSyncDevice(String targetDeviceId) async {
+    var success = false;
+    try {
+      success = targetDeviceId.isEmpty
+          ? await clearSyncDevice()
+          : await setSyncDevice(targetDeviceId);
+    } catch (e, stackTrace) {
+      error('Failed to update sync device',
+          name: logName, error: e, stackTrace: stackTrace);
+      success = false;
     }
-
-    _updateStatus(
-      SyncStatus.connected,
-      success ? 'Sync device updated' : 'Failed to update sync device',
-      !success,
-    );
 
     if (success) {
+      _updateStatus(SyncStatus.connected, 'Sync device updated');
       await loadDevices();
+    } else {
+      _updateStatus(
+        SyncStatus.warning,
+        'Could not update sync device. Check your connection and try again.',
+        true,
+      );
     }
+
+    return success;
   }
 
   @override

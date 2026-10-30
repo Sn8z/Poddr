@@ -130,7 +130,7 @@ class OpmlService {
         return (
           newUrls: <String>[],
           skippedCount: 0,
-          stopMessage: 'File too large',
+          stopMessage: 'This file is too large to import.',
           isError: true,
         );
       }
@@ -148,7 +148,7 @@ class OpmlService {
         return (
           newUrls: <String>[],
           skippedCount: 0,
-          stopMessage: 'Could not parse OPML file',
+          stopMessage: 'This file is not a valid OPML file.',
           isError: true,
         );
       }
@@ -157,7 +157,7 @@ class OpmlService {
         return (
           newUrls: <String>[],
           skippedCount: 0,
-          stopMessage: 'No feeds found in OPML',
+          stopMessage: 'No feeds were found in this OPML file.',
           isError: false,
         );
       }
@@ -175,7 +175,7 @@ class OpmlService {
         return (
           newUrls: <String>[],
           skippedCount: rssUrls.length,
-          stopMessage: 'All feeds already subscribed',
+          stopMessage: 'All feeds in this file are already subscribed.',
           isError: false,
         );
       }
@@ -192,7 +192,7 @@ class OpmlService {
       return (
         newUrls: <String>[],
         skippedCount: 0,
-        stopMessage: 'Import failed',
+        stopMessage: 'The import failed. Please try again.',
         isError: true,
       );
     }
@@ -263,7 +263,7 @@ class OpmlService {
     } catch (e, stackTrace) {
       error('OPML export failed',
           name: logName, error: e, stackTrace: stackTrace);
-      return (message: 'Export failed', isError: true);
+      return (message: 'The export failed. Please try again.', isError: true);
     }
   }
 }

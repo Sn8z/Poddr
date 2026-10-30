@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
@@ -21,11 +22,15 @@ class SubscriptionProvider extends ChangeNotifier {
   List<Podcast> _subscriptions = [];
   List<Podcast> get subscriptions => _subscriptions;
 
+  AsyncState<List<Podcast>> _subscriptionsState = const AsyncLoading();
+  AsyncState<List<Podcast>> get subscriptionsState => _subscriptionsState;
+
   Map<String, int> _subscriptionIdByRss = {};
   Map<String, int> get subscriptionIdByRss => _subscriptionIdByRss;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  bool get isLoading =>
+      _subscriptionsState is AsyncInitial ||
+      _subscriptionsState is AsyncLoading;
 
   static const int _maxEpisodes = 50;
   List<PodcastEpisode> _latestEpisodes = [];
@@ -53,31 +58,54 @@ class SubscriptionProvider extends ChangeNotifier {
         _subscriptionRepository =
             subscriptionRepository ?? DriftSubscriptionRepository(),
         _syncRepository = syncRepository ?? DriftSyncRepository() {
-    _isLoading = true;
+    _listenToSubscriptions();
+  }
+
+  void _listenToSubscriptions() {
+    _watchSubscription?.cancel();
     _watchSubscription = _subscriptionRepository.watchAllSubscriptions().listen(
-      (subs) async {
-        try {
-          _subscriptions = subs;
-          _subscriptionIdByRss =
-              await _subscriptionRepository.getAllSubscriptionIds();
-          _isLoading = false;
-          if (_disposed) return;
-          _notify();
-          await _updateLatestEpisodes();
-        } catch (e) {
-          error('Failed to refresh subscriptions', name: logName);
-          debug('Refresh subscriptions detail: $e', name: logName);
-          _isLoading = false;
-          _notify();
-        }
-      },
-      onError: (e, stackTrace) {
-        error('Failed to watch subscriptions', name: logName);
-        debug('Watch subscriptions detail: $e', name: logName);
-        _isLoading = false;
+      (subs) => unawaited(_onSubscriptionsChanged(subs)),
+      onError: (Object e, StackTrace stackTrace) {
+        error('Failed to watch subscriptions',
+            name: logName, error: e, stackTrace: stackTrace);
+        _subscriptionsState = const AsyncError(
+          'Your subscriptions could not be loaded. Please try again.',
+        );
         _notify();
       },
     );
+  }
+
+  Future<void> _onSubscriptionsChanged(List<Podcast> subs) async {
+    if (_disposed) return;
+
+    _subscriptions = subs;
+    try {
+      _subscriptionIdByRss =
+          await _subscriptionRepository.getAllSubscriptionIds();
+    } catch (e) {
+      warning('Failed to load subscription ids: $e', name: logName);
+    }
+
+    if (_disposed) return;
+
+    _subscriptionsState = AsyncData(subs);
+    _notify();
+
+    try {
+      await _updateLatestEpisodes();
+    } catch (e, stackTrace) {
+      error('Failed to update latest episodes',
+          name: logName, error: e, stackTrace: stackTrace);
+    }
+  }
+
+  /// Reloads subscriptions after a read failure.
+  Future<void> retrySubscriptions() async {
+    if (_disposed) return;
+    _subscriptionsState = const AsyncLoading();
+    _notify();
+    _listenToSubscriptions();
   }
 
   @override
@@ -194,21 +222,50 @@ class SubscriptionProvider extends ChangeNotifier {
   }
 
   /// Retries every feed that failed to refresh.
-  Future<void> retryFailedFeeds() async {
-    if (_failedFeeds.isEmpty) return;
+  Future<bool> retryFailedFeeds() async {
+    if (_failedFeeds.isEmpty) return true;
     _failedFeeds.clear();
-    await _updateLatestEpisodes();
+    _lastError = null;
+
+    try {
+      await _updateLatestEpisodes();
+    } catch (e, stackTrace) {
+      error('Failed to retry feeds',
+          name: logName, error: e, stackTrace: stackTrace);
+      _lastError = 'Some feeds could not be refreshed. Please try again.';
+      _notify();
+      return false;
+    }
+
+    if (_failedFeeds.isNotEmpty) {
+      _lastError = 'Some feeds could not be refreshed. Please try again.';
+      _notify();
+      return false;
+    }
+    return true;
   }
 
-  Future<void> retryFeed(String rss) async {
+  Future<bool> retryFeed(String rss) async {
     _failedFeeds.remove(rss);
     _loadedFeeds.remove(rss);
+    _lastError = null;
+
     try {
       await _updateLatestEpisodes();
     } catch (e, stackTrace) {
       error('Failed to retry feed $rss',
           name: logName, error: e, stackTrace: stackTrace);
+      _lastError = 'This feed could not be refreshed. Please try again.';
+      _notify();
+      return false;
     }
+
+    if (_failedFeeds.contains(rss)) {
+      _lastError = 'This feed could not be refreshed. Please try again.';
+      _notify();
+      return false;
+    }
+    return true;
   }
 
   PodcastEpisode? findEpisodeByUrl(String audioUrl) {
