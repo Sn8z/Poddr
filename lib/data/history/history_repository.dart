@@ -2,25 +2,20 @@ import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/progress.dart';
 
 abstract class IHistoryRepository {
-  Future<PodcastEpisode?> addHistory(
-    String audioUrl,
-    String title,
-    String description,
-    String imageUrl,
-    String podcastTitle,
-    String podcastRSS,
-    int duration,
+  Future<void> upsertProgress(
+    String audioUrl, {
+    required int position,
+    required int duration,
+    bool markFinished = true,
+    String? title,
+    String? description,
+    String? imageUrl,
+    String? podcastTitle,
+    String? podcastRSS,
     String? videoUrl,
-  );
+  });
 
   Future<List<PodcastEpisode>> getHistory();
-
-  Future<void> updateProgress(
-    String audioUrl,
-    int position,
-    int duration, {
-    bool markFinished = true,
-  });
 
   Future<EpisodeProgress?> getProgress(String audioUrl);
 

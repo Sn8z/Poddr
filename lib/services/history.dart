@@ -92,48 +92,33 @@ class HistoryProvider extends ChangeNotifier {
 
   Future<void> retryHistory() => getHistory();
 
-  Future<void> addToHistory(
-    String audioUrl,
-    String title,
-    String description,
-    String imageUrl,
-    String podcastTitle,
-    String podcastRSS,
-    int duration,
-    String? videoUrl,
-  ) async {
-    try {
-      await _historyRepository.addHistory(
-        audioUrl,
-        title,
-        description,
-        imageUrl,
-        podcastTitle,
-        podcastRSS,
-        duration,
-        videoUrl,
-      );
-    } catch (e) {
-      warning('Failed to add to history: $e', name: logName);
-      debug('Add to history detail', name: logName);
-    }
-  }
-
-  Future<void> updateProgress(
-    String audioUrl,
-    int position,
-    int duration, {
+  Future<void> upsertProgress(
+    String audioUrl, {
+    required int position,
+    required int duration,
     bool markFinished = true,
+    String? title,
+    String? description,
+    String? imageUrl,
+    String? podcastTitle,
+    String? podcastRSS,
+    String? videoUrl,
   }) async {
     try {
-      await _historyRepository.updateProgress(
+      await _historyRepository.upsertProgress(
         audioUrl,
-        position,
-        duration,
+        position: position,
+        duration: duration,
         markFinished: markFinished,
+        title: title,
+        description: description,
+        imageUrl: imageUrl,
+        podcastTitle: podcastTitle,
+        podcastRSS: podcastRSS,
+        videoUrl: videoUrl,
       );
     } catch (e) {
-      warning('Failed to update progress: $e', name: logName);
+      warning('Failed to save progress: $e', name: logName);
     }
   }
 
@@ -152,19 +137,6 @@ class HistoryProvider extends ChangeNotifier {
         return;
       }
 
-      if (existing == null && episode != null) {
-        await addToHistory(
-          episode.audioUrl,
-          episode.title ?? '',
-          episode.description ?? '',
-          episode.imageUrl ?? '',
-          episode.podcastTitle ?? '',
-          episode.podcastRSS ?? '',
-          episode.duration?.inSeconds ?? duration,
-          episode.videoUrl,
-        );
-      }
-
       final existingDuration = existing?.duration ?? 0;
       final effectiveDuration = duration > 0
           ? duration
@@ -172,11 +144,17 @@ class HistoryProvider extends ChangeNotifier {
               ? existingDuration
               : episode?.duration?.inSeconds ?? 0);
 
-      await _historyRepository.updateProgress(
+      await upsertProgress(
         audioUrl,
-        position,
-        effectiveDuration,
+        position: position,
+        duration: effectiveDuration,
         markFinished: false,
+        title: episode == null ? null : (episode.title ?? ''),
+        description: episode == null ? null : (episode.description ?? ''),
+        imageUrl: episode == null ? null : (episode.imageUrl ?? ''),
+        podcastTitle: episode == null ? null : (episode.podcastTitle ?? ''),
+        podcastRSS: episode == null ? null : (episode.podcastRSS ?? ''),
+        videoUrl: episode?.videoUrl,
       );
     } catch (e) {
       warning('Failed to apply remote progress: $e', name: logName);

@@ -10,49 +10,6 @@ class DriftHistoryRepository implements IHistoryRepository {
   DriftHistoryRepository();
 
   @override
-  Future<PodcastEpisode?> addHistory(
-    String audioUrl,
-    String title,
-    String description,
-    String imageUrl,
-    String podcastTitle,
-    String podcastRSS,
-    int duration,
-    String? videoUrl,
-  ) async {
-    final id = await database.into(database.listeningHistory).insert(
-          ListeningHistoryCompanion.insert(
-            audioUrl: audioUrl,
-            title: title,
-            description: description,
-            imageUrl: imageUrl,
-            podcastTitle: podcastTitle,
-            podcastRSS: podcastRSS,
-            duration: duration,
-            videoUrl: Value(videoUrl),
-          ),
-        );
-
-    final inserted = await (database.select(database.listeningHistory)
-          ..where((tbl) => tbl.id.equals(id)))
-        .getSingleOrNull();
-
-    if (inserted == null) return null;
-
-    return PodcastEpisode(
-      title: inserted.title,
-      podcastTitle: inserted.podcastTitle,
-      podcastRSS: inserted.podcastRSS,
-      description: inserted.description,
-      audioUrl: inserted.audioUrl,
-      videoUrl: inserted.videoUrl,
-      duration: Duration(seconds: inserted.duration),
-      publicationDate: null,
-      imageUrl: inserted.imageUrl,
-    );
-  }
-
-  @override
   Future<List<PodcastEpisode>> getHistory() async {
     final history = await (database.select(database.listeningHistory)
           ..orderBy([
@@ -79,26 +36,82 @@ class DriftHistoryRepository implements IHistoryRepository {
   }
 
   @override
-  Future<void> updateProgress(
-    String audioUrl,
-    int position,
-    int duration, {
+  Future<void> upsertProgress(
+    String audioUrl, {
+    required int position,
+    required int duration,
     bool markFinished = true,
+    String? title,
+    String? description,
+    String? imageUrl,
+    String? podcastTitle,
+    String? podcastRSS,
+    String? videoUrl,
   }) async {
+    final metadataFields = [
+      title,
+      description,
+      imageUrl,
+      podcastTitle,
+      podcastRSS,
+    ];
+    final providedMetadata = metadataFields.whereType<String>().length;
+    assert(
+      providedMetadata == 0 || providedMetadata == metadataFields.length,
+      'Provide all episode metadata fields or none.',
+    );
+
+    final hasMetadata = providedMetadata == metadataFields.length;
     final safePosition = position < 0 ? 0 : position;
     final hasValidDuration = duration > 0;
-    await (database.update(database.listeningHistory)
-          ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
-        .write(
-      ListeningHistoryCompanion(
-        position: Value(safePosition),
-        duration: hasValidDuration ? Value(duration) : const Value.absent(),
-        isFinished: hasValidDuration && markFinished
-            ? Value((safePosition / duration) >= .9)
-            : const Value.absent(),
-        listenedAt: Value(DateTime.now()),
-      ),
-    );
+    final Value<bool> isFinished = hasValidDuration && markFinished
+        ? Value((safePosition / duration) >= .9)
+        : const Value.absent();
+
+    await database.transaction(() async {
+      final existing = await (database.select(database.listeningHistory)
+            ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
+          .getSingleOrNull();
+
+      if (existing == null) {
+        if (!hasMetadata) return;
+
+        await database.into(database.listeningHistory).insert(
+              ListeningHistoryCompanion.insert(
+                audioUrl: audioUrl,
+                title: title!,
+                description: description!,
+                imageUrl: imageUrl!,
+                podcastTitle: podcastTitle!,
+                podcastRSS: podcastRSS!,
+                position: Value(safePosition),
+                duration: hasValidDuration ? duration : 0,
+                isFinished: isFinished,
+                listenedAt: Value(DateTime.now()),
+                videoUrl: Value(videoUrl),
+              ),
+            );
+        return;
+      }
+
+      await (database.update(database.listeningHistory)
+            ..where((tbl) => tbl.audioUrl.equals(audioUrl)))
+          .write(
+        ListeningHistoryCompanion(
+          title: hasMetadata ? Value(title!) : const Value.absent(),
+          description: hasMetadata ? Value(description!) : const Value.absent(),
+          imageUrl: hasMetadata ? Value(imageUrl!) : const Value.absent(),
+          podcastTitle:
+              hasMetadata ? Value(podcastTitle!) : const Value.absent(),
+          podcastRSS: hasMetadata ? Value(podcastRSS!) : const Value.absent(),
+          videoUrl: hasMetadata ? Value(videoUrl) : const Value.absent(),
+          position: Value(safePosition),
+          duration: hasValidDuration ? Value(duration) : const Value.absent(),
+          isFinished: isFinished,
+          listenedAt: Value(DateTime.now()),
+        ),
+      );
+    });
   }
 
   @override

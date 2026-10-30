@@ -38,8 +38,8 @@ class SyncProvider extends ChangeNotifier {
   final SecureSettingsRepository _secureSettings;
   final ISyncRepository _syncRepository;
 
-  SubscriptionProvider? _subscriptionProvider;
-  HistoryProvider? _historyProvider;
+  final SubscriptionProvider _subscriptionProvider;
+  final HistoryProvider _historyProvider;
 
   GpodderClient? _client;
   Timer? _subscriptionSyncTimer;
@@ -112,19 +112,17 @@ class SyncProvider extends ChangeNotifier {
   Future<bool>? _loginFuture;
 
   SyncProvider({
+    required SubscriptionProvider subscriptionProvider,
+    required HistoryProvider historyProvider,
     ISettingsRepository? settings,
     SecureSettingsRepository? secureSettings,
     ISyncRepository? syncRepository,
-  })  : _settings = settings ?? SharedPrefSettingsRepository(),
+  })  : _subscriptionProvider = subscriptionProvider,
+        _historyProvider = historyProvider,
+        _settings = settings ?? SharedPrefSettingsRepository(),
         _secureSettings = secureSettings ?? SecureSettingsRepository(),
         _syncRepository = syncRepository ?? DriftSyncRepository() {
     _init();
-  }
-
-  void update(SubscriptionProvider? subscriptionProvider,
-      HistoryProvider? historyProvider) {
-    _subscriptionProvider = subscriptionProvider;
-    _historyProvider = historyProvider;
   }
 
   Future<void> _init() async {
@@ -509,9 +507,7 @@ class SyncProvider extends ChangeNotifier {
   }
 
   Future<bool> syncSubscriptions() async {
-    if (_isSyncingSubscriptions ||
-        _client == null ||
-        _subscriptionProvider == null) {
+    if (_isSyncingSubscriptions || _client == null) {
       return true;
     }
     _isSyncingSubscriptions = true;
@@ -538,7 +534,7 @@ class SyncProvider extends ChangeNotifier {
 
   Future<bool> _performFullSubscriptionSync() async {
     final serverUrls = await _client!.getAllSubscriptions();
-    final localSubscriptions = _subscriptionProvider?.subscriptions ?? [];
+    final localSubscriptions = _subscriptionProvider.subscriptions;
     final localUrls = localSubscriptions
         .map((s) => s.rss ?? '')
         .where((url) => url.isNotEmpty)
@@ -547,11 +543,10 @@ class SyncProvider extends ChangeNotifier {
     var remoteApplySucceeded = true;
     for (final url in serverUrls) {
       if (!localUrls.contains(url)) {
-        final added = await _subscriptionProvider?.addSubscription(
-              rss: url,
-              fromSync: true,
-            ) ??
-            false;
+        final added = await _subscriptionProvider.addSubscription(
+          rss: url,
+          fromSync: true,
+        );
         if (added) {
           localUrls.add(url);
         } else {
@@ -583,7 +578,7 @@ class SyncProvider extends ChangeNotifier {
   Future<bool> _performDeltaSubscriptionSync(int lastSync) async {
     final changes = await _client!.getSubscriptionChanges(since: lastSync);
 
-    final localSubscriptions = _subscriptionProvider?.subscriptions ?? [];
+    final localSubscriptions = _subscriptionProvider.subscriptions;
     final localUrls = localSubscriptions
         .map((s) => s.rss ?? '')
         .where((url) => url.isNotEmpty)
@@ -623,11 +618,10 @@ class SyncProvider extends ChangeNotifier {
       final action = actionData.action;
 
       if (action == 'add' && !localUrls.contains(url)) {
-        final added = await _subscriptionProvider?.addSubscription(
-              rss: url,
-              fromSync: true,
-            ) ??
-            false;
+        final added = await _subscriptionProvider.addSubscription(
+          rss: url,
+          fromSync: true,
+        );
         if (added) {
           localUrls.add(url);
         } else {
@@ -636,11 +630,10 @@ class SyncProvider extends ChangeNotifier {
               name: logName);
         }
       } else if (action == 'remove' && localUrls.contains(url)) {
-        final removed = await _subscriptionProvider?.removeSubscription(
-              url,
-              fromSync: true,
-            ) ??
-            false;
+        final removed = await _subscriptionProvider.removeSubscription(
+          url,
+          fromSync: true,
+        );
         if (removed) {
           localUrls.remove(url);
         } else {
@@ -688,7 +681,7 @@ class SyncProvider extends ChangeNotifier {
   }
 
   Future<bool> syncEpisodes() async {
-    if (_isSyncingEpisodes || _client == null || _historyProvider == null) {
+    if (_isSyncingEpisodes || _client == null) {
       return true;
     }
     _isSyncingEpisodes = true;
@@ -760,15 +753,15 @@ class SyncProvider extends ChangeNotifier {
   Future<void> _applyEpisodeActionToHistory(
       String episodeUrl, String actionType, int position, int duration) async {
     if (actionType == 'play') {
-      final episode = _subscriptionProvider?.findEpisodeByUrl(episodeUrl);
-      await _historyProvider?.applyRemoteProgress(
+      final episode = _subscriptionProvider.findEpisodeByUrl(episodeUrl);
+      await _historyProvider.applyRemoteProgress(
         audioUrl: episodeUrl,
         position: position,
         duration: duration,
         episode: episode,
       );
     } else if (actionType == 'new') {
-      final removed = await _historyProvider?.removeHistory(episodeUrl);
+      final removed = await _historyProvider.removeHistory(episodeUrl);
       if (removed == false) {
         warning('Failed to apply remote episode removal for $episodeUrl',
             name: logName);

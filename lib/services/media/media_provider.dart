@@ -17,9 +17,9 @@ class MediaProvider extends ChangeNotifier {
   late final PoddrMediaHandler _mediaHandler =
       PoddrMediaHandler(resolver: _resolveQueueItem);
 
-  HistoryProvider? _historyProvider;
-  OfflineProvider? _offlineProvider;
-  SyncProvider? _syncProvider;
+  final HistoryProvider _historyProvider;
+  final OfflineProvider _offlineProvider;
+  final SyncProvider _syncProvider;
 
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
@@ -82,48 +82,43 @@ class MediaProvider extends ChangeNotifier {
   late final StreamSubscription<double> _volumeSub;
   late final StreamSubscription<List<MediaItem>> _queueSub;
 
-  MediaProvider() {
+  MediaProvider({
+    required HistoryProvider historyProvider,
+    required OfflineProvider offlineProvider,
+    required SyncProvider syncProvider,
+  })  : _historyProvider = historyProvider,
+        _offlineProvider = offlineProvider,
+        _syncProvider = syncProvider {
     _initMediaListeners();
-  }
-
-  void update(HistoryProvider? historyProvider,
-      OfflineProvider? offlineProvider, SyncProvider? syncProvider) {
-    _historyProvider = historyProvider;
-    _offlineProvider = offlineProvider;
-    _syncProvider = syncProvider;
   }
 
   Future<({String? audioSource, String? videoSource, Duration startPosition})?>
       _resolveQueueItem(String audioUrl) async {
     Duration startPosition = Duration.zero;
-    if (_historyProvider != null) {
-      try {
-        final progress = await _historyProvider!.getProgress(audioUrl);
-        if (progress != null && !progress.isFinished) {
-          startPosition = Duration(seconds: progress.position);
-        }
-      } catch (e) {
-        warning(
-          'Failed to read saved progress for queue playback, '
-          'starting from the beginning: $e',
-          name: logName,
-        );
+    try {
+      final progress = await _historyProvider.getProgress(audioUrl);
+      if (progress != null && !progress.isFinished) {
+        startPosition = Duration(seconds: progress.position);
       }
+    } catch (e) {
+      warning(
+        'Failed to read saved progress for queue playback, '
+        'starting from the beginning: $e',
+        name: logName,
+      );
     }
 
     String? audioSource;
     String? videoSource;
-    if (_offlineProvider != null) {
-      try {
-        audioSource = await _offlineProvider!.getLocalPath(audioUrl);
-        videoSource = await _offlineProvider!.getVideoLocalPath(audioUrl);
-      } catch (e) {
-        warning(
-          'Failed to resolve a downloaded copy for queue playback, '
-          'using the stream URL: $e',
-          name: logName,
-        );
-      }
+    try {
+      audioSource = await _offlineProvider.getLocalPath(audioUrl);
+      videoSource = await _offlineProvider.getVideoLocalPath(audioUrl);
+    } catch (e) {
+      warning(
+        'Failed to resolve a downloaded copy for queue playback, '
+        'using the stream URL: $e',
+        name: logName,
+      );
     }
 
     return (
@@ -340,15 +335,11 @@ class MediaProvider extends ChangeNotifier {
       _lastError = 'This episode cannot be played.';
       return false;
     }
-    if (_historyProvider == null) {
-      _lastError = 'Playback is not ready yet. Please try again.';
-      return false;
-    }
 
     Duration startPosition = Duration.zero;
     EpisodeProgress? progress;
     try {
-      progress = await _historyProvider!.getProgress(audioUrl);
+      progress = await _historyProvider.getProgress(audioUrl);
       if (progress != null && !progress.isFinished) {
         startPosition = Duration(seconds: progress.position);
       }
@@ -363,30 +354,27 @@ class MediaProvider extends ChangeNotifier {
     String playAudioSource = audioUrl;
     String? playVideoSource = videoUrl;
 
-    if (_offlineProvider != null) {
-      try {
-        final localPath = await _offlineProvider!.getLocalPath(audioUrl);
-        if (localPath != null) {
-          playAudioSource = localPath;
-          info("Playing audio from local file: $localPath", name: logName);
-        }
-
-        if (videoUrl != null) {
-          final localVideoPath =
-              await _offlineProvider!.getVideoLocalPath(audioUrl);
-          if (localVideoPath != null) {
-            playVideoSource = localVideoPath;
-            info("Playing video from local file: $localVideoPath",
-                name: logName);
-          }
-        }
-      } catch (e) {
-        warning(
-          'Failed to resolve a downloaded copy for $audioUrl, '
-          'using the stream URL: $e',
-          name: logName,
-        );
+    try {
+      final localPath = await _offlineProvider.getLocalPath(audioUrl);
+      if (localPath != null) {
+        playAudioSource = localPath;
+        info("Playing audio from local file: $localPath", name: logName);
       }
+
+      if (videoUrl != null) {
+        final localVideoPath =
+            await _offlineProvider.getVideoLocalPath(audioUrl);
+        if (localVideoPath != null) {
+          playVideoSource = localVideoPath;
+          info("Playing video from local file: $localVideoPath", name: logName);
+        }
+      }
+    } catch (e) {
+      warning(
+        'Failed to resolve a downloaded copy for $audioUrl, '
+        'using the stream URL: $e',
+        name: logName,
+      );
     }
 
     try {
@@ -405,18 +393,18 @@ class MediaProvider extends ChangeNotifier {
         startPosition: startPosition,
       );
       _lastError = null;
-      if (progress == null) {
-        _historyProvider!.addToHistory(
-          audioUrl,
-          episodeTitle ?? "Missing title",
-          description ?? "Missing description",
-          artUri ?? "",
-          podcastTitle ?? "",
-          podcastRSS ?? "",
-          _duration.inSeconds,
-          videoUrl,
-        );
-      }
+      await _historyProvider.upsertProgress(
+        audioUrl,
+        position: startPosition.inSeconds,
+        duration: _duration.inSeconds,
+        markFinished: false,
+        title: episodeTitle ?? "Missing title",
+        description: description ?? "Missing description",
+        imageUrl: artUri ?? "",
+        podcastTitle: podcastTitle ?? "",
+        podcastRSS: podcastRSS ?? "",
+        videoUrl: videoUrl,
+      );
       return true;
     } catch (e, stackTrace) {
       error('Failed to load media',
@@ -432,30 +420,30 @@ class MediaProvider extends ChangeNotifier {
     String? episodeUrl,
     Duration? position,
   }) async {
-    if (_historyProvider == null) return;
-
     final String url = episodeUrl ?? _audioUrl;
     final Duration pos = position ?? _position;
     final int dur = _duration.inSeconds;
 
     if (dur <= 0 || pos.inSeconds >= dur) return;
 
-    await _historyProvider!.updateProgress(url, pos.inSeconds, dur);
+    await _historyProvider.upsertProgress(
+      url,
+      position: pos.inSeconds,
+      duration: dur,
+    );
   }
 
   Future<void> _recordSyncAction({
     String? episodeUrl,
     Duration? position,
   }) async {
-    if (_syncProvider == null) return;
-
     final String url = episodeUrl ?? _audioUrl;
     final Duration pos = position ?? _position;
     final int dur = _duration.inSeconds;
 
     if (dur <= 0 || pos.inSeconds >= dur) return;
 
-    _syncProvider?.recordEpisodeAction(
+    _syncProvider.recordEpisodeAction(
       podcastRss: podcastRSS,
       episodeUrl: url,
       action: 'play',

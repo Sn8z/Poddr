@@ -40,8 +40,6 @@ void main() async {
     return true;
   };
 
-  // Replace the default red error screen with a friendly, non-technical
-  // fallback. The technical error was already logged by FlutterError.onError.
   ErrorWidget.builder = (_) => const _FriendlyErrorFallback();
 
   final GoRouter router = PoddrRouter.router;
@@ -71,26 +69,21 @@ void main() async {
           create: (_) => CollectionsProvider(),
         ),
 
-        // Sync Provider
-        ChangeNotifierProxyProvider2<SubscriptionProvider, HistoryProvider,
-            SyncProvider>(
-          create: (_) => SyncProvider(),
-          update: (_, subscription, history, prev) {
-            prev ??= SyncProvider();
-            prev.update(subscription, history);
-            return prev;
-          },
+        // Sync
+        ChangeNotifierProvider<SyncProvider>(
+          create: (context) => SyncProvider(
+            subscriptionProvider: context.read<SubscriptionProvider>(),
+            historyProvider: context.read<HistoryProvider>(),
+          ),
         ),
 
         // Media
-        ChangeNotifierProxyProvider3<HistoryProvider, OfflineProvider,
-            SyncProvider, MediaProvider>(
-          create: (_) => MediaProvider(),
-          update: (_, history, offline, sync, prev) {
-            prev ??= MediaProvider();
-            prev.update(history, offline, sync);
-            return prev;
-          },
+        ChangeNotifierProvider<MediaProvider>(
+          create: (context) => MediaProvider(
+            historyProvider: context.read<HistoryProvider>(),
+            offlineProvider: context.read<OfflineProvider>(),
+            syncProvider: context.read<SyncProvider>(),
+          ),
         ),
       ],
       child: Poddr(router: router),
