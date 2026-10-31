@@ -10,9 +10,10 @@ class MediaThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaProvider = context.watch<MediaProvider>();
-    final videoController = mediaProvider.videoController;
-    final hasVideo = mediaProvider.hasVideo;
+    final videoController = context
+        .select<MediaProvider, VideoController?>((p) => p.videoController);
+    final hasVideo = context.select<MediaProvider, bool>((p) => p.hasVideo);
+    final artwork = context.select<MediaProvider, String>((p) => p.artwork);
 
     Widget content;
     if (hasVideo && videoController != null) {
@@ -22,7 +23,7 @@ class MediaThumbnail extends StatelessWidget {
         controls: NoVideoControls,
       );
     } else {
-      content = PoddrImage(imageUrl: mediaProvider.artwork, maxHeightDiskCache: 300);
+      content = PoddrImage(imageUrl: artwork, maxHeightDiskCache: 300);
     }
 
     return GestureDetector(

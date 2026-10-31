@@ -48,6 +48,7 @@ class SyncProvider extends ChangeNotifier {
   bool _isSyncingEpisodes = false;
   bool _timersStarted = false;
   bool _syncEnabled = false;
+  bool _disposed = false;
   bool get isSyncEnabled => _syncEnabled;
   int _subscriptionSyncFailures = 0;
   int _episodeSyncFailures = 0;
@@ -211,7 +212,7 @@ class SyncProvider extends ChangeNotifier {
       }
       return false;
     } finally {
-      notifyListeners();
+      _notify();
     }
   }
 
@@ -224,7 +225,11 @@ class SyncProvider extends ChangeNotifier {
         status == SyncStatus.error;
     _statusIsWarning = !_statusIsError &&
         (status == SyncStatus.retrying || status == SyncStatus.warning);
-    notifyListeners();
+    _notify();
+  }
+
+  void _notify() {
+    if (!_disposed) notifyListeners();
   }
 
   void _recordSyncOutcome({
@@ -285,6 +290,8 @@ class SyncProvider extends ChangeNotifier {
     Duration delay = _initialLoginDelay;
 
     for (int attempt = 0;; attempt++) {
+      if (_disposed) return false;
+
       if (!_syncEnabled) {
         _updateStatus(SyncStatus.disconnected);
         return false;
@@ -320,6 +327,7 @@ class SyncProvider extends ChangeNotifier {
 
       if (!delay.isNegative) {
         await Future.delayed(delay);
+        if (_disposed) return false;
         delay = delay * 2;
         if (delay > _maxLoginDelay) delay = _maxLoginDelay;
       }
@@ -399,7 +407,7 @@ class SyncProvider extends ChangeNotifier {
           name: logName, error: e, stackTrace: stackTrace);
       return false;
     } finally {
-      notifyListeners();
+      _notify();
     }
   }
 
@@ -483,7 +491,7 @@ class SyncProvider extends ChangeNotifier {
     _episodeSyncTimer?.cancel();
     _episodeSyncTimer = null;
     _timersStarted = false;
-    notifyListeners();
+    _notify();
   }
 
   Future<bool> syncAll() async {
@@ -527,7 +535,7 @@ class SyncProvider extends ChangeNotifier {
           name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isSyncingSubscriptions = false;
-      notifyListeners();
+      _notify();
     }
     return success;
   }
@@ -730,7 +738,7 @@ class SyncProvider extends ChangeNotifier {
           name: logName, error: e, stackTrace: stackTrace);
     } finally {
       _isSyncingEpisodes = false;
-      notifyListeners();
+      _notify();
     }
     return success;
   }
@@ -1015,7 +1023,7 @@ class SyncProvider extends ChangeNotifier {
       }
       return false;
     } finally {
-      notifyListeners();
+      _notify();
     }
   }
 
@@ -1047,6 +1055,7 @@ class SyncProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _disposed = true;
     _subscriptionSyncTimer?.cancel();
     _subscriptionSyncTimer = null;
     _episodeSyncTimer?.cancel();
