@@ -29,27 +29,23 @@ class CollectionsProvider extends ChangeNotifier {
 
   StreamSubscription? _pairsSubscription;
 
-  final Map<int, Stream<List<PodcastCollection>>> _collectionStreams = {};
-
   Stream<List<PodcastCollection>> watchCollectionsForSubscription(
       int subscriptionId) {
-    return _collectionStreams.putIfAbsent(subscriptionId, () {
-      return _repository
-          .watchCollectionsForSubscription(subscriptionId)
-          .transform(
-        StreamTransformer.fromHandlers(
-          handleError: (errorObject, stackTrace, sink) {
-            error(
-              'Failed to watch collections for subscription $subscriptionId',
-              name: logName,
-              error: errorObject,
-              stackTrace: stackTrace,
-            );
-            sink.addError(errorObject, stackTrace);
-          },
-        ),
-      );
-    });
+    return _repository
+        .watchCollectionsForSubscription(subscriptionId)
+        .transform(
+      StreamTransformer.fromHandlers(
+        handleError: (errorObject, stackTrace, sink) {
+          error(
+            'Failed to watch collections for subscription $subscriptionId',
+            name: logName,
+            error: errorObject,
+            stackTrace: stackTrace,
+          );
+          sink.addError(errorObject, stackTrace);
+        },
+      ),
+    );
   }
 
   CollectionsProvider({ICollectionsRepository? repository})

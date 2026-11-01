@@ -35,18 +35,13 @@ class PoddrCollectionSelectionDialog extends StatelessWidget {
             message: message,
             onRetry: collectionsProvider.loadCollections,
           ),
-        AsyncData(:final value) => _buildSelectionList(
-            context,
-            collectionsProvider,
-            value,
-          ),
+        AsyncData(:final value) => _buildSelectionList(context, value),
       },
     );
   }
 
   Widget _buildSelectionList(
     BuildContext context,
-    CollectionsProvider collectionsProvider,
     List<PodcastCollection> allCollections,
   ) {
     if (allCollections.isEmpty) {
@@ -56,11 +51,55 @@ class PoddrCollectionSelectionDialog extends StatelessWidget {
       );
     }
 
+    return _CollectionToggles(
+      subscriptionId: subscriptionId,
+      collections: allCollections,
+    );
+  }
+}
+
+class _CollectionToggles extends StatefulWidget {
+  const _CollectionToggles({
+    required this.subscriptionId,
+    required this.collections,
+  });
+
+  final int subscriptionId;
+  final List<PodcastCollection> collections;
+
+  @override
+  State<_CollectionToggles> createState() => _CollectionTogglesState();
+}
+
+class _CollectionTogglesState extends State<_CollectionToggles> {
+  late Stream<List<PodcastCollection>> _stream;
+
+  @override
+  void initState() {
+    super.initState();
+    _stream = _watch();
+  }
+
+  @override
+  void didUpdateWidget(covariant _CollectionToggles oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.subscriptionId != widget.subscriptionId) {
+      _stream = _watch();
+    }
+  }
+
+  Stream<List<PodcastCollection>> _watch() => context
+      .read<CollectionsProvider>()
+      .watchCollectionsForSubscription(widget.subscriptionId);
+
+  @override
+  Widget build(BuildContext context) {
+    final collectionsProvider = context.read<CollectionsProvider>();
+
     return StreamBuilder<List<PodcastCollection>>(
-      stream:
-          collectionsProvider.watchCollectionsForSubscription(subscriptionId),
-      builder: (context, subSnapshot) {
-        if (subSnapshot.hasError) {
+      stream: _stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
           return Text(
             'The selected collections could not be loaded.',
             style: context.theme.textTheme.bodyMedium.copyWith(
@@ -69,9 +108,9 @@ class PoddrCollectionSelectionDialog extends StatelessWidget {
           );
         }
 
-        final currentCollections = subSnapshot.data ?? [];
+        final currentCollections = snapshot.data ?? [];
         return Column(
-          children: allCollections.map((collection) {
+          children: widget.collections.map((collection) {
             final isSelected =
                 currentCollections.any((c) => c.id == collection.id);
             return PoddrToggle(
@@ -88,10 +127,10 @@ class PoddrCollectionSelectionDialog extends StatelessWidget {
               onChanged: (value) async {
                 final success = value
                     ? await collectionsProvider.addSubscriptionToCollection(
-                        subscriptionId, collection.id)
+                        widget.subscriptionId, collection.id)
                     : await collectionsProvider
                         .removeSubscriptionFromCollection(
-                            subscriptionId, collection.id);
+                            widget.subscriptionId, collection.id);
                 if (!success && context.mounted) {
                   await showPoddrErrorDialog(
                     context: context,

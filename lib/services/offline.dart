@@ -12,6 +12,15 @@ import 'package:poddr/models/offline_episode.dart';
 
 enum DownloadStatus { queued, downloading, paused, failed }
 
+enum DownloadUiState { idle, queued, downloading, failed, downloaded }
+
+typedef DownloadView = ({
+  DownloadUiState state,
+  double progress,
+  int queuePosition,
+  String? error,
+});
+
 class OfflineProvider extends ChangeNotifier {
   static const String logName = "OfflineProvider";
 
@@ -119,6 +128,53 @@ class OfflineProvider extends ChangeNotifier {
 
   int getQueuePosition(String audioUrl) {
     return _downloadQueue.indexWhere((e) => e.audioUrl == audioUrl) + 1;
+  }
+
+  DownloadView downloadView(String audioUrl) {
+    final error = _statusErrors[audioUrl];
+
+    if (_downloading.contains(audioUrl)) {
+      return (
+        state: DownloadUiState.downloading,
+        progress: _downloadProgress[audioUrl] ?? 0,
+        queuePosition: 0,
+        error: error,
+      );
+    }
+
+    if (_downloadQueue.any((e) => e.audioUrl == audioUrl)) {
+      return (
+        state: DownloadUiState.queued,
+        progress: 0,
+        queuePosition: getQueuePosition(audioUrl),
+        error: error,
+      );
+    }
+
+    if (_statuses[audioUrl] == DownloadStatus.failed) {
+      return (
+        state: DownloadUiState.failed,
+        progress: 0,
+        queuePosition: 0,
+        error: error,
+      );
+    }
+
+    if (_downloads.any((d) => d.audioUrl == audioUrl)) {
+      return (
+        state: DownloadUiState.downloaded,
+        progress: 0,
+        queuePosition: 0,
+        error: error,
+      );
+    }
+
+    return (
+      state: DownloadUiState.idle,
+      progress: 0,
+      queuePosition: 0,
+      error: error,
+    );
   }
 
   Future<void> getDownloads() async {

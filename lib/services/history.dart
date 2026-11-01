@@ -31,7 +31,12 @@ class HistoryProvider extends ChangeNotifier {
 
   HistoryProvider({IHistoryRepository? historyRepository})
       : _historyRepository = historyRepository ?? DriftHistoryRepository() {
+    _listen();
+  }
+
+  void _listen() {
     _isLoading = true;
+    _watchSubscription?.cancel();
     _watchSubscription = _historyRepository.watchAllHistory().listen(
       (items) {
         _history = items;
@@ -64,33 +69,11 @@ class HistoryProvider extends ChangeNotifier {
     if (!_disposed) notifyListeners();
   }
 
-  Future<void> getHistory() async {
-    _isLoading = true;
+  void retryHistory() {
     _historyState = const AsyncLoading();
     _notify();
-
-    try {
-      final items = await _historyRepository.getHistory();
-      _history = items;
-      _historyState = AsyncData(items);
-      _lastError = null;
-    } on PoddrException catch (e, stackTrace) {
-      error('Failed to get history',
-          name: logName, error: e, stackTrace: stackTrace);
-      _historyState = AsyncError(e.userMessage);
-    } catch (e, stackTrace) {
-      error('Failed to get history unexpectedly',
-          name: logName, error: e, stackTrace: stackTrace);
-      _historyState = const AsyncError(
-        'Listening history could not be loaded. Please try again.',
-      );
-    } finally {
-      _isLoading = false;
-      _notify();
-    }
+    _listen();
   }
-
-  Future<void> retryHistory() => getHistory();
 
   Future<void> upsertProgress(
     String audioUrl, {
@@ -174,19 +157,15 @@ class HistoryProvider extends ChangeNotifier {
     }
   }
 
-  final Map<String, Stream<EpisodeProgress?>> _progressStreams = {};
-
   Stream<EpisodeProgress?> watchProgressByAudioUrl(String audioUrl) {
-    return _progressStreams.putIfAbsent(audioUrl, () {
-      try {
-        return _historyRepository.watchProgressByAudioUrl(audioUrl);
-      } catch (e, stackTrace) {
-        error('Failed to watch progress',
-            name: logName, error: e, stackTrace: stackTrace);
-        debug('Watch progress detail: $e', name: logName);
-        return const Stream.empty();
-      }
-    });
+    try {
+      return _historyRepository.watchProgressByAudioUrl(audioUrl);
+    } catch (e, stackTrace) {
+      error('Failed to watch progress',
+          name: logName, error: e, stackTrace: stackTrace);
+      debug('Watch progress detail: $e', name: logName);
+      return const Stream.empty();
+    }
   }
 
   Future<bool> removeHistory(String audioUrl) async {

@@ -18,38 +18,77 @@ class CollectionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<int?>(
-      stream: context.read<SubscriptionProvider>().watchSubscriptionId(rss),
-      builder: (context, subSnapshot) {
-        if (subSnapshot.connectionState == ConnectionState.waiting &&
-            !subSnapshot.hasData) {
-          return const ShimmerBox(height: 20);
-        }
+    final (:id, :loading) =
+        context.select<SubscriptionProvider, ({int? id, bool loading})>(
+      (p) => (
+        id: p.subscriptionIdByRss[rss],
+        loading: p.subscriptionIdByRss.isEmpty && p.isLoading,
+      ),
+    );
 
-        final subscriptionId = subSnapshot.data;
-        if (subscriptionId == null) {
-          return const SizedBox.shrink();
-        }
+    if (loading) {
+      return const ShimmerBox(height: 20);
+    }
 
-        return StreamBuilder<List<PodcastCollection>>(
-          stream: context
-              .read<CollectionsProvider>()
-              .watchCollectionsForSubscription(subscriptionId),
-          builder: (context, colSnapshot) {
-            final collections = colSnapshot.data ?? [];
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (collections.isNotEmpty) ...[
-                  PoddrCollectionsDisplay(collections: collections),
-                  gapH8,
-                ],
-                PoddrCollectionEditButton(subscriptionId: subscriptionId),
-              ],
-            );
-          },
+    if (id == null) {
+      return const SizedBox.shrink();
+    }
+
+    return _CollectionsForSubscription(subscriptionId: id);
+  }
+}
+
+class _CollectionsForSubscription extends StatefulWidget {
+  const _CollectionsForSubscription({required this.subscriptionId});
+
+  final int subscriptionId;
+
+  @override
+  State<_CollectionsForSubscription> createState() =>
+      _CollectionsForSubscriptionState();
+}
+
+class _CollectionsForSubscriptionState
+    extends State<_CollectionsForSubscription> {
+  late Stream<List<PodcastCollection>> _stream;
+
+  @override
+  void initState() {
+    super.initState();
+    _stream = _watch();
+  }
+
+  @override
+  void didUpdateWidget(covariant _CollectionsForSubscription oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.subscriptionId != widget.subscriptionId) {
+      _stream = _watch();
+    }
+  }
+
+  Stream<List<PodcastCollection>> _watch() => context
+      .read<CollectionsProvider>()
+      .watchCollectionsForSubscription(widget.subscriptionId);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<PodcastCollection>>(
+      stream: _stream,
+      builder: (context, snapshot) {
+        final collections = snapshot.data ?? [];
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (collections.isNotEmpty) ...[
+              PoddrCollectionsDisplay(collections: collections),
+              gapH8,
+            ],
+            PoddrCollectionEditButton(
+              subscriptionId: widget.subscriptionId,
+            ),
+          ],
         );
       },
     );

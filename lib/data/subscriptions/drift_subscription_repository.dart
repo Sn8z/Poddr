@@ -11,24 +11,6 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
   DriftSubscriptionRepository();
 
   @override
-  Future<List<Podcast>> getSubscriptions() async {
-    debug("Getting subscriptions", name: logName);
-    final subscriptions =
-        await database.select(database.podcastSubscription).get();
-
-    return subscriptions.map((sub) {
-      return Podcast(
-        title: sub.title,
-        rss: sub.rss,
-        description: sub.description,
-        author: sub.author,
-        image: sub.imageUrl,
-        broken: sub.broken,
-      );
-    }).toList();
-  }
-
-  @override
   Future<int> addSubscription(
     String? title,
     String? rss,
@@ -105,15 +87,6 @@ class DriftSubscriptionRepository implements ISubscriptionRepository {
           ..where((sub) => sub.rss.equals(rss)))
         .getSingleOrNull();
     return result?.id;
-  }
-
-  @override
-  Stream<int?> watchSubscriptionIdByRss(String rss) {
-    debug("Watching subscription ID for $rss", name: logName);
-    return (database.select(database.podcastSubscription)
-          ..where((sub) => sub.rss.equals(rss)))
-        .watchSingleOrNull()
-        .map((row) => row?.id);
   }
 
   @override

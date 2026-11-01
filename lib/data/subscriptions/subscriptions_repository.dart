@@ -1,8 +1,6 @@
 import 'package:poddr/models/podcast.dart';
 
 abstract class ISubscriptionRepository {
-  Future<List<Podcast>> getSubscriptions();
-
   Future<int> addSubscription(
     String? title,
     String? rss,
@@ -14,8 +12,6 @@ abstract class ISubscriptionRepository {
   Future<int?> getSubscriptionIdByRss(String rss);
 
   Future<Map<String, int>> getAllSubscriptionIds();
-
-  Stream<int?> watchSubscriptionIdByRss(String rss);
 
   Stream<List<Podcast>> watchAllSubscriptions();
 

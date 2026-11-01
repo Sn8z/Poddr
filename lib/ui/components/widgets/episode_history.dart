@@ -23,31 +23,14 @@ class EpisodeHistory extends StatelessWidget {
     return SizedBox(
       height: height,
       width: width ?? double.infinity,
-      child: StreamBuilder<EpisodeProgress?>(
-        stream: context.read<HistoryProvider>().watchProgressByAudioUrl(audioUrl),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SizedBox();
-          } else if (snapshot.hasError) {
-            return const SizedBox();
-          } else if (snapshot.hasData && snapshot.data != null) {
-            final data = snapshot.data!;
-            if (data.isFinished) {
-              return PoddrLinearProgress(
-                value: 1.0,
-                height: height,
-              );
-            } else {
-              final value = data.position / data.duration;
-              final finiteValue = value >= 0 && value <= 1 ? value.toDouble() : 0.0;
-              return PoddrLinearProgress(
-                value: finiteValue,
-                height: height,
-              );
-            }
-          } else {
-            return const SizedBox();
-          }
+      child: _ProgressStreamBuilder(
+        audioUrl: audioUrl,
+        builder: (context, progress) {
+          if (progress == null) return const SizedBox();
+          return PoddrLinearProgress(
+            value: _progressValue(progress),
+            height: height,
+          );
         },
       ),
     );
@@ -69,33 +52,65 @@ class EpisodeHistoryCircle extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: StreamBuilder<EpisodeProgress?>(
-        stream: context.read<HistoryProvider>().watchProgressByAudioUrl(audioUrl),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SizedBox();
-          } else if (snapshot.hasError) {
-            return const SizedBox();
-          } else if (snapshot.hasData && snapshot.data != null) {
-            final data = snapshot.data!;
-            if (data.isFinished) {
-              return _CircularProgress(
-                value: 1.0,
-                strokeWidth: size! / 5,
-              );
-            } else {
-              final value = data.position / data.duration;
-              final finiteValue = value >= 0 && value <= 1 ? value.toDouble() : 0.0;
-              return _CircularProgress(
-                value: finiteValue,
-                strokeWidth: size! / 5,
-              );
-            }
-          } else {
-            return const SizedBox();
-          }
+      child: _ProgressStreamBuilder(
+        audioUrl: audioUrl,
+        builder: (context, progress) {
+          if (progress == null) return const SizedBox();
+          return _CircularProgress(
+            value: _progressValue(progress),
+            strokeWidth: size! / 5,
+          );
         },
       ),
+    );
+  }
+}
+
+double _progressValue(EpisodeProgress progress) {
+  if (progress.isFinished) return 1.0;
+  final value = progress.position / progress.duration;
+  return value >= 0 && value <= 1 ? value : 0.0;
+}
+
+class _ProgressStreamBuilder extends StatefulWidget {
+  final String audioUrl;
+  final Widget Function(BuildContext context, EpisodeProgress? progress)
+      builder;
+
+  const _ProgressStreamBuilder({
+    required this.audioUrl,
+    required this.builder,
+  });
+
+  @override
+  State<_ProgressStreamBuilder> createState() => _ProgressStreamBuilderState();
+}
+
+class _ProgressStreamBuilderState extends State<_ProgressStreamBuilder> {
+  late Stream<EpisodeProgress?> _stream;
+
+  @override
+  void initState() {
+    super.initState();
+    _stream = _watch();
+  }
+
+  @override
+  void didUpdateWidget(covariant _ProgressStreamBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.audioUrl != widget.audioUrl) {
+      _stream = _watch();
+    }
+  }
+
+  Stream<EpisodeProgress?> _watch() =>
+      context.read<HistoryProvider>().watchProgressByAudioUrl(widget.audioUrl);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<EpisodeProgress?>(
+      stream: _stream,
+      builder: (context, snapshot) => widget.builder(context, snapshot.data),
     );
   }
 }

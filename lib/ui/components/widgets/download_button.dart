@@ -20,133 +20,123 @@ class DownloadButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final offlineProvider = context.watch<OfflineProvider>();
-    final isDownloading =
-        offlineProvider.downloading.contains(episode.audioUrl);
-    final progress = offlineProvider.downloadProgress[episode.audioUrl];
-    final isDownloaded = offlineProvider.downloads.any(
-      (d) => d.audioUrl == episode.audioUrl,
+    final view = context.select<OfflineProvider, DownloadView>(
+      (p) => p.downloadView(episode.audioUrl),
     );
-    final isQueued = offlineProvider.downloadQueue.any(
-      (e) => e.audioUrl == episode.audioUrl,
-    );
-    final downloadFailed = offlineProvider.downloadStatus[episode.audioUrl] ==
-        DownloadStatus.failed;
-    final downloadError = offlineProvider.downloadErrors[episode.audioUrl];
 
-    if (isDownloading) {
-      return SizedBox(
-        width: iconSize,
-        height: iconSize,
-        child: Stack(
+    switch (view.state) {
+      case DownloadUiState.downloading:
+        return SizedBox(
+          width: iconSize,
+          height: iconSize,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              PoddrLinearProgress(
+                value: view.progress,
+                height: 2,
+              ),
+              PoddrIconButton(
+                onPressed: () {
+                  context.read<OfflineProvider>().cancelDownload(
+                        episode.audioUrl,
+                      );
+                },
+                icon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedCancel01,
+                ),
+                size: 14,
+              ),
+            ],
+          ),
+        );
+      case DownloadUiState.queued:
+        return Stack(
           alignment: Alignment.center,
           children: [
-            PoddrLinearProgress(
-              value: progress ?? 0,
-              height: 2,
-            ),
             PoddrIconButton(
               onPressed: () {
-                offlineProvider.cancelDownload(episode.audioUrl);
+                context.read<OfflineProvider>().cancelDownload(
+                      episode.audioUrl,
+                    );
               },
               icon: HugeIcon(
-                icon: HugeIcons.strokeRoundedCancel01,
+                icon: HugeIcons.strokeRoundedLoading01,
               ),
               size: 14,
             ),
-          ],
-        ),
-      );
-    }
-
-    if (isQueued) {
-      final queuePosition = offlineProvider.getQueuePosition(episode.audioUrl);
-      return Stack(
-        alignment: Alignment.center,
-        children: [
-          PoddrIconButton(
-            onPressed: () {
-              offlineProvider.cancelDownload(episode.audioUrl);
-            },
-            icon: HugeIcon(
-              icon: HugeIcons.strokeRoundedLoading01,
-            ),
-            size: 14,
-          ),
-          if (queuePosition > 0)
-            Positioned(
-              right: 0,
-              top: 0,
-              child: Container(
-                padding: const EdgeInsets.all(1),
-                decoration: BoxDecoration(
-                  color: context.theme.primary,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                constraints: const BoxConstraints(minWidth: 10, minHeight: 10),
-                child: Text(
-                  '$queuePosition',
-                  style: context.theme.textTheme.labelSmall.copyWith(
-                    color: context.theme.onPrimary,
+            if (view.queuePosition > 0)
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: context.theme.primary,
+                    borderRadius: BorderRadius.circular(6),
                   ),
-                  textAlign: TextAlign.center,
+                  constraints:
+                      const BoxConstraints(minWidth: 10, minHeight: 10),
+                  child: Text(
+                    '${view.queuePosition}',
+                    style: context.theme.textTheme.labelSmall.copyWith(
+                      color: context.theme.onPrimary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-        ],
-      );
+          ],
+        );
+      case DownloadUiState.failed:
+        return PoddrIconButton(
+          onPressed: () {
+            context.read<OfflineProvider>().download(episode);
+          },
+          onLongPress: view.error == null
+              ? null
+              : () => showPoddrErrorDialog(
+                    context: context,
+                    message: view.error!,
+                    title: 'Download failed',
+                  ),
+          icon: HugeIcon(
+            icon: HugeIcons.strokeRoundedRefresh,
+            color: context.theme.error,
+          ),
+          size: iconSize,
+          semanticLabel: view.error ?? 'Download failed, tap to retry',
+        );
+      case DownloadUiState.downloaded:
+        return PoddrIconButton(
+          onPressed: () async {
+            final offlineProvider = context.read<OfflineProvider>();
+            final removed = await offlineProvider.remove(episode.audioUrl);
+            if (!removed && context.mounted) {
+              await showPoddrErrorDialog(
+                context: context,
+                message: offlineProvider.lastError ??
+                    'The downloaded episode could not be removed. '
+                        'Please try again.',
+              );
+            }
+          },
+          icon: HugeIcon(
+            icon: HugeIcons.strokeRoundedCancel01,
+          ),
+          size: iconSize,
+          semanticLabel: 'Delete download',
+        );
+      case DownloadUiState.idle:
+        return PoddrIconButton(
+          onPressed: () {
+            context.read<OfflineProvider>().download(episode);
+          },
+          icon: HugeIcon(
+            icon: HugeIcons.strokeRoundedDownload01,
+          ),
+          size: iconSize,
+        );
     }
-
-    if (downloadFailed) {
-      return PoddrIconButton(
-        onPressed: () {
-          offlineProvider.download(episode);
-        },
-        onLongPress: downloadError == null
-            ? null
-            : () => showPoddrErrorDialog(
-                  context: context,
-                  message: downloadError,
-                  title: 'Download failed',
-                ),
-        icon: HugeIcon(
-          icon: HugeIcons.strokeRoundedRefresh,
-          color: context.theme.error,
-        ),
-        size: iconSize,
-        semanticLabel: downloadError ?? 'Download failed, tap to retry',
-      );
-    }
-
-    if (isDownloaded) {
-      return PoddrIconButton(
-        onPressed: () async {
-          final removed = await offlineProvider.remove(episode.audioUrl);
-          if (!removed && context.mounted) {
-            await showPoddrErrorDialog(
-              context: context,
-              message: offlineProvider.lastError ??
-                  'The downloaded episode could not be removed. '
-                      'Please try again.',
-            );
-          }
-        },
-        icon: HugeIcon(
-          icon: HugeIcons.strokeRoundedCancel01,
-        ),
-        size: iconSize,
-        semanticLabel: 'Delete download',
-      );
-    }
-
-    return PoddrIconButton(
-      onPressed: () {
-        offlineProvider.download(episode);
-      },
-      icon: HugeIcon(
-        icon: HugeIcons.strokeRoundedDownload01,
-      ),
-      size: iconSize,
-    );
   }
 }

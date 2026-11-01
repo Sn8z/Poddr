@@ -15,15 +15,11 @@ abstract class IHistoryRepository {
     String? videoUrl,
   });
 
-  Future<List<PodcastEpisode>> getHistory();
-
   Future<EpisodeProgress?> getProgress(String audioUrl);
 
   Stream<EpisodeProgress?> watchProgressByAudioUrl(String audioUrl);
 
   Stream<List<PodcastEpisode>> watchAllHistory();
-
-  Stream<List<PodcastEpisode>> watchHistoryForPodcast(String podcastRSS);
 
   Future<void> removeHistory(String audioUrl);
 }
