@@ -25,7 +25,7 @@ class DownloadButton extends StatelessWidget {
     );
 
     switch (view.state) {
-      case DownloadUiState.downloading:
+      case DownloadState.downloading:
         return SizedBox(
           width: iconSize,
           height: iconSize,
@@ -50,7 +50,7 @@ class DownloadButton extends StatelessWidget {
             ],
           ),
         );
-      case DownloadUiState.queued:
+      case DownloadState.queued:
         return Stack(
           alignment: Alignment.center,
           children: [
@@ -88,7 +88,7 @@ class DownloadButton extends StatelessWidget {
               ),
           ],
         );
-      case DownloadUiState.failed:
+      case DownloadState.failed:
         return PoddrIconButton(
           onPressed: () {
             context.read<OfflineProvider>().download(episode);
@@ -107,7 +107,7 @@ class DownloadButton extends StatelessWidget {
           size: iconSize,
           semanticLabel: view.error ?? 'Download failed, tap to retry',
         );
-      case DownloadUiState.downloaded:
+      case DownloadState.downloaded:
         return PoddrIconButton(
           onPressed: () async {
             final offlineProvider = context.read<OfflineProvider>();
@@ -127,7 +127,7 @@ class DownloadButton extends StatelessWidget {
           size: iconSize,
           semanticLabel: 'Delete download',
         );
-      case DownloadUiState.idle:
+      case DownloadState.idle:
         return PoddrIconButton(
           onPressed: () {
             context.read<OfflineProvider>().download(episode);

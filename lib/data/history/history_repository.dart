@@ -19,7 +19,7 @@ abstract class IHistoryRepository {
 
   Stream<EpisodeProgress?> watchProgressByAudioUrl(String audioUrl);
 
-  Stream<List<PodcastEpisode>> watchAllHistory();
+  Stream<List<PodcastEpisode>> watchRecentHistory();
 
   Future<void> removeHistory(String audioUrl);
 }

@@ -4,7 +4,6 @@ import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/offline.dart';
-import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/components/widgets/download_button.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
@@ -37,17 +36,15 @@ class DownloadsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProxyProvider4<OfflineProvider, MediaProvider,
-        SubscriptionProvider, CollectionsProvider, DownloadsViewModel>(
+    return ChangeNotifierProxyProvider3<OfflineProvider, MediaProvider,
+        CollectionsProvider, DownloadsViewModel>(
       create: (context) => DownloadsViewModel(
         context.read<OfflineProvider>(),
         context.read<MediaProvider>(),
-        context.read<SubscriptionProvider>(),
         context.read<CollectionsProvider>(),
       ),
-      update: (_, offline, media, subscriptions, collections, previous) =>
-          previous ??
-          DownloadsViewModel(offline, media, subscriptions, collections),
+      update: (_, offline, media, collections, previous) =>
+          previous ?? DownloadsViewModel(offline, media, collections),
       builder: (context, child) {
         final viewModel = context.watch<DownloadsViewModel>();
         final offlineProvider = context.watch<OfflineProvider>();

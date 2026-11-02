@@ -120,7 +120,7 @@ class DriftHistoryRepository implements IHistoryRepository {
   }
 
   @override
-  Stream<List<PodcastEpisode>> watchAllHistory() {
+  Stream<List<PodcastEpisode>> watchRecentHistory() {
     return (database.select(database.listeningHistory)
           ..orderBy([
             (t) =>

@@ -40,7 +40,7 @@ class PoddrCollectionFilterList extends StatelessWidget {
         ),
       AsyncError(:final message) => ErrorState(
           message: message,
-          onRetry: collectionsProvider.loadCollections,
+          onRetry: collectionsProvider.retryCollections,
         ),
       AsyncData(:final value) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

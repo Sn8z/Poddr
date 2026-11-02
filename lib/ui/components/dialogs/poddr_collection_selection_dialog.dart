@@ -11,11 +11,11 @@ import 'package:poddr/ui/components/widgets/poddr_toggle.dart';
 import 'package:provider/provider.dart';
 
 class PoddrCollectionSelectionDialog extends StatelessWidget {
-  final int subscriptionId;
+  final String rss;
 
   const PoddrCollectionSelectionDialog({
     super.key,
-    required this.subscriptionId,
+    required this.rss,
   });
 
   @override
@@ -33,7 +33,7 @@ class PoddrCollectionSelectionDialog extends StatelessWidget {
           ),
         AsyncError(:final message) => ErrorState(
             message: message,
-            onRetry: collectionsProvider.loadCollections,
+            onRetry: collectionsProvider.retryCollections,
           ),
         AsyncData(:final value) => _buildSelectionList(context, value),
       },
@@ -52,7 +52,7 @@ class PoddrCollectionSelectionDialog extends StatelessWidget {
     }
 
     return _CollectionToggles(
-      subscriptionId: subscriptionId,
+      rss: rss,
       collections: allCollections,
     );
   }
@@ -60,11 +60,11 @@ class PoddrCollectionSelectionDialog extends StatelessWidget {
 
 class _CollectionToggles extends StatefulWidget {
   const _CollectionToggles({
-    required this.subscriptionId,
+    required this.rss,
     required this.collections,
   });
 
-  final int subscriptionId;
+  final String rss;
   final List<PodcastCollection> collections;
 
   @override
@@ -83,14 +83,13 @@ class _CollectionTogglesState extends State<_CollectionToggles> {
   @override
   void didUpdateWidget(covariant _CollectionToggles oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.subscriptionId != widget.subscriptionId) {
+    if (oldWidget.rss != widget.rss) {
       _stream = _watch();
     }
   }
 
-  Stream<List<PodcastCollection>> _watch() => context
-      .read<CollectionsProvider>()
-      .watchCollectionsForSubscription(widget.subscriptionId);
+  Stream<List<PodcastCollection>> _watch() =>
+      context.read<CollectionsProvider>().watchCollectionsForRss(widget.rss);
 
   @override
   Widget build(BuildContext context) {
@@ -126,11 +125,10 @@ class _CollectionTogglesState extends State<_CollectionToggles> {
               value: isSelected,
               onChanged: (value) async {
                 final success = value
-                    ? await collectionsProvider.addSubscriptionToCollection(
-                        widget.subscriptionId, collection.id)
-                    : await collectionsProvider
-                        .removeSubscriptionFromCollection(
-                            widget.subscriptionId, collection.id);
+                    ? await collectionsProvider.addToCollection(
+                        collection.id, widget.rss)
+                    : await collectionsProvider.removeFromCollection(
+                        collection.id, widget.rss);
                 if (!success && context.mounted) {
                   await showPoddrErrorDialog(
                     context: context,

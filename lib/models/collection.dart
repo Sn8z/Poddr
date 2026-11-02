@@ -9,18 +9,6 @@ class PodcastCollection {
     required this.color,
   });
 
-  PodcastCollection copyWith({
-    int? id,
-    String? name,
-    int? color,
-  }) {
-    return PodcastCollection(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      color: color ?? this.color,
-    );
-  }
-
   @override
   String toString() => 'PodcastCollection{id: $id, name: $name, color: $color}';
 }

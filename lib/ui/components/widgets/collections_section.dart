@@ -8,7 +8,6 @@ import 'package:poddr/ui/components/dialogs/poddr_collection_selection_dialog.da
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
-import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
 
@@ -18,38 +17,26 @@ class CollectionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (:id, :loading) =
-        context.select<SubscriptionProvider, ({int? id, bool loading})>(
-      (p) => (
-        id: p.subscriptionIdByRss[rss],
-        loading: p.subscriptionIdByRss.isEmpty && p.isLoading,
-      ),
+    final isSubscribed = context.select<SubscriptionProvider, bool>(
+      (p) => p.subscriptions.any((podcast) => podcast.rss == rss),
     );
 
-    if (loading) {
-      return const ShimmerBox(height: 20);
-    }
+    if (!isSubscribed) return const SizedBox.shrink();
 
-    if (id == null) {
-      return const SizedBox.shrink();
-    }
-
-    return _CollectionsForSubscription(subscriptionId: id);
+    return _CollectionsForRss(rss: rss);
   }
 }
 
-class _CollectionsForSubscription extends StatefulWidget {
-  const _CollectionsForSubscription({required this.subscriptionId});
+class _CollectionsForRss extends StatefulWidget {
+  const _CollectionsForRss({required this.rss});
 
-  final int subscriptionId;
+  final String rss;
 
   @override
-  State<_CollectionsForSubscription> createState() =>
-      _CollectionsForSubscriptionState();
+  State<_CollectionsForRss> createState() => _CollectionsForRssState();
 }
 
-class _CollectionsForSubscriptionState
-    extends State<_CollectionsForSubscription> {
+class _CollectionsForRssState extends State<_CollectionsForRss> {
   late Stream<List<PodcastCollection>> _stream;
 
   @override
@@ -59,16 +46,15 @@ class _CollectionsForSubscriptionState
   }
 
   @override
-  void didUpdateWidget(covariant _CollectionsForSubscription oldWidget) {
+  void didUpdateWidget(covariant _CollectionsForRss oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.subscriptionId != widget.subscriptionId) {
+    if (oldWidget.rss != widget.rss) {
       _stream = _watch();
     }
   }
 
-  Stream<List<PodcastCollection>> _watch() => context
-      .read<CollectionsProvider>()
-      .watchCollectionsForSubscription(widget.subscriptionId);
+  Stream<List<PodcastCollection>> _watch() =>
+      context.read<CollectionsProvider>().watchCollectionsForRss(widget.rss);
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +71,7 @@ class _CollectionsForSubscriptionState
               PoddrCollectionsDisplay(collections: collections),
               gapH8,
             ],
-            PoddrCollectionEditButton(
-              subscriptionId: widget.subscriptionId,
-            ),
+            PoddrCollectionEditButton(rss: widget.rss),
           ],
         );
       },
@@ -96,8 +80,8 @@ class _CollectionsForSubscriptionState
 }
 
 class PoddrCollectionEditButton extends StatelessWidget {
-  const PoddrCollectionEditButton({super.key, required this.subscriptionId});
-  final int subscriptionId;
+  const PoddrCollectionEditButton({super.key, required this.rss});
+  final String rss;
 
   @override
   Widget build(BuildContext context) {
@@ -114,9 +98,7 @@ class PoddrCollectionEditButton extends StatelessWidget {
                 color: context.theme.secondary,
               ),
             ),
-            child: PoddrCollectionSelectionDialog(
-              subscriptionId: subscriptionId,
-            ),
+            child: PoddrCollectionSelectionDialog(rss: rss),
           ),
         );
       },

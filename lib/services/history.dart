@@ -37,7 +37,7 @@ class HistoryProvider extends ChangeNotifier {
   void _listen() {
     _isLoading = true;
     _watchSubscription?.cancel();
-    _watchSubscription = _historyRepository.watchAllHistory().listen(
+    _watchSubscription = _historyRepository.watchRecentHistory().listen(
       (items) {
         _history = items;
         _historyState = AsyncData(items);

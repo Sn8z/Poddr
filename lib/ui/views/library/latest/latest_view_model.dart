@@ -5,10 +5,11 @@ import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
+import 'package:poddr/ui/views/library/collection_filter.dart';
 
 class LatestEpisodesViewModel extends ChangeNotifier {
   final SubscriptionProvider _source;
-  final CollectionsProvider _collectionsProvider;
+  final CollectionFilter _collectionFilter;
 
   final TextEditingController filterController = TextEditingController();
 
@@ -21,8 +22,7 @@ class LatestEpisodesViewModel extends ChangeNotifier {
   SortDirection _sortDirection = SortDirection.descending;
   String get sortDirection => _sortDirection.label;
 
-  Set<int> _selectedCollectionIds = {};
-  Set<int> get selectedCollectionIds => _selectedCollectionIds;
+  Set<int> get selectedCollectionIds => _collectionFilter.collectionIds;
 
   bool get isLoadingLatest => _source.isLoadingLatest;
 
@@ -31,24 +31,16 @@ class LatestEpisodesViewModel extends ChangeNotifier {
 
   Future<void> retrySubscriptions() => _source.retrySubscriptions();
 
-  LatestEpisodesViewModel(this._source, this._collectionsProvider) {
+  LatestEpisodesViewModel(this._source, CollectionsProvider collectionsProvider)
+      : _collectionFilter = CollectionFilter(collectionsProvider) {
     _source.addListener(notifyListeners);
-    _collectionsProvider.addListener(notifyListeners);
+    _collectionFilter.addListener(notifyListeners);
   }
 
   List<PodcastEpisode> get episodes {
-    var episodes = _source.latestEpisodes;
-
-    if (_selectedCollectionIds.isNotEmpty) {
-      final idByRss = _source.subscriptionIdByRss;
-      final subToCol = _collectionsProvider.subscriptionToCollections;
-      episodes = episodes.where((e) {
-        final subId = idByRss[e.podcastRSS ?? ''];
-        if (subId == null) return false;
-        final collectionIds = subToCol[subId] ?? {};
-        return _selectedCollectionIds.any((id) => collectionIds.contains(id));
-      }).toList();
-    }
+    final episodes = _source.latestEpisodes
+        .where((e) => _collectionFilter.includes(e.podcastRSS))
+        .toList();
 
     return filterAndSortEpisodes(
       episodes: episodes,
@@ -69,7 +61,7 @@ class LatestEpisodesViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _source.removeListener(notifyListeners);
-    _collectionsProvider.removeListener(notifyListeners);
+    _collectionFilter.dispose();
     filterController.dispose();
     super.dispose();
   }
@@ -84,12 +76,6 @@ class LatestEpisodesViewModel extends ChangeNotifier {
   }
 
   void setCollectionFilter(Set<int> ids) {
-    _selectedCollectionIds = ids;
-    notifyListeners();
-  }
-
-  void clearCollectionFilter() {
-    _selectedCollectionIds = {};
-    notifyListeners();
+    _collectionFilter.update(ids);
   }
 }

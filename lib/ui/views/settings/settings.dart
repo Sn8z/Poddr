@@ -49,7 +49,7 @@ class SettingsView extends StatelessWidget {
         const ContentBox(
           title: "Collections",
           children: [
-            CollectionsSection(),
+            CollectionsSettingsSection(),
           ],
         ),
         sliverGapH16,

@@ -4,10 +4,11 @@ import 'package:poddr/models/podcast.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
+import 'package:poddr/ui/views/library/collection_filter.dart';
 
 class LibraryViewModel extends ChangeNotifier {
   final SubscriptionProvider _subscriptionProvider;
-  final CollectionsProvider _collectionsProvider;
+  final CollectionFilter _collectionFilter;
 
   final TextEditingController filterController = TextEditingController();
 
@@ -20,27 +21,19 @@ class LibraryViewModel extends ChangeNotifier {
   SortDirection _sortDirection = SortDirection.ascending;
   String get sortDirection => _sortDirection.label;
 
-  Set<int> _selectedCollectionIds = {};
-  Set<int> get selectedCollectionIds => _selectedCollectionIds;
+  Set<int> get selectedCollectionIds => _collectionFilter.collectionIds;
 
-  LibraryViewModel(this._subscriptionProvider, this._collectionsProvider) {
+  LibraryViewModel(
+      this._subscriptionProvider, CollectionsProvider collectionsProvider)
+      : _collectionFilter = CollectionFilter(collectionsProvider) {
     _subscriptionProvider.addListener(notifyListeners);
-    _collectionsProvider.addListener(notifyListeners);
+    _collectionFilter.addListener(notifyListeners);
   }
 
   List<Podcast> get subscriptions {
-    var podcasts = _subscriptionProvider.subscriptions;
-
-    if (_selectedCollectionIds.isNotEmpty) {
-      final idByRss = _subscriptionProvider.subscriptionIdByRss;
-      final subToCol = _collectionsProvider.subscriptionToCollections;
-      podcasts = podcasts.where((p) {
-        final subId = idByRss[p.rss ?? ''];
-        if (subId == null) return false;
-        final collectionIds = subToCol[subId] ?? {};
-        return _selectedCollectionIds.any((id) => collectionIds.contains(id));
-      }).toList();
-    }
+    final podcasts = _subscriptionProvider.subscriptions
+        .where((p) => _collectionFilter.includes(p.rss))
+        .toList();
 
     return filterAndSortPodcasts(
       podcasts: podcasts,
@@ -80,7 +73,7 @@ class LibraryViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _subscriptionProvider.removeListener(notifyListeners);
-    _collectionsProvider.removeListener(notifyListeners);
+    _collectionFilter.dispose();
     filterController.dispose();
     super.dispose();
   }
@@ -95,12 +88,6 @@ class LibraryViewModel extends ChangeNotifier {
   }
 
   void setCollectionFilter(Set<int> ids) {
-    _selectedCollectionIds = ids;
-    notifyListeners();
-  }
-
-  void clearCollectionFilter() {
-    _selectedCollectionIds = {};
-    notifyListeners();
+    _collectionFilter.update(ids);
   }
 }

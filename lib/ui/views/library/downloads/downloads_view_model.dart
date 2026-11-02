@@ -2,16 +2,15 @@ import 'package:flutter/widgets.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/offline.dart';
-import 'package:poddr/services/subscriptions.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/offline_episode.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
+import 'package:poddr/ui/views/library/collection_filter.dart';
 
 class DownloadsViewModel extends ChangeNotifier {
   final OfflineProvider _offlineProvider;
   final MediaProvider _mediaProvider;
-  final SubscriptionProvider _subscriptionProvider;
-  final CollectionsProvider _collectionsProvider;
+  final CollectionFilter _collectionFilter;
 
   final TextEditingController filterController = TextEditingController();
 
@@ -24,29 +23,19 @@ class DownloadsViewModel extends ChangeNotifier {
   SortDirection _sortDirection = SortDirection.descending;
   String get sortDirection => _sortDirection.label;
 
-  Set<int> _selectedCollectionIds = {};
-  Set<int> get selectedCollectionIds => _selectedCollectionIds;
+  Set<int> get selectedCollectionIds => _collectionFilter.collectionIds;
 
   DownloadsViewModel(this._offlineProvider, this._mediaProvider,
-      this._subscriptionProvider, this._collectionsProvider) {
+      CollectionsProvider collectionsProvider)
+      : _collectionFilter = CollectionFilter(collectionsProvider) {
     _offlineProvider.addListener(notifyListeners);
-    _subscriptionProvider.addListener(notifyListeners);
-    _collectionsProvider.addListener(notifyListeners);
+    _collectionFilter.addListener(notifyListeners);
   }
 
   List<OfflineEpisode> get downloads {
-    var downloads = _offlineProvider.downloads;
-
-    if (_selectedCollectionIds.isNotEmpty) {
-      final idByRss = _subscriptionProvider.subscriptionIdByRss;
-      final subToCol = _collectionsProvider.subscriptionToCollections;
-      downloads = downloads.where((d) {
-        final subId = idByRss[d.podcastRSS];
-        if (subId == null) return false;
-        final collectionIds = subToCol[subId] ?? {};
-        return _selectedCollectionIds.any((id) => collectionIds.contains(id));
-      }).toList();
-    }
+    final downloads = _offlineProvider.downloads
+        .where((d) => _collectionFilter.includes(d.podcastRSS))
+        .toList();
 
     return filterAndSortOfflineEpisodes(
       episodes: downloads,
@@ -57,21 +46,6 @@ class DownloadsViewModel extends ChangeNotifier {
   }
 
   bool get isLoading => _offlineProvider.isLoading;
-  Map<String, double> get downloadProgress => _offlineProvider.downloadProgress;
-  Set<String> get downloading => _offlineProvider.downloading;
-  Set<String> get paused => _offlineProvider.paused;
-  Map<String, DownloadStatus> get downloadStatus =>
-      _offlineProvider.downloadStatus;
-  Map<String, String> get downloadErrors => _offlineProvider.downloadErrors;
-  Map<String, double> get downloadSpeeds => _offlineProvider.downloadSpeeds;
-  Map<String, Duration> get downloadEtas => _offlineProvider.downloadEtas;
-  List<PodcastEpisode> get downloadQueue => _offlineProvider.downloadQueue;
-
-  Future<void> pauseDownload(String audioUrl) =>
-      _offlineProvider.pauseDownload(audioUrl);
-
-  Future<void> resumeDownload(PodcastEpisode episode) =>
-      _offlineProvider.resumeDownload(episode);
 
   Future<bool> loadMedia({
     required String audioUrl,
@@ -108,10 +82,6 @@ class DownloadsViewModel extends ChangeNotifier {
   String? get lastError => _offlineProvider.lastError;
   String? get playbackError => _mediaProvider.lastError;
 
-  int getQueuePosition(String audioUrl) {
-    return _offlineProvider.getQueuePosition(audioUrl);
-  }
-
   void setFilter(String value) {
     _filter = value;
     if (filterController.text != value) {
@@ -123,8 +93,7 @@ class DownloadsViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _offlineProvider.removeListener(notifyListeners);
-    _subscriptionProvider.removeListener(notifyListeners);
-    _collectionsProvider.removeListener(notifyListeners);
+    _collectionFilter.dispose();
     filterController.dispose();
     super.dispose();
   }
@@ -139,12 +108,6 @@ class DownloadsViewModel extends ChangeNotifier {
   }
 
   void setCollectionFilter(Set<int> ids) {
-    _selectedCollectionIds = ids;
-    notifyListeners();
-  }
-
-  void clearCollectionFilter() {
-    _selectedCollectionIds = {};
-    notifyListeners();
+    _collectionFilter.update(ids);
   }
 }

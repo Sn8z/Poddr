@@ -33,14 +33,6 @@ class DriftCollectionsRepository implements ICollectionsRepository {
   }
 
   @override
-  Future<List<PodcastCollection>> getAllCollections() async {
-    final allCollections = await database.select(database.collections).get();
-    return allCollections
-        .map((c) => PodcastCollection(id: c.id, name: c.name, color: c.color))
-        .toList();
-  }
-
-  @override
   Future<void> updateCollectionColor(int id, int color) async {
     await (database.update(database.collections)..where((c) => c.id.equals(id)))
         .write(CollectionsCompanion(color: Value(color)));
@@ -63,7 +55,10 @@ class DriftCollectionsRepository implements ICollectionsRepository {
 
   @override
   Future<void> linkCollectionToSubscription(
-      int collectionId, int subscriptionId) async {
+      int collectionId, String rss) async {
+    final subscriptionId = await _subscriptionIdForRss(rss);
+    if (subscriptionId == null) return;
+
     await database.into(database.subscriptionCollections).insert(
           SubscriptionCollectionsCompanion.insert(
             subscriptionId: subscriptionId,
@@ -75,7 +70,10 @@ class DriftCollectionsRepository implements ICollectionsRepository {
 
   @override
   Future<void> unlinkCollectionFromSubscription(
-      int collectionId, int subscriptionId) async {
+      int collectionId, String rss) async {
+    final subscriptionId = await _subscriptionIdForRss(rss);
+    if (subscriptionId == null) return;
+
     await (database.delete(database.subscriptionCollections)
           ..where((sc) =>
               sc.collectionId.equals(collectionId) &
@@ -83,26 +81,11 @@ class DriftCollectionsRepository implements ICollectionsRepository {
         .go();
   }
 
-  @override
-  Future<Map<int, Set<int>>> getAllSubscriptionCollectionPairs() async {
-    final rows = await database.select(database.subscriptionCollections).get();
-    return _rowsToMap(rows);
-  }
-
-  @override
-  Stream<Map<int, Set<int>>> watchAllSubscriptionCollectionPairs() {
-    return database
-        .select(database.subscriptionCollections)
-        .watch()
-        .map(_rowsToMap);
-  }
-
-  Map<int, Set<int>> _rowsToMap(List<SubscriptionCollection> rows) {
-    final map = <int, Set<int>>{};
-    for (var row in rows) {
-      map.putIfAbsent(row.subscriptionId, () => {}).add(row.collectionId);
-    }
-    return map;
+  Future<int?> _subscriptionIdForRss(String rss) async {
+    final subscription = await (database.select(database.podcastSubscription)
+          ..where((sub) => sub.rss.equals(rss)))
+        .getSingleOrNull();
+    return subscription?.id;
   }
 
   @override
@@ -116,26 +99,52 @@ class DriftCollectionsRepository implements ICollectionsRepository {
   }
 
   @override
-  Stream<List<PodcastCollection>> watchCollectionsForSubscription(
-      int subscriptionId) {
+  Stream<List<PodcastCollection>> watchCollectionsForRss(String rss) {
     final query = database.select(database.collections).join([
       innerJoin(
         database.subscriptionCollections,
         database.subscriptionCollections.collectionId
             .equalsExp(database.collections.id),
       ),
+      innerJoin(
+        database.podcastSubscription,
+        database.podcastSubscription.id
+            .equalsExp(database.subscriptionCollections.subscriptionId),
+      ),
     ])
-      ..where(database.subscriptionCollections.subscriptionId
-          .equals(subscriptionId));
+      ..where(database.podcastSubscription.rss.equals(rss));
 
     return query.watch().map(
           (rows) => rows.map((row) {
             final collection = row.readTable(database.collections);
             return PodcastCollection(
-                id: collection.id,
-                name: collection.name,
-                color: collection.color);
+              id: collection.id,
+              name: collection.name,
+              color: collection.color,
+            );
           }).toList(),
+        );
+  }
+
+  @override
+  Stream<Set<String>> watchRssInCollections(Set<int> collectionIds) {
+    if (collectionIds.isEmpty) return Stream.value(const <String>{});
+
+    final query = database.select(database.podcastSubscription).join([
+      innerJoin(
+        database.subscriptionCollections,
+        database.subscriptionCollections.subscriptionId
+            .equalsExp(database.podcastSubscription.id),
+      ),
+    ])
+      ..where(
+          database.subscriptionCollections.collectionId.isIn(collectionIds));
+
+    return query.watch().map(
+          (rows) => {
+            for (final row in rows)
+              row.readTable(database.podcastSubscription).rss,
+          },
         );
   }
 }

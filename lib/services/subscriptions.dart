@@ -25,9 +25,6 @@ class SubscriptionProvider extends ChangeNotifier {
   AsyncState<List<Podcast>> _subscriptionsState = const AsyncLoading();
   AsyncState<List<Podcast>> get subscriptionsState => _subscriptionsState;
 
-  Map<String, int> _subscriptionIdByRss = {};
-  Map<String, int> get subscriptionIdByRss => _subscriptionIdByRss;
-
   bool get isLoading =>
       _subscriptionsState is AsyncInitial ||
       _subscriptionsState is AsyncLoading;
@@ -80,12 +77,6 @@ class SubscriptionProvider extends ChangeNotifier {
     if (_disposed) return;
 
     _subscriptions = subs;
-    try {
-      _subscriptionIdByRss =
-          await _subscriptionRepository.getAllSubscriptionIds();
-    } catch (e) {
-      warning('Failed to load subscription ids: $e', name: logName);
-    }
 
     if (_disposed) return;
 
@@ -273,10 +264,6 @@ class SubscriptionProvider extends ChangeNotifier {
       if (episode.audioUrl == audioUrl) return episode;
     }
     return null;
-  }
-
-  Future<int?> getSubscriptionId(String rss) async {
-    return await _subscriptionRepository.getSubscriptionIdByRss(rss);
   }
 
   Future<bool> removeSubscription(String rss, {bool fromSync = false}) async {

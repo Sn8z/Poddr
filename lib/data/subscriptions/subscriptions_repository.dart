@@ -9,10 +9,6 @@ abstract class ISubscriptionRepository {
     String? image,
   );
 
-  Future<int?> getSubscriptionIdByRss(String rss);
-
-  Future<Map<String, int>> getAllSubscriptionIds();
-
   Stream<List<Podcast>> watchAllSubscriptions();
 
   Future<void> removeSubscription(String rss);

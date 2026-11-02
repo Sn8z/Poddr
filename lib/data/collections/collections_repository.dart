@@ -3,26 +3,19 @@ import 'package:poddr/models/collection.dart';
 abstract class ICollectionsRepository {
   Future<PodcastCollection> createCollection(String name, {int? color});
 
-  Future<List<PodcastCollection>> getAllCollections();
-
   Future<void> updateCollectionName(int id, String name);
 
   Future<void> updateCollectionColor(int id, int color);
 
   Future<void> deleteCollection(int id);
 
-  Future<void> linkCollectionToSubscription(
-      int collectionId, int subscriptionId);
+  Future<void> linkCollectionToSubscription(int collectionId, String rss);
 
-  Future<void> unlinkCollectionFromSubscription(
-      int collectionId, int subscriptionId);
+  Future<void> unlinkCollectionFromSubscription(int collectionId, String rss);
 
   Stream<List<PodcastCollection>> watchAllCollections();
 
-  Stream<List<PodcastCollection>> watchCollectionsForSubscription(
-      int subscriptionId);
+  Stream<List<PodcastCollection>> watchCollectionsForRss(String rss);
 
-  Future<Map<int, Set<int>>> getAllSubscriptionCollectionPairs();
-
-  Stream<Map<int, Set<int>>> watchAllSubscriptionCollectionPairs();
+  Stream<Set<String>> watchRssInCollections(Set<int> collectionIds);
 }

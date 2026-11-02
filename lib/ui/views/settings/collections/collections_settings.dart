@@ -5,7 +5,6 @@ import 'package:poddr/core/theme/poddr_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:poddr/services/collections.dart';
 import 'package:poddr/models/collection.dart';
-import 'package:poddr/ui/views/settings/collections/collections_view_model.dart';
 import 'package:poddr/ui/components/widgets/poddr_overlay.dart';
 import 'package:poddr/ui/components/widgets/poddr_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_error_dialog.dart';
@@ -19,29 +18,12 @@ import 'package:poddr/ui/components/widgets/list_item.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/colors.dart';
 
-class CollectionsSection extends StatelessWidget {
-  const CollectionsSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final collectionsProvider = context.read<CollectionsProvider>();
-
-    return ChangeNotifierProvider(
-      create: (_) => CollectionsViewModel(collectionsProvider),
-      builder: (context, child) {
-        return const _CollectionsView();
-      },
-    );
-  }
-}
-
-class _CollectionsView extends StatelessWidget {
-  const _CollectionsView();
+class CollectionsSettingsSection extends StatelessWidget {
+  const CollectionsSettingsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     final collectionsProvider = context.watch<CollectionsProvider>();
-    final viewModel = context.read<CollectionsViewModel>();
     final state = collectionsProvider.collectionsState;
 
     return switch (state) {
@@ -51,7 +33,7 @@ class _CollectionsView extends StatelessWidget {
         ),
       AsyncError(:final message) => ErrorState(
           message: message,
-          onRetry: collectionsProvider.loadCollections,
+          onRetry: collectionsProvider.retryCollections,
         ),
       AsyncData(:final value) => Column(
           children: [
@@ -70,45 +52,45 @@ class _CollectionsView extends StatelessWidget {
               for (final collection in value)
                 _CollectionListItem(
                   collection: collection,
-                  onEdit: () => _handleEdit(context, collection, viewModel),
-                  onDelete: () =>
-                      _showDeleteConfirmation(context, collection, viewModel),
+                  onEdit: () => _handleEdit(context, collection),
+                  onDelete: () => _showDeleteConfirmation(context, collection),
                 ),
             gapH16,
-            _AddCollectionRow(viewModel: viewModel),
+            const _AddCollectionRow(),
           ],
         ),
     };
   }
 
-  Future<void> _handleEdit(BuildContext context, PodcastCollection collection,
-      CollectionsViewModel viewModel) async {
+  Future<void> _handleEdit(
+      BuildContext context, PodcastCollection collection) async {
     final result = await CollectionDialog.show(context, collection: collection);
-    if (result != null) {
-      final (name, color) = result;
-      var success = true;
-      if (name != collection.name) {
-        final updated =
-            await viewModel.updateCollectionName(collection.id, name);
-        success = success && updated;
-      }
-      if (color != collection.color) {
-        final updated =
-            await viewModel.updateCollectionColor(collection.id, color);
-        success = success && updated;
-      }
-      if (!success && context.mounted) {
-        await showPoddrErrorDialog(
-          context: context,
-          message: viewModel.lastError ??
-              'The collection could not be updated. Please try again.',
-        );
-      }
+    if (result == null || !context.mounted) return;
+
+    final (name, color) = result;
+    final collectionsProvider = context.read<CollectionsProvider>();
+    var success = true;
+    if (name != collection.name) {
+      final updated =
+          await collectionsProvider.updateCollectionName(collection.id, name);
+      success = success && updated;
+    }
+    if (color != collection.color) {
+      final updated =
+          await collectionsProvider.updateCollectionColor(collection.id, color);
+      success = success && updated;
+    }
+    if (!success && context.mounted) {
+      await showPoddrErrorDialog(
+        context: context,
+        message: collectionsProvider.lastError ??
+            'The collection could not be updated. Please try again.',
+      );
     }
   }
 
-  Future<void> _showDeleteConfirmation(BuildContext context,
-      PodcastCollection collection, CollectionsViewModel viewModel) async {
+  Future<void> _showDeleteConfirmation(
+      BuildContext context, PodcastCollection collection) async {
     final confirmed = await showPoddrDialog<bool>(
       context: context,
       builder: (dialogContext) => PoddrDialog(
@@ -139,12 +121,13 @@ class _CollectionsView extends StatelessWidget {
       ),
     );
 
-    if (confirmed == true) {
-      final success = await viewModel.deleteCollection(collection.id);
+    if (confirmed == true && context.mounted) {
+      final collectionsProvider = context.read<CollectionsProvider>();
+      final success = await collectionsProvider.deleteCollection(collection.id);
       if (!success && context.mounted) {
         await showPoddrErrorDialog(
           context: context,
-          message: viewModel.lastError ??
+          message: collectionsProvider.lastError ??
               'The collection could not be deleted. Please try again.',
         );
       }
@@ -192,59 +175,46 @@ class _CollectionListItem extends StatelessWidget {
   }
 }
 
-class _AddCollectionRow extends StatelessWidget {
-  final CollectionsViewModel viewModel;
-
-  const _AddCollectionRow({required this.viewModel});
+class _AddCollectionRow extends StatefulWidget {
+  const _AddCollectionRow();
 
   @override
-  Widget build(BuildContext context) {
-    return PoddrTextInput(
-      controller: viewModel.nameController,
-      onSubmit: (val) => _submit(context),
-      hintText: 'Enter name...',
-      fontSize: 18,
-      prefixIcon: GestureDetector(
-        onTap: () => _showColorPicker(context),
-        child: Consumer<CollectionsViewModel>(
-          builder: (context, vm, child) {
-            return Container(
-              width: 28,
-              height: 28,
-              decoration: ShapeDecoration(
-                color: Color(vm.newCollectionColor),
-                shape: RoundedSuperellipseBorder(
-                  side: BorderSide.none,
-                  borderRadius: BorderRadius.circular(28 / 3),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-      suffixIcon: PoddrIconButton(
-        onPressed: () => _submit(context),
-        icon: HugeIcon(
-          icon: HugeIcons.strokeRoundedPlusSign,
-        ),
-      ),
+  State<_AddCollectionRow> createState() => _AddCollectionRowState();
+}
+
+class _AddCollectionRowState extends State<_AddCollectionRow> {
+  final TextEditingController _nameController = TextEditingController();
+  int _color = generateRandomColorInt();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final name = _nameController.text.trim();
+    if (name.isEmpty) return;
+
+    final collectionsProvider = context.read<CollectionsProvider>();
+    final success =
+        await collectionsProvider.createCollection(name, color: _color);
+    if (!mounted) return;
+
+    if (success) {
+      _nameController.clear();
+      setState(() => _color = generateRandomColorInt());
+      return;
+    }
+
+    await showPoddrErrorDialog(
+      context: context,
+      message: collectionsProvider.lastError ??
+          'The collection could not be created. Please try again.',
     );
   }
 
-  Future<void> _submit(BuildContext context) async {
-    if (viewModel.newCollectionName.trim().isEmpty) return;
-
-    final success = await viewModel.submitNewCollection();
-    if (!success && context.mounted) {
-      await showPoddrErrorDialog(
-        context: context,
-        message: viewModel.lastError ??
-            'The collection could not be created. Please try again.',
-      );
-    }
-  }
-
-  void _showColorPicker(BuildContext context) {
+  void _showColorPicker() {
     showPoddrDialog(
       context: context,
       builder: (dialogContext) => PoddrDialog(
@@ -263,10 +233,40 @@ class _AddCollectionRow extends StatelessWidget {
           ),
         ],
         child: HsvColorPicker(
-          initialColor: Color(viewModel.newCollectionColor),
+          initialColor: Color(_color),
           onColorChanged: (color) {
-            viewModel.setNewCollectionColor(color.toARGB32());
+            setState(() => _color = color.toARGB32());
           },
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PoddrTextInput(
+      controller: _nameController,
+      onSubmit: (_) => _submit(),
+      hintText: 'Enter name...',
+      fontSize: 18,
+      prefixIcon: GestureDetector(
+        onTap: _showColorPicker,
+        child: Container(
+          width: 28,
+          height: 28,
+          decoration: ShapeDecoration(
+            color: Color(_color),
+            shape: RoundedSuperellipseBorder(
+              side: BorderSide.none,
+              borderRadius: BorderRadius.circular(28 / 3),
+            ),
+          ),
+        ),
+      ),
+      suffixIcon: PoddrIconButton(
+        onPressed: _submit,
+        icon: HugeIcon(
+          icon: HugeIcons.strokeRoundedPlusSign,
         ),
       ),
     );
