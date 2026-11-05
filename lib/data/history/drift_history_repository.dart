@@ -7,9 +7,9 @@ import 'package:poddr/models/progress.dart';
 class DriftHistoryRepository implements IHistoryRepository {
   static const int _recentHistoryLimit = 20;
 
-  final PoddrDatabase database = PoddrDatabase();
+  final PoddrDatabase database;
 
-  DriftHistoryRepository();
+  DriftHistoryRepository(this.database);
 
   @override
   Future<void> upsertProgress(

@@ -15,9 +15,9 @@ import 'package:poddr/core/exceptions.dart';
 
 class DriftOfflineRepository implements IOfflineRepository {
   static const String logName = "DriftOfflineRepository";
-  final drift.PoddrDatabase database = drift.PoddrDatabase();
+  final drift.PoddrDatabase database;
 
-  DriftOfflineRepository();
+  DriftOfflineRepository(this.database);
 
   static const Map<String, String> _mimeToExtension = {
     'audio/mpeg': 'mp3',

@@ -99,13 +99,9 @@ class PendingSubscriptionActions extends Table {
   PendingSubscriptionActions
 ])
 class PoddrDatabase extends _$PoddrDatabase {
-  static PoddrDatabase? _instance;
+  PoddrDatabase(super.executor);
 
-  PoddrDatabase._internal() : super(_openConnection());
-
-  factory PoddrDatabase() {
-    return _instance ??= PoddrDatabase._internal();
-  }
+  factory PoddrDatabase.open() => PoddrDatabase(_openConnection());
 
   @override
   int get schemaVersion => 1;
@@ -143,6 +139,10 @@ class PoddrDatabase extends _$PoddrDatabase {
               break;
           }
         }
+      },
+      beforeOpen: (details) async {
+        // SQLite only enforces foreign keys per connection.
+        await customStatement('PRAGMA foreign_keys = ON');
       },
     );
   }

@@ -5,9 +5,9 @@ import 'package:poddr/models/collection.dart';
 import 'package:poddr/ui/utils/colors.dart';
 
 class DriftCollectionsRepository implements ICollectionsRepository {
-  final PoddrDatabase database = PoddrDatabase();
+  final PoddrDatabase database;
 
-  DriftCollectionsRepository();
+  DriftCollectionsRepository(this.database);
 
   @override
   Future<PodcastCollection> createCollection(String name, {int? color}) async {
@@ -46,9 +46,6 @@ class DriftCollectionsRepository implements ICollectionsRepository {
 
   @override
   Future<void> deleteCollection(int id) async {
-    await (database.delete(database.subscriptionCollections)
-          ..where((sc) => sc.collectionId.equals(id)))
-        .go();
     await (database.delete(database.collections)..where((c) => c.id.equals(id)))
         .go();
   }

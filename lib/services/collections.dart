@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/log.dart';
-import 'package:poddr/data/collections/drift_collections_repository.dart';
 import 'package:poddr/data/collections/collections_repository.dart';
 import 'package:poddr/models/collection.dart';
 
@@ -21,8 +20,8 @@ class CollectionsProvider extends ChangeNotifier {
   StreamSubscription<List<PodcastCollection>>? _watchSubscription;
   bool _disposed = false;
 
-  CollectionsProvider({ICollectionsRepository? repository})
-      : _repository = repository ?? DriftCollectionsRepository() {
+  CollectionsProvider({required ICollectionsRepository repository})
+      : _repository = repository {
     _listen();
   }
 

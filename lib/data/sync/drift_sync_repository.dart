@@ -4,7 +4,9 @@ import 'package:poddr/data/db/drift/database.dart'
 import 'package:poddr/data/sync/sync_repository.dart';
 
 class DriftSyncRepository implements ISyncRepository {
-  final PoddrDatabase _db = PoddrDatabase();
+  final PoddrDatabase _db;
+
+  DriftSyncRepository(this._db);
 
   @override
   Future<void> addPendingEpisodeAction({

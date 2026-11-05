@@ -1,7 +1,7 @@
 import 'package:poddr/models/podcast.dart';
 
 abstract class ISubscriptionRepository {
-  Future<int> addSubscription(
+  Future<int?> addSubscription(
     String? title,
     String? rss,
     String? description,

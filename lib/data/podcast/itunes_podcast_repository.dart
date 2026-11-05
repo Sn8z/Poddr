@@ -9,8 +9,9 @@ import 'package:poddr/models/podcast.dart';
 
 class ITunesPodcastRepository implements IPodcastRepository {
   static const int maxFeedBytes = 5 * 1024 * 1024;
+  static const String _host = 'itunes.apple.com';
+  static const String _defaultCountry = 'us';
   final String logName = "ItunesPodcastRepository";
-  final String baseUrl = "https://itunes.apple.com";
   final PoddrHttpClient _http = PoddrHttpClient.shared;
 
   Never _throwForStatus(int statusCode, String action) {
@@ -32,27 +33,24 @@ class ITunesPodcastRepository implements IPodcastRepository {
 
   @override
   Future<List<Podcast>> search(String query) async {
-    final searchUrl = "$baseUrl/search?term=$query&media=podcast";
+    final searchUrl = Uri.https(_host, '/search', {
+      'term': query,
+      'media': 'podcast',
+    });
     debug("Searching for $searchUrl", name: logName);
 
-    final response = await _http.get(Uri.parse(searchUrl));
+    final response = await _http.get(searchUrl);
     if (response.statusCode != 200) {
       _throwForStatus(response.statusCode, 'Search');
     }
 
     try {
       final data = json.decode(response.body);
-      final feeds = <Podcast>[];
-      for (var item in data['results']) {
-        final Podcast feed = Podcast(
-          rss: item['feedUrl'],
-          title: item['trackName'] ?? item['trackCensoredName'],
-          image: item['artworkUrl600'] ?? item['artworkUrl100'],
-          author: item['artistName'],
-        );
-        feeds.add(feed);
-      }
-      return feeds;
+      return (data['results'] as List<dynamic>)
+          .whereType<Map<String, dynamic>>()
+          .where((item) => _hasFeedUrl(item))
+          .map((item) => _podcastFromSearchResult(item))
+          .toList();
     } catch (e) {
       throw ApiException(
         'Could not parse search response: $e',
@@ -63,11 +61,25 @@ class ITunesPodcastRepository implements IPodcastRepository {
 
   @override
   Future<List<Podcast>> getCharts(String country, String genre) async {
-    final chartsUrl =
-        "$baseUrl/$country/rss/toppodcasts/limit=50/explicit=true/genre=$genre/json";
+    final resolvedCountry =
+        country.trim().isEmpty ? _defaultCountry : country.trim();
+    final resolvedGenre = genre.trim();
+    final chartsUrl = Uri(
+      scheme: 'https',
+      host: _host,
+      pathSegments: [
+        resolvedCountry,
+        'rss',
+        'toppodcasts',
+        'limit=50',
+        'explicit=true',
+        if (resolvedGenre.isNotEmpty) 'genre=$resolvedGenre',
+        'json',
+      ],
+    );
     debug("Checking charts for $chartsUrl", name: logName);
 
-    final response = await _http.get(Uri.parse(chartsUrl));
+    final response = await _http.get(chartsUrl);
     if (response.statusCode != 200) {
       _throwForStatus(response.statusCode, 'Charts');
     }
@@ -82,8 +94,11 @@ class ITunesPodcastRepository implements IPodcastRepository {
           .where((id) => id != null)
           .join(',');
 
-      final lookupUrl = "$baseUrl/lookup?id=$ids&entity=podcast";
-      final lookupResponse = await _http.get(Uri.parse(lookupUrl));
+      final lookupUrl = Uri.https(_host, '/lookup', {
+        'id': ids,
+        'entity': 'podcast',
+      });
+      final lookupResponse = await _http.get(lookupUrl);
 
       if (lookupResponse.statusCode != 200) {
         _throwForStatus(lookupResponse.statusCode, 'Charts lookup');
@@ -93,14 +108,11 @@ class ITunesPodcastRepository implements IPodcastRepository {
       final results = lookupData['results'] as List<dynamic>?;
       if (results == null) return [];
 
-      return results.map((result) {
-        return Podcast(
-          rss: result['feedUrl'],
-          title: result['trackName'] ?? result['trackCensoredName'],
-          image: result['artworkUrl600'] ?? result['artworkUrl100'],
-          author: result['artistName'],
-        );
-      }).toList();
+      return results
+          .whereType<Map<String, dynamic>>()
+          .where((result) => _hasFeedUrl(result))
+          .map((result) => _podcastFromSearchResult(result))
+          .toList();
     } catch (e) {
       if (e is PoddrException) rethrow;
       throw ApiException(
@@ -108,6 +120,20 @@ class ITunesPodcastRepository implements IPodcastRepository {
         userMessage: 'Charts could not be loaded. Please try again.',
       );
     }
+  }
+
+  static bool _hasFeedUrl(Map<String, dynamic> item) {
+    final feedUrl = item['feedUrl'] as String?;
+    return feedUrl != null && feedUrl.trim().isNotEmpty;
+  }
+
+  static Podcast _podcastFromSearchResult(Map<String, dynamic> item) {
+    return Podcast(
+      rss: item['feedUrl'],
+      title: item['trackName'] ?? item['trackCensoredName'],
+      image: item['artworkUrl600'] ?? item['artworkUrl100'],
+      author: item['artistName'],
+    );
   }
 
   @override

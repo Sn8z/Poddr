@@ -5,12 +5,12 @@ import 'package:poddr/core/log.dart';
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
-import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
-import 'package:poddr/data/sync/drift_sync_repository.dart';
 import 'package:poddr/data/sync/sync_repository.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/podcast.dart';
+
+typedef _FeedResult = ({String rss, List<PodcastEpisode> episodes});
 
 class SubscriptionProvider extends ChangeNotifier {
   static const String logName = "SubscriptionProvider";
@@ -49,12 +49,11 @@ class SubscriptionProvider extends ChangeNotifier {
 
   SubscriptionProvider({
     IPodcastRepository? podcastRepository,
-    ISubscriptionRepository? subscriptionRepository,
-    ISyncRepository? syncRepository,
+    required ISubscriptionRepository subscriptionRepository,
+    required ISyncRepository syncRepository,
   })  : _podcastRepository = podcastRepository ?? ITunesPodcastRepository(),
-        _subscriptionRepository =
-            subscriptionRepository ?? DriftSubscriptionRepository(),
-        _syncRepository = syncRepository ?? DriftSyncRepository() {
+        _subscriptionRepository = subscriptionRepository,
+        _syncRepository = syncRepository {
     _listenToSubscriptions();
   }
 
@@ -110,16 +109,27 @@ class SubscriptionProvider extends ChangeNotifier {
     if (!_disposed) notifyListeners();
   }
 
+  String? _normalizedRss(String rss) {
+    final normalizedRss = rss.trim();
+    if (normalizedRss.isEmpty) {
+      _lastError = 'This feed has no URL.';
+      return null;
+    }
+    return normalizedRss;
+  }
+
   Future<bool> addSubscription({
     required String rss,
     bool fromSync = false,
   }) async {
+    final normalizedRss = _normalizedRss(rss);
+    if (normalizedRss == null) return false;
     try {
-      final Podcast podcast = await _podcastRepository.getFeed(rss);
+      final Podcast podcast = await _podcastRepository.getFeed(normalizedRss);
 
       await _subscriptionRepository.addSubscription(
         podcast.title,
-        rss,
+        normalizedRss,
         podcast.description,
         podcast.author,
         podcast.image,
@@ -127,16 +137,19 @@ class SubscriptionProvider extends ChangeNotifier {
 
       if (!fromSync) {
         try {
-          await _syncRepository.addPendingSubscriptionAction(rss, 'add');
+          await _syncRepository.addPendingSubscriptionAction(
+            normalizedRss,
+            'add',
+          );
         } catch (e, stackTrace) {
           error('Failed to queue sync action',
               name: logName, error: e, stackTrace: stackTrace);
         }
       }
 
-      info("Added subscription $rss", name: logName);
+      info("Added subscription $normalizedRss", name: logName);
       _lastError = null;
-      await _addFeedEpisodes(rss);
+      await _addFeedEpisodes(normalizedRss);
       return true;
     } catch (e, stackTrace) {
       error('Failed to add subscription',
@@ -150,11 +163,13 @@ class SubscriptionProvider extends ChangeNotifier {
     required String rss,
     bool fromSync = false,
   }) async {
+    final normalizedRss = _normalizedRss(rss);
+    if (normalizedRss == null) return false;
     try {
-      final Podcast podcast = await _podcastRepository.getFeed(rss);
+      final Podcast podcast = await _podcastRepository.getFeed(normalizedRss);
 
       return await addSubscriptionDirect(
-        rss: rss,
+        rss: normalizedRss,
         title: podcast.title,
         description: podcast.description,
         author: podcast.author,
@@ -177,10 +192,12 @@ class SubscriptionProvider extends ChangeNotifier {
     String? image,
     bool fromSync = false,
   }) async {
+    final normalizedRss = _normalizedRss(rss);
+    if (normalizedRss == null) return false;
     try {
       await _subscriptionRepository.addSubscription(
         title ?? '',
-        rss,
+        normalizedRss,
         description ?? '',
         author ?? '',
         image ?? '',
@@ -188,16 +205,19 @@ class SubscriptionProvider extends ChangeNotifier {
 
       if (!fromSync) {
         try {
-          await _syncRepository.addPendingSubscriptionAction(rss, 'add');
+          await _syncRepository.addPendingSubscriptionAction(
+            normalizedRss,
+            'add',
+          );
         } catch (e, stackTrace) {
           error('Failed to queue sync action',
               name: logName, error: e, stackTrace: stackTrace);
         }
       }
 
-      info("Added subscription $rss", name: logName);
+      info("Added subscription $normalizedRss", name: logName);
       _lastError = null;
-      await _addFeedEpisodes(rss);
+      await _addFeedEpisodes(normalizedRss);
       return true;
     } catch (e, stackTrace) {
       error('Failed to add subscription directly',
@@ -404,7 +424,7 @@ class SubscriptionProvider extends ChangeNotifier {
         effectiveRss = newFeedUrl;
       }
 
-      return _FeedResult(effectiveRss, fullPodcast.episodes);
+      return (rss: effectiveRss, episodes: fullPodcast.episodes);
     } catch (e, st) {
       error("Failed to fetch $rss", name: logName, error: e, stackTrace: st);
       await _subscriptionRepository.markAsBroken(rss);
@@ -427,10 +447,4 @@ class SubscriptionProvider extends ChangeNotifier {
       _latestEpisodes = _latestEpisodes.take(_maxEpisodes).toList();
     }
   }
-}
-
-class _FeedResult {
-  final String rss;
-  final List<PodcastEpisode> episodes;
-  _FeedResult(this.rss, this.episodes);
 }

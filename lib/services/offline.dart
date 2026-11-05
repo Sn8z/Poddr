@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:poddr/core/log.dart';
-import 'package:poddr/data/offline/drift_offline_repository.dart';
 import 'package:poddr/data/offline/offline_repository.dart';
 import 'package:poddr/core/http_client.dart';
 import 'package:poddr/core/exceptions.dart';
@@ -57,8 +56,8 @@ class OfflineProvider extends ChangeNotifier {
   StreamSubscription<List<OfflineEpisode>>? _watchSubscription;
   bool _disposed = false;
 
-  OfflineProvider({IOfflineRepository? repository})
-      : _repository = repository ?? DriftOfflineRepository() {
+  OfflineProvider({required IOfflineRepository repository})
+      : _repository = repository {
     _init();
   }
 

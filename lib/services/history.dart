@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/log.dart';
-import 'package:poddr/data/history/drift_history_repository.dart';
 import 'package:poddr/data/history/history_repository.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/progress.dart';
@@ -29,8 +28,8 @@ class HistoryProvider extends ChangeNotifier {
   StreamSubscription<List<PodcastEpisode>>? _watchSubscription;
   bool _disposed = false;
 
-  HistoryProvider({IHistoryRepository? historyRepository})
-      : _historyRepository = historyRepository ?? DriftHistoryRepository() {
+  HistoryProvider({required IHistoryRepository historyRepository})
+      : _historyRepository = historyRepository {
     _listen();
   }
 

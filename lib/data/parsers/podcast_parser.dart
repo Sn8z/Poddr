@@ -2,6 +2,7 @@ import 'package:xml/xml.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/models/episode.dart';
+import 'package:poddr/models/podcast_metadata.dart';
 
 class PoddrPodcastParser {
   static const String logName = "PoddrPodcastParser";
@@ -431,54 +432,54 @@ class PoddrPodcastParser {
     return value.toLowerCase() == 'yes';
   }
 
-  static List<Map<String, String>> _parseFunding(XmlElement element) {
+  static List<FundingLink> _parseFunding(XmlElement element) {
     return element
         .findElements('podcast:funding')
-        .map(
-          (e) => {
-            'url': e.getAttribute('url') ?? '',
-            'title': e.innerText.trim(),
-          },
+        .map<FundingLink>(
+          (e) => (
+            url: e.getAttribute('url') ?? '',
+            title: e.innerText.trim(),
+          ),
         )
         .toList();
   }
 
-  static Map<String, String>? _parseChapters(XmlElement element) {
+  static ChapterLink? _parseChapters(XmlElement element) {
     final chapters = element.findElements('podcast:chapters').firstOrNull;
     if (chapters == null) return null;
 
-    return {
-      'url': chapters.getAttribute('url') ?? '',
-      'type': chapters.getAttribute('type') ?? '',
-    };
+    return (
+      url: chapters.getAttribute('url') ?? '',
+      type: chapters.getAttribute('type'),
+    );
   }
 
-  static List<Map<String, String>> _parsePersons(XmlElement element) {
+  static List<Person> _parsePersons(XmlElement element) {
     return element
         .findElements('podcast:person')
-        .map(
-          (e) => {
-            'name': e.innerText.trim(),
-            'role': e.getAttribute('role') ?? '',
-            'img': e.getAttribute('img') ?? '',
-            'href': e.getAttribute('href') ?? '',
-            'group': e.getAttribute('group') ?? '',
-          },
+        .map<Person>(
+          (e) => (
+            name: e.innerText.trim(),
+            role: e.getAttribute('role'),
+            img: e.getAttribute('img'),
+            href: e.getAttribute('href'),
+            group: e.getAttribute('group'),
+          ),
         )
         .toList();
   }
 
-  static Map<String, String>? _parseLocation(XmlElement element) {
+  static Location? _parseLocation(XmlElement element) {
     final location = element.findElements('podcast:location').firstOrNull;
     if (location == null) return null;
 
-    return {
-      'name': location.innerText.trim(),
-      'geo': location.getAttribute('geo') ?? '',
-      'osm': location.getAttribute('osm') ?? '',
-      'country': location.getAttribute('country') ?? '',
-      'rel': location.getAttribute('rel') ?? 'subject',
-    };
+    return (
+      name: location.innerText.trim(),
+      geo: location.getAttribute('geo'),
+      osm: location.getAttribute('osm'),
+      country: location.getAttribute('country'),
+      rel: location.getAttribute('rel') ?? 'subject',
+    );
   }
 
   static String? _parsePodcastGuid(XmlElement element) {
@@ -496,16 +497,16 @@ class PoddrPodcastParser {
     return value == 'yes' || value == 'true';
   }
 
-  static List<Map<String, dynamic>>? _parseCategories(XmlElement channel) {
-    final categories = <Map<String, dynamic>>[];
+  static List<RssCategory>? _parseCategories(XmlElement channel) {
+    final categories = <RssCategory>[];
 
     for (final category in channel.findElements('category')) {
       final text = category.innerText.trim();
       if (text.isNotEmpty) {
-        categories.add({
-          'text': text,
-          'domain': category.getAttribute('domain') ?? '',
-        });
+        categories.add((
+          text: text,
+          domain: category.getAttribute('domain'),
+        ));
       }
     }
 
@@ -666,28 +667,44 @@ class PoddrPodcastParser {
     return null;
   }
 
-  static List<Map<String, String>> _parseTranscripts(XmlElement item) {
+  static List<EpisodeTranscript> _parseTranscripts(XmlElement item) {
     return item
         .findElements('podcast:transcript')
-        .map(
-          (e) => {
-            'url': e.getAttribute('url') ?? '',
-            'type': e.getAttribute('type') ?? '',
-            'language': e.getAttribute('language') ?? '',
-          },
+        .map<EpisodeTranscript>(
+          (e) => (
+            url: e.getAttribute('url') ?? '',
+            type: e.getAttribute('type'),
+            language: e.getAttribute('language'),
+          ),
         )
         .toList();
   }
 
-  static List<Map<String, String>> _parseSoundbites(XmlElement item) {
+  static Duration? _parseDurationValue(String? seconds) {
+    if (seconds == null) return null;
+
+    final value = double.tryParse(seconds.trim());
+    if (value == null || !value.isFinite) return null;
+
+    return Duration(
+      milliseconds: (value * Duration.millisecondsPerSecond).round(),
+    );
+  }
+
+  static double? _parseDouble(String? value) {
+    if (value == null) return null;
+    return double.tryParse(value.trim());
+  }
+
+  static List<Soundbite> _parseSoundbites(XmlElement item) {
     return item
         .findElements('podcast:soundbite')
-        .map(
-          (e) => {
-            'start': e.getAttribute('startTime') ?? '',
-            'duration': e.getAttribute('duration') ?? '',
-            'title': e.innerText.trim(),
-          },
+        .map<Soundbite>(
+          (e) => (
+            title: e.innerText.trim(),
+            start: _parseDurationValue(e.getAttribute('startTime')),
+            duration: _parseDurationValue(e.getAttribute('duration')),
+          ),
         )
         .toList();
   }
@@ -712,44 +729,44 @@ class PoddrPodcastParser {
     return _parseBlock(item);
   }
 
-  static Map<String, dynamic>? _parseValue(XmlElement element) {
+  static ValueBlock? _parseValue(XmlElement element) {
     final valueElement = element.findElements('podcast:value').firstOrNull;
     if (valueElement == null) return null;
 
-    final value = <String, dynamic>{
-      'type': valueElement.getAttribute('type') ?? '',
-      'method': valueElement.getAttribute('method') ?? '',
-      'suggested': valueElement.getAttribute('suggested') ?? '',
-      'recipients': <Map<String, String>>[],
-    };
+    final recipients = valueElement
+        .findElements('podcast:valueRecipient')
+        .map<ValueRecipient>(
+          (recipient) => (
+            name: recipient.getAttribute('name'),
+            type: recipient.getAttribute('type'),
+            address: recipient.getAttribute('address'),
+            split: recipient.getAttribute('split'),
+            fee: recipient.getAttribute('fee'),
+          ),
+        )
+        .toList();
 
-    for (final recipient
-        in valueElement.findElements('podcast:valueRecipient')) {
-      (value['recipients'] as List<Map<String, String>>).add({
-        'name': recipient.getAttribute('name') ?? '',
-        'type': recipient.getAttribute('type') ?? '',
-        'address': recipient.getAttribute('address') ?? '',
-        'split': recipient.getAttribute('split') ?? '',
-        'fee': recipient.getAttribute('fee') ?? '',
-      });
-    }
-
-    return value;
+    return (
+      type: valueElement.getAttribute('type'),
+      method: valueElement.getAttribute('method'),
+      suggested: _parseDouble(valueElement.getAttribute('suggested')),
+      recipients: recipients,
+    );
   }
 
-  static List<Map<String, String>> _parseMusic(XmlElement item) {
+  static List<MusicSegment> _parseMusic(XmlElement item) {
     return item
         .findElements('podcast:music')
-        .map(
-          (e) => {
-            'startTime': e.getAttribute('startTime') ?? '',
-            'endTime': e.getAttribute('endTime') ?? '',
-            'title': e.getAttribute('title') ?? '',
-            'album': e.getAttribute('album') ?? '',
-            'artist': e.getAttribute('artist') ?? '',
-            'track': e.getAttribute('track') ?? '',
-            'url': e.getAttribute('url') ?? '',
-          },
+        .map<MusicSegment>(
+          (e) => (
+            title: e.getAttribute('title'),
+            startTime: _parseDurationValue(e.getAttribute('startTime')),
+            endTime: _parseDurationValue(e.getAttribute('endTime')),
+            album: e.getAttribute('album'),
+            artist: e.getAttribute('artist'),
+            track: e.getAttribute('track'),
+            url: e.getAttribute('url'),
+          ),
         )
         .toList();
   }

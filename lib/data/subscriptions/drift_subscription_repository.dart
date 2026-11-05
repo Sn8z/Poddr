@@ -6,30 +6,40 @@ import 'package:poddr/core/log.dart';
 
 class DriftSubscriptionRepository implements ISubscriptionRepository {
   static const String logName = "DriftSubscriptionRepository";
-  final PoddrDatabase database = PoddrDatabase();
+  final PoddrDatabase database;
 
-  DriftSubscriptionRepository();
+  DriftSubscriptionRepository(this.database);
 
   @override
-  Future<int> addSubscription(
+  Future<int?> addSubscription(
     String? title,
     String? rss,
     String? description,
     String? author,
     String? image,
   ) async {
-    info("Adding subscription: $rss", name: logName);
-    final id = await database.into(database.podcastSubscription).insert(
-          PodcastSubscriptionCompanion.insert(
-            title: title ?? '',
-            rss: rss ?? '',
-            description: description ?? '',
-            author: author ?? '',
-            imageUrl: image ?? '',
-          ),
-          mode: InsertMode.insertOrIgnore,
-        );
-    return id;
+    if (rss == null || rss.trim().isEmpty) {
+      throw ArgumentError.value(rss, 'rss', 'Subscription requires a feed URL');
+    }
+
+    final resolvedRss = rss.trim();
+    info("Adding subscription: $resolvedRss", name: logName);
+
+    final row =
+        await database.into(database.podcastSubscription).insertReturningOrNull(
+              PodcastSubscriptionCompanion.insert(
+                rss: resolvedRss,
+                title: (title != null && title.trim().isNotEmpty)
+                    ? title.trim()
+                    : resolvedRss,
+                description: description ?? '',
+                author: author ?? '',
+                imageUrl: image ?? '',
+              ),
+              mode: InsertMode.insertOrIgnore,
+            );
+
+    return row?.id;
   }
 
   @override

@@ -16,6 +16,12 @@ import 'package:poddr/services/collections.dart';
 import 'package:poddr/services/media/media_provider.dart';
 import 'package:poddr/services/sync.dart';
 import 'package:poddr/core/router.dart';
+import 'package:poddr/data/db/drift/database.dart';
+import 'package:poddr/data/collections/drift_collections_repository.dart';
+import 'package:poddr/data/history/drift_history_repository.dart';
+import 'package:poddr/data/offline/drift_offline_repository.dart';
+import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
+import 'package:poddr/data/sync/drift_sync_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,6 +50,17 @@ void main() async {
 
   final GoRouter router = PoddrRouter.router;
 
+  final PoddrDatabase database = PoddrDatabase.open();
+  final DriftSubscriptionRepository subscriptionRepository =
+      DriftSubscriptionRepository(database);
+  final DriftHistoryRepository historyRepository =
+      DriftHistoryRepository(database);
+  final DriftOfflineRepository offlineRepository =
+      DriftOfflineRepository(database);
+  final DriftCollectionsRepository collectionsRepository =
+      DriftCollectionsRepository(database);
+  final DriftSyncRepository syncRepository = DriftSyncRepository(database);
+
   runApp(
     MultiProvider(
       providers: [
@@ -52,21 +69,25 @@ void main() async {
 
         // Offline
         ChangeNotifierProvider<OfflineProvider>(
-            create: (_) => OfflineProvider()),
+          create: (_) => OfflineProvider(repository: offlineRepository),
+        ),
 
         // Subscriptions
         ChangeNotifierProvider<SubscriptionProvider>(
-          create: (_) => SubscriptionProvider(),
+          create: (_) => SubscriptionProvider(
+            subscriptionRepository: subscriptionRepository,
+            syncRepository: syncRepository,
+          ),
         ),
 
         // History
         ChangeNotifierProvider<HistoryProvider>(
-          create: (_) => HistoryProvider(),
+          create: (_) => HistoryProvider(historyRepository: historyRepository),
         ),
 
         // Collections
         ChangeNotifierProvider<CollectionsProvider>(
-          create: (_) => CollectionsProvider(),
+          create: (_) => CollectionsProvider(repository: collectionsRepository),
         ),
 
         // Sync
@@ -74,6 +95,7 @@ void main() async {
           create: (context) => SyncProvider(
             subscriptionProvider: context.read<SubscriptionProvider>(),
             historyProvider: context.read<HistoryProvider>(),
+            syncRepository: syncRepository,
           ),
         ),
 
