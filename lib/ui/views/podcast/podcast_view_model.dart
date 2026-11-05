@@ -3,7 +3,6 @@ import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
-import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
@@ -36,9 +35,9 @@ class PodcastViewModel extends ChangeNotifier {
   String get sortDirection => _sortDirection.label;
 
   PodcastViewModel({
-    IPodcastRepository? podcastRepository,
+    required IPodcastRepository podcastRepository,
     String? initialRss,
-  }) : _podcastRepository = podcastRepository ?? ITunesPodcastRepository() {
+  }) : _podcastRepository = podcastRepository {
     if (initialRss != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         getPodcast(initialRss);
@@ -65,7 +64,7 @@ class PodcastViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final podcast = await _podcastRepository.getFeed(rss);
+      final podcast = await _podcastRepository.getFeed(rss, skipCache: force);
       _podcastState = AsyncData(podcast);
     } on PoddrException catch (e, stackTrace) {
       error('Failed to load podcast',

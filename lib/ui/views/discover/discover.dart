@@ -14,6 +14,10 @@ import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/components/widgets/appbar.dart';
 import 'package:poddr/ui/components/widgets/appbar_options.dart';
 import 'package:poddr/ui/views/discover/discover_view_model.dart';
+import 'package:poddr/data/podcast/podcast_repository.dart';
+import 'package:poddr/data/settings/settings_repository.dart';
+import 'package:poddr/data/countries/country_repository.dart';
+import 'package:poddr/data/genres/genre_repository.dart';
 
 import 'package:poddr/ui/components/widgets/box.dart';
 import 'package:poddr/ui/components/widgets/episode_history.dart';
@@ -38,7 +42,12 @@ class PodcastDiscoveryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => DiscoverViewModel(),
+      create: (context) => DiscoverViewModel(
+        podcastRepository: context.read<IPodcastRepository>(),
+        settingsRepository: context.read<ISettingsRepository>(),
+        countryRepository: context.read<ICountryRepository>(),
+        genreRepository: context.read<IGenreRepository>(),
+      ),
       builder: (context, child) {
         return PageLayout(
           slivers: [

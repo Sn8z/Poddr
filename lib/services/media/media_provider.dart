@@ -10,12 +10,12 @@ import 'package:poddr/services/history.dart';
 import 'package:poddr/services/media/media_handler.dart';
 import 'package:poddr/services/offline.dart';
 import 'package:poddr/services/sync.dart';
+import 'package:poddr/data/media/media_repository.dart';
 
 class MediaProvider extends ChangeNotifier {
   static const String logName = "MediaProvider";
 
-  late final PoddrMediaHandler _mediaHandler =
-      PoddrMediaHandler(resolver: _resolveQueueItem);
+  late final PoddrMediaHandler _mediaHandler;
 
   final HistoryProvider _historyProvider;
   final OfflineProvider _offlineProvider;
@@ -86,9 +86,14 @@ class MediaProvider extends ChangeNotifier {
     required HistoryProvider historyProvider,
     required OfflineProvider offlineProvider,
     required SyncProvider syncProvider,
+    required IMediaRepository mediaRepository,
   })  : _historyProvider = historyProvider,
         _offlineProvider = offlineProvider,
         _syncProvider = syncProvider {
+    _mediaHandler = PoddrMediaHandler(
+      resolver: _resolveQueueItem,
+      mediaRepository: mediaRepository,
+    );
     _initMediaListeners();
   }
 

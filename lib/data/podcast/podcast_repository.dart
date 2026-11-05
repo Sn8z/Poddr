@@ -5,5 +5,5 @@ abstract class IPodcastRepository {
 
   Future<List<Podcast>> getCharts(String country, String genre);
 
-  Future<Podcast> getFeed(String rss);
+  Future<Podcast> getFeed(String rss, {bool skipCache = false});
 }

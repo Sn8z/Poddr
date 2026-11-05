@@ -12,7 +12,10 @@ class ITunesPodcastRepository implements IPodcastRepository {
   static const String _host = 'itunes.apple.com';
   static const String _defaultCountry = 'us';
   final String logName = "ItunesPodcastRepository";
-  final PoddrHttpClient _http = PoddrHttpClient.shared;
+  final PoddrHttpClient _http;
+
+  ITunesPodcastRepository({required PoddrHttpClient httpClient})
+      : _http = httpClient;
 
   Never _throwForStatus(int statusCode, String action) {
     if (statusCode == 404) {
@@ -137,23 +140,18 @@ class ITunesPodcastRepository implements IPodcastRepository {
   }
 
   @override
-  Future<Podcast> getFeed(String rss) async {
+  Future<Podcast> getFeed(String rss, {bool skipCache = false}) async {
     debug("Getting feed $rss", name: logName);
 
-    final response = await _http.get(Uri.parse(rss));
+    final response = await _http.get(
+      Uri.parse(rss),
+      maxBytes: maxFeedBytes,
+      skipCache: skipCache,
+    );
     debug("Feed return code ${response.statusCode}", name: logName);
 
     if (response.statusCode != 200) {
       _throwForStatus(response.statusCode, 'Feed $rss');
-    }
-
-    final feedSize = response.contentLength ?? response.bodyBytes.length;
-    if (feedSize > maxFeedBytes) {
-      debug('Rejected $rss with $feedSize bytes', name: logName);
-      throw ApiException(
-        'Feed too large ($feedSize bytes): $rss',
-        userMessage: 'This podcast feed is too large to load.',
-      );
     }
 
     try {

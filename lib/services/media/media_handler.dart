@@ -5,7 +5,6 @@ import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart' hide AudioDevice;
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:poddr/data/media/media_repository.dart';
-import 'package:poddr/data/media/prefs_media_repository.dart';
 import 'package:poddr/models/episode.dart';
 import 'package:poddr/services/media/media_player.dart';
 
@@ -65,8 +64,8 @@ class PoddrMediaHandler extends BaseAudioHandler
 
   PoddrMediaHandler({
     this.resolver,
-    IMediaRepository? mediaRepository,
-  }) : _mediaRepository = mediaRepository ?? SharedPrefsMediaRepository() {
+    required IMediaRepository mediaRepository,
+  }) : _mediaRepository = mediaRepository {
     _initPlayer();
     _initListeners();
     _initAudioSession();

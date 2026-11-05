@@ -13,6 +13,7 @@ import 'package:poddr/ui/components/widgets/shimmer.dart';
 import 'package:poddr/ui/components/widgets/text_input.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/views/search/search_view_model.dart';
+import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +23,9 @@ class SearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => SearchViewModel(),
+      create: (context) => SearchViewModel(
+        podcastRepository: context.read<IPodcastRepository>(),
+      ),
       builder: (context, child) {
         final searchProvider = context.watch<SearchViewModel>();
         final searchState = searchProvider.searchState;

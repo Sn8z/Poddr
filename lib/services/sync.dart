@@ -4,7 +4,6 @@ import 'package:poddr/core/log.dart';
 import 'package:poddr/core/utils/uuid.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 import 'package:poddr/data/settings/secure_settings_repository.dart';
-import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/sync/gpodder_client.dart';
 import 'package:poddr/data/sync/sync_repository.dart';
 import 'package:poddr/core/exceptions.dart';
@@ -114,13 +113,13 @@ class SyncProvider extends ChangeNotifier {
   SyncProvider({
     required SubscriptionProvider subscriptionProvider,
     required HistoryProvider historyProvider,
-    ISettingsRepository? settings,
-    SecureSettingsRepository? secureSettings,
+    required ISettingsRepository settings,
+    required SecureSettingsRepository secureSettings,
     required ISyncRepository syncRepository,
   })  : _subscriptionProvider = subscriptionProvider,
         _historyProvider = historyProvider,
-        _settings = settings ?? SharedPrefSettingsRepository(),
-        _secureSettings = secureSettings ?? SecureSettingsRepository(),
+        _settings = settings,
+        _secureSettings = secureSettings,
         _syncRepository = syncRepository {
     _init();
   }

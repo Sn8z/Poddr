@@ -3,16 +3,12 @@ import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
-import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
-import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 import 'package:poddr/models/podcast.dart';
 import 'package:poddr/models/country.dart';
 import 'package:poddr/models/genre.dart';
 import 'package:poddr/data/countries/country_repository.dart';
-import 'package:poddr/data/countries/itunes_country_repository.dart';
 import 'package:poddr/data/genres/genre_repository.dart';
-import 'package:poddr/data/genres/itunes_genre_repository.dart';
 
 class DiscoverViewModel extends ChangeNotifier {
   static const String logName = "DiscoverViewModel";
@@ -50,15 +46,14 @@ class DiscoverViewModel extends ChangeNotifier {
   List<Genre> get genres => _genreRepository.getGenres();
 
   DiscoverViewModel({
-    IPodcastRepository? podcastRepository,
-    ISettingsRepository? settingsRepository,
-    ICountryRepository? countryRepository,
-    IGenreRepository? genreRepository,
-  })  : _podcastRepository = podcastRepository ?? ITunesPodcastRepository(),
-        _settingsRepository =
-            settingsRepository ?? SharedPrefSettingsRepository(),
-        _countryRepository = countryRepository ?? ItunesCountryRepository(),
-        _genreRepository = genreRepository ?? ItunesGenreRepository() {
+    required IPodcastRepository podcastRepository,
+    required ISettingsRepository settingsRepository,
+    required ICountryRepository countryRepository,
+    required IGenreRepository genreRepository,
+  })  : _podcastRepository = podcastRepository,
+        _settingsRepository = settingsRepository,
+        _countryRepository = countryRepository,
+        _genreRepository = genreRepository {
     _init();
   }
 

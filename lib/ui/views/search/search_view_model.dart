@@ -3,7 +3,6 @@ import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
-import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
 import 'package:poddr/models/podcast.dart';
 
 class SearchViewModel extends ChangeNotifier {
@@ -19,8 +18,8 @@ class SearchViewModel extends ChangeNotifier {
 
   String? _lastQuery;
 
-  SearchViewModel({IPodcastRepository? podcastRepository})
-      : _podcastRepository = podcastRepository ?? ITunesPodcastRepository();
+  SearchViewModel({required IPodcastRepository podcastRepository})
+      : _podcastRepository = podcastRepository;
 
   Future<void> searchPodcast(String query) async {
     final trimmed = query.trim();

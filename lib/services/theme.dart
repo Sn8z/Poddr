@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/theme/poddr_theme_data.dart';
-import 'package:poddr/data/settings/prefs_settings_repository.dart';
 import 'package:poddr/data/settings/settings_repository.dart';
 
 class ThemeProvider extends ChangeNotifier {
@@ -24,9 +23,8 @@ class ThemeProvider extends ChangeNotifier {
   PoddrThemeMode _themeMode = PoddrThemeMode.system;
   PoddrThemeMode get themeMode => _themeMode;
 
-  ThemeProvider({ISettingsRepository? settingsRepository})
-      : _settingsRepository =
-            settingsRepository ?? SharedPrefSettingsRepository() {
+  ThemeProvider({required ISettingsRepository settingsRepository})
+      : _settingsRepository = settingsRepository {
     _loadTheme();
   }
 

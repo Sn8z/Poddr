@@ -23,6 +23,7 @@ import 'package:poddr/ui/components/widgets/poddr_error_dialog.dart';
 import 'package:poddr/ui/components/widgets/poddr_icon_button.dart';
 import 'package:poddr/ui/components/widgets/poddr_list.dart';
 import 'package:poddr/ui/components/widgets/podcast_header.dart';
+import 'package:poddr/data/podcast/podcast_repository.dart';
 import 'package:poddr/ui/layouts/page_layout.dart';
 import 'package:poddr/ui/utils/gaps.dart';
 import 'package:poddr/ui/utils/sort_fields.dart';
@@ -42,7 +43,10 @@ class _PodcastDetailsViewState extends State<PodcastDetailsView> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => PodcastViewModel(initialRss: widget.rss),
+      create: (context) => PodcastViewModel(
+        podcastRepository: context.read<IPodcastRepository>(),
+        initialRss: widget.rss,
+      ),
       builder: (context, child) {
         final podcastProvider = context.watch<PodcastViewModel>();
         final podcast = podcastProvider.podcast;

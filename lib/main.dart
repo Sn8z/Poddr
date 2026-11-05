@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:poddr/core/http_client.dart';
 import 'package:poddr/services/offline.dart';
 import 'package:poddr/core/shortcuts.dart';
 import 'package:poddr/core/log.dart';
@@ -22,6 +23,17 @@ import 'package:poddr/data/history/drift_history_repository.dart';
 import 'package:poddr/data/offline/drift_offline_repository.dart';
 import 'package:poddr/data/subscriptions/drift_subscription_repository.dart';
 import 'package:poddr/data/sync/drift_sync_repository.dart';
+import 'package:poddr/data/podcast/podcast_repository.dart';
+import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
+import 'package:poddr/data/settings/settings_repository.dart';
+import 'package:poddr/data/settings/prefs_settings_repository.dart';
+import 'package:poddr/data/settings/secure_settings_repository.dart';
+import 'package:poddr/data/countries/country_repository.dart';
+import 'package:poddr/data/countries/itunes_country_repository.dart';
+import 'package:poddr/data/genres/genre_repository.dart';
+import 'package:poddr/data/genres/itunes_genre_repository.dart';
+import 'package:poddr/data/media/media_repository.dart';
+import 'package:poddr/data/media/prefs_media_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,8 +76,37 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        Provider<PoddrHttpClient>(
+          create: (_) => PoddrHttpClient(),
+          dispose: (_, client) => client.close(),
+        ),
+        Provider<IPodcastRepository>(
+          create: (context) => ITunesPodcastRepository(
+            httpClient: context.read<PoddrHttpClient>(),
+          ),
+        ),
+        Provider<ISettingsRepository>(
+          create: (_) => SharedPrefSettingsRepository(),
+        ),
+        Provider<SecureSettingsRepository>(
+          create: (_) => SecureSettingsRepository(),
+        ),
+        Provider<ICountryRepository>(
+          create: (_) => ItunesCountryRepository(),
+        ),
+        Provider<IGenreRepository>(
+          create: (_) => ItunesGenreRepository(),
+        ),
+        Provider<IMediaRepository>(
+          create: (_) => SharedPrefsMediaRepository(),
+        ),
+
         // Theme
-        ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(
+            settingsRepository: context.read<ISettingsRepository>(),
+          ),
+        ),
 
         // Offline
         ChangeNotifierProvider<OfflineProvider>(
@@ -74,7 +115,8 @@ void main() async {
 
         // Subscriptions
         ChangeNotifierProvider<SubscriptionProvider>(
-          create: (_) => SubscriptionProvider(
+          create: (context) => SubscriptionProvider(
+            podcastRepository: context.read<IPodcastRepository>(),
             subscriptionRepository: subscriptionRepository,
             syncRepository: syncRepository,
           ),
@@ -95,6 +137,8 @@ void main() async {
           create: (context) => SyncProvider(
             subscriptionProvider: context.read<SubscriptionProvider>(),
             historyProvider: context.read<HistoryProvider>(),
+            settings: context.read<ISettingsRepository>(),
+            secureSettings: context.read<SecureSettingsRepository>(),
             syncRepository: syncRepository,
           ),
         ),
@@ -105,6 +149,7 @@ void main() async {
             historyProvider: context.read<HistoryProvider>(),
             offlineProvider: context.read<OfflineProvider>(),
             syncProvider: context.read<SyncProvider>(),
+            mediaRepository: context.read<IMediaRepository>(),
           ),
         ),
       ],

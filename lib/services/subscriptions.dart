@@ -4,7 +4,6 @@ import 'package:poddr/core/async_state.dart';
 import 'package:poddr/core/log.dart';
 import 'package:poddr/core/exceptions.dart';
 import 'package:poddr/data/podcast/podcast_repository.dart';
-import 'package:poddr/data/podcast/itunes_podcast_repository.dart';
 import 'package:poddr/data/subscriptions/subscriptions_repository.dart';
 import 'package:poddr/data/sync/sync_repository.dart';
 import 'package:poddr/models/episode.dart';
@@ -48,10 +47,10 @@ class SubscriptionProvider extends ChangeNotifier {
   StreamSubscription<List<Podcast>>? _watchSubscription;
 
   SubscriptionProvider({
-    IPodcastRepository? podcastRepository,
+    required IPodcastRepository podcastRepository,
     required ISubscriptionRepository subscriptionRepository,
     required ISyncRepository syncRepository,
-  })  : _podcastRepository = podcastRepository ?? ITunesPodcastRepository(),
+  })  : _podcastRepository = podcastRepository,
         _subscriptionRepository = subscriptionRepository,
         _syncRepository = syncRepository {
     _listenToSubscriptions();
